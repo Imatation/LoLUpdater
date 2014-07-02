@@ -190,7 +190,6 @@ td {
  }
 form {
   background: #f2f2f2;
-  padding: 20px;
 }
 .outer {
   width: 100%;
@@ -277,12 +276,11 @@ form {
   border-bottom: 1px solid #111;
 }
 #main_content {
-  padding-top: 40px;
 }
 #footer_wrap {
   background: #212121;
 }
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 970px) {
   body {
     font-size:14px;
   }
@@ -290,8 +288,8 @@ form {
     display: none;
   }
   .inner {
-    min-width: 320px;
-    max-width: 480px;
+    min-width: 970px;
+    max-width: 970px;
   }
   #project_title {
   font-size: 32px;
@@ -315,8 +313,8 @@ form {
     font-size: 12px;
   }
   code, pre {
-    min-width: 320px;
-    max-width: 480px;
+    min-width: 970px;
+    max-width: 970px;
     font-size: 11px;
   }
 }
