@@ -1,0 +1,7 @@
+LoLUpdater/obj/*
+LoLUpdater/bin/*
+LoLUpdaterXP/obj/*
+LoLUpdaterXP/bin/*
+*.ide
+*.user
+*.suo
