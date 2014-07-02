@@ -1,0 +1,27 @@
+﻿<Window x:Name="Window" x:Class="LoLUpdater.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="LoLUpdater" Height="142" Width="506.669" ResizeMode="NoResize">
+    <Grid RenderTransformOrigin="0.484,0.308" Margin="0,0,4,-1">
+        <RadioButton x:Name="Patch" Content="Patch" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top" Height="15" Width="94" ToolTip="Patches LoL with all the options" IsChecked="True"/>
+        <RadioButton x:Name="Remove" Content="Remove Patch" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Height="15" Width="94" ToolTip="Removes the patch"/>
+        <ListBox x:Name="CheckedListBox" HorizontalAlignment="Left" Height="64" Margin="108,10,0,0" VerticalAlignment="Top" Width="284">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="2"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <CheckBox x:Name="AdobeAIR" Content="Adobe AIR" ToolTip="Update for the PVP.NET Client" Checked="AdobeAIR_Checked"/>
+            <CheckBox x:Name="AdobeAIRBeta" Content="Adobe AIR Beta" ToolTip="Beta update for the PVP.NET Client" Checked="AdobeAIRBeta_Checked"/>
+            <CheckBox x:Name="Flash" Content="Adobe Flash" ToolTip="Update for the Launcher" Checked="Flash_Checked"/>
+            <CheckBox x:Name="FlashBeta" Content="Adobe Flash Beta" ToolTip="Beta update for the Launcher" Checked="FlashBeta_Checked"/>
+            <CheckBox x:Name="Cg" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Checked="Cg_Checked"/>
+            <CheckBox x:Name="CgD3D9" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Checked="CgD3D9_Checked"/>
+            <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Checked="CgGL_Checked"/>
+            <CheckBox x:Name="tbb" Content="tbb.dll 4.2.0.0" ToolTip="Update for the Game"/>
+        </ListBox>
+        <ListBox x:Name="ButtonCheckedListBox" HorizontalAlignment="Left" Height="64" Margin="392,10,0,0" VerticalAlignment="Top" Width="93">
+            <Button Content="Visual options" Click="Visual_Click" ToolTip="Disable Windows Visual enhancments"/>
+            <Button Content="Clean HDD" Click="Clean_Click" ToolTip="Runs Clean Manager"/>
+        </ListBox>
+        <Button x:Name="OK" Content="OK" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Width="466" Click="OK_Click"/>
+        <GroupBox Header="Main" HorizontalAlignment="Left" VerticalAlignment="Top" Height="74" Width="108"/>
+    </Grid>
+</Window>
