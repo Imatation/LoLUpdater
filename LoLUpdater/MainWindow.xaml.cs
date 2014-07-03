@@ -115,16 +115,19 @@ namespace LoLUpdater
                     if (Cg.IsChecked == true)
                     {
                         File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "bin", "cg.dll"), @"RADS\projects\lol_launcher\releases\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\deploy\cg.dll", true);
+
                         File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "bin", "cg.dll"), @"RADS\solutions\lol_game_client_sln\releases\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\deploy\cg.dll", true);
                     }
                     if (CgGL.IsChecked == true)
                     {
                         File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "bin", "cgGL.dll"), @"RADS\projects\lol_launcher\releases\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\deploy\cgGL.dll", true);
+
                         File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "bin", "cgGL.dll"), @"RADS\solutions\lol_game_client_sln\releases\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\deploy\cgGL.dll", true);
                     }
                     if (CgD3D9.IsChecked == true)
                     {
                         File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "bin", "cgD3D9.dll"), @"RADS\projects\lol_launcher\releases\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\deploy\cgD3D9.dll", true);
+
                         File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "bin", "cgD3D9.dll"), @"RADS\solutions\lol_game_client_sln\releases\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\deploy\cgD3D9.dll", true);
                     }
                     if (tbb.IsChecked == true)
