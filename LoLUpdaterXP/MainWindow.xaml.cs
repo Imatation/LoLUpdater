@@ -224,6 +224,7 @@ namespace LoLUpdater
                         File.Copy(Path.Combine("Backup", "GamePermanent_en_SG.cfg"), Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), true);
                     }
                 }
+                Directory.Delete("Backup", true);
             }
             MessageBox.Show("Finished!", "LoLUpdater");
         }
