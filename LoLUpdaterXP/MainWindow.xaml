@@ -15,7 +15,6 @@
             <CheckBox x:Name="Cg" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Checked="Cg_Checked"/>
             <CheckBox x:Name="CgD3D9" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Checked="CgD3D9_Checked"/>
             <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Checked="CgGL_Checked"/>
-            <CheckBox x:Name="game" Content="game.cfg mod v1" ToolTip="Mod for the config"/>
             <CheckBox x:Name="tbb" Content="tbb.dll 4.2.0.0" ToolTip="Update for the Game"/>
         </ListBox>
         <Button x:Name="OK" Content="OK" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Width="466" Click="OK_Click"/>
