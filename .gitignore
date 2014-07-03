@@ -1,0 +1,7 @@
+LoLUpdater
+LoLUpdater.sln.ide
+LoLUpdaterXP.sln.ide
+LoLUpdaterXP
+*.ide
+*.user
+*.suo
