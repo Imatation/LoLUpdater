@@ -101,11 +101,11 @@ namespace LoLUpdater
                         }
                     }
                 }
-                if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Pando Networks\Media Booster\uninst.exe")))
+                if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Pando Networks", "Media Booster", "uninst.exe")))
                 {
                     var PMB = new ProcessStartInfo();
                     var process = new Process();
-                    PMB.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"Pando Networks\Media Booster\uninst.exe");
+                    PMB.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Pando Networks", "Media Booster", "uninst.exe");
                     PMB.Arguments = "/silent";
                     process.StartInfo = PMB;
                     process.Start();
