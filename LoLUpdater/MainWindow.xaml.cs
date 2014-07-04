@@ -20,7 +20,7 @@ namespace LoLUpdater
         {
             if (MessageBox.Show("We are unable to include the Adobe Flash Redistributable due to not having a licence, HOWEVER you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/flashplayer/flashplayer14_sa_win_32.exe");
+              Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
             }
         }
         private void OK_Click(object sender, RoutedEventArgs e)
