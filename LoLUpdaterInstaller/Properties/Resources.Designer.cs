@@ -63,16 +63,6 @@ namespace Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] dotNetFx40_Full_x86_x64 {
-            get {
-                object obj = ResourceManager.GetObject("dotNetFx40_Full_x86_x64", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] Interop_WUApiLib {
             get {
                 object obj = ResourceManager.GetObject("Interop_WUApiLib", resourceCulture);
@@ -86,16 +76,6 @@ namespace Properties {
         internal static byte[] LoLUpdater {
             get {
                 object obj = ResourceManager.GetObject("LoLUpdater", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] LoLUpdaterXP {
-            get {
-                object obj = ResourceManager.GetObject("LoLUpdaterXP", resourceCulture);
                 return ((byte[])(obj));
             }
         }

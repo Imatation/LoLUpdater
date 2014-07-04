@@ -118,17 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="dotNetFx40_Full_x86_x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\dotNetFx40_Full_x86_x64.exe;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="Interop_WUApiLib" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Interop.WUApiLib.dll;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="LoLUpdater" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LoLUpdater.exe;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="LoLUpdaterXP" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LoLUpdaterXP.exe;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="NDP452_KB2901907_x86_x64_AllOS_ENU" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NDP452-KB2901907-x86-x64-AllOS-ENU.exe;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
