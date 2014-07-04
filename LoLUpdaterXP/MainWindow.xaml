@@ -20,6 +20,6 @@
         <Button x:Name="OK" Content="OK" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Width="481" Click="OK_Click"/>
         <GroupBox Header="Main" HorizontalAlignment="Left" VerticalAlignment="Top" Height="74" Width="108"/>
         <Button x:Name="CleanHDD" Content="CleanHDD" HorizontalAlignment="Left" Margin="397,34,0,0" VerticalAlignment="Top" Width="75" Click="Clean_Click"/>
-        <CheckBox x:Name="Riot_Logs" Content="Delete old Logs" HorizontalAlignment="Left" Margin="397,10,0,0" VerticalAlignment="Top" Checked="Deleteoldlogs_Checked"/>
+        <CheckBox x:Name="Riot_Logs" Content="Delete Old Logs" HorizontalAlignment="Left" Margin="397,10,0,0" VerticalAlignment="Top" Checked="Deleteoldlogs_Checked"/>
     </Grid>
 </Window>
