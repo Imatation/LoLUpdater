@@ -72,9 +72,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(460, 41);
+            this.button2.Location = new System.Drawing.Point(448, 41);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(152, 23);
+            this.button2.Size = new System.Drawing.Size(164, 23);
             this.button2.TabIndex = 3;
             this.button2.Text = "Browse for GarenaPH Directory";
             this.button2.UseVisualStyleBackColor = true;
