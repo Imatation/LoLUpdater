@@ -2,6 +2,8 @@ LoLUpdater
 LoLUpdater.sln.ide
 LoLUpdaterXP.sln.ide
 LoLUpdaterXP
+LoLUpdaterInstaller
+LoLUpdaterInstaller.sln.ide
 *.ide
 *.user
 *.suo
