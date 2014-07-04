@@ -56,16 +56,20 @@ namespace LoLUpdater
             if (WinUpdate.IsChecked == true)
             {
                 UpdateSessionClass uSession = new UpdateSessionClass();
-                uSession.CreateUpdateDownloader().Updates = uSession.CreateUpdateSearcher().Search("IsInstalled=0 and Type='Software'").Updates;
-                uSession.CreateUpdateDownloader().Download();
+                IUpdateSearcher uSearcher = uSession.CreateUpdateSearcher();
+                ISearchResult uResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
+                UpdateDownloader downloader = uSession.CreateUpdateDownloader();
+                downloader.Updates = uResult.Updates;
+                downloader.Download();
                 UpdateCollection updatesToInstall = new UpdateCollection();
-                foreach (IUpdate update in uSession.CreateUpdateSearcher().Search("IsInstalled=0 and Type='Software'").Updates)
+                foreach (IUpdate update in uResult.Updates)
                 {
                     if (update.IsDownloaded)
                         updatesToInstall.Add(update);
                 }
-                uSession.CreateUpdateInstaller().Updates = updatesToInstall;
-                IInstallationResult installationRes = uSession.CreateUpdateInstaller().Install();
+                IUpdateInstaller installer = uSession.CreateUpdateInstaller();
+                installer.Updates = updatesToInstall;
+                IInstallationResult installationRes = installer.Install();
             }
             if (Riot_Logs.IsChecked == true)
             {
