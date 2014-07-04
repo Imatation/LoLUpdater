@@ -51,7 +51,7 @@ namespace LoLUpdaterInstaller
                 System.IO.File.WriteAllBytes(folderBrowserDialog1.SelectedPath + @"\Interop.WUApiLib.dll", Properties.Resources.Interop_WUApiLib);
                 WshShellClass shell = new WshShellClass();
                 IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Garena LoLUpdater.lnk");
-                shortcut.TargetPath = folderBrowserDialog1.SelectedPath + @"\LoLUpdater.exe";
+                shortcut.TargetPath = folderBrowserDialog1.SelectedPath + "LoLUpdater.exe";
                 shortcut.Description = "LoL Patcher";
                 shortcut.Save();
             }
@@ -61,18 +61,18 @@ namespace LoLUpdaterInstaller
                 System.IO.File.WriteAllBytes(folderBrowserDialog2.SelectedPath + @"\Interop.WUApiLib.dll", Properties.Resources.Interop_WUApiLib);
                 WshShellClass shell = new WshShellClass();
                 IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\GarenaPH LoLUpdater.lnk");
-                shortcut.TargetPath = folderBrowserDialog2.SelectedPath + @"\LoLUpdater.exe";
+                shortcut.TargetPath = folderBrowserDialog2.SelectedPath + "LoLUpdater.exe";
                 shortcut.Description = "LoL Patcher";
                 shortcut.Save();
             }
             if (folderBrowserDialog3.SelectedPath != null)
             {
 
-                System.IO.File.WriteAllBytes(folderBrowserDialog3.SelectedPath + @"LoLUpdater.exe", Properties.Resources.LoLUpdater);
-                System.IO.File.WriteAllBytes(folderBrowserDialog3.SelectedPath + @"Interop.WUApiLib.dll", Properties.Resources.Interop_WUApiLib);
+                System.IO.File.WriteAllBytes(folderBrowserDialog3.SelectedPath + @"\LoLUpdater.exe", Properties.Resources.LoLUpdater);
+                System.IO.File.WriteAllBytes(folderBrowserDialog3.SelectedPath + @"\Interop.WUApiLib.dll", Properties.Resources.Interop_WUApiLib);
                 WshShellClass shell = new WshShellClass();
                 IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\LoLUpdater.lnk");
-                shortcut.TargetPath = folderBrowserDialog3.SelectedPath + @"\LoLUpdater.exe";
+                shortcut.TargetPath = folderBrowserDialog3.SelectedPath + "LoLUpdater.exe";
                 shortcut.Description = "LoL Patcher";
                 shortcut.Save();
             }
