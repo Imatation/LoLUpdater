@@ -2,6 +2,8 @@ LoLUpdater/obj/*
 LoLUpdater/bin/*
 LoLUpdaterXP/obj/*
 LoLUpdaterXP/bin/*
+LoLUpdaterInstaller/bin/*
+LoLUpdaterInstaller/obj/*
 *.ide
 *.user
 *.suo

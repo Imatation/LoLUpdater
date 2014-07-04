@@ -82,6 +82,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Resources\Cg-3.1 April2012 Setup.exe" />
   </ItemGroup>
   <ItemGroup>
