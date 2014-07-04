@@ -1,4 +1,4 @@
-﻿<Window x:Name="Window" x:Class="LoLUpdater.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="LoLUpdater" Height="142" Width="490.669" ResizeMode="NoResize">
+﻿<Window x:Name="Window" x:Class="LoLUpdater.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="LoLUpdater" Height="142" Width="510.669" ResizeMode="NoResize">
     <Grid RenderTransformOrigin="0.484,0.308" Margin="0,0,4,-1">
         <RadioButton x:Name="Patch" Content="Patch" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top" Height="15" Width="94" ToolTip="Patches LoL with all the options" IsChecked="True"/>
         <RadioButton x:Name="Remove" Content="Remove Patch" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Height="15" Width="94" ToolTip="Removes the patch"/>
@@ -17,8 +17,9 @@
             <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Checked="CgGL_Checked"/>
             <CheckBox x:Name="tbb" Content="tbb.dll 4.2.0.0" ToolTip="Update for the Game"/>
         </ListBox>
-        <Button x:Name="OK" Content="OK" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Width="466" Click="OK_Click"/>
+        <Button x:Name="OK" Content="OK" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Width="481" Click="OK_Click"/>
         <GroupBox Header="Main" HorizontalAlignment="Left" VerticalAlignment="Top" Height="74" Width="108"/>
-        <Button x:Name="Clean" Content="Clean HDD" HorizontalAlignment="Left" Margin="397,32,0,0" VerticalAlignment="Top" Width="69" Click="Clean_Click" RenderTransformOrigin="0.45,1.5"/>
+        <Button x:Name="CleanHDD" Content="CleanHDD" HorizontalAlignment="Left" Margin="397,34,0,0" VerticalAlignment="Top" Width="75" Click="Clean_Click"/>
+        <CheckBox x:Name="Riot_Logs" Content="Delete old Logs" HorizontalAlignment="Left" Margin="397,10,0,0" VerticalAlignment="Top" Checked="Deleteoldlogs_Checked"/>
     </Grid>
 </Window>

@@ -1,4 +1,4 @@
-﻿<Window x:Name="Window" x:Class="LoLUpdater.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="LoLUpdater" Height="142" Width="506.669" ResizeMode="NoResize">
+﻿<Window x:Name="Window" x:Class="LoLUpdater.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="LoLUpdater" Height="142" Width="629.669" ResizeMode="NoResize">
     <Grid RenderTransformOrigin="0.484,0.308" Margin="0,0,4,-1">
         <RadioButton x:Name="Patch" Content="Patch" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top" Height="15" Width="94" ToolTip="Patches LoL with all the options" IsChecked="True"/>
         <RadioButton x:Name="Remove" Content="Remove Patch" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Height="15" Width="94" ToolTip="Removes the patch"/>
@@ -21,7 +21,12 @@
             <Button Content="Visual options" Click="Visual_Click" ToolTip="Disable Windows Visual enhancments"/>
             <Button Content="Clean HDD" Click="Clean_Click" ToolTip="Runs Clean Manager"/>
         </ListBox>
-        <Button x:Name="OK" Content="OK" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Width="466" Click="OK_Click"/>
+        <Button x:Name="OK" Content="OK" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top" Width="589" Click="OK_Click"/>
         <GroupBox Header="Main" HorizontalAlignment="Left" VerticalAlignment="Top" Height="74" Width="108"/>
+        <ListBox HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="125" Margin="485,10,0,0">
+            <CheckBox x:Name="WinUpdate" Content="Windows Update" Checked="WinUpdate_Checked"/>
+            <CheckBox x:Name="MouseHz_" Content="MouseHz+" Checked="MouseHz__Checked"/>
+            <CheckBox x:Name="Riot_Logs" Content="Delete Old Logs" Checked="Deleteoldlogs_Checked"/>
+        </ListBox>
     </Grid>
 </Window>
