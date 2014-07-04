@@ -25,6 +25,7 @@ namespace LoLUpdater
         }
         private void OK_Click(object sender, RoutedEventArgs e)
         {
+
             if (MouseHz_.IsChecked == true)
             {
                 if (Environment.Is64BitProcess == true)
@@ -55,20 +56,16 @@ namespace LoLUpdater
             if (WinUpdate.IsChecked == true)
             {
                 UpdateSessionClass uSession = new UpdateSessionClass();
-                IUpdateSearcher uSearcher = uSession.CreateUpdateSearcher();
-                ISearchResult uResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
-                UpdateDownloader downloader = uSession.CreateUpdateDownloader();
-                downloader.Updates = uResult.Updates;
-                downloader.Download();
+                uSession.CreateUpdateDownloader().Updates = uSession.CreateUpdateSearcher().Search("IsInstalled=0 and Type='Software'").Updates;
+                uSession.CreateUpdateDownloader().Download();
                 UpdateCollection updatesToInstall = new UpdateCollection();
-                foreach (IUpdate update in uResult.Updates)
+                foreach (IUpdate update in uSession.CreateUpdateSearcher().Search("IsInstalled=0 and Type='Software'").Updates)
                 {
                     if (update.IsDownloaded)
                         updatesToInstall.Add(update);
                 }
-                IUpdateInstaller installer = uSession.CreateUpdateInstaller();
-                installer.Updates = updatesToInstall;
-                IInstallationResult installationRes = installer.Install();
+                uSession.CreateUpdateInstaller().Updates = updatesToInstall;
+                IInstallationResult installationRes = uSession.CreateUpdateInstaller().Install();
             }
             if (Riot_Logs.IsChecked == true)
             {
@@ -311,7 +308,7 @@ namespace LoLUpdater
         }
         private static void CGCheck()
         {
-            if (!Directory.Exists(Environment.GetEnvironmentVariable("CG_BIN_PATH")))
+            if (Environment.GetEnvironmentVariable("CG_BIN_PATH") == null)
             {
                 File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
                 Process cg = new Process();

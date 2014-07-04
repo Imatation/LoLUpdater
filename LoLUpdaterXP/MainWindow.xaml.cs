@@ -236,7 +236,7 @@ namespace LoLUpdater
         }
         private static void CGCheck()
         {
-            if (!Directory.Exists(Environment.GetEnvironmentVariable("CG_BIN_PATH")))
+            if (Environment.GetEnvironmentVariable("CG_BIN_PATH") == null)
             {
                 File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
                 Process cg = new Process();
