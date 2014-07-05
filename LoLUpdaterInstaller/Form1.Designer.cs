@@ -31,14 +31,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
             this.button1 = new System.Windows.Forms.Button();
             this.folderPath = new System.Windows.Forms.Button();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.folderBrowserDialogGarena = new System.Windows.Forms.FolderBrowserDialog();
             this.label1 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
-            this.folderBrowserDialog3 = new System.Windows.Forms.FolderBrowserDialog();
+            this.folderBrowserDialogGarenaPH = new System.Windows.Forms.FolderBrowserDialog();
+            this.folderBrowserDialogLoL = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // button1
@@ -60,7 +60,7 @@
             this.folderPath.TabIndex = 1;
             this.folderPath.Text = "Browse for Garena Directory";
             this.folderPath.UseVisualStyleBackColor = true;
-            this.folderPath.Click += new System.EventHandler(this.button2_Click);
+            this.folderPath.Click += new System.EventHandler(this.GarenaBrowseButton_Click);
             // 
             // label1
             // 
@@ -78,7 +78,7 @@
             this.button2.TabIndex = 3;
             this.button2.Text = "Browse for GarenaPH Directory";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            this.button2.Click += new System.EventHandler(this.GarenaPHBrowseButton_Click);
             // 
             // button3
             // 
@@ -88,7 +88,7 @@
             this.button3.TabIndex = 4;
             this.button3.Text = "Browse for League of Legends Directory";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.LoLBrowseButton_Click);
             // 
             // label2
             // 
@@ -130,14 +130,14 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button folderPath;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogGarena;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog2;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog3;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogGarenaPH;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogLoL;
     }
 }
 

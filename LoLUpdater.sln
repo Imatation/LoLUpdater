@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoLUpdater", "LoLUpdater\Lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoLUpdaterXP", "LoLUpdaterXP\LoLUpdaterXP.csproj", "{ED81A36F-DB83-42D8-8D5A-231B505DF7E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoLUpdaterInstaller", "LoLUpdaterInstaller\LoLUpdaterInstaller.csproj", "{E265A5E5-A83C-4FDF-BAC1-AE64411FEF01}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|Any CPU = Release|Any CPU
@@ -18,7 +16,6 @@ Global
 		{4585C6CB-C391-474F-91EE-A1550B60685C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ED81A36F-DB83-42D8-8D5A-231B505DF7E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED81A36F-DB83-42D8-8D5A-231B505DF7E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E265A5E5-A83C-4FDF-BAC1-AE64411FEF01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

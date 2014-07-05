@@ -100,5 +100,8 @@
       <Private>True</Private>
     </COMReference>
   </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="logo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

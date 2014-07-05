@@ -25,7 +25,6 @@ namespace LoLUpdater
         }
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-
             if (MouseHz_.IsChecked == true)
             {
                 if (Environment.Is64BitProcess == true)

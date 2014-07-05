@@ -4,9 +4,6 @@
     {
         private static System.Resources.ResourceManager resourceMan;
         private static System.Globalization.CultureInfo resourceCulture;
-        internal Resources()
-        {
-        }
         internal static System.Resources.ResourceManager ResourceManager
         {
             get
