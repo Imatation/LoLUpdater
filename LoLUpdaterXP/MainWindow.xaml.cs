@@ -278,7 +278,6 @@ namespace LoLUpdater
         {
             MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater");
         }
-
         private void ping_Click(object sender, RoutedEventArgs e)
         {
             Ping ping = new Ping();
@@ -286,26 +285,13 @@ namespace LoLUpdater
             if (NA.IsSelected)
             {
                 reply = ping.Send("64.7.194.1");
-                if (reply.RoundtripTime > 0)
-                { Label.Content = reply.RoundtripTime.ToString(); }
-
-                else
-                {
-                    Label.Content = reply.Status.ToString();
-                }
+                Label.Content = reply.RoundtripTime.ToString();
             }
-            if (EUW.IsSelected)
+            else if (EUW.IsSelected)
             {
                 reply = ping.Send("190.93.245.13");
-                if (reply.RoundtripTime > 0)
-                { Label.Content = reply.RoundtripTime.ToString(); }
-
-                else
-                {
-                    Label.Content = reply.Status.ToString();
-                }
+                Label.Content = reply.RoundtripTime.ToString();
             }
         }
-    }
     }
 }
