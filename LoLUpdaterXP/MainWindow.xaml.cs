@@ -3,6 +3,8 @@ using System.IO;
 using System.Windows;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
+
 namespace LoLUpdater
 {
     public partial class MainWindow : Window
@@ -276,5 +278,34 @@ namespace LoLUpdater
         {
             MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater");
         }
+
+        private void ping_Click(object sender, RoutedEventArgs e)
+        {
+            Ping ping = new Ping();
+            PingReply reply;
+            if (NA.IsSelected)
+            {
+                reply = ping.Send("64.7.194.1");
+                if (reply.RoundtripTime > 0)
+                { Label.Content = reply.RoundtripTime.ToString(); }
+
+                else
+                {
+                    Label.Content = reply.Status.ToString();
+                }
+            }
+            if (EUW.IsSelected)
+            {
+                reply = ping.Send("190.93.245.13");
+                if (reply.RoundtripTime > 0)
+                { Label.Content = reply.RoundtripTime.ToString(); }
+
+                else
+                {
+                    Label.Content = reply.Status.ToString();
+                }
+            }
+        }
+    }
     }
 }

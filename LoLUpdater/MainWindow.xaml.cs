@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Linq;
 using WUApiLib;
 using Microsoft.Win32;
+using System.Net.NetworkInformation;
+
 namespace LoLUpdater
 {
     public partial class MainWindow : Window
@@ -20,7 +22,7 @@ namespace LoLUpdater
         {
             if (MessageBox.Show("We are unable to include the Adobe Flash Redistributable due to not having a licence, HOWEVER you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-              Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
+                Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
             }
         }
         private void OK_Click(object sender, RoutedEventArgs e)
@@ -362,6 +364,34 @@ namespace LoLUpdater
         private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater");
+        }
+
+        private void ping_Click(object sender, RoutedEventArgs e)
+        {
+            Ping ping = new Ping();
+            PingReply reply;
+            if (NA.IsSelected)
+            {
+                reply = ping.Send("64.7.194.1");
+                if (reply.RoundtripTime > 0)
+                { Label.Content = reply.RoundtripTime.ToString(); }
+
+                else
+                {
+                    Label.Content = reply.Status.ToString();
+                }
+            }
+            if (EUW.IsSelected)
+            {
+                reply = ping.Send("190.93.245.13");
+                if (reply.RoundtripTime > 0)
+                { Label.Content = reply.RoundtripTime.ToString(); }
+
+                else
+                {
+                    Label.Content = reply.Status.ToString();
+                }
+            }
         }
     }
 }
