@@ -10,6 +10,7 @@ namespace LoLUpdater
 {
     public partial class MainWindow : Window
     {
+        
         private void AdobeAIRBeta_Checked(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("We are unable to include any Adobe products, HOWEVER you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -68,7 +69,7 @@ namespace LoLUpdater
             }
             if (WinUpdate.IsChecked == true)
             {
-                UpdateSessionClass uSession = new UpdateSessionClass();
+                UpdateSession uSession = new UpdateSession();
                 IUpdateSearcher uSearcher = uSession.CreateUpdateSearcher();
                 ISearchResult uResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
                 UpdateDownloader downloader = uSession.CreateUpdateDownloader();
