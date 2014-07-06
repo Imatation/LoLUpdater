@@ -1,0 +1,10 @@
+* text=auto
+*.cs     text diff=csharp
+*.sln    text merge=union
+*.csproj text merge=union
+*.xaml   text
+*.ico   binary
+*.exe   binary
+*.dll   binary
+*.config   text
+*.resx  text
