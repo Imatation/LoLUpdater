@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿<Window x:Name="Window" x:Class="LoLUpdater.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="LoLUpdater" Height="156" Width="740.669" ResizeMode="NoResize">
+=======
+﻿<Window x:Name="Window" x:Class="LoLUpdater.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="LoLUpdater" Height="156" Width="740" ResizeMode="NoResize">
+>>>>>>> origin/master
     <Grid>
         <RadioButton x:Name="Patch" Content="Install" HorizontalAlignment="Left" Margin="10,17,0,0" VerticalAlignment="Top" Height="15" Width="94" ToolTip="Patches LoL with all the options" IsChecked="True"/>
         <RadioButton x:Name="Remove" Content="Uninstall" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Height="15" Width="104" ToolTip="Removes the patch"/>

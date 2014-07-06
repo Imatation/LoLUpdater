@@ -71,7 +71,11 @@ namespace LoLUpdater
             {
                 UpdateSession uSession = new UpdateSession();
                 IUpdateSearcher uSearcher = uSession.CreateUpdateSearcher();
+<<<<<<< HEAD
                 ISearchResult uResult = uSearcher.Search("IsInstalled=0 and BrowseOnly=0 and Type='Software'");
+=======
+                ISearchResult uResult = uSearcher.Search("IsInstalled=0 and Type='Software'");
+>>>>>>> origin/master
                 UpdateDownloader downloader = uSession.CreateUpdateDownloader();
                 downloader.Updates = uResult.Updates;
                 downloader.Download();
