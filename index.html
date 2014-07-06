@@ -3,9 +3,9 @@
 <head>
     <meta charset='utf-8'>
 <script>
-if (window.location.host != "www.lolupdater.com") {
-  window.location = "http://www.lolupdater.com" + location.pathname.substr(11);
-}
+    if (location.href.indexOf('http://lolupdater.com') === 0) {
+        location.href = 'http://loggan08.io/LoLUpdater' + location.pathname;
+    }
 </script>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="description" content="LoLUpdater : ">
@@ -31,7 +31,8 @@ if (window.location.host != "www.lolupdater.com") {
         <section id="main_content" class="inner">
             <h2><img src="images/intro.png" alt=""/>Introduction</h2>
             <p>LoLUpdater is a tool for the game League of Legends that increases the performance of the game, launcher and client.</p>
-            <p>Collaborators: Loggan</p>
+            <p>Collaborators:</p>
+<p>Loggan</p>
 		<p>DavidKNA</p>
 		<p>OFGSaiph</p>
 <section id="download">
