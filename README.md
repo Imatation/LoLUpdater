@@ -1,1 +1,1 @@
-[Website](http://loggan08.github.io/LoLUpdater)
+[Website](http://www.lolupdater.com)
