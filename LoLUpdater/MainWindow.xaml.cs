@@ -10,14 +10,14 @@ namespace LoLUpdater
 {
     public partial class MainWindow : Window
     {
-        private void AdobeAIRBeta_Checked(object sender, RoutedEventArgs e)
+        private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("We are unable to include any Adobe products, HOWEVER you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
             }
         }
-        private void FlashBeta_Checked(object sender, RoutedEventArgs e)
+        private void Flash_Checked(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("We are unable to include any Adobe products, HOWEVER you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
