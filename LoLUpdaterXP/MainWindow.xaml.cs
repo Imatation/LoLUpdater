@@ -149,16 +149,19 @@ namespace LoLUpdater
                 {
                     if (Cg.IsChecked == true)
                     {
+                        CGCheck();
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cg.dll"), Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cg.dll"), true);
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cg.dll"), Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cg.dll"), true);
                     }
                     if (CgGL.IsChecked == true)
                     {
+                        CGCheck();
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgGL.dll"), Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cgGL.dll"), true);
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgGL.dll"), Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cgGL.dll"), true);
                     }
                     if (CgD3D9.IsChecked == true)
                     {
+                        CGCheck();
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgD3D9.dll"), Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cgD3D9.dll"), true);
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgD3D9.dll"), Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cgD3D9.dll"), true);
                     }
@@ -193,18 +196,18 @@ namespace LoLUpdater
                 {
                     if (Cg.IsChecked == true)
                     {
-                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cg.dll"), Path.Combine("Game", "cg.dll"), true);
                         CGCheck();
+                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cg.dll"), Path.Combine("Game", "cg.dll"), true);
                     }
                     if (CgD3D9.IsChecked == true)
                     {
-                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgD3D9.dll"), Path.Combine("Game", "cgD3D9.dll"), true);
                         CGCheck();
+                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgD3D9.dll"), Path.Combine("Game", "cgD3D9.dll"), true);
                     }
                     if (CgGL.IsChecked == true)
                     {
-                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgCgGL.dll"), Path.Combine("Game", "cgCgGL.dll"), true);
                         CGCheck();
+                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgCgGL.dll"), Path.Combine("Game", "cgCgGL.dll"), true);
                     }
                     if (tbb.IsChecked == true)
                     {
