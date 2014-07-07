@@ -10,6 +10,7 @@ namespace LoLUpdater
 {
     public partial class MainWindow : Window
     {
+
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("We are unable to include any Adobe products, HOWEVER you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -17,6 +18,7 @@ namespace LoLUpdater
                 Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
             }
         }
+
         private void Flash_Checked(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("We are unable to include any Adobe products, HOWEVER you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -24,6 +26,7 @@ namespace LoLUpdater
                 Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
             }
         }
+
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             //Todo: add some sort of progress indication
@@ -31,6 +34,7 @@ namespace LoLUpdater
             {
                 Process.Start("SystemPropertiesPerformance.exe");
             }
+
             if (Clean.IsChecked == true)
             {
                 var cm = new ProcessStartInfo();
@@ -40,6 +44,7 @@ namespace LoLUpdater
                 process.StartInfo = cm;
                 process.Start();
             }
+
             if (MouseHz_.IsChecked == true)
             {
                 if (Environment.Is64BitProcess)
@@ -67,6 +72,7 @@ namespace LoLUpdater
                     process.Start();
                 }
             }
+
             // Todo: fix this using unsafe code
             if (WinUpdate.IsChecked == true)
             {
@@ -86,6 +92,7 @@ namespace LoLUpdater
                 installer.Updates = updatesToInstall;
                 IInstallationResult installationRes = installer.Install();
             }
+
             if (Riot_Logs.IsChecked == true)
             {
                 if (Directory.Exists("RADS"))
@@ -100,6 +107,7 @@ namespace LoLUpdater
                     }
                 }
             }
+
             if (!Directory.Exists("Backup"))
             {
                 Directory.CreateDirectory("Backup");
@@ -140,6 +148,7 @@ namespace LoLUpdater
                     File.Copy(Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Path.Combine("Backup", "Adobe AIR.dll"), true);
                 }
             }
+
             if (Patch.IsChecked == true)
             {
                 if (File.Exists(Path.Combine("Config", "game.cfg")))
@@ -303,6 +312,7 @@ namespace LoLUpdater
                     File.Copy(Path.Combine("Backup", "tbb.dll"), Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), true);
                     File.Copy(Path.Combine("Backup", "NPSWF32.dll"), Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "NPSWF32.dll"), true);
                     File.Copy(Path.Combine("Backup", "Adobe AIR.dll"), Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe AIR.dll"), true);
+                    
                     if (File.Exists(Path.Combine("Backup", "game.cfg")))
                     {
                         File.Copy(Path.Combine("Backup", "game.cfg"), Path.Combine("Config", "game.cfg"), true);
@@ -327,10 +337,13 @@ namespace LoLUpdater
                         File.Copy(Path.Combine("Backup", "GamePermanent_en_SG.cfg"), Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), true);
                     }
                 }
+
                 Directory.Delete("Backup", true);
             }
+
             MessageBox.Show("Finished!", "LoLUpdater");
         }
+
         private static void CGCheck()
         {
             if(Environment.Is64BitProcess == true)
@@ -364,23 +377,28 @@ namespace LoLUpdater
             cg.WaitForExit();
             File.Delete("Cg-3.1 April2012 Setup.exe");
         }
+
         private void MouseHz__Checked(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("This requires Admin privileges and only works with Windows 8/8.1", "LoLUpdater");
         }
+
         private void WinUpdate_Checked(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("This requires Admin privileges and might also take a while", "LoLUpdater");
         }
+
         private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater");
         }
+
         // Todo: Make this prettier and add more servers
         private void ping_Click(object sender, RoutedEventArgs e)
         {
             Ping ping = new Ping();
             PingReply reply;
+
             if (NA.IsSelected)
             {
                 reply = ping.Send("64.7.194.1");
