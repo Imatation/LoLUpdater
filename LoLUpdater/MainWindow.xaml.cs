@@ -66,7 +66,7 @@ namespace LoLUpdater
                     process.Start();
                 }
             }
-            // Causes warnings when compiled
+            // Todo: fix this using unsafe code
             if (WinUpdate.IsChecked == true)
             {
                 UpdateSession uSession = new UpdateSession();
@@ -375,6 +375,7 @@ namespace LoLUpdater
         {
             MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater");
         }
+        // Todo: Make this prettier and add more servers
         private void ping_Click(object sender, RoutedEventArgs e)
         {
             Ping ping = new Ping();

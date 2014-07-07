@@ -317,6 +317,7 @@ namespace LoLUpdater
         }
         private void ping_Click(object sender, RoutedEventArgs e)
         {
+            // Todo: add more servers and make this prettier
             Ping ping = new Ping();
             PingReply reply;
             if (NA.IsSelected)
