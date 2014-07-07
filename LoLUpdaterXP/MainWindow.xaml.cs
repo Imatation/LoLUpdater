@@ -152,7 +152,7 @@ namespace LoLUpdater
                     }
                     if (tbb.IsChecked == true)
                     {
-                        File.WriteAllBytes(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\deploy\tbb.dll", Properties.Resources.tbb);
+                        File.WriteAllBytes(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), Properties.Resources.tbb);
                     }
                     if (AdobeAIR.IsChecked == true)
                     {
