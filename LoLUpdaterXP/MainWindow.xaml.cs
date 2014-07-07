@@ -166,6 +166,7 @@ namespace LoLUpdater
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgD3D9.dll"), Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cgD3D9.dll"), true);
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgD3D9.dll"), Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cgD3D9.dll"), true);
                     }
+                    //Todo: this is broken on my comp for some reason
                     if (tbb.IsChecked == true)
                     {
                         File.WriteAllBytes(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), Properties.Resources.tbb);
