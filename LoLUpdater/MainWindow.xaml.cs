@@ -42,7 +42,7 @@ namespace LoLUpdater
             }
             if (MouseHz_.IsChecked == true)
             {
-                if (Environment.Is64BitProcess == true)
+                if (Environment.Is64BitProcess)
                 {
                     RegistryKey mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
                     mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), RegistryValueKind.String);
@@ -335,34 +335,34 @@ namespace LoLUpdater
         {
             if(Environment.Is64BitProcess == true)
             {
-                if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
+                string amd64Location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "NVIDIA Corporation", "Cg", "Bin", "cg.dll");
+
+                if (File.Exists(amd64Location))
                 {
-                    File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
-                    Process cg = new Process();
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
-                    startInfo.Arguments = "/silent";
-                    cg.StartInfo = startInfo;
-                    cg.Start();
-                    cg.WaitForExit();
-                    File.Delete("Cg-3.1 April2012 Setup.exe");
+                    return;
                 }
             }
             else
             {
-                if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
+                string x86Location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                    "NVIDIA Corporation", "Cg", "Bin", "cg.dll");
+
+                if (File.Exists(x86Location))
                 {
-                    File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
-                    Process cg = new Process();
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
-                    startInfo.Arguments = "/silent";
-                    cg.StartInfo = startInfo;
-                    cg.Start();
-                    cg.WaitForExit();
-                    File.Delete("Cg-3.1 April2012 Setup.exe");
+                    return;
                 }
             }
+
+            File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
+            Process cg = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
+            startInfo.Arguments = "/silent";
+            cg.StartInfo = startInfo;
+            cg.Start();
+            cg.WaitForExit();
+            File.Delete("Cg-3.1 April2012 Setup.exe");
         }
         private void MouseHz__Checked(object sender, RoutedEventArgs e)
         {
