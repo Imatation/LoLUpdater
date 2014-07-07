@@ -30,8 +30,6 @@
             <ComboBoxItem Name="NA" Content="NA"/>
         </ComboBox>
         <Button x:Name="ping" Content="Update ping" HorizontalAlignment="Left" Margin="594,58,0,0" VerticalAlignment="Top" Width="120" Click="ping_Click" ToolTip="Click here to update your ping"/>
-        <GroupBox Header="DLLs" HorizontalAlignment="Left" VerticalAlignment="Top" Height="87" Width="350" Margin="83,-4,0,0"/>
-        <GroupBox Header="Extras" HorizontalAlignment="Left" VerticalAlignment="Top" Height="88" Width="156" Margin="433,-5,0,0"/>
         <Label x:Name="Label_Copy" Content="Ping:" HorizontalAlignment="Left" Margin="594,32,0,0" VerticalAlignment="Top" Width="35"/>
     </Grid>
 </Window>
