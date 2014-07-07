@@ -204,9 +204,14 @@ namespace LoLUpdater
                 if (Directory.Exists("RADS"))
                 {
                     var releasePath = Path.Combine("RADS", "projects", "lol_launcher", "releases");
+                    var fullReleasePath = releasePath + @"\" + new DirectoryInfo(releasePath).GetDirectories().OrderByDescending(d => d.CreationTime)
+                        .FirstOrDefault() + @"\";
                     var solutionPath = Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases");
+                    var fullSolutionPath = solutionPath + @"\" + new DirectoryInfo(solutionPath).GetDirectories().OrderByDescending(d => d.CreationTime)
+                        .FirstOrDefault() + @"\";
                     var airClientPath = Path.Combine("RADS", "projects", "lol_air_client", "releases");
                     String programFiles;
+
                     if (Environment.Is64BitProcess == true)
                     {
                         programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
@@ -218,49 +223,62 @@ namespace LoLUpdater
 
                     if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
                     {
-                        CGCheck();
-                        var cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
-                        var cgPath = Path.Combine(cgBinPath, "cg.dll");
-                        var cgGLPath = Path.Combine(cgBinPath, "cgGL.dll");
-                        var CgD3D9Path = Path.Combine(cgBinPath, "cgD3D9.dll");
-                        var cgDeploy = Path.Combine("deploy", "cg.dll");
-                        var cgGLDeplay = Path.Combine("deploy", "cgGL.dll");
+                        if (CGCheck())
+                        {
+                            var cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+                            var cgPath = Path.Combine(cgBinPath, "cg.dll");
+                            var cgGLPath = Path.Combine(cgBinPath, "cgGL.dll");
+                            var CgD3D9Path = Path.Combine(cgBinPath, "cgD3D9.dll");
 
-                        if (Cg.IsChecked == true)
-                        {
-                            File.Copy(cgPath, releasePath + @"\" + new DirectoryInfo(releasePath).GetDirectories().OrderByDescending(d => d.CreationTime)
-                                .FirstOrDefault() + @"\" + cgDeploy, true);
-                            File.Copy(cgPath, solutionPath + @"\" + new DirectoryInfo(solutionPath).GetDirectories().OrderByDescending(d => d.CreationTime)
-                                .FirstOrDefault() + @"\" + cgDeploy, true);
-                        }
+                            string cgDeploy = "";
+                            string cgGLDeploy = "";
+                            string cgD3D9Deploy = "";
 
-                        if (CgGL.IsChecked == true)
-                        {
-                            File.Copy(cgGLPath, releasePath + @"\" + new DirectoryInfo(releasePath).GetDirectories().OrderByDescending(d => d.CreationTime)
-                                .FirstOrDefault() + @"\" + cgGLDeplay, true);
-                            File.Copy(cgGLPath, solutionPath + @"\" + new DirectoryInfo(solutionPath).GetDirectories().OrderByDescending(d => d.CreationTime
-                                ).FirstOrDefault() + @"\" + cgGLDeplay, true);
-                        }
-                        if (CgD3D9.IsChecked == true)
-                        {
-                            File.Copy(CgD3D9Path, releasePath + @"\" + new DirectoryInfo(releasePath).GetDirectories().OrderByDescending(d => d.CreationTime)
-                                .FirstOrDefault() + @"\" + Path.Combine("deploy", "cgD3D9.dll"), true);
-                            File.Copy(CgD3D9Path, solutionPath + @"\" + new DirectoryInfo(solutionPath).GetDirectories().OrderByDescending(d => d.CreationTime)
-                                .FirstOrDefault() + @"\" + Path.Combine("deploy", "cgD3D9.dll"), true);
-                        }
+                            if (Directory.Exists("RADS"))
+                            {
+                                cgDeploy = Path.Combine("deploy", "cg.dll");
+                                cgGLDeploy = Path.Combine("deploy", "cgGL.dll");
+                                cgD3D9Deploy = Path.Combine("deploy", "cgD3D9.dll");
+                            }
+                            else if (Directory.Exists("Game"))
+                            {
+                                cgDeploy = Path.Combine("Game", "cg.dll");
+                                cgGLDeploy = Path.Combine("Game", "cgGL.dll");
+                                cgD3D9Deploy = Path.Combine("Game", "cgD3D9.dll");
+                            }
+
+                            if (Cg.IsChecked == true)
+                            {
+                                File.Copy(cgPath, fullReleasePath + cgDeploy, true);
+                                File.Copy(cgPath, fullSolutionPath + cgDeploy, true);
+                            }
+
+                            if (CgGL.IsChecked == true)
+                            {
+                                File.Copy(cgGLPath, fullReleasePath + cgGLDeploy, true);
+                                File.Copy(cgGLPath, fullSolutionPath + cgGLDeploy, true);
+                            }
+
+                            if (CgD3D9.IsChecked == true)
+                            {
+                                File.Copy(CgD3D9Path, fullReleasePath + cgD3D9Deploy, true);
+                                File.Copy(CgD3D9Path, fullSolutionPath + cgD3D9Deploy, true);
+                            }
+                        } 
                     }
 
                     if (tbb.IsChecked == true)
                     {
-                        File.WriteAllBytes(solutionPath + @"\" + new DirectoryInfo(solutionPath).GetDirectories().OrderByDescending(d => d.CreationTime)
-                            .FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), Properties.Resources.tbb);
+                        File.WriteAllBytes(fullSolutionPath + Path.Combine("deploy", "tbb.dll"), Properties.Resources.tbb);
                     }
+
                     if (AdobeAIR.IsChecked == true)
                     {
                         File.Copy(Path.Combine(programFiles, "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"),
                             airClientPath + @"\" + new DirectoryInfo(airClientPath).GetDirectories().OrderByDescending(d => d.CreationTime)
                             .FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), true);
                     }
+
                     if (Flash.IsChecked == true)
                     {
                         File.Copy(Path.Combine(programFiles, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"),
@@ -270,6 +288,7 @@ namespace LoLUpdater
                 }
                 else if (Directory.Exists("Game"))
                 {
+
                     if (Cg.IsChecked == true)
                     {
                         CGCheck();
@@ -377,7 +396,7 @@ namespace LoLUpdater
             Application.Current.Shutdown();
         }
 
-        private static void CGCheck()
+        private static Boolean CGCheck()
         {
             if (Environment.Is64BitProcess == true)
             {
@@ -386,7 +405,7 @@ namespace LoLUpdater
 
                 if (File.Exists(amd64Location))
                 {
-                    return;                                                                                                 // Return if found, we don't
+                    return true;                                                                                                 // Return if found, we don't
                 }                                                                                                           // need to go any further.
             }
             else
@@ -396,7 +415,7 @@ namespace LoLUpdater
 
                 if (File.Exists(x86Location))
                 {
-                    return;
+                    return true;
                 }
             }
 
@@ -409,6 +428,7 @@ namespace LoLUpdater
             cg.Start();
             cg.WaitForExit();
             File.Delete("Cg-3.1 April2012 Setup.exe");
+            return false;
         }
 
         private void adobeAlert()
