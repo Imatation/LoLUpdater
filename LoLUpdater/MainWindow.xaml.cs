@@ -28,17 +28,18 @@ namespace LoLUpdater
 
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("We are unable to include any Adobe products, HOWEVER you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
-            }
+            adobeAlert();
         }
 
         private void Flash_Checked(object sender, RoutedEventArgs e)
         {
+            adobeAlert();
+        }
+
+        private void adobeAlert() {
             MessageBoxResult alertMessage = MessageBox.Show("We are unable to include any Adobe products, " +
                 "HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the" +
-                " installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo,MessageBoxImage.Question); 
+                " installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (alertMessage == MessageBoxResult.Yes)
             {
@@ -399,14 +400,27 @@ namespace LoLUpdater
 
         private void MouseHz__Checked(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("This requires Admin privileges and only works with Windows 8/8.1", "LoLUpdater",
-                MessageBoxButton.OK,MessageBoxImage.Information);
+            if (!UacHelper.IsProcessElevated)
+            {
+                MessageBox.Show("Error: Please run application as administrator.", "LoLUpdater",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MouseHz_.IsChecked = false;
+            }
         }
 
         private void WinUpdate_Checked(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("This requires Admin privileges and might also take a while", "LoLUpdater",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            if (!UacHelper.IsProcessElevated)
+            {
+                MessageBox.Show("Error: Please run application as administrator.", "LoLUpdater",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                WinUpdate.IsChecked = false;
+            }
+            else
+            {
+                MessageBox.Show("This will take some time.", "LoLUpdater",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)
