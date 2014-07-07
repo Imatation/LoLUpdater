@@ -1,15 +1,30 @@
-﻿using System;
-using System.IO;
-using System.Windows;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using WUApiLib;
-using Microsoft.Win32;
 using System.Net.NetworkInformation;
+using System.Windows;
+using WUApiLib;
 namespace LoLUpdater
 {
     public partial class MainWindow : Window
     {
+        public MainWindow()
+        {
+            Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            Version win8version = new Version(6, 2, 9200, 0);
+
+            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT &&
+                Environment.OSVersion.Version >= win8version)
+            {
+                MouseHz_.Visibility = Visibility.Visible;
+            }
+        }
 
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
@@ -21,7 +36,11 @@ namespace LoLUpdater
 
         private void Flash_Checked(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("We are unable to include any Adobe products, HOWEVER you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            MessageBoxResult alertMessage = MessageBox.Show("We are unable to include any Adobe products, " +
+                "HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the" +
+                " installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo,MessageBoxImage.Question); 
+
+            if (alertMessage == MessageBoxResult.Yes)
             {
                 Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
             }
@@ -341,20 +360,20 @@ namespace LoLUpdater
                 Directory.Delete("Backup", true);
             }
 
-            MessageBox.Show("Finished!", "LoLUpdater");
+            MessageBox.Show("Finished!", "LoLUpdater", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private static void CGCheck()
         {
             if(Environment.Is64BitProcess == true)
             {
-                string amd64Location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                    "NVIDIA Corporation", "Cg", "Bin", "cg.dll");
+                string amd64Location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),   // Store the path in a variable.
+                    "NVIDIA Corporation", "Cg", "Bin", "cg.dll");                                                           // It creates cleaner code.
 
                 if (File.Exists(amd64Location))
                 {
-                    return;
-                }
+                    return;                                                                                                 // Return if found, we don't
+                }                                                                                                           // need to go any further.
             }
             else
             {
@@ -367,8 +386,8 @@ namespace LoLUpdater
                 }
             }
 
-            File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
-            Process cg = new Process();
+            File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);                  // Extract and write the file
+            Process cg = new Process();                                               
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
             startInfo.Arguments = "/silent";
@@ -380,17 +399,20 @@ namespace LoLUpdater
 
         private void MouseHz__Checked(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("This requires Admin privileges and only works with Windows 8/8.1", "LoLUpdater");
+            MessageBox.Show("This requires Admin privileges and only works with Windows 8/8.1", "LoLUpdater",
+                MessageBoxButton.OK,MessageBoxImage.Information);
         }
 
         private void WinUpdate_Checked(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("This requires Admin privileges and might also take a while", "LoLUpdater");
+            MessageBox.Show("This requires Admin privileges and might also take a while", "LoLUpdater",
+                MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater");
+            MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater",
+                MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         // Todo: Make this prettier and add more servers
