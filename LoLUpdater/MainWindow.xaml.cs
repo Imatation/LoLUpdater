@@ -338,17 +338,35 @@ namespace LoLUpdater
         }
         private static void CGCheck()
         {
-            if (!File.Exists(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cg.dll")))
+            if(Environment.Is64BitProcess == true)
             {
-                File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
-                Process cg = new Process();
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
-                startInfo.Arguments = "/silent";
-                cg.StartInfo = startInfo;
-                cg.Start();
-                cg.WaitForExit();
-                File.Delete("Cg-3.1 April2012 Setup.exe");
+                if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
+                {
+                    File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
+                    Process cg = new Process();
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
+                    startInfo.Arguments = "/silent";
+                    cg.StartInfo = startInfo;
+                    cg.Start();
+                    cg.WaitForExit();
+                    File.Delete("Cg-3.1 April2012 Setup.exe");
+                }
+            }
+            else
+            {
+                if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
+                {
+                    File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
+                    Process cg = new Process();
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
+                    startInfo.Arguments = "/silent";
+                    cg.StartInfo = startInfo;
+                    cg.Start();
+                    cg.WaitForExit();
+                    File.Delete("Cg-3.1 April2012 Setup.exe");
+                }
             }
         }
         private void MouseHz__Checked(object sender, RoutedEventArgs e)

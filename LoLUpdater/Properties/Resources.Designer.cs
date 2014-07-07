@@ -1,4 +1,4 @@
-﻿namespace Properties
+﻿namespace LoLUpdater.Properties
 {
     internal class Resources
     {
@@ -8,9 +8,9 @@
         {
             get
             {
-                if (ReferenceEquals(resourceMan, null))
+                if (object.ReferenceEquals(resourceMan, null))
                 {
-                    resourceMan = new System.Resources.ResourceManager("Properties.Resources", typeof(Resources).Assembly);
+                    resourceMan = new System.Resources.ResourceManager("LoLUpdater.Properties.Resources", typeof(Resources).Assembly);
                 }
                 return resourceMan;
             }
