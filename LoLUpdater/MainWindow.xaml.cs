@@ -24,6 +24,40 @@ namespace LoLUpdater
             {
                 MouseHz_.Visibility = Visibility.Visible;
             }
+
+            if (!UacHelper.IsProcessElevated)
+            {
+                MouseHz_.IsEnabled = false;
+                WinUpdate.IsEnabled = false;
+                var result = MessageBox.Show("Certain features have been disabled. To enable all features, please run application " +
+                    "as administrator. Restart as administrator? You can disable these prompts from within Application Options", 
+                    "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Information);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    restartAsAdmin();
+                }
+                
+            }
+        }
+
+        private void restartAsAdmin()  // Closes the application and restarts as an administrator.
+        {
+            ProcessStartInfo proc = new ProcessStartInfo();
+            proc.UseShellExecute = true;
+            proc.WorkingDirectory = Environment.CurrentDirectory;
+            proc.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            proc.Verb = "runas";
+
+            try
+            {
+                Process.Start(proc);
+            }
+            catch
+            {
+                return;
+            }
+            Application.Current.Shutdown();
         }
 
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
@@ -396,31 +430,6 @@ namespace LoLUpdater
             cg.Start();
             cg.WaitForExit();
             File.Delete("Cg-3.1 April2012 Setup.exe");
-        }
-
-        private void MouseHz__Checked(object sender, RoutedEventArgs e)
-        {
-            if (!UacHelper.IsProcessElevated)
-            {
-                MessageBox.Show("Error: Please run application as administrator.", "LoLUpdater",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                MouseHz_.IsChecked = false;
-            }
-        }
-
-        private void WinUpdate_Checked(object sender, RoutedEventArgs e)
-        {
-            if (!UacHelper.IsProcessElevated)
-            {
-                MessageBox.Show("Error: Please run application as administrator.", "LoLUpdater",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                WinUpdate.IsChecked = false;
-            }
-            else
-            {
-                MessageBox.Show("This will take some time.", "LoLUpdater",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
-            }
         }
 
         private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)

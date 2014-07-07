@@ -18,10 +18,10 @@
         <Button x:Name="OK" Content="OK" HorizontalAlignment="Left" Margin="0,88,0,0" VerticalAlignment="Top" Width="714" Click="OK_Click"/>
         <GroupBox Header="Main" HorizontalAlignment="Left" VerticalAlignment="Top" Height="87" Width="83" Margin="0,-4,0,0"/>
         <ListBox HorizontalAlignment="Left" Height="64" VerticalAlignment="Top" Width="143" Margin="438,13,0,0" ToolTip="Deletes Riot Logs older than 7 days">
-            <CheckBox x:Name="WinUpdate" Content="Windows Update" Checked="WinUpdate_Checked" ToolTip="Performs a Windows Update"/>
+            <CheckBox x:Name="WinUpdate" Content="Windows Update" ToolTip="Performs a Windows Update"/>
             <CheckBox x:Name="Clean" Content="Clean HDD" ToolTip="Cleans the hardrive from temporary garbage files"/>
             <CheckBox x:Name="Visual" Content="Visual Options" ToolTip="Change how Windows looks"/>
-            <CheckBox x:Name="MouseHz_" Content="MouseHz+" Checked="MouseHz__Checked" ToolTip="Increases mouseHz to 500Hz, for a smoother mouse" Visibility="Hidden"/>
+            <CheckBox x:Name="MouseHz_" Content="MouseHz+" ToolTip="Increases mouseHz to 500Hz, for a smoother mouse" Visibility="Hidden"/>
             <CheckBox x:Name="Riot_Logs" Content="Delete Old Logs" Checked="Deleteoldlogs_Checked"/>
         </ListBox>
         <Label x:Name="Label" Content="" HorizontalAlignment="Left" Margin="629,32,0,0" VerticalAlignment="Top" Width="31" RenderTransformOrigin="4.194,0.538"/>
