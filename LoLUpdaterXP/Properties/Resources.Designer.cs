@@ -15,17 +15,6 @@
                 return resourceMan;
             }
         }
-        internal static System.Globalization.CultureInfo Culture
-        {
-            get
-            {
-                return resourceCulture;
-            }
-            set
-            {
-                resourceCulture = value;
-            }
-        }
         internal static byte[] Cg_3_1_April2012_Setup
         {
             get
