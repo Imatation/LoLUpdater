@@ -26,6 +26,7 @@ namespace LoLUpdater
         }
         private void OK_Click(object sender, RoutedEventArgs e)
         {
+            //Todo: add some sort of progress indication
             if (Visual.IsChecked == true)
             {
                 Process.Start("SystemPropertiesPerformance.exe");
