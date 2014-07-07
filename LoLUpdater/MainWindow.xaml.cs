@@ -66,6 +66,7 @@ namespace LoLUpdater
                     process.Start();
                 }
             }
+            // Causes warnings when compiled
             if (WinUpdate.IsChecked == true)
             {
                 UpdateSession uSession = new UpdateSession();
@@ -177,12 +178,24 @@ namespace LoLUpdater
                 }
                 if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Pando Networks", "Media Booster", "uninst.exe")))
                 {
-                    var PMB = new ProcessStartInfo();
-                    var process = new Process();
-                    PMB.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Pando Networks", "Media Booster", "uninst.exe");
-                    PMB.Arguments = "/silent";
-                    process.StartInfo = PMB;
-                    process.Start();
+                    if (Environment.Is64BitProcess == true)
+                    {
+                        var PMB = new ProcessStartInfo();
+                        var process = new Process();
+                        PMB.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Pando Networks", "Media Booster", "uninst.exe");
+                        PMB.Arguments = "/silent";
+                        process.StartInfo = PMB;
+                        process.Start();
+                    }
+                    else
+                    {
+                        var PMB = new ProcessStartInfo();
+                        var process = new Process();
+                        PMB.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Pando Networks", "Media Booster", "uninst.exe");
+                        PMB.Arguments = "/silent";
+                        process.StartInfo = PMB;
+                        process.Start();
+                    }
                 }
                 if (Directory.Exists("RADS"))
                 {
