@@ -30,34 +30,14 @@ namespace LoLUpdater
                 MouseHz_.IsEnabled = false;
                 WinUpdate.IsEnabled = false;
                 var result = MessageBox.Show("Certain features have been disabled. To enable all features, please run application " +
-                    "as administrator. Restart as administrator? You can disable these prompts from within Application Options", 
+                    "as administrator. Restart as administrator? You can disable these prompts from within Application Options",
                     "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Information);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     restartAsAdmin();
                 }
-                
             }
-        }
-
-        private void restartAsAdmin()  // Closes the application and restarts as an administrator.
-        {
-            ProcessStartInfo proc = new ProcessStartInfo();
-            proc.UseShellExecute = true;
-            proc.WorkingDirectory = Environment.CurrentDirectory;
-            proc.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            proc.Verb = "runas";
-
-            try
-            {
-                Process.Start(proc);
-            }
-            catch
-            {
-                return;
-            }
-            Application.Current.Shutdown();
         }
 
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
@@ -70,14 +50,27 @@ namespace LoLUpdater
             adobeAlert();
         }
 
-        private void adobeAlert() {
-            MessageBoxResult alertMessage = MessageBox.Show("We are unable to include any Adobe products, " +
-                "HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the" +
-                " installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question);
+        private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
 
-            if (alertMessage == MessageBoxResult.Yes)
+        // Todo: Make this prettier and add more servers
+        private void ping_Click(object sender, RoutedEventArgs e)
+        {
+            Ping ping = new Ping();
+            PingReply reply;
+
+            if (NA.IsSelected)
             {
-                Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
+                reply = ping.Send("64.7.194.1");
+                Label.Content = reply.RoundtripTime.ToString();
+            }
+            else if (EUW.IsSelected)
+            {
+                reply = ping.Send("190.93.245.13");
+                Label.Content = reply.RoundtripTime.ToString();
             }
         }
 
@@ -91,75 +84,22 @@ namespace LoLUpdater
 
             if (Clean.IsChecked == true)
             {
-                var cm = new ProcessStartInfo();
-                var process = new Process();
-                cm.FileName = "cleanmgr.exe";
-                cm.Arguments = "sagerun:1";
-                process.StartInfo = cm;
-                process.Start();
+                runCleanManager();
             }
 
             if (MouseHz_.IsChecked == true)
             {
-                if (Environment.Is64BitProcess)
-                {
-                    RegistryKey mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-                    mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), RegistryValueKind.String);
-                    var cmd = new ProcessStartInfo();
-                    var process = new Process();
-                    cmd.FileName = "cmd.exe";
-                    cmd.Verb = "runas";
-                    cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
-                    process.StartInfo = cmd;
-                    process.Start();
-                }
-                else
-                {
-                    RegistryKey mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-                    mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), RegistryValueKind.String);
-                    var cmd = new ProcessStartInfo();
-                    var process = new Process();
-                    cmd.FileName = "cmd.exe";
-                    cmd.Verb = "runas";
-                    cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
-                    process.StartInfo = cmd;
-                    process.Start();
-                }
+                handleMouseHz();
             }
 
-            // Todo: fix this using unsafe code
             if (WinUpdate.IsChecked == true)
             {
-                UpdateSession uSession = new UpdateSession();
-                IUpdateSearcher uSearcher = uSession.CreateUpdateSearcher();
-                ISearchResult uResult = uSearcher.Search("IsInstalled=0 and BrowseOnly=0 and Type='Software'");
-                UpdateDownloader downloader = uSession.CreateUpdateDownloader();
-                downloader.Updates = uResult.Updates;
-                downloader.Download();
-                UpdateCollection updatesToInstall = new UpdateCollection();
-                foreach (IUpdate update in uResult.Updates)
-                {
-                    if (update.IsDownloaded)
-                        updatesToInstall.Add(update);
-                }
-                IUpdateInstaller installer = uSession.CreateUpdateInstaller();
-                installer.Updates = updatesToInstall;
-                IInstallationResult installationRes = installer.Install();
+                handleWindowsUpdate();
             }
 
             if (Riot_Logs.IsChecked == true)
             {
-                if (Directory.Exists("RADS"))
-                {
-                    string[] files = Directory.GetFiles("Logs");
-
-                    foreach (string file in files)
-                    {
-                        FileInfo fi = new FileInfo(file);
-                        if (fi.LastAccessTime < DateTime.Now.AddDays(-7))
-                            fi.Delete();
-                    }
-                }
+                handleRiotLogs();
             }
 
             if (!Directory.Exists("Backup"))
@@ -263,49 +203,69 @@ namespace LoLUpdater
                 }
                 if (Directory.Exists("RADS"))
                 {
-                    if (Cg.IsChecked == true)
+                    var releasePath = Path.Combine("RADS", "projects", "lol_launcher", "releases");
+                    var solutionPath = Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases");
+                    var airClientPath = Path.Combine("RADS", "projects", "lol_air_client", "releases");
+                    String programFiles;
+                    if (Environment.Is64BitProcess == true)
+                    {
+                        programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+                    }
+                    else
+                    {
+                        programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                    }
+
+                    if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
                     {
                         CGCheck();
-                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cg.dll"), Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cg.dll"), true);
-                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cg.dll"), Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cg.dll"), true);
+                        var cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+                        var cgPath = Path.Combine(cgBinPath, "cg.dll");
+                        var cgGLPath = Path.Combine(cgBinPath, "cgGL.dll");
+                        var CgD3D9Path = Path.Combine(cgBinPath, "cgD3D9.dll");
+                        var cgDeploy = Path.Combine("deploy", "cg.dll");
+                        var cgGLDeplay = Path.Combine("deploy", "cgGL.dll");
+
+                        if (Cg.IsChecked == true)
+                        {
+                            File.Copy(cgPath, releasePath + @"\" + new DirectoryInfo(releasePath).GetDirectories().OrderByDescending(d => d.CreationTime)
+                                .FirstOrDefault() + @"\" + cgDeploy, true);
+                            File.Copy(cgPath, solutionPath + @"\" + new DirectoryInfo(solutionPath).GetDirectories().OrderByDescending(d => d.CreationTime)
+                                .FirstOrDefault() + @"\" + cgDeploy, true);
+                        }
+
+                        if (CgGL.IsChecked == true)
+                        {
+                            File.Copy(cgGLPath, releasePath + @"\" + new DirectoryInfo(releasePath).GetDirectories().OrderByDescending(d => d.CreationTime)
+                                .FirstOrDefault() + @"\" + cgGLDeplay, true);
+                            File.Copy(cgGLPath, solutionPath + @"\" + new DirectoryInfo(solutionPath).GetDirectories().OrderByDescending(d => d.CreationTime
+                                ).FirstOrDefault() + @"\" + cgGLDeplay, true);
+                        }
+                        if (CgD3D9.IsChecked == true)
+                        {
+                            File.Copy(CgD3D9Path, releasePath + @"\" + new DirectoryInfo(releasePath).GetDirectories().OrderByDescending(d => d.CreationTime)
+                                .FirstOrDefault() + @"\" + Path.Combine("deploy", "cgD3D9.dll"), true);
+                            File.Copy(CgD3D9Path, solutionPath + @"\" + new DirectoryInfo(solutionPath).GetDirectories().OrderByDescending(d => d.CreationTime)
+                                .FirstOrDefault() + @"\" + Path.Combine("deploy", "cgD3D9.dll"), true);
+                        }
                     }
-                    if (CgGL.IsChecked == true)
-                    {
-                        CGCheck();
-                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgGL.dll"), Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cgGL.dll"), true);
-                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgGL.dll"), Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cgGL.dll"), true);
-                    }
-                    if (CgD3D9.IsChecked == true)
-                    {
-                        CGCheck();
-                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgD3D9.dll"), Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cgD3D9.dll"), true);
-                        File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgD3D9.dll"), Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "cgD3D9.dll"), true);
-                    }
+
                     if (tbb.IsChecked == true)
                     {
-                        File.WriteAllBytes(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), Properties.Resources.tbb);
+                        File.WriteAllBytes(solutionPath + @"\" + new DirectoryInfo(solutionPath).GetDirectories().OrderByDescending(d => d.CreationTime)
+                            .FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), Properties.Resources.tbb);
                     }
                     if (AdobeAIR.IsChecked == true)
                     {
-                        if (Environment.Is64BitProcess == true)
-                        {
-                            File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), true);
-                        }
-                        else
-                        {
-                            File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), true);
-                        }
+                        File.Copy(Path.Combine(programFiles, "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"),
+                            airClientPath + @"\" + new DirectoryInfo(airClientPath).GetDirectories().OrderByDescending(d => d.CreationTime)
+                            .FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), true);
                     }
                     if (Flash.IsChecked == true)
                     {
-                        if (Environment.Is64BitProcess == true)
-                        {
-                            File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Common Files", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"), Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"), true);
-                        }
-                        else
-                        {
-                            File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Common Files", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"), Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"), true);
-                        }
+                        File.Copy(Path.Combine(programFiles, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"),
+                            airClientPath + @"\" + new DirectoryInfo(airClientPath).GetDirectories().OrderByDescending(d => d.CreationTime)
+                            .FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"), true);
                     }
                 }
                 else if (Directory.Exists("Game"))
@@ -366,7 +326,7 @@ namespace LoLUpdater
                     File.Copy(Path.Combine("Backup", "tbb.dll"), Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), true);
                     File.Copy(Path.Combine("Backup", "NPSWF32.dll"), Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "NPSWF32.dll"), true);
                     File.Copy(Path.Combine("Backup", "Adobe AIR.dll"), Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe AIR.dll"), true);
-                    
+
                     if (File.Exists(Path.Combine("Backup", "game.cfg")))
                     {
                         File.Copy(Path.Combine("Backup", "game.cfg"), Path.Combine("Config", "game.cfg"), true);
@@ -398,9 +358,28 @@ namespace LoLUpdater
             MessageBox.Show("Finished!", "LoLUpdater", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        private void restartAsAdmin()  // Closes the application and restarts as an administrator.
+        {
+            ProcessStartInfo proc = new ProcessStartInfo();
+            proc.UseShellExecute = true;
+            proc.WorkingDirectory = Environment.CurrentDirectory;
+            proc.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            proc.Verb = "runas";
+
+            try
+            {
+                Process.Start(proc);
+            }
+            catch
+            {
+                return;
+            }
+            Application.Current.Shutdown();
+        }
+
         private static void CGCheck()
         {
-            if(Environment.Is64BitProcess == true)
+            if (Environment.Is64BitProcess == true)
             {
                 string amd64Location = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),   // Store the path in a variable.
                     "NVIDIA Corporation", "Cg", "Bin", "cg.dll");                                                           // It creates cleaner code.
@@ -422,7 +401,7 @@ namespace LoLUpdater
             }
 
             File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);                  // Extract and write the file
-            Process cg = new Process();                                               
+            Process cg = new Process();
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
             startInfo.Arguments = "/silent";
@@ -432,28 +411,87 @@ namespace LoLUpdater
             File.Delete("Cg-3.1 April2012 Setup.exe");
         }
 
-        private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)
+        private void adobeAlert()
         {
-            MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater",
-                MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+            MessageBoxResult alertMessage = MessageBox.Show("We are unable to include any Adobe products, " +
+                "HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the" +
+                " installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-        // Todo: Make this prettier and add more servers
-        private void ping_Click(object sender, RoutedEventArgs e)
-        {
-            Ping ping = new Ping();
-            PingReply reply;
-
-            if (NA.IsSelected)
+            if (alertMessage == MessageBoxResult.Yes)
             {
-                reply = ping.Send("64.7.194.1");
-                Label.Content = reply.RoundtripTime.ToString();
-            }
-            else if (EUW.IsSelected)
-            {
-                reply = ping.Send("190.93.245.13");
-                Label.Content = reply.RoundtripTime.ToString();
+                Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
             }
         }
+
+        private void runCleanManager()
+        {
+            var cm = new ProcessStartInfo();
+            var process = new Process();
+            cm.FileName = "cleanmgr.exe";
+            cm.Arguments = "sagerun:1";
+            process.StartInfo = cm;
+            process.Start();
+        }
+
+        private void handleMouseHz()
+        {
+            RegistryKey mousehz;
+
+            if (Environment.Is64BitProcess)
+            {
+                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT",
+                    "CurrentVersion", "AppCompatFlags", "Layers"));
+            }
+            else
+            {
+                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft",
+                    "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+            }
+
+            mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                "explorer.exe"), RegistryValueKind.String);
+            var cmd = new ProcessStartInfo();
+            var process = new Process();
+            cmd.FileName = "cmd.exe";
+            cmd.Verb = "runas";
+            cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
+            process.StartInfo = cmd;
+            process.Start();
+        }
+
+        private void handleWindowsUpdate()
+        {
+            UpdateSession uSession = new UpdateSession();
+            IUpdateSearcher uSearcher = uSession.CreateUpdateSearcher();
+            ISearchResult uResult = uSearcher.Search("IsInstalled=0 and BrowseOnly=0 and Type='Software'");
+            UpdateDownloader downloader = uSession.CreateUpdateDownloader();
+            downloader.Updates = uResult.Updates;
+            downloader.Download();
+            UpdateCollection updatesToInstall = new UpdateCollection();
+            foreach (IUpdate update in uResult.Updates)
+            {
+                if (update.IsDownloaded)
+                    updatesToInstall.Add(update);
+            }
+            IUpdateInstaller installer = uSession.CreateUpdateInstaller();
+            installer.Updates = updatesToInstall;
+            IInstallationResult installationRes = installer.Install();
+        }
+
+        private void handleRiotLogs()
+        {
+            if (Directory.Exists("RADS"))
+            {
+                string[] files = Directory.GetFiles("Logs");
+
+                foreach (string file in files)
+                {
+                    FileInfo fi = new FileInfo(file);
+                    if (fi.LastAccessTime < DateTime.Now.AddDays(-7))
+                        fi.Delete();
+                }
+            }
+        }
+
     }
 }
