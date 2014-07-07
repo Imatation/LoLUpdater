@@ -194,14 +194,17 @@ namespace LoLUpdater
                     if (Cg.IsChecked == true)
                     {
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cg.dll"), Path.Combine("Game", "cg.dll"), true);
+                        CGCheck();
                     }
                     if (CgD3D9.IsChecked == true)
                     {
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgD3D9.dll"), Path.Combine("Game", "cgD3D9.dll"), true);
+                        CGCheck();
                     }
                     if (CgGL.IsChecked == true)
                     {
                         File.Copy(Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH"), "cgCgGL.dll"), Path.Combine("Game", "cgCgGL.dll"), true);
+                        CGCheck();
                     }
                     if (tbb.IsChecked == true)
                     {
@@ -271,18 +274,6 @@ namespace LoLUpdater
                 Directory.Delete("Backup", true);
             }
             MessageBox.Show("Finished!", "LoLUpdater");
-        }
-        private void CgD3D9_Checked(object sender, RoutedEventArgs e)
-        {
-            CGCheck();
-        }
-        private void CgGL_Checked(object sender, RoutedEventArgs e)
-        {
-            CGCheck();
-        }
-        private void Cg_Checked(object sender, RoutedEventArgs e)
-        {
-            CGCheck();
         }
         private static void CGCheck()
         {
