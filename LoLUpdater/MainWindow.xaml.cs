@@ -56,6 +56,11 @@ namespace LoLUpdater
         public MainWindow()
         {
             Loaded += MainWindow_Loaded;
+
+            System.Windows.Threading.DispatcherTimer pingTimer = new System.Windows.Threading.DispatcherTimer();
+            pingTimer.Tick += new EventHandler(pingTimer_Tick);
+            pingTimer.Interval = new TimeSpan(0, 0, 5);
+            pingTimer.Start();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -81,6 +86,13 @@ namespace LoLUpdater
                     restartAsAdmin();
                 }
             }
+
+            handlePing();
+        }
+
+        private void pingTimer_Tick(object sender, EventArgs e)
+        {
+            handlePing();
         }
 
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
@@ -102,19 +114,7 @@ namespace LoLUpdater
         // Todo: Make this prettier and add more servers
         private void ping_Click(object sender, RoutedEventArgs e)
         {
-            Ping ping = new Ping();
-            PingReply reply;
-
-            if (NA.IsSelected)
-            {
-                reply = ping.Send("64.7.194.1");
-                Label.Content = reply.RoundtripTime.ToString();
-            }
-            else if (EUW.IsSelected)
-            {
-                reply = ping.Send("190.93.245.13");
-                Label.Content = reply.RoundtripTime.ToString();
-            }
+            handlePing();
         }
 
         private void OK_Click(object sender, RoutedEventArgs e)
@@ -556,6 +556,23 @@ namespace LoLUpdater
                     if (fi.LastAccessTime < DateTime.Now.AddDays(-7))
                         fi.Delete();
                 }
+            }
+        }
+
+        private void handlePing()
+        {
+            Ping ping = new Ping();
+            PingReply reply;
+
+            if (NA.IsSelected)
+            {
+                reply = ping.Send("64.7.194.1");
+                Label.Content = reply.RoundtripTime.ToString();
+            }
+            else if (EUW.IsSelected)
+            {
+                reply = ping.Send("190.93.245.13");
+                Label.Content = reply.RoundtripTime.ToString();
             }
         }
 
