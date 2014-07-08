@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using WUApiLib;
 namespace LoLUpdater
 {
@@ -123,11 +124,27 @@ namespace LoLUpdater
             handlePing();
         }
 
+        public void DoEvents()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
+                new DispatcherOperationCallback(ExitFrame), frame);
+            Dispatcher.PushFrame(frame);
+        }
+
+        public object ExitFrame(object f)
+        {
+            ((DispatcherFrame)f).Continue = false;
+
+            return null;
+        }
+
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             populateVariableLocations();
             taskProgress.IsIndeterminate = true;
             taskProgress.Tag = "Openning System Performance Properties...";
+            DoEvents();
 
             if (Visual.IsChecked == true)
             {
@@ -294,8 +311,9 @@ namespace LoLUpdater
         /// This method checks if the user wishes to install the CG toolkit, if so
         /// it installs each option the user selects.
         /// </summary>
-        private void handleCGInstall()
+        private void handleCGInstall() // The error checking needs to be revised. Perhaps a variable that denotes the error if it is unresolvable, and relays it to the user.
         {
+            try {  
             if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
             {
                 if (CGCheck())
@@ -316,6 +334,25 @@ namespace LoLUpdater
                     {
                         File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
                         File.Copy(CgD3D9Path, fullSolutionPath + finalCg3D9, true);
+                    }
+                }
+            }
+            }
+            catch (System.IO.IOException)
+            {
+                var output = MessageBox.Show("Error: League of Legends is currently open. Would you like to automatically close it?","Error",MessageBoxButton.YesNo,MessageBoxImage.Error);
+                if (output == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+	                    Process[] proc = Process.GetProcessesByName("LoLLauncher");
+	                    proc[0].Kill();
+                        proc[0].WaitForExit();
+                        handleCGInstall();
+                    }
+                    catch (Exception)
+                    {
+
                     }
                 }
             }
