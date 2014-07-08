@@ -8,8 +8,6 @@ namespace LoLUpdater
 {
     public static class UacHelper
     {
-        private const string uacRegistryKey = Path.Combine("Software", "Microsoft", "Windows", "CurrentVersion", "Policies", "System");
-        private const string uacRegistryKey32 = Path.Combine("Software", "WoW6432Node", "Microsoft", "Windows", "CurrentVersion", "Policies", "System");
         private const string uacRegistryValue = "EnableLUA";
 
         private static uint STANDARD_RIGHTS_READ = 0x00020000;
@@ -71,7 +69,7 @@ namespace LoLUpdater
         {
             get
             {
-                using (RegistryKey uacKey = Registry.LocalMachine.OpenSubKey(uacRegistryKey, false))
+                using (RegistryKey uacKey = Registry.LocalMachine.OpenSubKey(Path.Combine("Software", "Microsoft", "Windows", "CurrentVersion", "Policies", "System"), false))
                 {
                     bool result = uacKey.GetValue(uacRegistryValue).Equals(1);
                     return result;
