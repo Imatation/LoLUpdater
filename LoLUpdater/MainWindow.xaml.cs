@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Windows;
+using System.Windows.Controls;
 using WUApiLib;
 namespace LoLUpdater
 {
@@ -70,7 +71,7 @@ namespace LoLUpdater
             if (System.Environment.OSVersion.Platform == PlatformID.Win32NT &&
                 Environment.OSVersion.Version >= win8version)
             {
-                MouseHz_.Visibility = Visibility.Visible;
+                MouseHz_.IsEnabled = true;
             }
 
             if (!UacHelper.IsProcessElevated)
@@ -120,6 +121,7 @@ namespace LoLUpdater
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             populateVariableLocations();
+            taskProgress.IsIndeterminate = true;
             taskProgress.Tag = "Openning System Performance Properties...";
 
             if (Visual.IsChecked == true)
@@ -127,7 +129,6 @@ namespace LoLUpdater
                 Process.Start("SystemPropertiesPerformance.exe");
             }
 
-            taskProgress.Value = 10;
             taskProgress.Tag = "Openning Disk Cleanup...";
 
             if (Clean.IsChecked == true)
@@ -135,7 +136,6 @@ namespace LoLUpdater
                 runCleanManager();
             }
 
-            taskProgress.Value = 20;
             taskProgress.Tag = "Setting Up Mouse Hz Adjustment...";
 
             if (MouseHz_.IsChecked == true)
@@ -143,7 +143,6 @@ namespace LoLUpdater
                 handleMouseHz();
             }
 
-            taskProgress.Value = 30;
             taskProgress.Tag = "Setting Up Windows Update...";
 
             if (WinUpdate.IsChecked == true)
@@ -151,7 +150,6 @@ namespace LoLUpdater
                 handleWindowsUpdate();
             }
 
-            taskProgress.Value = 40;
             taskProgress.Tag = "Deleting Riot Logs...";
 
             if (Riot_Logs.IsChecked == true)
@@ -159,7 +157,6 @@ namespace LoLUpdater
                 handleRiotLogs();
             }
 
-            taskProgress.Value = 50;
             taskProgress.Tag = "Performing Backup...";
 
             if (!Directory.Exists("Backup"))
@@ -167,7 +164,6 @@ namespace LoLUpdater
                 handleBackup();
             }
 
-            taskProgress.Value = 70;
             taskProgress.Tag = "Patching...";
 
             if (Patch.IsChecked == true)
@@ -182,8 +178,9 @@ namespace LoLUpdater
                 taskProgress.Tag = "Removing Patch...";
                 handleUninstall();
             }
-            taskProgress.Value = 100;
 
+            taskProgress.IsIndeterminate = false;
+            taskProgress.Value = 100;
             taskProgress.Tag = "All Processes Completed Successfully!";
         }
 
@@ -595,6 +592,62 @@ namespace LoLUpdater
                 reply = ping.Send("190.93.245.13");
                 Label.Content = reply.RoundtripTime.ToString();
             }
+        }
+
+        private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            handlePing();
+        }
+
+        private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            var chkBox = (CheckBox)sender;
+            switch (chkBox.Name)
+            {
+                case "AdobeAIR":
+                    lblDescription.Text = "TODO: SET DESCRIPTION FOR ADOBE AIR";
+                    break;
+                case "Flash":
+                    lblDescription.Text = "TODO: SET DESCRIPTION FOR ADOBE FLASH";
+                    break;
+                case "Cg":
+                    lblDescription.Text = "TODO: SET DESCRIPTION FOR CG";
+                    break;
+                case "CgD3D9":
+                    lblDescription.Text = "TODO: SET DESCRIPTION FOR CGD3D9";
+                    break;
+                case "CgGL":
+                    lblDescription.Text = "TODO: SET DESCRIPTION CGGL";
+                    break;
+                case "tbb":
+                    lblDescription.Text = "TODO: SET DESCRIPTION FOR TBB";
+                    break;
+                case "WinUpdate":
+                    lblDescription.Text = "TODO: SET DESCRIPTION FOR WINDOWS UPDATE";
+                    break;
+                case "Clean":
+                    lblDescription.Text = "TODO: SET DESCRIPTION FOR DISK CLEANUP";
+                    break;
+                case "Visual":
+                    lblDescription.Text = "TODO: SET DESCRIPTION FOR VISUAL STYLES";
+                    break;
+                case "MouseHz_":
+                    lblDescription.Text = "TODO: SET DESCRIPTION FOR MOUSE HZ";
+                    break;
+                case "Riot_Logs":
+                    lblDescription.Text = "TODO: SET DESCRIPTION FOR RIOT LOGS";
+                    break;
+            }
+        }
+
+        private void chkOption_MouseExit(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            lblDescription.Text = "";
+        }
+
+        private void btnOptions_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
     }
