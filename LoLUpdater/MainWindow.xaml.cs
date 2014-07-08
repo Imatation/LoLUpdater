@@ -605,37 +605,37 @@ namespace LoLUpdater
             switch (chkBox.Name)
             {
                 case "AdobeAIR":
-                    lblDescription.Text = "TODO: SET DESCRIPTION FOR ADOBE AIR";
+                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching.";
                     break;
                 case "Flash":
-                    lblDescription.Text = "TODO: SET DESCRIPTION FOR ADOBE FLASH";
+                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching.";
                     break;
                 case "Cg":
-                    lblDescription.Text = "TODO: SET DESCRIPTION FOR CG";
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel";
                     break;
                 case "CgD3D9":
-                    lblDescription.Text = "TODO: SET DESCRIPTION FOR CGD3D9";
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel";
                     break;
                 case "CgGL":
-                    lblDescription.Text = "TODO: SET DESCRIPTION CGGL";
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel";
                     break;
                 case "tbb":
-                    lblDescription.Text = "TODO: SET DESCRIPTION FOR TBB";
+                    lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game";
                     break;
                 case "WinUpdate":
-                    lblDescription.Text = "TODO: SET DESCRIPTION FOR WINDOWS UPDATE";
+                    lblDescription.Text = "Performs a Windows Update on the computer, might take some time.";
                     break;
                 case "Clean":
-                    lblDescription.Text = "TODO: SET DESCRIPTION FOR DISK CLEANUP";
+                    lblDescription.Text = "Do a quick clean of the harddrive";
                     break;
                 case "Visual":
-                    lblDescription.Text = "TODO: SET DESCRIPTION FOR VISUAL STYLES";
+                    lblDescription.Text = "Enables you to edit the visual style of Window";
                     break;
                 case "MouseHz_":
-                    lblDescription.Text = "TODO: SET DESCRIPTION FOR MOUSE HZ";
+                    lblDescription.Text = "Sets the Mouse Hz to 500Hz on Windows 8 and Windows 8.1, resulting in a more responsive mouse";
                     break;
                 case "Riot_Logs":
-                    lblDescription.Text = "TODO: SET DESCRIPTION FOR RIOT LOGS";
+                    lblDescription.Text = "Deletes Riot logs created 7 or more days ago";
                     break;
             }
         }
