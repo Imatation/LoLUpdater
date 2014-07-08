@@ -1,18 +1,15 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.IO;
 namespace LoLUpdater
 {
     public static class UacHelper
     {
-        private const string uacRegistryKey = "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
+        private const string uacRegistryKey = Path.Combine("Software", "Microsoft", "Windows", "CurrentVersion", "Policies", "System");
+        private const string uacRegistryKey32 = Path.Combine("Software", "WoW6432Node", "Microsoft", "Windows", "CurrentVersion", "Policies", "System");
         private const string uacRegistryValue = "EnableLUA";
 
         private static uint STANDARD_RIGHTS_READ = 0x00020000;
@@ -69,7 +66,7 @@ namespace LoLUpdater
             TokenElevationTypeFull,
             TokenElevationTypeLimited
         }
-
+        // Todo: Use uacRegistryKey32 as well here
         public static bool IsUacEnabled
         {
             get
@@ -80,7 +77,9 @@ namespace LoLUpdater
                     return result;
                 }
             }
+
         }
+
 
         public static bool IsProcessElevated
         {
