@@ -617,11 +617,18 @@
     						</Grid.ColumnDefinitions>
     						<Popup x:Name="PART_Popup" AllowsTransparency="True" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
     							<Themes:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}">
-    								<Border x:Name="DropDownBorder" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+    								<Border x:Name="DropDownBorder" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" CornerRadius="3.25">
     									<ScrollViewer x:Name="DropDownScrollViewer">
     										<Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
     											<Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
-    												<Rectangle x:Name="OpaqueRect" Fill="{Binding Background, ElementName=DropDownBorder}" Height="{Binding ActualHeight, ElementName=DropDownBorder}" Width="{Binding ActualWidth, ElementName=DropDownBorder}"/>
+    												<Rectangle x:Name="OpaqueRect" Height="{Binding ActualHeight, ElementName=DropDownBorder}" Width="{Binding ActualWidth, ElementName=DropDownBorder}" RadiusX="3.25" RadiusY="3.25">
+    													<Rectangle.Fill>
+    														<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+    															<GradientStop Color="#FFDED5B2" Offset="0"/>
+    															<GradientStop Color="#FFF7F3E3" Offset="1"/>
+    														</LinearGradientBrush>
+    													</Rectangle.Fill>
+    												</Rectangle>
     											</Canvas>
     											<ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
     										</Grid>
@@ -939,6 +946,89 @@
     						</Trigger>
     						<Trigger Property="IsChecked" Value="{x:Null}">
     							<Setter Property="Opacity" TargetName="optionMark" Value="0.56"/>
+    						</Trigger>
+    					</ControlTemplate.Triggers>
+    				</ControlTemplate>
+    			</Setter.Value>
+    		</Setter>
+    	</Style>
+    	<SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
+    	<SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
+    	<SolidColorBrush x:Key="ProgressBar.Border" Color="#FFBCBCBC"/>
+    	<LinearGradientBrush x:Key="GreenGrad" EndPoint="0.5,1" StartPoint="0.5,0">
+    		<GradientStop Color="#FF76C96A" Offset="0"/>
+    		<GradientStop Color="#FF0A4B00" Offset="1"/>
+    		<GradientStop Color="#FF108300" Offset="0.501"/>
+    		<GradientStop Color="#FF129501" Offset="0.5"/>
+    	</LinearGradientBrush>
+    	<Style TargetType="{x:Type ProgressBar}">
+    		<Setter Property="Foreground" Value="{StaticResource ProgressBar.Progress}"/>
+    		<Setter Property="Background" Value="{StaticResource ProgressBar.Background}"/>
+    		<Setter Property="BorderBrush" Value="{StaticResource ProgressBar.Border}"/>
+    		<Setter Property="BorderThickness" Value="1"/>
+    		<Setter Property="Template">
+    			<Setter.Value>
+    				<ControlTemplate TargetType="{x:Type ProgressBar}">
+    					<Grid x:Name="TemplateRoot">
+    						<VisualStateManager.VisualStateGroups>
+    							<VisualStateGroup x:Name="CommonStates">
+    								<VisualState x:Name="Determinate"/>
+    								<VisualState x:Name="Indeterminate">
+    									<Storyboard RepeatBehavior="Forever">
+    										<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="Animation">
+    											<EasingDoubleKeyFrame KeyTime="0" Value="0.25"/>
+    											<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.25"/>
+    											<EasingDoubleKeyFrame KeyTime="0:0:2" Value="0.25"/>
+    										</DoubleAnimationUsingKeyFrames>
+    										<PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="Animation">
+    											<EasingPointKeyFrame KeyTime="0" Value="-0.5,0.5"/>
+    											<EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,0.5"/>
+    											<EasingPointKeyFrame KeyTime="0:0:2" Value="1.5,0.5"/>
+    										</PointAnimationUsingKeyFrames>
+    									</Storyboard>
+    								</VisualState>
+    							</VisualStateGroup>
+    						</VisualStateManager.VisualStateGroups>
+    						<Border BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3.25">
+    							<Border.BorderBrush>
+    								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+    									<GradientStop Color="#FF0C131D" Offset="0.5"/>
+    									<GradientStop Color="#FF4B6178"/>
+    									<GradientStop Color="#FF4B6178" Offset="0.996"/>
+    								</LinearGradientBrush>
+    							</Border.BorderBrush>
+    							<Border.Background>
+    								<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+    									<GradientStop Color="#FF5F5F5F" Offset="1"/>
+    									<GradientStop Color="#FF1B1B1B"/>
+    								</LinearGradientBrush>
+    							</Border.Background>
+    						</Border>
+    						<Rectangle x:Name="PART_Track" RadiusX="3.25" RadiusY="3.25"/>
+    						<Grid x:Name="PART_Indicator" ClipToBounds="true" HorizontalAlignment="Left">
+    							<Rectangle x:Name="Indicator" Fill="{DynamicResource GreenGrad}" RadiusX="3.25" RadiusY="3.25"/>
+    							<Rectangle x:Name="Animation" RenderTransformOrigin="0.5,0.5" Fill="{DynamicResource GreenGrad}" RadiusX="3.25" RadiusY="3.25">
+    								<Rectangle.RenderTransform>
+    									<TransformGroup>
+    										<ScaleTransform/>
+    										<SkewTransform/>
+    										<RotateTransform/>
+    										<TranslateTransform/>
+    									</TransformGroup>
+    								</Rectangle.RenderTransform>
+    							</Rectangle>
+    						</Grid>
+    					</Grid>
+    					<ControlTemplate.Triggers>
+    						<Trigger Property="Orientation" Value="Vertical">
+    							<Setter Property="LayoutTransform" TargetName="TemplateRoot">
+    								<Setter.Value>
+    									<RotateTransform Angle="-90"/>
+    								</Setter.Value>
+    							</Setter>
+    						</Trigger>
+    						<Trigger Property="IsIndeterminate" Value="true">
+    							<Setter Property="Visibility" TargetName="Indicator" Value="Collapsed"/>
     						</Trigger>
     					</ControlTemplate.Triggers>
     				</ControlTemplate>
