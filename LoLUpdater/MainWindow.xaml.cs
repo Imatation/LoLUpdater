@@ -119,6 +119,7 @@ namespace LoLUpdater
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
+            populateVariableLocations();
             //Todo: add some sort of progress indication
             if (Visual.IsChecked == true)
             {
@@ -298,8 +299,6 @@ namespace LoLUpdater
         /// </summary>
         private void handleUninstall()
         {
-            populateVariableLocations();
-
             if (Directory.Exists("RADS"))
             {
                 if (File.Exists(Path.Combine("Backup", "game.cfg")))
@@ -375,10 +374,14 @@ namespace LoLUpdater
             NPSWF32Install          = Path.Combine(programFiles, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll");
             adobeAirInstall         = Path.Combine(programFiles, "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll");
 
+            
             cgBinPath               = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
-            cgPath                  = Path.Combine(cgBinPath, "cg.dll");
-            cgGLPath                = Path.Combine(cgBinPath, "cgGL.dll");
-            CgD3D9Path              = Path.Combine(cgBinPath, "cgD3D9.dll");
+            if (cgBinPath != null)
+            {
+                cgPath              = Path.Combine(cgBinPath, "cg.dll");
+                cgGLPath            = Path.Combine(cgBinPath, "cgGL.dll");
+                CgD3D9Path          = Path.Combine(cgBinPath, "cgD3D9.dll");
+            }
 
             backupCG                = Path.Combine("Backup", "cg.dll");
             backupCgGL              = Path.Combine("Backup", "cgGL.dll");
@@ -412,7 +415,7 @@ namespace LoLUpdater
             Application.Current.Shutdown();
         }
 
-        private static Boolean CGCheck()
+        private Boolean CGCheck()
         {
             if (Environment.Is64BitProcess == true)
             {
@@ -444,7 +447,8 @@ namespace LoLUpdater
             cg.Start();
             cg.WaitForExit();
             File.Delete("Cg-3.1 April2012 Setup.exe");
-            return false;
+            populateVariableLocations();
+            return true;
         }
 
         private void adobeAlert()
