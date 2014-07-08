@@ -972,6 +972,9 @@
     					<Grid x:Name="TemplateRoot">
     						<VisualStateManager.VisualStateGroups>
     							<VisualStateGroup x:Name="CommonStates">
+    								<VisualStateGroup.Transitions>
+    									<VisualTransition GeneratedDuration="0:0:0.1"/>
+    								</VisualStateGroup.Transitions>
     								<VisualState x:Name="Determinate"/>
     								<VisualState x:Name="Indeterminate">
     									<Storyboard RepeatBehavior="Forever">
@@ -1006,8 +1009,8 @@
     						</Border>
     						<Rectangle x:Name="PART_Track" RadiusX="3.25" RadiusY="3.25"/>
     						<Grid x:Name="PART_Indicator" ClipToBounds="true" HorizontalAlignment="Left">
-    							<Rectangle x:Name="Indicator" Fill="{DynamicResource GreenGrad}" RadiusX="3.25" RadiusY="3.25"/>
-    							<Rectangle x:Name="Animation" RenderTransformOrigin="0.5,0.5" Fill="{DynamicResource GreenGrad}" RadiusX="3.25" RadiusY="3.25">
+    							<Rectangle x:Name="Indicator" Fill="{DynamicResource GreenGrad}" RadiusX="3.25" RadiusY="3.25" d:IsHidden="True"/>
+    							<Rectangle x:Name="Animation" RenderTransformOrigin="0.5,0.5" Fill="{DynamicResource GreenGrad}" RadiusX="3.25" RadiusY="3.25" d:IsHidden="True">
     								<Rectangle.RenderTransform>
     									<TransformGroup>
     										<ScaleTransform/>
@@ -1018,6 +1021,17 @@
     								</Rectangle.RenderTransform>
     							</Rectangle>
     						</Grid>
+    						<Grid x:Name="PART_GlowRect"/>
+<TextBlock Text="{TemplateBinding Tag}" Grid.ZIndex="2" Foreground="Black"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"/>
+                    <TextBlock Text="{TemplateBinding Tag}"
+                                Grid.ZIndex="3" Foreground="White"
+                                Width="{Binding ElementName=rectangle, Path=ActualWidth}"
+                                TextAlignment="Center"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center">
+                    </TextBlock>
     					</Grid>
     					<ControlTemplate.Triggers>
     						<Trigger Property="Orientation" Value="Vertical">

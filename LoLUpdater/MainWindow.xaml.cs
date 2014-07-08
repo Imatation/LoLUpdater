@@ -120,36 +120,55 @@ namespace LoLUpdater
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             populateVariableLocations();
-            //Todo: add some sort of progress indication
+            taskProgress.Tag = "Openning System Performance Properties...";
+
             if (Visual.IsChecked == true)
             {
                 Process.Start("SystemPropertiesPerformance.exe");
             }
+
+            taskProgress.Value = 10;
+            taskProgress.Tag = "Openning Disk Cleanup...";
 
             if (Clean.IsChecked == true)
             {
                 runCleanManager();
             }
 
+            taskProgress.Value = 20;
+            taskProgress.Tag = "Setting Up Mouse Hz Adjustment...";
+
             if (MouseHz_.IsChecked == true)
             {
                 handleMouseHz();
             }
+
+            taskProgress.Value = 30;
+            taskProgress.Tag = "Setting Up Windows Update...";
 
             if (WinUpdate.IsChecked == true)
             {
                 handleWindowsUpdate();
             }
 
+            taskProgress.Value = 40;
+            taskProgress.Tag = "Deleting Riot Logs...";
+
             if (Riot_Logs.IsChecked == true)
             {
                 handleRiotLogs();
             }
 
+            taskProgress.Value = 50;
+            taskProgress.Tag = "Performing Backup...";
+
             if (!Directory.Exists("Backup"))
             {
                 handleBackup();
             }
+
+            taskProgress.Value = 70;
+            taskProgress.Tag = "Patching...";
 
             if (Patch.IsChecked == true)
             {
@@ -160,10 +179,12 @@ namespace LoLUpdater
             }
             else if (Remove.IsChecked == true)
             {
+                taskProgress.Tag = "Removing Patch...";
                 handleUninstall();
             }
+            taskProgress.Value = 100;
 
-            MessageBox.Show("Finished!", "LoLUpdater", MessageBoxButton.OK, MessageBoxImage.Information);
+            taskProgress.Tag = "All Processes Completed Successfully!";
         }
 
         /// <summary>
