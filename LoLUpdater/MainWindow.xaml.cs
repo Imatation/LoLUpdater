@@ -74,7 +74,12 @@ namespace LoLUpdater
                 MouseHz_.IsEnabled = true;
             }
 
-            if (!UacHelper.IsProcessElevated)
+
+
+
+            Boolean disableWarnings = Properties.Settings.Default.disableWarnings;
+
+            if (!UacHelper.IsProcessElevated && !disableWarnings)
             {
                 MouseHz_.IsEnabled = false;
                 WinUpdate.IsEnabled = false;
@@ -647,7 +652,8 @@ namespace LoLUpdater
 
         private void btnOptions_Click(object sender, RoutedEventArgs e)
         {
-
+            frmOptions options = new frmOptions();
+            options.ShowDialog();
         }
 
     }

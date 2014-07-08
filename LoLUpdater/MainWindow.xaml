@@ -56,7 +56,7 @@
         <GroupBox Header="Description" HorizontalAlignment="Left" Height="110" Margin="8,146,0,0" VerticalAlignment="Top" Width="706.5" FontWeight="Bold">
         	<TextBlock x:Name="lblDescription" Margin="10,4.24,-2,2.415" TextWrapping="Wrap" Foreground="#FFB59214" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </GroupBox>
-        <Button x:Name="btnOptions" Content="Options" HorizontalAlignment="Left" Margin="647,110,0,0" Width="67" Foreground="White" BorderThickness="19,12,15,2" d:IsEffectDisabled="True" Height="31" VerticalAlignment="Top" Click="btnOptions_Click" IsEnabled="False">
+        <Button x:Name="btnOptions" Content="Options" HorizontalAlignment="Left" Margin="647,110,0,0" Width="67" Foreground="White" BorderThickness="19,12,15,2" d:IsEffectDisabled="True" Height="31" VerticalAlignment="Top" Click="btnOptions_Click">
             <Button.BorderBrush>
                 <RadialGradientBrush SpreadMethod="Reflect" Opacity="0.475">
                     <GradientStop Color="#FFC58F53" Offset="0"/>
