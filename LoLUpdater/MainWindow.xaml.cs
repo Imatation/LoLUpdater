@@ -52,7 +52,7 @@ namespace LoLUpdater
         string finalAdobeAir = "";
         // --- END LOCATION BASED VARIABLES ---
 
-
+        // This part is actually never used.
         public MainWindow()
         {
             Loaded += MainWindow_Loaded;
