@@ -92,9 +92,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Prototype.xaml.cs">
-      <DependentUpon>Prototype.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UacHelper.cs" />
     <Page Include="CustomButton.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -120,10 +117,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Prototype.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
