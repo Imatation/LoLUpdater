@@ -94,6 +94,11 @@ namespace LoLUpdater
                 }
             }
 
+            if (getPing("64.7.194.1") > getPing("190.93.245.13")) // if EUW ping is smaller than NA ping
+            {
+                EUW.IsSelected = true;
+            }
+
             handlePing();
         }
 
@@ -621,19 +626,22 @@ namespace LoLUpdater
 
         private void handlePing()
         {
-            Ping ping = new Ping();
-            PingReply reply;
-
             if (NA.IsSelected)
             {
-                reply = ping.Send("64.7.194.1");
-                Label.Content = reply.RoundtripTime.ToString();
+                Label.Content = getPing("64.7.194.1");
             }
             else if (EUW.IsSelected)
             {
-                reply = ping.Send("190.93.245.13");
-                Label.Content = reply.RoundtripTime.ToString();
+                Label.Content = getPing("190.93.245.13");
             }
+        }
+
+        private long getPing(string ip)
+        {
+            Ping ping = new Ping();
+            PingReply reply = ping.Send(ip);
+
+            return reply.RoundtripTime;
         }
 
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
