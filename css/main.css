@@ -76,7 +76,7 @@ textarea
 
 body
 {
-    font-family: 'Segoe UI';
+    font-family: 'Segoe UI', 'Helvetica Neue', 'Fira Sans', Helvetica, sans-serif;
     font-weight: 200;
 
     color: #111;
