@@ -11,48 +11,32 @@ namespace LoLUpdater
 {
     public partial class MainWindow : Window
     {
-        // --- BEGIN LOCATION BASED VARIABLES ---
-
-        /* A quick note on my rationale behind this strange change.
-         * Within this application, there exist many many file system calls.
-         * Those calls cause an absolutely outrageous amount of reads to the disk drive.
-         * By eliminating as many of those calls as possible, we can reuse much of the 
-         * same information, and drastically increase performance and code readability.
-         */
         string folderLocation = "";
         string programFiles = "";
-
         string releasePath = "";
         string fullReleasePath = "";
         string solutionPath = "";
         string fullSolutionPath = "";
         string airClientPath = "";
         string fullAirClientPath = "";
-
         string cgBinPath = "";
         string cgPath = "";
         string cgGLPath = "";
         string CgD3D9Path = "";
-
         string backupCG = "";
         string backupCgGL = "";
         string backupCg3D9 = "";
         string backupTbb = "";
         string backupNPSWF32 = "";
         string backupAdobeAir = "";
-
         string NPSWF32Install = "";
         string adobeAirInstall = "";
-
         string finalCG = "";
         string finalCgGL = "";
         string finalCg3D9 = "";
-
         string finalTbb = "";
         string finalNPSWF32 = "";
         string finalAdobeAir = "";
-        // --- END LOCATION BASED VARIABLES ---
-        // This part is actually never used.
         public MainWindow()
         {
             Loaded += MainWindow_Loaded;
@@ -64,8 +48,7 @@ namespace LoLUpdater
         }
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Version win8version = new Version(6, 2, 9200, 0);
-            if (getPing("64.7.194.1") > getPing("190.93.245.13")) // if EUW ping is smaller than NA ping
+            if (getPing("64.7.194.1") > getPing("190.93.245.13"))
             {
                 EUW.IsSelected = true;
             }
@@ -84,11 +67,6 @@ namespace LoLUpdater
         {
             adobeAlert();
         }
-        private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater",
-                MessageBoxButton.OK, MessageBoxImage.Information);
-        }
         public void DoEvents()
         {
             DispatcherFrame frame = new DispatcherFrame();
@@ -106,14 +84,8 @@ namespace LoLUpdater
         {
             populateVariableLocations();
             taskProgress.IsIndeterminate = true;
-            taskProgress.Tag = "Openning System Performance Properties...";
             DoEvents();
-            if (Visual.IsChecked == true)
-            {
-                Process.Start("SystemPropertiesPerformance.exe");
-            }
             taskProgress.Tag = "Openning Disk Cleanup...";
-
             if (Clean.IsChecked == true)
             {
                 runCleanManager();
@@ -136,14 +108,10 @@ namespace LoLUpdater
                 taskProgress.Tag = "Removing Patch...";
                 handleUninstall();
             }
-
             taskProgress.IsIndeterminate = false;
             taskProgress.Value = 100;
             taskProgress.Tag = "All Processes Completed Successfully!";
         }
-        /// <summary>
-        /// This method checks the game config, and sets the particle multithreading to 1.
-        /// </summary>
         private void handleParticleMultithreading()
         {
             if (File.Exists(Path.Combine("Config", "game.cfg")))
@@ -182,9 +150,6 @@ namespace LoLUpdater
                 }
             }
         }
-        /// <summary>
-        /// Creates a backup of all vital files.
-        /// </summary>
         private void handleBackup()
         {
             Directory.CreateDirectory("Backup");
@@ -218,9 +183,6 @@ namespace LoLUpdater
             File.Copy(fullAirClientPath + finalNPSWF32, backupNPSWF32, true);
             File.Copy(fullAirClientPath + finalAdobeAir, backupAdobeAir, true);
         }
-        /// <summary>
-        /// This method handles the installation of adobe and tbb.
-        /// </summary>
         private void handleAdobeAndTBB()
         {
             if (tbb.IsChecked == true)
@@ -238,11 +200,7 @@ namespace LoLUpdater
                 File.Copy(NPSWF32Install, fullAirClientPath + finalNPSWF32, true);
             }
         }
-        /// <summary>
-        /// This method checks if the user wishes to install the CG toolkit, if so
-        /// it installs each option the user selects.
-        /// </summary>
-        private void handleCGInstall() // The error checking needs to be revised. Perhaps a variable that denotes the error if it is unresolvable, and relays it to the user.
+        private void handleCGInstall()
         {
             try
             {
@@ -287,9 +245,6 @@ namespace LoLUpdater
                 }
             }
         }
-        /// <summary>
-        /// This method removes Pando Media Booster from the system.
-        /// </summary>
         private void handlePandoUninstall()
         {
             if (File.Exists(Path.Combine(programFiles, "Pando Networks", "Media Booster", "uninst.exe")))
@@ -303,9 +258,6 @@ namespace LoLUpdater
 
             }
         }
-        /// <summary>
-        /// This method handles the uninstall of the latest game patches.
-        /// </summary>
         private void handleUninstall()
         {
             if (Directory.Exists("RADS"))
@@ -341,10 +293,6 @@ namespace LoLUpdater
 
             Directory.Delete("Backup", true);
         }
-        /// <summary>
-        /// This method determines what version of the application is running, and populates
-        /// all the necessary variables for later use.
-        /// </summary>
         private void populateVariableLocations()
         {
             if (Environment.Is64BitProcess == true)
@@ -355,7 +303,6 @@ namespace LoLUpdater
             {
                 programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             }
-
             if (Directory.Exists("RADS"))
             {
                 folderLocation = "deploy";
@@ -386,7 +333,6 @@ namespace LoLUpdater
                 cgGLPath = Path.Combine(cgBinPath, "cgGL.dll");
                 CgD3D9Path = Path.Combine(cgBinPath, "cgD3D9.dll");
             }
-
             backupCG = Path.Combine("Backup", "cg.dll");
             backupCgGL = Path.Combine("Backup", "cgGL.dll");
             backupCg3D9 = Path.Combine("Backup", "cgD3D9.dll");
@@ -399,17 +345,13 @@ namespace LoLUpdater
             finalCg3D9 = Path.Combine(folderLocation, "cgD3D9.dll");
             finalTbb = Path.Combine(folderLocation, "tbb.dll");
         }
-        /// <summary>
-        /// This method restarts the application with elevated privaleges.
-        /// </summary>
-        private void restartAsAdmin()  // Closes the application and restarts as an administrator.
+        private void restartAsAdmin()
         {
             ProcessStartInfo proc = new ProcessStartInfo();
             proc.UseShellExecute = true;
             proc.WorkingDirectory = Environment.CurrentDirectory;
             proc.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location;
             proc.Verb = "runas";
-
             try
             {
                 Process.Start(proc);
@@ -420,22 +362,17 @@ namespace LoLUpdater
             }
             Application.Current.Shutdown();
         }
-        /// <summary>
-        /// This method checks for the presence of the CG toolkit, if it is not found, it is installed.
-        /// </summary>
-        /// <returns>True if present or installation completed successfully.</returns>
         private Boolean CGCheck()
         {
             string fileLocation = Path.Combine(programFiles, "NVIDIA Corporation", "Cg", "Bin", "cg.dll");
 
             if (File.Exists(fileLocation))
             {
-                return true;                                                                                            // Return if found, we don't
-            }                                                                                                           // need to go any further.
-
+                return true;
+            }
             try
             {
-                File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);              // Extract and write the file
+                File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
                 Process cg = new Process();
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
@@ -452,10 +389,6 @@ namespace LoLUpdater
                 return false;
             }
         }
-        /// <summary>
-        /// Prompts user to install adobe product.
-        /// </summary>
-        // TODO: Add error checking to see if adobe product is already installed.
         private void adobeAlert()
         {
             MessageBoxResult alertMessage = MessageBox.Show("We are unable to include any Adobe products, " +
@@ -476,6 +409,30 @@ namespace LoLUpdater
             process.StartInfo = cm;
             process.Start();
         }
+        private void handleMouseHz()
+        {
+            RegistryKey mousehz;
+
+            if (Environment.Is64BitProcess)
+            {
+                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT",
+                    "CurrentVersion", "AppCompatFlags", "Layers"));
+            }
+            else
+            {
+                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft",
+                    "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+            }
+            mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
+                "explorer.exe"), RegistryValueKind.String);
+            var cmd = new ProcessStartInfo();
+            var process = new Process();
+            cmd.FileName = "cmd.exe";
+            cmd.Verb = "runas";
+            cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
+            process.StartInfo = cmd;
+            process.Start();
+        }
         private void handlePing()
         {
             if (NA.IsSelected)
@@ -494,7 +451,6 @@ namespace LoLUpdater
 
             return reply.RoundtripTime;
         }
-
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             handlePing();
@@ -522,31 +478,14 @@ namespace LoLUpdater
                 case "tbb":
                     lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game";
                     break;
-                case "WinUpdate":
-                    lblDescription.Text = "Performs a Windows Update on the computer, might take some time.";
-                    break;
                 case "Clean":
                     lblDescription.Text = "Do a quick clean of the harddrive";
-                    break;
-                case "Visual":
-                    lblDescription.Text = "Enables you to edit the visual style of Windows";
-                    break;
-                case "MouseHz_":
-                    lblDescription.Text = "Sets the Mouse Hz to 500Hz on Windows 8 and Windows 8.1, resulting in a more responsive mouse";
-                    break;
-                case "Riot_Logs":
-                    lblDescription.Text = "Deletes Riot logs created 7 or more days ago";
                     break;
             }
         }
         private void chkOption_MouseExit(object sender, System.Windows.Input.MouseEventArgs e)
         {
             lblDescription.Text = "";
-        }
-        private void btnOptions_Click(object sender, RoutedEventArgs e)
-        {
-            frmOptions options = new frmOptions();
-            options.ShowDialog();
         }
     }
 }
