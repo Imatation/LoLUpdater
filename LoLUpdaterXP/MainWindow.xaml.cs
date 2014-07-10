@@ -118,14 +118,6 @@ namespace LoLUpdater
             {
                 runCleanManager();
             }
-            taskProgress.Tag = "Setting Up Mouse Hz Adjustment...";
-            taskProgress.Tag = "Deleting Riot Logs...";
-
-            if (Riot_Logs.IsChecked == true)
-            {
-                handleRiotLogs();
-            }
-
             taskProgress.Tag = "Performing Backup...";
             if (!Directory.Exists("Backup"))
             {
@@ -483,45 +475,6 @@ namespace LoLUpdater
             cm.Arguments = "sagerun:1";
             process.StartInfo = cm;
             process.Start();
-        }
-        private void handleMouseHz()
-        {
-            RegistryKey mousehz;
-
-            if (Environment.Is64BitProcess)
-            {
-                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT",
-                    "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
-            else
-            {
-                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft",
-                    "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
-
-            mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
-                "explorer.exe"), RegistryValueKind.String);
-            var cmd = new ProcessStartInfo();
-            var process = new Process();
-            cmd.FileName = "cmd.exe";
-            cmd.Verb = "runas";
-            cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
-            process.StartInfo = cmd;
-            process.Start();
-        }
-        private void handleRiotLogs()
-        {
-            if (Directory.Exists("RADS"))
-            {
-                string[] files = Directory.GetFiles("Logs");
-
-                foreach (string file in files)
-                {
-                    FileInfo fi = new FileInfo(file);
-                    if (fi.LastAccessTime < DateTime.Now.AddDays(-7))
-                        fi.Delete();
-                }
-            }
         }
         private void handlePing()
         {
