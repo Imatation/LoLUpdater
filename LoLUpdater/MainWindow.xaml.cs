@@ -134,44 +134,36 @@ namespace LoLUpdater
             {
                 Process.Start("SystemPropertiesPerformance.exe");
             }
-
             taskProgress.Tag = "Openning Disk Cleanup...";
 
             if (Clean.IsChecked == true)
             {
                 runCleanManager();
             }
-
             taskProgress.Tag = "Setting Up Mouse Hz Adjustment...";
 
             if (MouseHz_.IsChecked == true)
             {
                 handleMouseHz();
             }
-
             taskProgress.Tag = "Setting Up Windows Update...";
-
             if (WinUpdate.IsChecked == true)
             {
                 handleWindowsUpdate();
             }
-
             taskProgress.Tag = "Deleting Riot Logs...";
 
             if (Riot_Logs.IsChecked == true)
             {
                 handleRiotLogs();
             }
-
             taskProgress.Tag = "Performing Backup...";
 
             if (!Directory.Exists("Backup"))
             {
                 handleBackup();
             }
-
             taskProgress.Tag = "Patching...";
-
             if (Patch.IsChecked == true)
             {
                 handleParticleMultithreading();
@@ -184,7 +176,6 @@ namespace LoLUpdater
                 taskProgress.Tag = "Removing Patch...";
                 handleUninstall();
             }
-
             taskProgress.IsIndeterminate = false;
             taskProgress.Value = 100;
             taskProgress.Tag = "All Processes Completed Successfully!";
@@ -434,7 +425,6 @@ namespace LoLUpdater
                 cgGLPath = Path.Combine(cgBinPath, "cgGL.dll");
                 CgD3D9Path = Path.Combine(cgBinPath, "cgD3D9.dll");
             }
-
             backupCG = Path.Combine("Backup", "cg.dll");
             backupCgGL = Path.Combine("Backup", "cgGL.dll");
             backupCg3D9 = Path.Combine("Backup", "cgD3D9.dll");
@@ -457,7 +447,6 @@ namespace LoLUpdater
             proc.WorkingDirectory = Environment.CurrentDirectory;
             proc.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location;
             proc.Verb = "runas";
-
             try
             {
                 Process.Start(proc);
@@ -599,7 +588,6 @@ namespace LoLUpdater
 
             return reply.RoundtripTime;
         }
-
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             handlePing();
@@ -648,7 +636,6 @@ namespace LoLUpdater
         {
             lblDescription.Text = "";
         }
-
         private void btnOptions_Click(object sender, RoutedEventArgs e)
         {
             frmOptions options = new frmOptions();
