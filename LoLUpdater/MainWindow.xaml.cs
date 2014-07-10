@@ -53,7 +53,6 @@ namespace LoLUpdater
         string finalNPSWF32 = "";
         string finalAdobeAir = "";
         // --- END LOCATION BASED VARIABLES ---
-
         // This part is actually never used.
         public MainWindow()
         {
@@ -64,7 +63,6 @@ namespace LoLUpdater
             pingTimer.Interval = new TimeSpan(0, 0, 5);
             pingTimer.Start();
         }
-
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Version win8version = new Version(6, 2, 9200, 0);
@@ -74,12 +72,7 @@ namespace LoLUpdater
             {
                 MouseHz_.IsEnabled = true;
             }
-
-
-
-
             Boolean disableWarnings = Properties.Settings.Default.disableWarnings;
-
             if (!UacHelper.IsProcessElevated && !disableWarnings)
             {
                 MouseHz_.IsEnabled = false;
@@ -93,7 +86,6 @@ namespace LoLUpdater
                     restartAsAdmin();
                 }
             }
-
             if (getPing("64.7.194.1") > getPing("190.93.245.13")) // if EUW ping is smaller than NA ping
             {
                 EUW.IsSelected = true;
@@ -101,34 +93,23 @@ namespace LoLUpdater
 
             handlePing();
         }
-
         private void pingTimer_Tick(object sender, EventArgs e)
         {
             handlePing();
         }
-
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
         }
-
         private void Flash_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
         }
-
         private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater",
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
-
-        // Todo: Make this prettier and add more servers
-        private void ping_Click(object sender, RoutedEventArgs e)
-        {
-            handlePing();
-        }
-
         public void DoEvents()
         {
             DispatcherFrame frame = new DispatcherFrame();
@@ -136,14 +117,12 @@ namespace LoLUpdater
                 new DispatcherOperationCallback(ExitFrame), frame);
             Dispatcher.PushFrame(frame);
         }
-
         public object ExitFrame(object f)
         {
             ((DispatcherFrame)f).Continue = false;
 
             return null;
         }
-
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             populateVariableLocations();
@@ -210,7 +189,6 @@ namespace LoLUpdater
             taskProgress.Value = 100;
             taskProgress.Tag = "All Processes Completed Successfully!";
         }
-
         /// <summary>
         /// This method checks the game config, and sets the particle multithreading to 1.
         /// </summary>
@@ -252,7 +230,6 @@ namespace LoLUpdater
                 }
             }
         }
-
         /// <summary>
         /// Creates a backup of all vital files.
         /// </summary>
@@ -282,7 +259,6 @@ namespace LoLUpdater
                     }
                 }
             }
-
             File.Copy(fullSolutionPath + finalCG, backupCG, true);
             File.Copy(fullSolutionPath + finalCg3D9, backupCg3D9, true);
             File.Copy(fullSolutionPath + finalCgGL, backupCgGL, true);
@@ -290,7 +266,6 @@ namespace LoLUpdater
             File.Copy(fullAirClientPath + finalNPSWF32, backupNPSWF32, true);
             File.Copy(fullAirClientPath + finalAdobeAir, backupAdobeAir, true);
         }
-
         /// <summary>
         /// This method handles the installation of adobe and tbb.
         /// </summary>
@@ -311,47 +286,45 @@ namespace LoLUpdater
                 File.Copy(NPSWF32Install, fullAirClientPath + finalNPSWF32, true);
             }
         }
-
         /// <summary>
         /// This method checks if the user wishes to install the CG toolkit, if so
         /// it installs each option the user selects.
         /// </summary>
         private void handleCGInstall() // The error checking needs to be revised. Perhaps a variable that denotes the error if it is unresolvable, and relays it to the user.
         {
-            try {  
-            if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
+            try
             {
-                if (CGCheck())
+                if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
                 {
-                    if (Cg.IsChecked == true)
+                    if (CGCheck())
                     {
-                        File.Copy(cgPath, fullReleasePath + finalCG, true);
-                        File.Copy(cgPath, fullSolutionPath + finalCG, true);
-                    }
-
-                    if (CgGL.IsChecked == true)
-                    {
-                        File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);
-                        File.Copy(cgGLPath, fullSolutionPath + finalCgGL, true);
-                    }
-
-                    if (CgD3D9.IsChecked == true)
-                    {
-                        File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
-                        File.Copy(CgD3D9Path, fullSolutionPath + finalCg3D9, true);
+                        if (Cg.IsChecked == true)
+                        {
+                            File.Copy(cgPath, fullReleasePath + finalCG, true);
+                            File.Copy(cgPath, fullSolutionPath + finalCG, true);
+                        }
+                        if (CgGL.IsChecked == true)
+                        {
+                            File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);
+                            File.Copy(cgGLPath, fullSolutionPath + finalCgGL, true);
+                        }
+                        if (CgD3D9.IsChecked == true)
+                        {
+                            File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
+                            File.Copy(CgD3D9Path, fullSolutionPath + finalCg3D9, true);
+                        }
                     }
                 }
             }
-            }
             catch (System.IO.IOException)
             {
-                var output = MessageBox.Show("Error: League of Legends is currently open. Would you like to automatically close it?","Error",MessageBoxButton.YesNo,MessageBoxImage.Error);
+                var output = MessageBox.Show("Error: League of Legends is currently open. Would you like to automatically close it?", "Error", MessageBoxButton.YesNo, MessageBoxImage.Error);
                 if (output == MessageBoxResult.Yes)
                 {
                     try
                     {
-	                    Process[] proc = Process.GetProcessesByName("LoLLauncher");
-	                    proc[0].Kill();
+                        Process[] proc = Process.GetProcessesByName("LoLLauncher");
+                        proc[0].Kill();
                         proc[0].WaitForExit();
                         handleCGInstall();
                     }
@@ -362,7 +335,6 @@ namespace LoLUpdater
                 }
             }
         }
-
         /// <summary>
         /// This method removes Pando Media Booster from the system.
         /// </summary>
@@ -379,7 +351,6 @@ namespace LoLUpdater
 
             }
         }
-
         /// <summary>
         /// This method handles the uninstall of the latest game patches.
         /// </summary>
@@ -406,7 +377,6 @@ namespace LoLUpdater
                     File.Copy(Path.Combine("Backup", "GamePermanent_en_SG.cfg"), Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), true);
                 }
             }
-
             File.Copy(backupCG, fullReleasePath + finalCG, true);
             File.Copy(backupCG, fullSolutionPath + finalCG, true);
             File.Copy(backupCgGL, fullReleasePath + finalCgGL, true);
@@ -419,7 +389,6 @@ namespace LoLUpdater
 
             Directory.Delete("Backup", true);
         }
-
         /// <summary>
         /// This method determines what version of the application is running, and populates
         /// all the necessary variables for later use.
@@ -456,11 +425,8 @@ namespace LoLUpdater
                 finalNPSWF32 = Path.Combine("AIR", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll");
                 finalAdobeAir = Path.Combine("AIR", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll");
             }
-
             NPSWF32Install = Path.Combine(programFiles, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll");
             adobeAirInstall = Path.Combine(programFiles, "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll");
-
-
             cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
             if (cgBinPath != null)
             {
@@ -481,7 +447,6 @@ namespace LoLUpdater
             finalCg3D9 = Path.Combine(folderLocation, "cgD3D9.dll");
             finalTbb = Path.Combine(folderLocation, "tbb.dll");
         }
-
         /// <summary>
         /// This method restarts the application with elevated privaleges.
         /// </summary>
@@ -503,7 +468,6 @@ namespace LoLUpdater
             }
             Application.Current.Shutdown();
         }
-
         /// <summary>
         /// This method checks for the presence of the CG toolkit, if it is not found, it is installed.
         /// </summary>
@@ -536,7 +500,6 @@ namespace LoLUpdater
                 return false;
             }
         }
-
         /// <summary>
         /// Prompts user to install adobe product.
         /// </summary>
@@ -552,8 +515,6 @@ namespace LoLUpdater
                 Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
             }
         }
-
-
         private void runCleanManager()
         {
             var cm = new ProcessStartInfo();
@@ -563,7 +524,6 @@ namespace LoLUpdater
             process.StartInfo = cm;
             process.Start();
         }
-
         private void handleMouseHz()
         {
             RegistryKey mousehz;
@@ -589,7 +549,6 @@ namespace LoLUpdater
             process.StartInfo = cmd;
             process.Start();
         }
-
         private void handleWindowsUpdate()
         {
             UpdateSession uSession = new UpdateSession();
@@ -608,7 +567,6 @@ namespace LoLUpdater
             installer.Updates = updatesToInstall;
             IInstallationResult installationRes = installer.Install();
         }
-
         private void handleRiotLogs()
         {
             if (Directory.Exists("RADS"))
@@ -623,7 +581,6 @@ namespace LoLUpdater
                 }
             }
         }
-
         private void handlePing()
         {
             if (NA.IsSelected)
@@ -635,7 +592,6 @@ namespace LoLUpdater
                 Label.Content = getPing("190.93.245.13");
             }
         }
-
         private long getPing(string ip)
         {
             Ping ping = new Ping();
@@ -648,7 +604,6 @@ namespace LoLUpdater
         {
             handlePing();
         }
-
         private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var chkBox = (CheckBox)sender;
@@ -679,7 +634,7 @@ namespace LoLUpdater
                     lblDescription.Text = "Do a quick clean of the harddrive";
                     break;
                 case "Visual":
-                    lblDescription.Text = "Enables you to edit the visual style of Window";
+                    lblDescription.Text = "Enables you to edit the visual style of Windows";
                     break;
                 case "MouseHz_":
                     lblDescription.Text = "Sets the Mouse Hz to 500Hz on Windows 8 and Windows 8.1, resulting in a more responsive mouse";
@@ -689,7 +644,6 @@ namespace LoLUpdater
                     break;
             }
         }
-
         private void chkOption_MouseExit(object sender, System.Windows.Input.MouseEventArgs e)
         {
             lblDescription.Text = "";
