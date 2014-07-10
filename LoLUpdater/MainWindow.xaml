@@ -12,8 +12,8 @@
                     <UniformGrid Columns="2"/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
-            <CheckBox x:Name="AdobeAIR" Content="Adobe AIR.dll 14.0.0.125" ToolTip="Update for the PVP.NET Client" Checked="AdobeAIR_Checked" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-            <CheckBox x:Name="Flash" Content="NPSWF32.dll 14.0.0.137" ToolTip="Update for the PVP.NET Client" Checked="Flash_Checked" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
+            <CheckBox x:Name="AdobeAIR" Content="Adobe AIR.dll 14.0.0.143" ToolTip="Update for the PVP.NET Client" Checked="AdobeAIR_Checked" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
+            <CheckBox x:Name="Flash" Content="NPSWF32.dll 14.0.0.146" ToolTip="Update for the PVP.NET Client" Checked="Flash_Checked" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="Cg" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="CgD3D9" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
