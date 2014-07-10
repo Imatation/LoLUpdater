@@ -129,19 +129,16 @@ namespace LoLUpdater
             taskProgress.IsIndeterminate = true;
             taskProgress.Tag = "Openning System Performance Properties...";
             DoEvents();
-
             if (Visual.IsChecked == true)
             {
                 Process.Start("SystemPropertiesPerformance.exe");
             }
             taskProgress.Tag = "Openning Disk Cleanup...";
-
             if (Clean.IsChecked == true)
             {
                 runCleanManager();
             }
             taskProgress.Tag = "Setting Up Mouse Hz Adjustment...";
-
             if (MouseHz_.IsChecked == true)
             {
                 handleMouseHz();
@@ -151,14 +148,7 @@ namespace LoLUpdater
             {
                 handleWindowsUpdate();
             }
-            taskProgress.Tag = "Deleting Riot Logs...";
-
-            if (Riot_Logs.IsChecked == true)
-            {
-                handleRiotLogs();
-            }
             taskProgress.Tag = "Performing Backup...";
-
             if (!Directory.Exists("Backup"))
             {
                 handleBackup();
