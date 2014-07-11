@@ -72,14 +72,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CustomButton.xaml.cs">
-      <DependentUpon>CustomButton.xaml</DependentUpon>
-    </Compile>
     <Compile Include="frmOptions.xaml.cs">
       <DependentUpon>frmOptions.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LoLButton.xaml.cs">
-      <DependentUpon>LoLButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -92,15 +86,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="UacHelper.cs" />
-    <Page Include="CustomButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="frmOptions.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="LoLButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
