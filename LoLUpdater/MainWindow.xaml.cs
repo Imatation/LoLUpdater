@@ -12,49 +12,32 @@ namespace LoLUpdater
 {
     public partial class MainWindow : Window
     {
-        // --- BEGIN LOCATION BASED VARIABLES ---
-
-        /* A quick note on my rationale behind this strange change.
-         * Within this application, there exist many many file system calls.
-         * Those calls cause an absolutely outrageous amount of reads to the disk drive.
-         * By eliminating as many of those calls as possible, we can reuse much of the 
-         * same information, and drastically increase performance and code readability.
-         */
         string folderLocation = "";
         string programFiles = "";
-
         string releasePath = "";
         string fullReleasePath = "";
         string solutionPath = "";
         string fullSolutionPath = "";
         string airClientPath = "";
         string fullAirClientPath = "";
-
         string cgBinPath = "";
         string cgPath = "";
         string cgGLPath = "";
         string CgD3D9Path = "";
-
         string backupCG = "";
         string backupCgGL = "";
         string backupCg3D9 = "";
         string backupTbb = "";
         string backupNPSWF32 = "";
         string backupAdobeAir = "";
-
         string NPSWF32Install = "";
         string adobeAirInstall = "";
-
         string finalCG = "";
         string finalCgGL = "";
         string finalCg3D9 = "";
-
         string finalTbb = "";
         string finalNPSWF32 = "";
         string finalAdobeAir = "";
-        // --- END LOCATION BASED VARIABLES ---
-
-        // This part is actually never used.
         public MainWindow()
         {
             Loaded += MainWindow_Loaded;
@@ -64,7 +47,6 @@ namespace LoLUpdater
             pingTimer.Interval = new TimeSpan(0, 0, 5);
             pingTimer.Start();
         }
-
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Version win8version = new Version(6, 2, 9200, 0);
@@ -83,48 +65,34 @@ namespace LoLUpdater
                 WinUpdate.IsEnabled = false;
                 if (!disableWarnings)
                 {
-                    var result = MessageBox.Show("Certain features have been disabled. To enable all features, please run application " +
-                        "as administrator. Restart as administrator? You can disable these prompts from within Application Options",
-                        "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                var result = MessageBox.Show("Certain features have been disabled. To enable all features, please run application " +
+                    "as administrator. Restart as administrator? You can disable these prompts from within Application Options",
+                    "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Information);
 
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        restartAsAdmin();
-                    }
+                if (result == MessageBoxResult.Yes)
+                {
+                    restartAsAdmin();
                 }
+            }
+            if (getPing("64.7.194.1") > getPing("190.93.245.13"))
+            {
+                EUW.IsSelected = true;
             }
 
             handlePing();
         }
-
         private void pingTimer_Tick(object sender, EventArgs e)
         {
             handlePing();
         }
-
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
         }
-
         private void Flash_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
         }
-
-        /* This is probably unnecessary with the added description box
-        private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater",
-                MessageBoxButton.OK, MessageBoxImage.Information);
-        } */
-
-        // Todo: Make this prettier and add more servers
-        private void ping_Click(object sender, RoutedEventArgs e)
-        {
-            handlePing();
-        }
-
         public void DoEvents()
         {
             DispatcherFrame frame = new DispatcherFrame();
@@ -132,20 +100,17 @@ namespace LoLUpdater
                 new DispatcherOperationCallback(ExitFrame), frame);
             Dispatcher.PushFrame(frame);
         }
-
         public object ExitFrame(object f)
         {
             ((DispatcherFrame)f).Continue = false;
 
             return null;
         }
-
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             populateVariableLocations();
             taskProgress.IsIndeterminate = true;
             DoEvents();
-
             if (Visual.IsChecked == true)
             {
                 taskProgress.Tag = "Openning System Performance Properties...";
@@ -169,13 +134,7 @@ namespace LoLUpdater
                 taskProgress.Tag = "Setting Up Windows Update...";
                 handleWindowsUpdate();
             }
-
-            if (Riot_Logs.IsChecked == true)
-            {
-                taskProgress.Tag = "Deleting Riot Logs...";
-                handleRiotLogs();
-            }
-
+            taskProgress.Tag = "Performing Backup...";
             if (!Directory.Exists("Backup"))
             {
                 taskProgress.Tag = "Performing Backup...";
@@ -195,7 +154,6 @@ namespace LoLUpdater
                 taskProgress.Tag = "Removing Patch...";
                 handleUninstall();
             }
-
             taskProgress.IsIndeterminate = false;
             taskProgress.Value = 100;
             taskProgress.Tag = "All Processes Completed Successfully!";
@@ -310,39 +268,39 @@ namespace LoLUpdater
         {
             try
             {
-                if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
+            if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
+            {
+                if (CGCheck())
                 {
-                    if (CGCheck())
+                    if (Cg.IsChecked == true)
                     {
-                        if (Cg.IsChecked == true)
-                        {
-                            File.Copy(cgPath, fullReleasePath + finalCG, true);
-                            File.Copy(cgPath, fullSolutionPath + finalCG, true);
-                        }
+                        File.Copy(cgPath, fullReleasePath + finalCG, true);
+                        File.Copy(cgPath, fullSolutionPath + finalCG, true);
+                    }
 
-                        if (CgGL.IsChecked == true)
-                        {
-                            File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);
-                            File.Copy(cgGLPath, fullSolutionPath + finalCgGL, true);
-                        }
+                    if (CgGL.IsChecked == true)
+                    {
+                        File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);
+                        File.Copy(cgGLPath, fullSolutionPath + finalCgGL, true);
+                    }
 
-                        if (CgD3D9.IsChecked == true)
-                        {
-                            File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
-                            File.Copy(CgD3D9Path, fullSolutionPath + finalCg3D9, true);
-                        }
+                    if (CgD3D9.IsChecked == true)
+                    {
+                        File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
+                        File.Copy(CgD3D9Path, fullSolutionPath + finalCg3D9, true);
                     }
                 }
             }
+            }
             catch (System.IO.IOException)
             {
-                var output = MessageBox.Show("Error: League of Legends is currently open. Would you like to automatically close it?", "Error", MessageBoxButton.YesNo, MessageBoxImage.Error);
+                var output = MessageBox.Show("Error: League of Legends is currently open. Would you like to automatically close it?","Error",MessageBoxButton.YesNo,MessageBoxImage.Error);
                 if (output == MessageBoxResult.Yes)
                 {
                     try
                     {
-                        Process[] proc = Process.GetProcessesByName("LoLLauncher");
-                        proc[0].Kill();
+	                    Process[] proc = Process.GetProcessesByName("LoLLauncher");
+	                    proc[0].Kill();
                         proc[0].WaitForExit();
                         handleCGInstall();
                     }
@@ -617,21 +575,22 @@ namespace LoLUpdater
 
         private void handlePing()
         {
-            Ping ping = new Ping();
-            PingReply reply;
-
             if (NA.IsSelected)
             {
-                reply = ping.Send("64.7.194.1");
-                Label.Content = reply.RoundtripTime.ToString();
+                Label.Content = getPing("64.7.194.1");
             }
             else if (EUW.IsSelected)
             {
-                reply = ping.Send("190.93.245.13");
-                Label.Content = reply.RoundtripTime.ToString();
+                Label.Content = getPing("190.93.245.13");
             }
         }
+        private long getPing(string ip)
+        {
+            Ping ping = new Ping();
+            PingReply reply = ping.Send(ip);
 
+            return reply.RoundtripTime;
+        }
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             handlePing();
@@ -667,13 +626,10 @@ namespace LoLUpdater
                     lblDescription.Text = "Do a quick clean of the harddrive";
                     break;
                 case "Visual":
-                    lblDescription.Text = "Enables you to edit the visual style of Window";
+                    lblDescription.Text = "Enables you to edit the visual style of Windows";
                     break;
                 case "MouseHz_":
                     lblDescription.Text = "Sets the Mouse Hz to 500Hz on Windows 8 and Windows 8.1, resulting in a more responsive mouse";
-                    break;
-                case "Riot_Logs":
-                    lblDescription.Text = "Deletes Riot logs created 7 or more days ago";
                     break;
             }
         }
