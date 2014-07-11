@@ -75,22 +75,22 @@ namespace LoLUpdater
                 MouseHz_.IsEnabled = true;
             }
 
-
-
-
             Boolean disableWarnings = Properties.Settings.Default.disableWarnings;
 
-            if (!UacHelper.IsProcessElevated && !disableWarnings)
+            if (!UacHelper.IsProcessElevated)
             {
                 MouseHz_.IsEnabled = false;
                 WinUpdate.IsEnabled = false;
-                var result = MessageBox.Show("Certain features have been disabled. To enable all features, please run application " +
-                    "as administrator. Restart as administrator? You can disable these prompts from within Application Options",
-                    "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Information);
-
-                if (result == MessageBoxResult.Yes)
+                if (!disableWarnings)
                 {
-                    restartAsAdmin();
+                    var result = MessageBox.Show("Certain features have been disabled. To enable all features, please run application " +
+                        "as administrator. Restart as administrator? You can disable these prompts from within Application Options",
+                        "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Information);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        restartAsAdmin();
+                    }
                 }
             }
 
@@ -112,11 +112,12 @@ namespace LoLUpdater
             adobeAlert();
         }
 
+        /* This is probably unnecessary with the added description box
         private void Deleteoldlogs_Checked(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("This deletes Riot logs older than 7 days", "LoLUpdater",
                 MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+        } */
 
         // Todo: Make this prettier and add more servers
         private void ping_Click(object sender, RoutedEventArgs e)
@@ -143,53 +144,47 @@ namespace LoLUpdater
         {
             populateVariableLocations();
             taskProgress.IsIndeterminate = true;
-            taskProgress.Tag = "Openning System Performance Properties...";
             DoEvents();
 
             if (Visual.IsChecked == true)
             {
+                taskProgress.Tag = "Openning System Performance Properties...";
                 Process.Start("SystemPropertiesPerformance.exe");
             }
 
-            taskProgress.Tag = "Openning Disk Cleanup...";
-
             if (Clean.IsChecked == true)
             {
+                taskProgress.Tag = "Openning Disk Cleanup...";
                 runCleanManager();
             }
 
-            taskProgress.Tag = "Setting Up Mouse Hz Adjustment...";
-
             if (MouseHz_.IsChecked == true)
             {
+                taskProgress.Tag = "Setting Up Mouse Hz Adjustment...";
                 handleMouseHz();
             }
 
-            taskProgress.Tag = "Setting Up Windows Update...";
-
             if (WinUpdate.IsChecked == true)
             {
+                taskProgress.Tag = "Setting Up Windows Update...";
                 handleWindowsUpdate();
             }
 
-            taskProgress.Tag = "Deleting Riot Logs...";
-
             if (Riot_Logs.IsChecked == true)
             {
+                taskProgress.Tag = "Deleting Riot Logs...";
                 handleRiotLogs();
             }
 
-            taskProgress.Tag = "Performing Backup...";
-
             if (!Directory.Exists("Backup"))
             {
+                taskProgress.Tag = "Performing Backup...";
                 handleBackup();
             }
 
-            taskProgress.Tag = "Patching...";
-
             if (Patch.IsChecked == true)
             {
+                taskProgress.Tag = "Patching...";
                 handleParticleMultithreading();
                 handlePandoUninstall();
                 handleCGInstall();
@@ -313,40 +308,41 @@ namespace LoLUpdater
         /// </summary>
         private void handleCGInstall() // The error checking needs to be revised. Perhaps a variable that denotes the error if it is unresolvable, and relays it to the user.
         {
-            try {  
-            if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
+            try
             {
-                if (CGCheck())
+                if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
                 {
-                    if (Cg.IsChecked == true)
+                    if (CGCheck())
                     {
-                        File.Copy(cgPath, fullReleasePath + finalCG, true);
-                        File.Copy(cgPath, fullSolutionPath + finalCG, true);
-                    }
+                        if (Cg.IsChecked == true)
+                        {
+                            File.Copy(cgPath, fullReleasePath + finalCG, true);
+                            File.Copy(cgPath, fullSolutionPath + finalCG, true);
+                        }
 
-                    if (CgGL.IsChecked == true)
-                    {
-                        File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);
-                        File.Copy(cgGLPath, fullSolutionPath + finalCgGL, true);
-                    }
+                        if (CgGL.IsChecked == true)
+                        {
+                            File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);
+                            File.Copy(cgGLPath, fullSolutionPath + finalCgGL, true);
+                        }
 
-                    if (CgD3D9.IsChecked == true)
-                    {
-                        File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
-                        File.Copy(CgD3D9Path, fullSolutionPath + finalCg3D9, true);
+                        if (CgD3D9.IsChecked == true)
+                        {
+                            File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
+                            File.Copy(CgD3D9Path, fullSolutionPath + finalCg3D9, true);
+                        }
                     }
                 }
             }
-            }
             catch (System.IO.IOException)
             {
-                var output = MessageBox.Show("Error: League of Legends is currently open. Would you like to automatically close it?","Error",MessageBoxButton.YesNo,MessageBoxImage.Error);
+                var output = MessageBox.Show("Error: League of Legends is currently open. Would you like to automatically close it?", "Error", MessageBoxButton.YesNo, MessageBoxImage.Error);
                 if (output == MessageBoxResult.Yes)
                 {
                     try
                     {
-	                    Process[] proc = Process.GetProcessesByName("LoLLauncher");
-	                    proc[0].Kill();
+                        Process[] proc = Process.GetProcessesByName("LoLLauncher");
+                        proc[0].Kill();
                         proc[0].WaitForExit();
                         handleCGInstall();
                     }

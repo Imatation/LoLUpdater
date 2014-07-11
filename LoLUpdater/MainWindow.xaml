@@ -40,7 +40,8 @@
             <CheckBox x:Name="Clean" Content="Clean HDD" ToolTip="Cleans the hardrive from temporary garbage files" Foreground="#FFB59214" Background="#FF38549E" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="Visual" Content="Visual Options" ToolTip="Change how Windows looks" Foreground="#FFB59214" Background="#FF38549E" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="MouseHz_" Content="MouseHz+" ToolTip="Increases mouseHz to 500Hz, for a smoother mouse" ToolTipService.ShowOnDisabled="True" Foreground="#FFB59214" Background="#FF38549E" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-            <CheckBox x:Name="Riot_Logs" Content="Delete Old Logs" Checked="Deleteoldlogs_Checked" Foreground="#FFB59214" Background="#FF38549E" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
+            <CheckBox x:Name="Riot_Logs" Content="Delete Old Logs" Foreground="#FFB59214" Background="#FF38549E" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
+            <!-- (Removed Riot Logs Alert) <CheckBox x:Name="Riot_Logs" Content="Delete Old Logs" Checked="Deleteoldlogs_Checked" Foreground="#FFB59214" Background="#FF38549E" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/> -->
         </ListBox>
         <Label x:Name="Label" Content="" HorizontalAlignment="Left" Margin="632,67.05,0,0" VerticalAlignment="Top" Width="31" RenderTransformOrigin="4.194,0.538" Background="#FF0A1A34" Foreground="#FFB59214"/>
         <ComboBox HorizontalAlignment="Left" Margin="597,40,0,0" VerticalAlignment="Top" Width="119.5" ToolTip="Select your server" SelectedIndex="1" SelectionChanged="ComboBox_SelectionChanged" Style="{DynamicResource Experimental_ComboBox}">
