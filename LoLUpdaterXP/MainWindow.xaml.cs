@@ -210,9 +210,10 @@ namespace LoLUpdater
                     {
                         if (Cg.IsChecked == true)
                         {
-                            File.Copy(cgPath, fullReleasePath + finalCG, true);
                             File.Copy(cgPath, fullSolutionPath + finalCG, true);
                         }
+                        if(Cg1.IsChecked == true)
+                        { File.Copy(cgPath, fullReleasePath + finalCG, true); }
                         if (CgGL.IsChecked == true)
                         {
                             File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);

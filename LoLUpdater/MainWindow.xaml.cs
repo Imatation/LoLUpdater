@@ -57,10 +57,10 @@ namespace LoLUpdater
                 Environment.OSVersion.Version >= win8version)
             {
                 MouseHz_.IsEnabled = true;
+
             }
 
             Boolean disableWarnings = Properties.Settings.Default.disableWarnings;
-
             if (!UacHelper.IsProcessElevated)
             {
                 MouseHz_.IsEnabled = false;
@@ -277,39 +277,48 @@ namespace LoLUpdater
         {
             try
             {
-            if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
-            {
-                if (CGCheck())
+                if (Cg.IsChecked == true || CgGL.IsChecked == true || CgD3D9.IsChecked == true)
                 {
-                    if (Cg.IsChecked == true)
+                    if (CGCheck())
                     {
-                        File.Copy(cgPath, fullReleasePath + finalCG, true);
-                        File.Copy(cgPath, fullSolutionPath + finalCG, true);
-                    }
+                        if (Cg.IsChecked == true)
+                        {
+                            File.Copy(cgPath, fullSolutionPath + finalCG, true);
+                        }
+                        if (Cg1.IsChecked == true)
+                        {
+                            File.Copy(cgPath, fullReleasePath + finalCG, true);
+                        }
 
-                    if (CgGL.IsChecked == true)
-                    {
-                        File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);
-                        File.Copy(cgGLPath, fullSolutionPath + finalCgGL, true);
-                    }
+                        if (CgGL.IsChecked == true)
+                        {
+                            File.Copy(cgGLPath, fullSolutionPath + finalCgGL, true);
+                        }
+                        if (CgGL1.IsChecked == true)
+                        {
+                            File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);
+                        }
 
-                    if (CgD3D9.IsChecked == true)
-                    {
-                        File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
-                        File.Copy(CgD3D9Path, fullSolutionPath + finalCg3D9, true);
+                        if (CgD3D9.IsChecked == true)
+                        {
+                            File.Copy(CgD3D9Path, fullSolutionPath + finalCg3D9, true);
+                        }
+                        if (CgD3D1.IsChecked == true)
+                        {
+                            File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
+                        }
                     }
                 }
             }
-            }
             catch (System.IO.IOException)
             {
-                var output = MessageBox.Show("Error: League of Legends is currently open. Would you like to automatically close it?","Error",MessageBoxButton.YesNo,MessageBoxImage.Error);
+                var output = MessageBox.Show("Error: League of Legends is currently open. Would you like to automatically close it?", "Error", MessageBoxButton.YesNo, MessageBoxImage.Error);
                 if (output == MessageBoxResult.Yes)
                 {
                     try
                     {
-	                    Process[] proc = Process.GetProcessesByName("LoLLauncher");
-	                    proc[0].Kill();
+                        Process[] proc = Process.GetProcessesByName("LoLLauncher");
+                        proc[0].Kill();
                         proc[0].WaitForExit();
                         handleCGInstall();
                     }
@@ -611,22 +620,22 @@ namespace LoLUpdater
             switch (chkBox.Name)
             {
                 case "AdobeAIR":
-                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching.";
+                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client";
                     break;
                 case "Flash":
-                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching.";
+                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the built in Flash player in the Air Client";
                     break;
                 case "Cg":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel";
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
                 case "CgD3D9":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel";
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
                 case "CgGL":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel";
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
                 case "tbb":
-                    lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game";
+                    lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL";
                     break;
                 case "WinUpdate":
                     lblDescription.Text = "Performs a Windows Update on the computer, might take some time.";
@@ -639,6 +648,15 @@ namespace LoLUpdater
                     break;
                 case "MouseHz_":
                     lblDescription.Text = "Sets the Mouse Hz to 500Hz on Windows 8 and Windows 8.1, resulting in a more responsive mouse";
+                    break;
+                case "Cg1":
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
+                    break;
+                case "CgD3D1":
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
+                    break;
+                case "CgGL1":
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
             }
         }
@@ -653,6 +671,7 @@ namespace LoLUpdater
             frmOptions options = new frmOptions();
             options.ShowDialog();
         }
+
 
     }
 }
