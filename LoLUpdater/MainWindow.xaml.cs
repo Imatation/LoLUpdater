@@ -38,6 +38,7 @@ namespace LoLUpdater
         string finalTbb = "";
         string finalNPSWF32 = "";
         string finalAdobeAir = "";
+
         public MainWindow()
         {
             Loaded += MainWindow_Loaded;
@@ -47,6 +48,7 @@ namespace LoLUpdater
             pingTimer.Interval = new TimeSpan(0, 0, 5);
             pingTimer.Start();
         }
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Version win8version = new Version(6, 2, 9200, 0);
@@ -65,13 +67,14 @@ namespace LoLUpdater
                 WinUpdate.IsEnabled = false;
                 if (!disableWarnings)
                 {
-                var result = MessageBox.Show("Certain features have been disabled. To enable all features, please run application " +
-                    "as administrator. Restart as administrator? You can disable these prompts from within Application Options",
-                    "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                    var result = MessageBox.Show("Certain features have been disabled. To enable all features, please run application " +
+                        "as administrator. Restart as administrator? You can disable these prompts from within Application Options",
+                        "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Information);
 
-                if (result == MessageBoxResult.Yes)
-                {
-                    restartAsAdmin();
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        restartAsAdmin();
+                    }
                 }
             }
             if (getPing("64.7.194.1") > getPing("190.93.245.13"))
@@ -81,18 +84,22 @@ namespace LoLUpdater
 
             handlePing();
         }
+
         private void pingTimer_Tick(object sender, EventArgs e)
         {
             handlePing();
         }
+
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
         }
+
         private void Flash_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
         }
+
         public void DoEvents()
         {
             DispatcherFrame frame = new DispatcherFrame();
@@ -100,12 +107,14 @@ namespace LoLUpdater
                 new DispatcherOperationCallback(ExitFrame), frame);
             Dispatcher.PushFrame(frame);
         }
+
         public object ExitFrame(object f)
         {
             ((DispatcherFrame)f).Continue = false;
 
             return null;
         }
+
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             populateVariableLocations();
