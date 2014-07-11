@@ -85,7 +85,7 @@ namespace LoLUpdater
             populateVariableLocations();
             taskProgress.IsIndeterminate = true;
             DoEvents();
-            taskProgress.Tag = "Openning Disk Cleanup...";
+            taskProgress.Tag = "Opening Disk Cleanup...";
             if (Clean.IsChecked == true)
             {
                 runCleanManager();
