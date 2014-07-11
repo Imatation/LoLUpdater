@@ -1,13 +1,1 @@
-(function() {
-  var download, downloadAlt, screenshot;
-
-  if (document.getElementsByTagName("body")[0].className.indexOf("xp") > -1) {
-    download = document.getElementById("download");
-    downloadAlt = document.getElementById("download-alt");
-    screenshot = document.getElementById("screenshot");
-    download.href = "/download-xp";
-    downloadAlt.href = "/download";
-    screenshot.src = "img/screenshot_xp.png";
-  }
-
-}).call(this);
+(function(){var e,n,d;document.getElementsByTagName("body")[0].className.indexOf("xp")>-1&&(e=document.getElementById("download"),n=document.getElementById("download-alt"),d=document.getElementById("screenshot"),e.href="/download-xp",n.href="/download",d.src="img/screenshot_xp.png")}).call(this);
