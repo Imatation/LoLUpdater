@@ -41,11 +41,13 @@ namespace LoLUpdater
         public MainWindow()
         {
             Loaded += MainWindow_Loaded;
-
-            System.Windows.Threading.DispatcherTimer pingTimer = new System.Windows.Threading.DispatcherTimer();
-            pingTimer.Tick += new EventHandler(pingTimer_Tick);
-            pingTimer.Interval = new TimeSpan(0, 0, 5);
-            pingTimer.Start();
+            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable() == true)
+            {
+                System.Windows.Threading.DispatcherTimer pingTimer = new System.Windows.Threading.DispatcherTimer();
+                pingTimer.Tick += new EventHandler(pingTimer_Tick);
+                pingTimer.Interval = new TimeSpan(0, 0, 5);
+                pingTimer.Start();
+            }
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
