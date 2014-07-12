@@ -42,11 +42,10 @@ namespace LoLUpdater
         public MainWindow()
         {
 
-            //Todo: Fix so it doesnt crash when launched without an Internet Connection
-                System.Windows.Threading.DispatcherTimer pingTimer = new System.Windows.Threading.DispatcherTimer();
-                pingTimer.Tick += new EventHandler(pingTimer_Tick);
-                pingTimer.Interval = new TimeSpan(0, 0, 5);
-                pingTimer.Start();
+            System.Windows.Threading.DispatcherTimer pingTimer = new System.Windows.Threading.DispatcherTimer();
+            pingTimer.Tick += new EventHandler(pingTimer_Tick);
+            pingTimer.Interval = new TimeSpan(0, 0, 5);
+            pingTimer.Start();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -76,11 +75,6 @@ namespace LoLUpdater
                         restartAsAdmin();
                     }
                 }
-            }
-            //Todo: Fix so it doesnt crash when launched without an Internet Connection
-            if (getPing("64.7.194.1")  > getPing("190.93.245.13"))
-            {
-                EUW.IsSelected = true;
             }
 
             handlePing();
@@ -592,47 +586,49 @@ namespace LoLUpdater
             }
         }
 
-        private void handlePing()
-        
+        private static readonly System.Collections.Generic.Dictionary<string, string> Ping_Dictionary = new System.Collections.Generic.Dictionary<string, string>()
         {
-            if (OCE.IsSelected)
-            {
-                Label.Content = getPing("oce.leagueoflegends.com");
-            }
-            if (LAN.IsSelected)
-            {
-                Label.Content = getPing("lan.leagueoflegends.com");
-            }
-            if (RU.IsSelected)
-            {
-                Label.Content = getPing("ru.leagueoflegends.com");
-            }
-            if (TR.IsSelected)
-            {
-                Label.Content = getPing("tr.leagueoflegends.com");
-            }
-            if (EUNE.IsSelected)
-            {
-                Label.Content = getPing("eune.leagueoflegends.com");
-            }
-            if (BR.IsSelected)
-            {
-                Label.Content = getPing("br.leagueoflegends.com");
-            }
-            if(GarenaPH.IsSelected)
-            {
-                Label.Content = getPing("garena.ph");
-            }
-            if(GarenaSingapore.IsSelected)
-            { Label.Content = getPing("lol.garena.com"); }
+            // Order is important here
+            { "EUW", "190.93.245.13"},
+            { "EUNE", "eune.leagueoflegends.com"},
+            { "NA", "64.7.194.1"},
+            { "BR", "br.leagueoflegends.com"},
+            { "TR", "tr.leagueoflegends.com"},
+            { "OCE", "oce.leagueoflegends.com"},
+            { "LAN", "lan.leagueoflegends.com"},
+            { "RU", "ru.leagueoflegends.com"},
+            { "GarenaSingapore", "lol.garena.com"},
+            { "GarenaPH", "garena.ph"}
+        };
 
-            if (NA.IsSelected)
+        private void handlePing()
+        {
+            if (!IsNetworkAvailable())
             {
-                Label.Content = getPing("64.7.194.1");
+                Label.Content = "No Internet";
             }
-            else if (EUW.IsSelected)
+            else if (Ping_Server.SelectedIndex == -1)
             {
-                Label.Content = getPing("190.93.245.13");
+                long? ping = null;
+                for (int index = 0; index < Ping_Dictionary.Count; index++)
+                {
+
+                    var item = Ping_Dictionary.ElementAt(index);
+                    long itemPing = getPing(item.Value);
+
+                    if (ping == null || itemPing < ping)
+                    {
+                        ping = itemPing;
+                        Ping_Server.SelectedIndex = index;
+                    }
+
+                }
+                Label.Content = ping;
+            }
+            else
+            {
+                string ip = Ping_Dictionary.ElementAt(Ping_Server.SelectedIndex).Value;
+                Label.Content = getPing(ip);
             }
         }
         private long getPing(string ip)
@@ -642,6 +638,37 @@ namespace LoLUpdater
 
             return reply.RoundtripTime;
         }
+
+        // http://stackoverflow.com/questions/520347/how-do-i-check-for-a-network-connection
+        private bool IsNetworkAvailable()
+        {
+            if (!NetworkInterface.GetIsNetworkAvailable())
+                return false;
+
+            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                // discard because of standard reasons
+                if ((ni.OperationalStatus != OperationalStatus.Up) ||
+                    (ni.NetworkInterfaceType == NetworkInterfaceType.Loopback) ||
+                    (ni.NetworkInterfaceType == NetworkInterfaceType.Tunnel))
+                    continue;
+
+
+
+                // discard virtual cards (virtual box, virtual pc, etc.)
+                if ((ni.Description.IndexOf("virtual", StringComparison.OrdinalIgnoreCase) >= 0) ||
+                    (ni.Name.IndexOf("virtual", StringComparison.OrdinalIgnoreCase) >= 0))
+                    continue;
+
+                // discard "Microsoft Loopback Adapter", it will not show as NetworkInterfaceType.Loopback but as Ethernet Card.
+                if (ni.Description.Equals("Microsoft Loopback Adapter", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                return true;
+            }
+            return false;
+        }
+
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             handlePing();
