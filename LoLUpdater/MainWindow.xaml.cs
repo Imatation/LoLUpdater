@@ -14,7 +14,6 @@ namespace LoLUpdater
     {
         public MainWindow()
         {
-
             System.Windows.Threading.DispatcherTimer pingTimer = new System.Windows.Threading.DispatcherTimer();
             pingTimer.Tick += new EventHandler(pingTimer_Tick);
             pingTimer.Interval = new TimeSpan(0, 0, 5);
@@ -60,16 +59,13 @@ namespace LoLUpdater
         }
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            if (Process.GetProcesses().Any(p => p.ProcessName.Contains("LoLClient")))
+            if (Process.GetProcessesByName("LoLClient").Length > 0)
             {
-                if (MessageBox.Show("Error: The League of Legends Client is currently open, it is required that you close this if you want to patch. Would you like to close it?", "Error", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
-                {
-                    Process[] proc = Process.GetProcessesByName("LoLClient");
-                    proc[0].Kill();
-                    proc[0].WaitForExit();
-                    handleCGInstall();
-                }
+                Process[] proc = Process.GetProcessesByName("LoLClient");
+                proc[0].Kill();
+                proc[0].WaitForExit();
             }
+            handleCGInstall();
             taskProgress.IsIndeterminate = true;
             DoEvents();
             if (Visual.IsChecked == true)
@@ -487,7 +483,6 @@ namespace LoLUpdater
                 long? ping = null;
                 for (int index = 0; index < Ping_Dictionary.Count; index++)
                 {
-
                     var item = Ping_Dictionary.ElementAt(index);
                     long itemPing = getPing(item.Value);
 
@@ -510,14 +505,12 @@ namespace LoLUpdater
         {
             Ping ping = new Ping();
             PingReply reply = ping.Send(ip);
-
             return reply.RoundtripTime;
         }
         private bool IsNetworkAvailable()
         {
             if (!NetworkInterface.GetIsNetworkAvailable())
                 return false;
-
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
                 if ((ni.OperationalStatus != OperationalStatus.Up) ||
@@ -529,7 +522,6 @@ namespace LoLUpdater
                     continue;
                 if (ni.Description.Equals("Microsoft Loopback Adapter", StringComparison.OrdinalIgnoreCase))
                     continue;
-
                 return true;
             }
             return false;

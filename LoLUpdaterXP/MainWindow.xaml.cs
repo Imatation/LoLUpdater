@@ -51,15 +51,11 @@ namespace LoLUpdater
         }
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            if (Process.GetProcesses().Any(p => p.ProcessName.Contains("LoLClient")))
+            if (Process.GetProcessesByName("LoLClient").Length > 0)
             {
-                if (MessageBox.Show("Error: The League of Legends Client is currently open, it is required that you close this if you want to patch. Would you like to close it?", "Error", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
-                {
-                    Process[] proc = Process.GetProcessesByName("LoLClient");
-                    proc[0].Kill();
-                    proc[0].WaitForExit();
-                    handleCGInstall();
-                }
+                Process[] proc = Process.GetProcessesByName("LoLClient");
+                proc[0].Kill();
+                proc[0].WaitForExit();
             }
             taskProgress.IsIndeterminate = true;
             DoEvents();
@@ -406,27 +402,6 @@ namespace LoLUpdater
             process.StartInfo = cm;
             process.Start();
         }
-        private void handleMouseHz()
-        {
-            RegistryKey mousehz;
-
-            if (Environment.Is64BitProcess)
-            {
-                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
-            else
-            {
-                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
-            mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), RegistryValueKind.String);
-            var cmd = new ProcessStartInfo();
-            var process = new Process();
-            cmd.FileName = "cmd.exe";
-            cmd.Verb = "runas";
-            cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
-            process.StartInfo = cmd;
-            process.Start();
-        }
         private static readonly System.Collections.Generic.Dictionary<string, string> Ping_Dictionary = new System.Collections.Generic.Dictionary<string, string>()
         {
             { "EUW", "190.93.245.13"},
@@ -445,7 +420,6 @@ namespace LoLUpdater
                 long? ping = null;
                 for (int index = 0; index < Ping_Dictionary.Count; index++)
                 {
-
                     var item = Ping_Dictionary.ElementAt(index);
                     long itemPing = getPing(item.Value);
 
@@ -454,7 +428,6 @@ namespace LoLUpdater
                         ping = itemPing;
                         Ping_Server.SelectedIndex = index;
                     }
-
                 }
                 Label.Content = ping;
             }
@@ -468,14 +441,12 @@ namespace LoLUpdater
         {
             Ping ping = new Ping();
             PingReply reply = ping.Send(ip);
-
             return reply.RoundtripTime;
         }
         private bool IsNetworkAvailable()
         {
             if (!NetworkInterface.GetIsNetworkAvailable())
                 return false;
-
             foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
             {
                 if ((ni.OperationalStatus != OperationalStatus.Up) ||
@@ -487,7 +458,6 @@ namespace LoLUpdater
                     continue;
                 if (ni.Description.Equals("Microsoft Loopback Adapter", StringComparison.OrdinalIgnoreCase))
                     continue;
-
                 return true;
             }
             return false;
