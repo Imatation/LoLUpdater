@@ -274,7 +274,7 @@ namespace LoLUpdater
                 {
                     try
                     {
-                        Process[] proc = Process.GetProcessesByName("LoLLauncher");
+                        Process[] proc = Process.GetProcessesByName("LoLClient");
                         proc[0].Kill();
                         proc[0].WaitForExit();
                         handleCGInstall();

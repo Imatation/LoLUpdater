@@ -41,6 +41,8 @@ namespace LoLUpdater
 
         public MainWindow()
         {
+
+            //Todo: Fix so it doesnt crash when launched without an Internet Connection
                 System.Windows.Threading.DispatcherTimer pingTimer = new System.Windows.Threading.DispatcherTimer();
                 pingTimer.Tick += new EventHandler(pingTimer_Tick);
                 pingTimer.Interval = new TimeSpan(0, 0, 5);
@@ -75,6 +77,7 @@ namespace LoLUpdater
                     }
                 }
             }
+            //Todo: Fix so it doesnt crash when launched without an Internet Connection
             if (getPing("64.7.194.1")  > getPing("190.93.245.13"))
             {
                 EUW.IsSelected = true;
@@ -315,7 +318,7 @@ namespace LoLUpdater
                 {
                     try
                     {
-                        Process[] proc = Process.GetProcessesByName("LoLLauncher");
+                        Process[] proc = Process.GetProcessesByName("LoLClient");
                         proc[0].Kill();
                         proc[0].WaitForExit();
                         handleCGInstall();
