@@ -37,6 +37,7 @@ namespace LoLUpdater
         string finalTbb = "";
         string finalNPSWF32 = "";
         string finalAdobeAir = "";
+
         public MainWindow()
         {
             Loaded += MainWindow_Loaded;
@@ -46,8 +47,18 @@ namespace LoLUpdater
             pingTimer.Interval = new TimeSpan(0, 0, 5);
             pingTimer.Start();
         }
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            Version win8version = new Version(6, 2, 9200, 0);
+
+            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT &&
+                Environment.OSVersion.Version >= win8version)
+            {
+                MouseHz_.IsEnabled = true;
+
+            }
+
             if (getPing("64.7.194.1") > getPing("190.93.245.13"))
             {
                 EUW.IsSelected = true;
@@ -55,18 +66,22 @@ namespace LoLUpdater
 
             handlePing();
         }
+
         private void pingTimer_Tick(object sender, EventArgs e)
         {
             handlePing();
         }
+
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
         }
+
         private void Flash_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
         }
+
         public void DoEvents()
         {
             DispatcherFrame frame = new DispatcherFrame();
@@ -74,30 +89,46 @@ namespace LoLUpdater
                 new DispatcherOperationCallback(ExitFrame), frame);
             Dispatcher.PushFrame(frame);
         }
+
         public object ExitFrame(object f)
         {
             ((DispatcherFrame)f).Continue = false;
 
             return null;
         }
+
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             populateVariableLocations();
             taskProgress.IsIndeterminate = true;
             DoEvents();
-            taskProgress.Tag = "Opening Disk Cleanup...";
+            if (Visual.IsChecked == true)
+            {
+                taskProgress.Tag = "Openning System Performance Properties...";
+                Process.Start("SystemPropertiesPerformance.exe");
+            }
+
             if (Clean.IsChecked == true)
             {
+                taskProgress.Tag = "Openning Disk Cleanup...";
                 runCleanManager();
+            }
+
+            if (MouseHz_.IsChecked == true)
+            {
+                taskProgress.Tag = "Setting Up Mouse Hz Adjustment...";
+                handleMouseHz();
             }
             taskProgress.Tag = "Performing Backup...";
             if (!Directory.Exists("Backup"))
             {
+                taskProgress.Tag = "Performing Backup...";
                 handleBackup();
             }
-            taskProgress.Tag = "Patching...";
+
             if (Patch.IsChecked == true)
             {
+                taskProgress.Tag = "Patching...";
                 handleParticleMultithreading();
                 handlePandoUninstall();
                 handleCGInstall();
@@ -112,6 +143,10 @@ namespace LoLUpdater
             taskProgress.Value = 100;
             taskProgress.Tag = "All Processes Completed Successfully!";
         }
+
+        /// <summary>
+        /// This method checks the game config, and sets the particle multithreading to 1.
+        /// </summary>
         private void handleParticleMultithreading()
         {
             if (File.Exists(Path.Combine("Config", "game.cfg")))
@@ -150,6 +185,10 @@ namespace LoLUpdater
                 }
             }
         }
+
+        /// <summary>
+        /// Creates a backup of all vital files.
+        /// </summary>
         private void handleBackup()
         {
             Directory.CreateDirectory("Backup");
@@ -176,6 +215,7 @@ namespace LoLUpdater
                     }
                 }
             }
+
             File.Copy(fullSolutionPath + finalCG, backupCG, true);
             File.Copy(fullSolutionPath + finalCg3D9, backupCg3D9, true);
             File.Copy(fullSolutionPath + finalCgGL, backupCgGL, true);
@@ -183,6 +223,10 @@ namespace LoLUpdater
             File.Copy(fullAirClientPath + finalNPSWF32, backupNPSWF32, true);
             File.Copy(fullAirClientPath + finalAdobeAir, backupAdobeAir, true);
         }
+
+        /// <summary>
+        /// This method handles the installation of adobe and tbb.
+        /// </summary>
         private void handleAdobeAndTBB()
         {
             if (tbb.IsChecked == true)
@@ -200,7 +244,12 @@ namespace LoLUpdater
                 File.Copy(NPSWF32Install, fullAirClientPath + finalNPSWF32, true);
             }
         }
-        private void handleCGInstall()
+
+        /// <summary>
+        /// This method checks if the user wishes to install the CG toolkit, if so
+        /// it installs each option the user selects.
+        /// </summary>
+        private void handleCGInstall() // The error checking needs to be revised. Perhaps a variable that denotes the error if it is unresolvable, and relays it to the user.
         {
             try
             {
@@ -212,15 +261,27 @@ namespace LoLUpdater
                         {
                             File.Copy(cgPath, fullSolutionPath + finalCG, true);
                         }
+                        if (Cg1.IsChecked == true)
+                        {
+                            File.Copy(cgPath, fullReleasePath + finalCG, true);
+                        }
+
                         if (CgGL.IsChecked == true)
                         {
-                            File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);
                             File.Copy(cgGLPath, fullSolutionPath + finalCgGL, true);
                         }
+                        if (CgGL1.IsChecked == true)
+                        {
+                            File.Copy(cgGLPath, fullReleasePath + finalCgGL, true);
+                        }
+
                         if (CgD3D9.IsChecked == true)
                         {
-                            File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
                             File.Copy(CgD3D9Path, fullSolutionPath + finalCg3D9, true);
+                        }
+                        if (CgD3D1.IsChecked == true)
+                        {
+                            File.Copy(CgD3D9Path, fullReleasePath + finalCg3D9, true);
                         }
                     }
                 }
@@ -244,6 +305,10 @@ namespace LoLUpdater
                 }
             }
         }
+
+        /// <summary>
+        /// This method removes Pando Media Booster from the system.
+        /// </summary>
         private void handlePandoUninstall()
         {
             if (File.Exists(Path.Combine(programFiles, "Pando Networks", "Media Booster", "uninst.exe")))
@@ -257,6 +322,10 @@ namespace LoLUpdater
 
             }
         }
+
+        /// <summary>
+        /// This method handles the uninstall of the latest game patches.
+        /// </summary>
         private void handleUninstall()
         {
             if (Directory.Exists("RADS"))
@@ -280,6 +349,7 @@ namespace LoLUpdater
                     File.Copy(Path.Combine("Backup", "GamePermanent_en_SG.cfg"), Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), true);
                 }
             }
+
             File.Copy(backupCG, fullReleasePath + finalCG, true);
             File.Copy(backupCG, fullSolutionPath + finalCG, true);
             File.Copy(backupCgGL, fullReleasePath + finalCgGL, true);
@@ -292,6 +362,11 @@ namespace LoLUpdater
 
             Directory.Delete("Backup", true);
         }
+
+        /// <summary>
+        /// This method determines what version of the application is running, and populates
+        /// all the necessary variables for later use.
+        /// </summary>
         private void populateVariableLocations()
         {
             if (Environment.Is64BitProcess == true)
@@ -302,6 +377,7 @@ namespace LoLUpdater
             {
                 programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             }
+
             if (Directory.Exists("RADS"))
             {
                 folderLocation = "deploy";
@@ -323,8 +399,11 @@ namespace LoLUpdater
                 finalNPSWF32 = Path.Combine("AIR", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll");
                 finalAdobeAir = Path.Combine("AIR", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll");
             }
+
             NPSWF32Install = Path.Combine(programFiles, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll");
             adobeAirInstall = Path.Combine(programFiles, "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll");
+
+
             cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
             if (cgBinPath != null)
             {
@@ -332,6 +411,7 @@ namespace LoLUpdater
                 cgGLPath = Path.Combine(cgBinPath, "cgGL.dll");
                 CgD3D9Path = Path.Combine(cgBinPath, "cgD3D9.dll");
             }
+
             backupCG = Path.Combine("Backup", "cg.dll");
             backupCgGL = Path.Combine("Backup", "cgGL.dll");
             backupCg3D9 = Path.Combine("Backup", "cgD3D9.dll");
@@ -344,13 +424,18 @@ namespace LoLUpdater
             finalCg3D9 = Path.Combine(folderLocation, "cgD3D9.dll");
             finalTbb = Path.Combine(folderLocation, "tbb.dll");
         }
-        private void restartAsAdmin()
+
+        /// <summary>
+        /// This method restarts the application with elevated privaleges.
+        /// </summary>
+        private void restartAsAdmin()  // Closes the application and restarts as an administrator.
         {
             ProcessStartInfo proc = new ProcessStartInfo();
             proc.UseShellExecute = true;
             proc.WorkingDirectory = Environment.CurrentDirectory;
             proc.FileName = System.Reflection.Assembly.GetExecutingAssembly().Location;
             proc.Verb = "runas";
+
             try
             {
                 Process.Start(proc);
@@ -361,17 +446,23 @@ namespace LoLUpdater
             }
             Application.Current.Shutdown();
         }
+
+        /// <summary>
+        /// This method checks for the presence of the CG toolkit, if it is not found, it is installed.
+        /// </summary>
+        /// <returns>True if present or installation completed successfully.</returns>
         private Boolean CGCheck()
         {
             string fileLocation = Path.Combine(programFiles, "NVIDIA Corporation", "Cg", "Bin", "cg.dll");
 
             if (File.Exists(fileLocation))
             {
-                return true;
-            }
+                return true;                                                                                            // Return if found, we don't
+            }                                                                                                           // need to go any further.
+
             try
             {
-                File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
+                File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);              // Extract and write the file
                 Process cg = new Process();
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
@@ -388,6 +479,11 @@ namespace LoLUpdater
                 return false;
             }
         }
+
+        /// <summary>
+        /// Prompts user to install adobe product.
+        /// </summary>
+        // TODO: Add error checking to see if adobe product is already installed.
         private void adobeAlert()
         {
             MessageBoxResult alertMessage = MessageBox.Show("We are unable to include any Adobe products, " +
@@ -399,6 +495,8 @@ namespace LoLUpdater
                 Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
             }
         }
+
+
         private void runCleanManager()
         {
             var cm = new ProcessStartInfo();
@@ -408,6 +506,7 @@ namespace LoLUpdater
             process.StartInfo = cm;
             process.Start();
         }
+
         private void handleMouseHz()
         {
             RegistryKey mousehz;
@@ -422,6 +521,7 @@ namespace LoLUpdater
                 mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft",
                     "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
             }
+
             mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows),
                 "explorer.exe"), RegistryValueKind.String);
             var cmd = new ProcessStartInfo();
@@ -432,8 +532,32 @@ namespace LoLUpdater
             process.StartInfo = cmd;
             process.Start();
         }
+
+
+        private void handleRiotLogs()
+        {
+            if (Directory.Exists("RADS"))
+            {
+                string[] files = Directory.GetFiles("Logs");
+
+                foreach (string file in files)
+                {
+                    FileInfo fi = new FileInfo(file);
+                    if (fi.LastAccessTime < DateTime.Now.AddDays(-7))
+                        fi.Delete();
+                }
+            }
+        }
+
         private void handlePing()
         {
+            if (GarenaPH.IsSelected)
+            {
+                Label.Content = getPing("garena.ph");
+            }
+            if (GarenaSingapore.IsSelected)
+            { Label.Content = getPing("lol.garena.com"); }
+
             if (NA.IsSelected)
             {
                 Label.Content = getPing("64.7.194.1");
@@ -454,37 +578,55 @@ namespace LoLUpdater
         {
             handlePing();
         }
+
         private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var chkBox = (CheckBox)sender;
             switch (chkBox.Name)
             {
                 case "AdobeAIR":
-                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching.";
+                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client";
                     break;
                 case "Flash":
-                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching.";
+                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the built in Flash player in the Air Client";
                     break;
                 case "Cg":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel";
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
                 case "CgD3D9":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel";
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
                 case "CgGL":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel";
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
                 case "tbb":
-                    lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game";
+                    lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL";
                     break;
                 case "Clean":
                     lblDescription.Text = "Do a quick clean of the harddrive";
                     break;
+                case "Cg1":
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
+                    break;
+                case "CgD3D1":
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
+                    break;
+                case "CgGL1":
+                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
+                    break;
             }
         }
+
         private void chkOption_MouseExit(object sender, System.Windows.Input.MouseEventArgs e)
         {
             lblDescription.Text = "";
         }
+
+        private void OK_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
     }
 }
