@@ -551,6 +551,30 @@ namespace LoLUpdater
 
         private void handlePing()
         {
+            if (OCE.IsSelected)
+            {
+                Label.Content = getPing("oce.leagueoflegends.com");
+            }
+            if (LAN.IsSelected)
+            {
+                Label.Content = getPing("lan.leagueoflegends.com");
+            }
+            if (RU.IsSelected)
+            {
+                Label.Content = getPing("ru.leagueoflegends.com");
+            }
+            if (TR.IsSelected)
+            {
+                Label.Content = getPing("tr.leagueoflegends.com");
+            }
+            if (EUNE.IsSelected)
+            {
+                Label.Content = getPing("eune.leagueoflegends.com");
+            }
+            if (BR.IsSelected)
+            {
+                Label.Content = getPing("br.leagueoflegends.com");
+            }
             if (GarenaPH.IsSelected)
             {
                 Label.Content = getPing("garena.ph");

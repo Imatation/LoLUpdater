@@ -30,7 +30,13 @@
         <Label x:Name="Label" Content="" HorizontalAlignment="Left" Margin="729,49,0,0" VerticalAlignment="Top" Width="31" RenderTransformOrigin="4.194,0.538" Background="#FF0A1A34" Foreground="#FFB59214" Height="26"/>
         <ComboBox HorizontalAlignment="Left" Margin="694,22,0,0" VerticalAlignment="Top" Width="122" ToolTip="Select your server" SelectedIndex="1" SelectionChanged="ComboBox_SelectionChanged" Height="22">
             <ComboBoxItem x:Name="EUW" Content="EUW" />
+            <ComboBoxItem x:Name="EUNE" Content="EUNE" />
             <ComboBoxItem x:Name="NA" Content="NA" />
+            <ComboBoxItem x:Name="BR" Content="BR" />
+            <ComboBoxItem x:Name="TR" Content="TR" />
+            <ComboBoxItem x:Name="RU" Content="RU" />
+            <ComboBoxItem x:Name="LAN" Content="LAN" />
+            <ComboBoxItem x:Name="OCE" Content="OCE" />
             <ComboBoxItem x:Name="GarenaSingapore" Content="Garena Singapore" />
             <ComboBoxItem x:Name="GarenaPH" Content="Garena Philippines" />
         </ComboBox>
