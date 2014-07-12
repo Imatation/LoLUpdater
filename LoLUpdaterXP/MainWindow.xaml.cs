@@ -514,7 +514,7 @@ namespace LoLUpdater
             process.Start();
         }
 
-
+        //Todo: Make this work
         private void handleRiotLogs()
         {
             if (Directory.Exists("RADS"))
@@ -626,8 +626,5 @@ namespace LoLUpdater
         {
             lblDescription.Text = "";
         }
-
-
-
     }
 }
