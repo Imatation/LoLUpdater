@@ -77,7 +77,7 @@ namespace LoLUpdater
                     }
                 }
             }
-            if (getPing("64.7.194.1") > getPing("190.93.245.13"))
+            if (getPing("64.7.194.1")  > getPing("190.93.245.13"))
             {
                 EUW.IsSelected = true;
             }
@@ -593,6 +593,13 @@ namespace LoLUpdater
 
         private void handlePing()
         {
+            if(GarenaPH.IsSelected)
+            {
+                Label.Content = getPing("garena.ph");
+            }
+            if(GarenaSingapore.IsSelected)
+            { Label.Content = getPing("lol.garena.com"); }
+
             if (NA.IsSelected)
             {
                 Label.Content = getPing("64.7.194.1");

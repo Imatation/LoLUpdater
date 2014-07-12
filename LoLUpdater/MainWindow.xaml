@@ -47,6 +47,8 @@
         <ComboBox HorizontalAlignment="Left" Margin="689,22,0,0" VerticalAlignment="Top" Width="122" ToolTip="Select your server" SelectedIndex="1" SelectionChanged="ComboBox_SelectionChanged" Style="{DynamicResource Experimental_ComboBox}" Height="22">
             <ComboBoxItem x:Name="EUW" Content="EUW" />
             <ComboBoxItem x:Name="NA" Content="NA" />
+            <ComboBoxItem x:Name="GarenaSingapore" Content="Garena Singapore" />
+            <ComboBoxItem x:Name="GarenaPH" Content="Garena Philippines" />
         </ComboBox>
         <Label x:Name="Label_Copy" Content="Ping:" HorizontalAlignment="Left" Margin="689,49,0,0" VerticalAlignment="Top" Width="35" Background="#FF0A1A34" Foreground="#FFB59214" Height="26"/>
         <Label Content="Air Client Options" HorizontalAlignment="Left" Height="30" Margin="94,0,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
