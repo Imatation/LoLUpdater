@@ -532,11 +532,11 @@ namespace LoLUpdater
             { "NA", "64.7.194.1"},
             { "BR", "br.leagueoflegends.com"},
             { "TR", "tr.leagueoflegends.com"},
+            { "RU", "ru.leagueoflegends.com"},
             { "OCE", "oce.leagueoflegends.com"},
             { "LAN", "lan.leagueoflegends.com"},
-            { "RU", "ru.leagueoflegends.com"},
-            { "GarenaSingapore", "lol.garena.com"},
-            { "GarenaPH", "garena.ph"}
+            { "Garena Singapore", "lol.garena.com"},
+            { "Garena Philippines", "garena.ph"}
         };
 
         private void handlePing()
