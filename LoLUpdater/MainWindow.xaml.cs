@@ -122,13 +122,13 @@ namespace LoLUpdater
             DoEvents();
             if (Visual.IsChecked == true)
             {
-                taskProgress.Tag = "Openning System Performance Properties...";
+                taskProgress.Tag = "Opening System Performance Properties...";
                 Process.Start("SystemPropertiesPerformance.exe");
             }
 
             if (Clean.IsChecked == true)
             {
-                taskProgress.Tag = "Openning Disk Cleanup...";
+                taskProgress.Tag = "Opening Disk Cleanup...";
                 runCleanManager();
             }
 
@@ -673,7 +673,7 @@ namespace LoLUpdater
                     lblDescription.Text = "Performs a Windows Update on the computer, might take some time.";
                     break;
                 case "Clean":
-                    lblDescription.Text = "Do a quick clean of the harddrive";
+                    lblDescription.Text = "Do a quick clean of the harddrive using the Windows automatic disk cleanup manager";
                     break;
                 case "Visual":
                     lblDescription.Text = "Enables you to edit the visual style of Windows";

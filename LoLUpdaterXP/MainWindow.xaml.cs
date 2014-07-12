@@ -50,14 +50,6 @@ namespace LoLUpdater
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Version win8version = new Version(6, 2, 9200, 0);
-
-            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT &&
-                Environment.OSVersion.Version >= win8version)
-            {
-                MouseHz_.IsEnabled = true;
-
-            }
 
             if (getPing("64.7.194.1") > getPing("190.93.245.13"))
             {
@@ -101,24 +93,14 @@ namespace LoLUpdater
         {
             populateVariableLocations();
             taskProgress.IsIndeterminate = true;
-            DoEvents();
-            if (Visual.IsChecked == true)
-            {
-                taskProgress.Tag = "Openning System Performance Properties...";
-                Process.Start("SystemPropertiesPerformance.exe");
-            }
 
             if (Clean.IsChecked == true)
             {
-                taskProgress.Tag = "Openning Disk Cleanup...";
+                taskProgress.Tag = "Opening Disk Cleanup...";
                 runCleanManager();
             }
 
-            if (MouseHz_.IsChecked == true)
-            {
-                taskProgress.Tag = "Setting Up Mouse Hz Adjustment...";
-                handleMouseHz();
-            }
+
             taskProgress.Tag = "Performing Backup...";
             if (!Directory.Exists("Backup"))
             {
@@ -627,7 +609,7 @@ namespace LoLUpdater
                     lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL";
                     break;
                 case "Clean":
-                    lblDescription.Text = "Do a quick clean of the harddrive";
+                    lblDescription.Text = "Do a quick clean of the harddrive using the Windows automatic disk cleanup manager";
                     break;
                 case "Cg1":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
@@ -646,10 +628,6 @@ namespace LoLUpdater
             lblDescription.Text = "";
         }
 
-        private void OK_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
 
 
     }
