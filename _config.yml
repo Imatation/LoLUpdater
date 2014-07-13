@@ -2,3 +2,12 @@ markdown: kramdown
 encoding: UTF-8
 kramdown:
   input: GFM
+site:
+  url: http://www.lolupdater.com
+  name: LoLUpdater
+gems:
+- jekyll-mentions
+- jemoji
+- jekyll-redirect-from
+- jekyll-sitemap
+exclude: node_modules
