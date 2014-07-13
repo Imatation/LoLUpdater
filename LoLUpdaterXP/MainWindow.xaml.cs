@@ -13,7 +13,6 @@ namespace LoLUpdater
     {
         public MainWindow()
         {
-
             System.Windows.Threading.DispatcherTimer pingTimer = new System.Windows.Threading.DispatcherTimer();
             pingTimer.Tick += new EventHandler(pingTimer_Tick);
             pingTimer.Interval = new TimeSpan(0, 0, 5);
@@ -27,7 +26,6 @@ namespace LoLUpdater
         {
             handlePing();
         }
-
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
@@ -46,7 +44,6 @@ namespace LoLUpdater
         public object ExitFrame(object f)
         {
             ((DispatcherFrame)f).Continue = false;
-
             return null;
         }
         private void OK_Click(object sender, RoutedEventArgs e)
@@ -57,6 +54,7 @@ namespace LoLUpdater
                 proc[0].Kill();
                 proc[0].WaitForExit();
             }
+            handleCGInstall();
             taskProgress.IsIndeterminate = true;
             DoEvents();
             if (Clean.IsChecked == true)
@@ -165,7 +163,6 @@ namespace LoLUpdater
                     File.Copy(Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), Path.Combine("Backup", "Adobe AIR.dll"), true);
                     File.Copy(Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"), Path.Combine("Backup", "NPSWF32.dll"), true);
                 }
-
             }
         }
         private void handleAdobeAndTBB()
@@ -187,7 +184,6 @@ namespace LoLUpdater
                     {
                         File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), true);
                     }
-
                 }
                 if (Flash.IsChecked == true)
                 {
@@ -207,7 +203,6 @@ namespace LoLUpdater
                 {
                     File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Properties.Resources.tbb);
                 }
-
                 if (AdobeAIR.IsChecked == true)
                 {
                     if (Environment.Is64BitProcess == true)
@@ -218,7 +213,6 @@ namespace LoLUpdater
                     {
                         File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), true);
                     }
-
                 }
                 if (Flash.IsChecked == true)
                 {
@@ -295,7 +289,6 @@ namespace LoLUpdater
                     PMB.Arguments = "/silent";
                     process.StartInfo = PMB;
                     process.Start();
-
                 }
             }
             else
@@ -402,6 +395,27 @@ namespace LoLUpdater
             process.StartInfo = cm;
             process.Start();
         }
+        private void handleMouseHz()
+        {
+            RegistryKey mousehz;
+
+            if (Environment.Is64BitProcess)
+            {
+                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+            }
+            else
+            {
+                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+            }
+            mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), RegistryValueKind.String);
+            var cmd = new ProcessStartInfo();
+            var process = new Process();
+            cmd.FileName = "cmd.exe";
+            cmd.Verb = "runas";
+            cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
+            process.StartInfo = cmd;
+            process.Start();
+        }
         private static readonly System.Collections.Generic.Dictionary<string, string> Ping_Dictionary = new System.Collections.Generic.Dictionary<string, string>()
         {
             { "EUW", "190.93.245.13"},
@@ -466,6 +480,7 @@ namespace LoLUpdater
         {
             handlePing();
         }
+        //Todo: Use WPF to do this so we can remove the WinForms using
         private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var chkBox = (CheckBox)sender;

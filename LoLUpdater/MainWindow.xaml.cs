@@ -22,20 +22,17 @@ namespace LoLUpdater
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Version win8version = new Version(6, 2, 9200, 0);
-
             if (System.Environment.OSVersion.Platform == PlatformID.Win32NT &&
                 Environment.OSVersion.Version >= win8version)
             {
                 MouseHz_.IsEnabled = true;
             }
-
             handlePing();
         }
         private void pingTimer_Tick(object sender, EventArgs e)
         {
             handlePing();
         }
-
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
@@ -54,7 +51,6 @@ namespace LoLUpdater
         public object ExitFrame(object f)
         {
             ((DispatcherFrame)f).Continue = false;
-
             return null;
         }
         private void OK_Click(object sender, RoutedEventArgs e)
@@ -189,7 +185,6 @@ namespace LoLUpdater
                     File.Copy(Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), Path.Combine("Backup", "Adobe AIR.dll"), true);
                     File.Copy(Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"), Path.Combine("Backup", "NPSWF32.dll"), true);
                 }
-
             }
         }
         private void handleAdobeAndTBB()
@@ -211,7 +206,6 @@ namespace LoLUpdater
                     {
                         File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), true);
                     }
-
                 }
                 if (Flash.IsChecked == true)
                 {
@@ -231,7 +225,6 @@ namespace LoLUpdater
                 {
                     File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Properties.Resources.tbb);
                 }
-
                 if (AdobeAIR.IsChecked == true)
                 {
                     if (Environment.Is64BitProcess == true)
@@ -242,7 +235,6 @@ namespace LoLUpdater
                     {
                         File.Copy(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Common Files", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), true);
                     }
-
                 }
                 if (Flash.IsChecked == true)
                 {
@@ -319,7 +311,6 @@ namespace LoLUpdater
                     PMB.Arguments = "/silent";
                     process.StartInfo = PMB;
                     process.Start();
-
                 }
             }
             else
@@ -491,7 +482,6 @@ namespace LoLUpdater
                         ping = itemPing;
                         Ping_Server.SelectedIndex = index;
                     }
-
                 }
                 Label.Content = ping;
             }
@@ -530,6 +520,7 @@ namespace LoLUpdater
         {
             handlePing();
         }
+        //Todo: Use WPF to do this so we can remove the WinForms using
         private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var chkBox = (CheckBox)sender;
