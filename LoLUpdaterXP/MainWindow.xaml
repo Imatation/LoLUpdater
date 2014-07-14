@@ -27,7 +27,7 @@
         <Label Content="Windows Utilities" HorizontalAlignment="Left" Height="26" Margin="568,-1,0,0" VerticalAlignment="Top" Width="110" Foreground="#FFB59214" FontWeight="Bold"/>
         <Label Content="Main" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="48" Foreground="#FFB59214" FontWeight="Bold" Margin="6,-1,0,0" RenderTransformOrigin="0.5,0.067"/>
         <ProgressBar x:Name="taskProgress" HorizontalAlignment="Left" Height="22" Margin="7,218,0,0" VerticalAlignment="Top" Width="750" Foreground="#FF06B025" FontFamily="Segoe UI"/>
-        <GroupBox Header="Description" HorizontalAlignment="Left" Height="110" Margin="7,103,0,0" VerticalAlignment="Top" Width="749" Foreground="#FFB59214" FontWeight="Bold">
+        <GroupBox Header="Description" HorizontalAlignment="Left" Height="110" Margin="7,103,0,0" VerticalAlignment="Top" Width="556" Foreground="#FFB59214" FontWeight="Bold">
             <TextBlock x:Name="lblDescription" Margin="10,4.24,-2,2.415" TextWrapping="Wrap" Foreground="#FFB59214" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </GroupBox>
         <ListBox x:Name="CheckedListBox_Copy" HorizontalAlignment="Left" Height="43" Margin="105,22,0,0" VerticalAlignment="Top" Width="167" Foreground="#FFB59214">
@@ -42,5 +42,6 @@
         </ListBox>
         <Label Content="Launcher Options" HorizontalAlignment="Left" Height="30" Margin="423,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
         <Button Name ="OK" Content="Go" HorizontalAlignment="Left" Margin="568,80,0,0" VerticalAlignment="Top" Width="188" Height="28" Click="OK_Click"/>
+        <Image HorizontalAlignment="Left" Height="100" Margin="615,113,0,0" VerticalAlignment="Top" Width="110" Source="garena.png"/>
     </Grid>
 </Window>
