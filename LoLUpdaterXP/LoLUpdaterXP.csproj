@@ -7,7 +7,7 @@
     <ProjectGuid>{826792A2-AD88-449C-A8F4-CE381C255A13}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WpfApplication1</RootNamespace>
+    <RootNamespace>LoLUpdaterXP</RootNamespace>
     <AssemblyName>LoLUpdaterXP</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
