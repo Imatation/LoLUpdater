@@ -47,7 +47,7 @@
         <Label Content="Main" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="48" Foreground="#FFB59214" FontWeight="Bold" Margin="6,-1,0,0"/>
         <Label Content="Ping Server" HorizontalAlignment="Left" Height="25" Margin="720,-1,0,0" VerticalAlignment="Top" Width="88" Foreground="#FFB59214" FontWeight="Bold"/>
         <ProgressBar x:Name="taskProgress" HorizontalAlignment="Left" Height="22" Margin="6,221,0,0" VerticalAlignment="Top" Width="831" Foreground="#FF06B025" FontFamily="Segoe UI"/>
-        <GroupBox Header="Description" HorizontalAlignment="Left" Height="110" Margin="6,106,0,0" VerticalAlignment="Top" Width="831" FontWeight="Bold">
+        <GroupBox Header="Description" HorizontalAlignment="Left" Height="110" Margin="6,106,0,0" VerticalAlignment="Top" Width="709" FontWeight="Bold">
             <TextBlock x:Name="lblDescription" Margin="10,4.24,-2,2.415" TextWrapping="Wrap" Foreground="#FFB59214" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </GroupBox>
         <ListBox x:Name="CheckedListBox_Copy" HorizontalAlignment="Left" Height="53" Margin="105,22,0,0" VerticalAlignment="Top" Width="167" Foreground="#FFB59214">
@@ -61,5 +61,6 @@
             <CheckBox x:Name="CgGL1" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
         <Label Name="Launcher" Content="Launcher Options" HorizontalAlignment="Left" Height="30" Margin="423,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
+        <Image HorizontalAlignment="Left" Height="110" Margin="720,106,0,0" VerticalAlignment="Top" Width="117" Source="garena.png"/>
     </Grid>
 </Window>
