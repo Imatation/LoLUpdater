@@ -12,7 +12,7 @@
             <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="tbb" Content="tbb.dll 4.2.0.0" ToolTip="Update for the Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
-        <Button x:Name="OK" Content="Go" HorizontalAlignment="Left" Margin="720,70,0,0" Width="117" Click="OK_Click" Foreground="White" BorderThickness="19,12,15,2" d:IsEffectDisabled="True" Height="31" VerticalAlignment="Top">
+        <Button x:Name="OK" Content="Go" HorizontalAlignment="Left" Margin="720,22,0,0" Width="117" Click="OK_Click" Foreground="White" BorderThickness="19,12,15,2" d:IsEffectDisabled="True" Height="79" VerticalAlignment="Top">
             <Button.BorderBrush>
                 <RadialGradientBrush SpreadMethod="Reflect" Opacity="0.475">
                     <GradientStop Color="#FFC58F53" Offset="0"/>
@@ -34,18 +34,9 @@
             <CheckBox x:Name="Visual" Content="Visual Options" ToolTip="Change how Windows looks" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="MouseHz_" Content="MouseHz+" ToolTip="Increases mouseHz to 500Hz, for a smoother mouse" ToolTipService.ShowOnDisabled="True" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
-        <Label x:Name="Label" Content="" HorizontalAlignment="Left" Margin="755,44,0,0" VerticalAlignment="Top" Width="82" RenderTransformOrigin="4.194,0.538" Background="#FF0A1A34" Foreground="#FFB59214" Height="26"/>
-        <ComboBox x:Name="Ping_Server"  HorizontalAlignment="Left" Margin="720,22,0,0" VerticalAlignment="Top" Width="117" ToolTip="Select your server" SelectedIndex="-1" SelectionChanged="ComboBox_SelectionChanged" Style="{DynamicResource Experimental_ComboBox}" Height="22">
-            <ComboBoxItem Content="EUW" />
-            <ComboBoxItem Content="NA" />
-            <ComboBoxItem Content="Garena Singapore" />
-            <ComboBoxItem Content="Garena Philippines" />
-        </ComboBox>
-        <Label Content="Ping:" HorizontalAlignment="Left" Margin="720,44,0,0" VerticalAlignment="Top" Width="35" Background="#FF0A1A34" Foreground="#FFB59214" FontWeight="Bold" Height="26"/>
         <Label Content="Air Client Options" HorizontalAlignment="Left" Height="30" Margin="105,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
         <Label Content="Windows Utilities" HorizontalAlignment="Left" Height="26" Margin="568,-1,0,0" VerticalAlignment="Top" Width="110" Foreground="#FFB59214" FontWeight="Bold"/>
         <Label Content="Main" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="48" Foreground="#FFB59214" FontWeight="Bold" Margin="6,-1,0,0"/>
-        <Label Content="Ping Server" HorizontalAlignment="Left" Height="25" Margin="720,-1,0,0" VerticalAlignment="Top" Width="88" Foreground="#FFB59214" FontWeight="Bold"/>
         <ProgressBar x:Name="taskProgress" HorizontalAlignment="Left" Height="22" Margin="6,221,0,0" VerticalAlignment="Top" Width="831" Foreground="#FF06B025" FontFamily="Segoe UI"/>
         <GroupBox Header="Description" HorizontalAlignment="Left" Height="110" Margin="6,106,0,0" VerticalAlignment="Top" Width="709" FontWeight="Bold">
             <TextBlock x:Name="lblDescription" Margin="10,4.24,-2,2.415" TextWrapping="Wrap" Foreground="#FFB59214" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>

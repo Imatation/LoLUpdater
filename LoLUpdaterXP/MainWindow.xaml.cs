@@ -3,29 +3,12 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 namespace LoLUpdater
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
-        {
-            System.Windows.Threading.DispatcherTimer pingTimer = new System.Windows.Threading.DispatcherTimer();
-            pingTimer.Tick += new EventHandler(pingTimer_Tick);
-            pingTimer.Interval = new TimeSpan(0, 0, 5);
-            pingTimer.Start();
-        }
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            handlePing();
-        }
-        private void pingTimer_Tick(object sender, EventArgs e)
-        {
-            handlePing();
-        }
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
@@ -33,18 +16,6 @@ namespace LoLUpdater
         private void Flash_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
-        }
-        public void DoEvents()
-        {
-            DispatcherFrame frame = new DispatcherFrame();
-            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
-                new DispatcherOperationCallback(ExitFrame), frame);
-            Dispatcher.PushFrame(frame);
-        }
-        public object ExitFrame(object f)
-        {
-            ((DispatcherFrame)f).Continue = false;
-            return null;
         }
         private void OK_Click(object sender, RoutedEventArgs e)
         {
@@ -56,7 +27,6 @@ namespace LoLUpdater
             }
             handleCGInstall();
             taskProgress.IsIndeterminate = true;
-            DoEvents();
             if (Clean.IsChecked == true)
             {
                 taskProgress.Tag = "Opening Disk Cleanup...";
@@ -415,70 +385,6 @@ namespace LoLUpdater
             cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
             process.StartInfo = cmd;
             process.Start();
-        }
-        private static readonly System.Collections.Generic.Dictionary<string, string> Ping_Dictionary = new System.Collections.Generic.Dictionary<string, string>()
-        {
-            { "EUW", "190.93.245.13"},
-            { "NA", "64.7.194.1"},
-            { "Garena Singapore", "lol.garena.com"},
-            { "Garena Philippines", "garena.ph"}
-        };
-        private void handlePing()
-        {
-            if (!IsNetworkAvailable())
-            {
-                Label.Content = "No Internet";
-            }
-            else if (Ping_Server.SelectedIndex == -1)
-            {
-                long? ping = null;
-                for (int index = 0; index < Ping_Dictionary.Count; index++)
-                {
-                    var item = Ping_Dictionary.ElementAt(index);
-                    long itemPing = getPing(item.Value);
-
-                    if (ping == null || itemPing < ping)
-                    {
-                        ping = itemPing;
-                        Ping_Server.SelectedIndex = index;
-                    }
-                }
-                Label.Content = ping;
-            }
-            else
-            {
-                string ip = Ping_Dictionary.ElementAt(Ping_Server.SelectedIndex).Value;
-                Label.Content = getPing(ip);
-            }
-        }
-        private long getPing(string ip)
-        {
-            Ping ping = new Ping();
-            PingReply reply = ping.Send(ip);
-            return reply.RoundtripTime;
-        }
-        private bool IsNetworkAvailable()
-        {
-            if (!NetworkInterface.GetIsNetworkAvailable())
-                return false;
-            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if ((ni.OperationalStatus != OperationalStatus.Up) ||
-                    (ni.NetworkInterfaceType == NetworkInterfaceType.Loopback) ||
-                    (ni.NetworkInterfaceType == NetworkInterfaceType.Tunnel))
-                    continue;
-                if ((ni.Description.IndexOf("virtual", StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (ni.Name.IndexOf("virtual", StringComparison.OrdinalIgnoreCase) >= 0))
-                    continue;
-                if (ni.Description.Equals("Microsoft Loopback Adapter", StringComparison.OrdinalIgnoreCase))
-                    continue;
-                return true;
-            }
-            return false;
-        }
-        private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            handlePing();
         }
         //Todo: Use WPF to do this so we can remove the WinForms using
         private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)

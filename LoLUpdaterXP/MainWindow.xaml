@@ -15,14 +15,6 @@
         <ListBox HorizontalAlignment="Left" Height="24" VerticalAlignment="Top" Width="147" Margin="568,20,0,0" BorderThickness="1">
             <CheckBox x:Name="Clean" Content="Clean HDD" ToolTip="Cleans the hardrive from temporary garbage files" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
-        <Label x:Name="Label" Content="" HorizontalAlignment="Left" Margin="725,45,0,0" VerticalAlignment="Top" Width="31" RenderTransformOrigin="4.194,0.538" Background="#FF0A1A34" Foreground="#FFB59214" Height="26"/>
-        <ComboBox x:Name="Ping_Server" HorizontalAlignment="Left" Margin="568,49,0,0" VerticalAlignment="Top" Width="117" ToolTip="Select your server" SelectedIndex="-1" SelectionChanged="ComboBox_SelectionChanged" Height="22" RenderTransformOrigin="0.658,0.227">
-            <ComboBoxItem Content="EUW" />
-            <ComboBoxItem Content="NA" />
-            <ComboBoxItem Content="Garena Singapore" />
-            <ComboBoxItem Content="Garena Philippines" />
-        </ComboBox>
-        <Label Content="Ping:" HorizontalAlignment="Left" Margin="690,45,0,0" VerticalAlignment="Top" Width="35" Background="#FF0A1A34" Foreground="#FFB59214" FontWeight="Bold" Height="26" RenderTransformOrigin="0.514,1.115"/>
         <Label Content="Air Client Options" HorizontalAlignment="Left" Height="30" Margin="105,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
         <Label Content="Windows Utilities" HorizontalAlignment="Left" Height="26" Margin="568,-1,0,0" VerticalAlignment="Top" Width="110" Foreground="#FFB59214" FontWeight="Bold"/>
         <Label Content="Main" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="48" Foreground="#FFB59214" FontWeight="Bold" Margin="6,-1,0,0" RenderTransformOrigin="0.5,0.067"/>
@@ -41,7 +33,7 @@
             <CheckBox x:Name="CgGL1" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
         <Label Content="Launcher Options" HorizontalAlignment="Left" Height="30" Margin="423,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
-        <Button Name ="OK" Content="Go" HorizontalAlignment="Left" Margin="568,80,0,0" VerticalAlignment="Top" Width="188" Height="28" Click="OK_Click"/>
+        <Button Name ="OK" Content="Go" HorizontalAlignment="Left" Margin="568,49,0,0" VerticalAlignment="Top" Width="188" Height="59" Click="OK_Click"/>
         <Image HorizontalAlignment="Left" Height="100" Margin="615,113,0,0" VerticalAlignment="Top" Width="110" Source="garena.png"/>
     </Grid>
 </Window>
