@@ -27,11 +27,6 @@ namespace LoLUpdater
             }
             handleCGInstall();
             taskProgress.IsIndeterminate = true;
-            if (Clean.IsChecked == true)
-            {
-                taskProgress.Tag = "Opening Disk Cleanup...";
-                runCleanManager();
-            }
             taskProgress.Tag = "Performing Backup...";
             if (!Directory.Exists("Backup"))
             {
@@ -45,6 +40,7 @@ namespace LoLUpdater
                 handlePandoUninstall();
                 handleCGInstall();
                 handleAdobeAndTBB();
+                runCleanManager();
             }
             else if (Remove.IsChecked == true)
             {
@@ -365,27 +361,6 @@ namespace LoLUpdater
             process.StartInfo = cm;
             process.Start();
         }
-        private void handleMouseHz()
-        {
-            RegistryKey mousehz;
-
-            if (Environment.Is64BitProcess)
-            {
-                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
-            else
-            {
-                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
-            mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), RegistryValueKind.String);
-            var cmd = new ProcessStartInfo();
-            var process = new Process();
-            cmd.FileName = "cmd.exe";
-            cmd.Verb = "runas";
-            cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
-            process.StartInfo = cmd;
-            process.Start();
-        }
         //Todo: Use WPF to do this so we can remove the WinForms using
         private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
@@ -409,9 +384,6 @@ namespace LoLUpdater
                     break;
                 case "tbb":
                     lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL";
-                    break;
-                case "Clean":
-                    lblDescription.Text = "Do a quick clean of the harddrive using the Windows automatic disk cleanup manager";
                     break;
                 case "Cg1":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";

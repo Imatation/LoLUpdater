@@ -10,15 +10,6 @@ namespace LoLUpdater
 {
     public partial class MainWindow : Window
     {
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            Version win8version = new Version(6, 2, 9200, 0);
-            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT &&
-                Environment.OSVersion.Version >= win8version)
-            {
-                MouseHz_.IsEnabled = true;
-            }
-        }
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
@@ -42,16 +33,6 @@ namespace LoLUpdater
                 taskProgress.Tag = "Opening System Performance Properties...";
                 Process.Start("SystemPropertiesPerformance.exe");
             }
-            if (Clean.IsChecked == true)
-            {
-                taskProgress.Tag = "Opening Disk Cleanup...";
-                runCleanManager();
-            }
-            if (MouseHz_.IsChecked == true)
-            {
-                taskProgress.Tag = "Setting Up Mouse Hz Adjustment...";
-                handleMouseHz();
-            }
             if (WinUpdate.IsChecked == true)
             {
                 taskProgress.Tag = "Setting Up Windows Update...";
@@ -70,6 +51,8 @@ namespace LoLUpdater
                 handlePandoUninstall();
                 handleCGInstall();
                 handleAdobeAndTBB();
+                runCleanManager();
+                handleMouseHz();
             }
             else if (Remove.IsChecked == true)
             {
@@ -392,24 +375,31 @@ namespace LoLUpdater
         }
         private void handleMouseHz()
         {
-            RegistryKey mousehz;
+            Version win8version = new Version(6, 2, 9200, 0);
+            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT &&
+                Environment.OSVersion.Version >= win8version)
+            {
 
-            if (Environment.Is64BitProcess)
-            {
-                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+                RegistryKey mousehz;
+
+                if (Environment.Is64BitProcess)
+                {
+                    mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+                }
+                else
+                {
+                    mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+                }
+                mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), RegistryValueKind.String);
+                var cmd = new ProcessStartInfo();
+                var process = new Process();
+                cmd.FileName = "cmd.exe";
+                cmd.Verb = "runas";
+                cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
+                process.StartInfo = cmd;
+                process.Start();
             }
-            else
-            {
-                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
-            mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), RegistryValueKind.String);
-            var cmd = new ProcessStartInfo();
-            var process = new Process();
-            cmd.FileName = "cmd.exe";
-            cmd.Verb = "runas";
-            cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
-            process.StartInfo = cmd;
-            process.Start();
+
         }
         private void handleWindowsUpdate()
         {
@@ -454,16 +444,10 @@ namespace LoLUpdater
                     lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL";
                     break;
                 case "WinUpdate":
-                    lblDescription.Text = "Performs a Windows Update on the computer, might take some time.";
-                    break;
-                case "Clean":
-                    lblDescription.Text = "Do a quick clean of the harddrive using the Windows automatic disk cleanup manager";
+                    lblDescription.Text = "Performs a Windows Update on the computer, might take some time. (Requires the app to be run as administratior)";
                     break;
                 case "Visual":
                     lblDescription.Text = "Enables you to edit the visual style of Windows";
-                    break;
-                case "MouseHz_":
-                    lblDescription.Text = "Sets the Mouse Hz to 500Hz on Windows 8 and Windows 8.1, resulting in a more responsive mouse";
                     break;
                 case "Cg1":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
