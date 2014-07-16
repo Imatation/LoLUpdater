@@ -349,7 +349,7 @@ namespace LoLUpdater
 
             if (alertMessage == MessageBoxResult.Yes)
             {
-                Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
+                Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
             }
         }
         private void runCleanManager()

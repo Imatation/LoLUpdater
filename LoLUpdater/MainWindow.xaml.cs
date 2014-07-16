@@ -361,7 +361,7 @@ namespace LoLUpdater
 
             if (alertMessage == MessageBoxResult.Yes)
             {
-                Process.Start("http://labsdownload.adobe.com/pub/labs/flashruntimes/air/air14_win.exe");
+                Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
             }
         }
         private void runCleanManager()
@@ -376,8 +376,7 @@ namespace LoLUpdater
         private void handleMouseHz()
         {
             Version win8version = new Version(6, 2, 9200, 0);
-            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT &&
-                Environment.OSVersion.Version >= win8version)
+            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= win8version)
             {
 
                 RegistryKey mousehz;

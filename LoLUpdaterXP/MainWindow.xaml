@@ -12,11 +12,7 @@
             <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="tbb" Content="tbb.dll 4.2.0.0" ToolTip="Update for the Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
-        <ListBox HorizontalAlignment="Left" Height="24" VerticalAlignment="Top" Width="147" Margin="568,20,0,0" BorderThickness="1">
-            <CheckBox x:Name="Clean" Content="Clean HDD" ToolTip="Cleans the hardrive from temporary garbage files" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-        </ListBox>
         <Label Content="Air Client Options" HorizontalAlignment="Left" Height="30" Margin="105,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
-        <Label Content="Windows Utilities" HorizontalAlignment="Left" Height="26" Margin="568,-1,0,0" VerticalAlignment="Top" Width="110" Foreground="#FFB59214" FontWeight="Bold"/>
         <Label Content="Main" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="48" Foreground="#FFB59214" FontWeight="Bold" Margin="6,-1,0,0" RenderTransformOrigin="0.5,0.067"/>
         <ProgressBar x:Name="taskProgress" HorizontalAlignment="Left" Height="22" Margin="7,218,0,0" VerticalAlignment="Top" Width="750" Foreground="#FF06B025" FontFamily="Segoe UI"/>
         <GroupBox Header="Description" HorizontalAlignment="Left" Height="110" Margin="7,103,0,0" VerticalAlignment="Top" Width="556" Foreground="#FFB59214" FontWeight="Bold">
@@ -33,7 +29,7 @@
             <CheckBox x:Name="CgGL1" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
         <Label Content="Launcher Options" HorizontalAlignment="Left" Height="30" Margin="423,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
-        <Button Name ="OK" Content="Go" HorizontalAlignment="Left" Margin="568,49,0,0" VerticalAlignment="Top" Width="188" Height="59" Click="OK_Click"/>
-        <Image HorizontalAlignment="Left" Height="100" Margin="615,113,0,0" VerticalAlignment="Top" Width="110" Source="garena.png"/>
+        <Button Name ="OK" Content="Go" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Width="262" Height="27" Click="OK_Click"/>
+        <Image HorizontalAlignment="Left" Height="203" Margin="568,10,0,0" VerticalAlignment="Top" Width="183" Source="garena.png"/>
     </Grid>
 </Window>
