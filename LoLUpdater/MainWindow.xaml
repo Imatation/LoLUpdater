@@ -28,7 +28,7 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
-        <ListBox HorizontalAlignment="Left" Height="55" VerticalAlignment="Top" Width="147" Margin="568,20,0,0" BorderThickness="1">
+        <ListBox HorizontalAlignment="Left" Height="46" VerticalAlignment="Top" Width="147" Margin="568,20,0,0" BorderThickness="1">
             <CheckBox x:Name="WinUpdate" Content="Windows Update" ToolTip="Performs a Windows Update" ToolTipService.ShowOnDisabled="True" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="Visual" Content="Visual Options" ToolTip="Change how Windows looks" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
@@ -51,7 +51,7 @@
         </ListBox>
         <Label Name="Launcher" Content="Launcher Options" HorizontalAlignment="Left" Height="30" Margin="423,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
         <Label Content="Config Tweaks" HorizontalAlignment="Left" Height="26" Margin="720,-1,0,0" VerticalAlignment="Top" Width="110" Foreground="#FFB59214" FontWeight="Bold"/>
-        <ListBox HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="168" Margin="720,22,0,0" BorderThickness="1">
+        <ListBox HorizontalAlignment="Left" Height="65" VerticalAlignment="Top" Width="168" Margin="720,22,0,0" BorderThickness="1">
             <CheckBox x:Name="Inking" Content="Inking=0" ToolTip="Performs a Windows Update" ToolTipService.ShowOnDisabled="True" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="AdvancedReflection" Content="AdvancedReflection=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="PerPixelPointLighting" Content="PerPixelPointLighting=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
