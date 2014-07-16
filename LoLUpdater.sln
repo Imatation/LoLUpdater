@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoLUpdater", "LoLUpdater\Lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoLUpdaterXP", "LoLUpdaterXP\LoLUpdaterXP.csproj", "{826792A2-AD88-449C-A8F4-CE381C255A13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication2", "LoLUpdaterLauncher\LoLUpdaterLauncher.csproj", "{A8091810-BE49-4BF2-AF51-7DFAE70BFE46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoLUpdaterLauncher", "LoLUpdaterLauncher\LoLUpdaterLauncher.csproj", "{A8091810-BE49-4BF2-AF51-7DFAE70BFE46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

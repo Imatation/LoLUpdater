@@ -4,7 +4,7 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 
-namespace ConsoleApplication2
+namespace LoLUpdater
 {
     class Program
     {
@@ -13,7 +13,7 @@ namespace ConsoleApplication2
             Version winvistaversion = new Version(6, 0, 6000, 0);
             if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= winvistaversion)
             {
-                File.WriteAllBytes("LoLUpdater.exe", Properties.Resources.LoLUpdater);
+                File.WriteAllBytes("LoLUpdater.exe", LoLUpdater.Properties.Resources.LoLUpdater);
                 var cmd = new ProcessStartInfo();
                 var process = new Process();
                 cmd.FileName = "LoLUpdater.exe";
@@ -21,14 +21,9 @@ namespace ConsoleApplication2
                 process.StartInfo = cmd;
                 process.Start();
             }
-            else if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version < winvistaversion)
+            else if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version < winvistaversion || Environment.OSVersion.Version == null)
             {
-                File.WriteAllBytes("LoLUpdaterXP.exe", Properties.Resources.LoLUpdaterXP);
-                Process.Start("LoLUpdaterXP.exe");
-            }
-            else
-            {
-                File.WriteAllBytes("LoLUpdaterXP.exe", Properties.Resources.LoLUpdaterXP);
+                File.WriteAllBytes("LoLUpdaterXP.exe", LoLUpdater.Properties.Resources.LoLUpdaterXP);
                 Process.Start("LoLUpdaterXP.exe");
             }
         }
