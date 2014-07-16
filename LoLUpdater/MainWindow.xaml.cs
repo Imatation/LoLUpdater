@@ -26,7 +26,6 @@ namespace LoLUpdater
                 proc[0].Kill();
                 proc[0].WaitForExit();
             }
-            handleCGInstall();
             taskProgress.IsIndeterminate = true;
             if (Visual.IsChecked == true)
             {
@@ -53,7 +52,14 @@ namespace LoLUpdater
                 handleAdobeAndTBB();
                 runCleanManager();
                 handleMouseHz();
+                if (Inking.IsChecked == true)
+                { handleinking(); }
+                if (AdvancedReflection.IsChecked == true)
+                { handleAdvancedReflection(); }
+                if (PerPixelPointLighting.IsChecked == true)
+                { handlePerPixelPointLighting(); }
             }
+
             else if (Remove.IsChecked == true)
             {
                 taskProgress.Tag = "Removing Patch...";
@@ -62,6 +68,10 @@ namespace LoLUpdater
             taskProgress.IsIndeterminate = false;
             taskProgress.Value = 100;
             taskProgress.Tag = "All Processes Completed Successfully!";
+            if (MessageBox.Show("It is recommended you do a restart after patching, would you like to do it?", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                Process.Start("shutdown.exe", "-r -t 0");
+            }
         }
         private void handleParticleMultithreading()
         {
@@ -97,6 +107,120 @@ namespace LoLUpdater
                     if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("DefaultParticleMultithreading=1"))
                     {
                         File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "DefaultParticleMultithreading=1");
+                    }
+                }
+            }
+        }
+        private void handleinking()
+        {
+            if (File.Exists(Path.Combine("Config", "game.cfg")))
+            {
+                if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("Inking=0"))
+                {
+                    File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "Inking=0");
+                }
+            }
+            else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+            {
+                if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("Inking=0"))
+                {
+                    File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "Inking=0");
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("Inking=0"))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "Inking=0");
+                    }
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("Inking=0"))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "Inking=0");
+                    }
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("Inking=0"))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "Inking=0");
+                    }
+                }
+            }
+        }
+        private void handleAdvancedReflection()
+        {
+            if (File.Exists(Path.Combine("Config", "game.cfg")))
+            {
+                if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("AdvancedReflection=0"))
+                {
+                    File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "AdvancedReflection=0");
+                }
+            }
+            else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+            {
+                if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("AdvancedReflection=0"))
+                {
+                    File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "AdvancedReflection=0");
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("AdvancedReflection=0"))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "AdvancedReflection=0");
+                    }
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("AdvancedReflection=0"))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "AdvancedReflection=0");
+                    }
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("AdvancedReflection=0"))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "AdvancedReflection=0");
+                    }
+                }
+            }
+        }
+        private void handlePerPixelPointLighting()
+        {
+            if (File.Exists(Path.Combine("Config", "game.cfg")))
+            {
+                if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("PerPixelPointLighting=0"))
+                {
+                    File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
+                }
+            }
+            else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+            {
+                if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("PerPixelPointLighting=0"))
+                {
+                    File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("PerPixelPointLighting=0"))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
+                    }
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("PerPixelPointLighting=0"))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
+                    }
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("PerPixelPointLighting=0"))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
                     }
                 }
             }
@@ -206,7 +330,6 @@ namespace LoLUpdater
         }
         private void handleCGInstall()
         {
-            CGCheck();
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
@@ -327,36 +450,40 @@ namespace LoLUpdater
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
                 {
-                    Process cg = new Process();
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
-                    startInfo.Arguments = "/silent";
-                    cg.StartInfo = startInfo;
-                    cg.Start();
-                    cg.WaitForExit();
-                    File.Delete("Cg-3.1 April2012 Setup.exe");
+                    Process.Start("NvidiaCGLicence.txt");
+                    if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        Process cg = new Process();
+                        ProcessStartInfo startInfo = new ProcessStartInfo();
+                        startInfo.FileName = "Cg_3_1_April2012_Setup.exe";
+                        startInfo.Arguments = "/silent";
+                        cg.StartInfo = startInfo;
+                        cg.Start();
+                        cg.WaitForExit();
+                    }
                 }
             }
             else
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
                 {
-                    Process cg = new Process();
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
-                    startInfo.Arguments = "/silent";
-                    cg.StartInfo = startInfo;
-                    cg.Start();
-                    cg.WaitForExit();
-                    File.Delete("Cg-3.1 April2012 Setup.exe");
+                    Process.Start("NvidiaCGLicence.txt");
+                    if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        Process cg = new Process();
+                        ProcessStartInfo startInfo = new ProcessStartInfo();
+                        startInfo.FileName = "Cg_3_1_April2012_Setup.exe";
+                        startInfo.Arguments = "/silent";
+                        cg.StartInfo = startInfo;
+                        cg.Start();
+                        cg.WaitForExit();
+                    }
                 }
             }
         }
         private void adobeAlert()
         {
-            MessageBoxResult alertMessage = MessageBox.Show("We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (alertMessage == MessageBoxResult.Yes)
+            if (MessageBox.Show("We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
             }
@@ -453,11 +580,50 @@ namespace LoLUpdater
                 case "CgGL1":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
+                case "Inking":
+                    lblDescription.Text = "Takes off the new 'graphics'";
+                    break;
+                case "AdvancedReflection":
+                    lblDescription.Text = "Takes off the reflections";
+                    break;
+                case "PerPixelPointLighting":
+                    lblDescription.Text = "Takes off the particles";
+                    break;
             }
         }
         private void chkOption_MouseExit(object sender, System.Windows.Input.MouseEventArgs e)
         {
             lblDescription.Text = "";
+        }
+
+        private void CgD3D9_Checked(object sender, RoutedEventArgs e)
+        {
+            CGCheck();
+        }
+
+        private void CgGL_Checked(object sender, RoutedEventArgs e)
+        {
+            CGCheck();
+        }
+
+        private void Cg_Checked(object sender, RoutedEventArgs e)
+        {
+            CGCheck();
+        }
+
+        private void Cg1_Checked(object sender, RoutedEventArgs e)
+        {
+            CGCheck();
+        }
+
+        private void CgD3D1_Checked(object sender, RoutedEventArgs e)
+        {
+            CGCheck();
+        }
+
+        private void CgGL1_Checked(object sender, RoutedEventArgs e)
+        {
+            CGCheck();
         }
     }
 }

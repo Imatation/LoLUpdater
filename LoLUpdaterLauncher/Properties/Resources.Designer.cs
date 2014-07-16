@@ -91,6 +91,22 @@ namespace LoLUpdater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to License For Customer Use of NVIDIA Software
+        ///IMPORTANT NOTICE -- READ CAREFULLY: This License For Customer Use of
+        ///NVIDIA Software (&quot;LICENSE&quot;) is the agreement which governs use of the software of
+        ///NVIDIA Corporation and its subsidiaries (&quot;NVIDIA&quot;) downloadable herefrom,
+        ///including computer software and associated printed materials (&quot;SOFTWARE&quot;).
+        ///By downloading, installing, copying, or otherwise using the SOFTWARE, you
+        ///agree to be bound by the terms of this LICENSE. If you do not agree to the
+        ///terms of thi [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NvidiaCGLicence {
+            get {
+                return ResourceManager.GetString("NvidiaCGLicence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] tbb {

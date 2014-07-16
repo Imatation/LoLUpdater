@@ -61,6 +61,9 @@
     <None Include="Resources\tbb.dll" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\NvidiaCGLicence.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\LoLUpdater.exe" />
   </ItemGroup>
   <ItemGroup>
