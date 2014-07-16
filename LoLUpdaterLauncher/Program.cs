@@ -10,18 +10,6 @@ namespace ConsoleApplication2
     {
         static void Main(string[] args)
         {
-            Version winxpversion = new Version(5, 1, 2600, 0);
-            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version == winxpversion)
-            {
-                File.WriteAllBytes("LoLUpdaterXP.exe", Properties.Resources.LoLUpdaterXP);
-                Process.Start("LoLUpdaterXP.exe");
-            }
-            Version winxp2version = new Version(5, 1, 3790, 0);
-            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version == winxp2version)
-            {
-                File.WriteAllBytes("LoLUpdaterXP.exe", Properties.Resources.LoLUpdaterXP);
-                Process.Start("LoLUpdaterXP.exe");
-            }
             Version winvistaversion = new Version(6, 0, 6000, 0);
             if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= winvistaversion)
             {
@@ -32,6 +20,16 @@ namespace ConsoleApplication2
                 cmd.Verb = "runas";
                 process.StartInfo = cmd;
                 process.Start();
+            }
+            else if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version < winvistaversion)
+            {
+                File.WriteAllBytes("LoLUpdaterXP.exe", Properties.Resources.LoLUpdaterXP);
+                Process.Start("LoLUpdaterXP.exe");
+            }
+            else
+            {
+                File.WriteAllBytes("LoLUpdaterXP.exe", Properties.Resources.LoLUpdaterXP);
+                Process.Start("LoLUpdaterXP.exe");
             }
         }
     }
