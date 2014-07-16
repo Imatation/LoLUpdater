@@ -63,6 +63,16 @@ namespace LoLUpdater.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] Cg_3_1_April2012_Setup {
+            get {
+                object obj = ResourceManager.GetObject("Cg_3_1_April2012_Setup", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] LoLUpdater {
             get {
                 object obj = ResourceManager.GetObject("LoLUpdater", resourceCulture);
@@ -76,6 +86,16 @@ namespace LoLUpdater.Properties {
         internal static byte[] LoLUpdaterXP {
             get {
                 object obj = ResourceManager.GetObject("LoLUpdaterXP", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] tbb {
+            get {
+                object obj = ResourceManager.GetObject("tbb", resourceCulture);
                 return ((byte[])(obj));
             }
         }

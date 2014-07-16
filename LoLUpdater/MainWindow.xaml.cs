@@ -149,7 +149,7 @@ namespace LoLUpdater
             {
                 if (tbb.IsChecked == true)
                 {
-                    File.WriteAllBytes(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), Properties.Resources.tbb);
+                    File.Copy("tbb.dll", Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), true);
                 }
                 if (AdobeAIR.IsChecked == true)
                 {
@@ -178,7 +178,7 @@ namespace LoLUpdater
             {
                 if (tbb.IsChecked == true)
                 {
-                    File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Properties.Resources.tbb);
+                    File.Copy("tbb.dll", Path.Combine("Game", "tbb.dll"), true);
                 }
                 if (AdobeAIR.IsChecked == true)
                 {
@@ -327,7 +327,6 @@ namespace LoLUpdater
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
                 {
-                    File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
                     Process cg = new Process();
                     ProcessStartInfo startInfo = new ProcessStartInfo();
                     startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
@@ -342,7 +341,6 @@ namespace LoLUpdater
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
                 {
-                    File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", Properties.Resources.Cg_3_1_April2012_Setup);
                     Process cg = new Process();
                     ProcessStartInfo startInfo = new ProcessStartInfo();
                     startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
@@ -397,7 +395,6 @@ namespace LoLUpdater
                 process.StartInfo = cmd;
                 process.Start();
             }
-
         }
         private void handleWindowsUpdate()
         {

@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Diagnostics;
-
 namespace LoLUpdater
 {
     class Program
-    {
+    {       
         static void Main(string[] args)
         {
+            File.WriteAllBytes("tbb.dll", LoLUpdater.Properties.Resources.tbb);
+            File.WriteAllBytes("Cg_3_1_April2012_Setup.exe", LoLUpdater.Properties.Resources.Cg_3_1_April2012_Setup);
             Version winvistaversion = new Version(6, 0, 6000, 0);
             if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= winvistaversion)
             {

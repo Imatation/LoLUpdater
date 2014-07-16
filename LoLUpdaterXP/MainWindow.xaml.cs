@@ -41,6 +41,7 @@ namespace LoLUpdater
                 handleCGInstall();
                 handleAdobeAndTBB();
                 runCleanManager();
+                handleMouseHz();
             }
             else if (Remove.IsChecked == true)
             {
@@ -137,9 +138,8 @@ namespace LoLUpdater
             {
                 if (tbb.IsChecked == true)
                 {
-                    File.WriteAllBytes(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), LoLUpdater.Resources.tbb);
+                    File.Copy("tbb.dll", Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" + Path.Combine("deploy", "tbb.dll"), true);
                 }
-
                 if (AdobeAIR.IsChecked == true)
                 {
                     if (Environment.Is64BitProcess == true)
@@ -167,7 +167,7 @@ namespace LoLUpdater
             {
                 if (tbb.IsChecked == true)
                 {
-                    File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), LoLUpdater.Resources.tbb);
+                    File.Copy("tbb.dll", Path.Combine("Game", "tbb.dll"), true);
                 }
                 if (AdobeAIR.IsChecked == true)
                 {
@@ -316,7 +316,6 @@ namespace LoLUpdater
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
                 {
-                    File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", LoLUpdater.Resources.Cg_3_1_April2012_Setup);
                     Process cg = new Process();
                     ProcessStartInfo startInfo = new ProcessStartInfo();
                     startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
@@ -331,7 +330,6 @@ namespace LoLUpdater
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
                 {
-                    File.WriteAllBytes("Cg-3.1 April2012 Setup.exe", LoLUpdater.Resources.Cg_3_1_April2012_Setup);
                     Process cg = new Process();
                     ProcessStartInfo startInfo = new ProcessStartInfo();
                     startInfo.FileName = "Cg-3.1 April2012 Setup.exe";
@@ -360,6 +358,32 @@ namespace LoLUpdater
             cm.Arguments = "sagerun:1";
             process.StartInfo = cm;
             process.Start();
+        }
+        private void handleMouseHz()
+        {
+            Version win8version = new Version(6, 2, 9200, 0);
+            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= win8version)
+            {
+
+                RegistryKey mousehz;
+
+                if (Environment.Is64BitProcess)
+                {
+                    mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+                }
+                else
+                {
+                    mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+                }
+                mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), RegistryValueKind.String);
+                var cmd = new ProcessStartInfo();
+                var process = new Process();
+                cmd.FileName = "cmd.exe";
+                cmd.Verb = "runas";
+                cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
+                process.StartInfo = cmd;
+                process.Start();
+            }
         }
         //Todo: Use WPF to do this so we can remove the WinForms using
         private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
