@@ -8,8 +8,8 @@
         </GroupBox>
         <ListBox x:Name="CheckedListBox" HorizontalAlignment="Left" Height="86" Margin="277,20,0,0" VerticalAlignment="Top" Width="141" Foreground="#FFB59214">
             <CheckBox x:Name="Cg" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
-            <CheckBox x:Name="CgD3D9" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="CgD3D9_Checked"/>
-            <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="CgGL_Checked"/>
+            <CheckBox x:Name="CgD3D9" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
+            <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
             <CheckBox x:Name="tbb" Content="tbb.dll 4.2.0.0" ToolTip="Update for the Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
         <Button x:Name="OK" Content="Go" HorizontalAlignment="Left" Margin="720,107,0,0" Width="168" Click="OK_Click" Foreground="White" BorderThickness="19,12,15,2" d:IsEffectDisabled="True" Height="105" VerticalAlignment="Top">
@@ -45,9 +45,9 @@
         </ListBox>
         <Label Content="Game Client Options" HorizontalAlignment="Left" Height="30" Margin="277,0,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
         <ListBox x:Name="CheckedListBox_Copy1" HorizontalAlignment="Left" Height="67" Margin="423,20,0,0" VerticalAlignment="Top" Width="140" Foreground="#FFB59214">
-            <CheckBox x:Name="Cg1" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg1_Checked"/>
-            <CheckBox x:Name="CgD3D1" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="CgD3D1_Checked"/>
-            <CheckBox x:Name="CgGL1" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="CgGL1_Checked"/>
+            <CheckBox x:Name="Cg1" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
+            <CheckBox x:Name="CgD3D1" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
+            <CheckBox x:Name="CgGL1" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
         </ListBox>
         <Label Name="Launcher" Content="Launcher Options" HorizontalAlignment="Left" Height="30" Margin="423,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
         <Label Content="Config Tweaks" HorizontalAlignment="Left" Height="26" Margin="720,-1,0,0" VerticalAlignment="Top" Width="110" Foreground="#FFB59214" FontWeight="Bold"/>

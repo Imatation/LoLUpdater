@@ -48,7 +48,7 @@ namespace LoLUpdater
             if (Patch.IsChecked == true)
             {
                 taskProgress.Tag = "Patching...";
-                handleParticleMultithreading();
+                handleCfg("DefaultParticleMultithreading=1");
                 handlePandoUninstall();
                 handleCGInstall();
                 handleAdobeAndTBB();
@@ -56,117 +56,15 @@ namespace LoLUpdater
                 handleMouseHz();
                 if (Inking.IsChecked == true)
                 {
-                    if (File.Exists(Path.Combine("Config", "game.cfg")))
-                    {
-                        if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("Inking=0"))
-                        {
-                            File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "Inking=0");
-                        }
-                    }
-                    else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                    {
-                        if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("Inking=0"))
-                        {
-                            File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "Inking=0");
-                        }
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                        {
-                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("Inking=0"))
-                            {
-                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "Inking=0");
-                            }
-                        }
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
-                        {
-                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("Inking=0"))
-                            {
-                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "Inking=0");
-                            }
-                        }
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
-                        {
-                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("Inking=0"))
-                            {
-                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "Inking=0");
-                            }
-                        }
-                    }
-                }
+                    handleCfg("Inking=0");
+                                    }
                 if (AdvancedReflection.IsChecked == true)
                 {
-                    if (File.Exists(Path.Combine("Config", "game.cfg")))
-                    {
-                        if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("AdvancedReflection=0"))
-                        {
-                            File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "AdvancedReflection=0");
-                        }
-                    }
-                    else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                    {
-                        if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("AdvancedReflection=0"))
-                        {
-                            File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "AdvancedReflection=0");
-                        }
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                        {
-                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("AdvancedReflection=0"))
-                            {
-                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "AdvancedReflection=0");
-                            }
-                        }
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
-                        {
-                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("AdvancedReflection=0"))
-                            {
-                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "AdvancedReflection=0");
-                            }
-                        }
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
-                        {
-                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("AdvancedReflection=0"))
-                            {
-                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "AdvancedReflection=0");
-                            }
-                        }
-                    }
+                   handleCfg("AdvanceReflection=0");
                 }
                 if (PerPixelPointLighting.IsChecked == true)
                 {
-                    if (File.Exists(Path.Combine("Config", "game.cfg")))
-                    {
-                        if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("PerPixelPointLighting=0"))
-                        {
-                            File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
-                        }
-                    }
-                    else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                    {
-                        if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("PerPixelPointLighting=0"))
-                        {
-                            File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
-                        }
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                        {
-                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("PerPixelPointLighting=0"))
-                            {
-                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
-                            }
-                        }
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
-                        {
-                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("PerPixelPointLighting=0"))
-                            {
-                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
-                            }
-                        }
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
-                        {
-                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("PerPixelPointLighting=0"))
-                            {
-                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
-                            }
-                        }
-                    }
+                    handleCfg("PerPixelPointLighting=0");
                 }
             }
 
@@ -181,44 +79,6 @@ namespace LoLUpdater
             if (MessageBox.Show("It is recommended you do a restart after patching, would you like to do it?", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
-            }
-        }
-        private void handleParticleMultithreading()
-        {
-            if (File.Exists(Path.Combine("Config", "game.cfg")))
-            {
-                if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("DefaultParticleMultithreading=1"))
-                {
-                    File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "DefaultParticleMultithreading=1");
-                }
-            }
-            else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-            {
-                if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("DefaultParticleMultithreading=1"))
-                {
-                    File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "DefaultParticleMultithreading=1");
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("DefaultParticleMultithreading=1"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "DefaultParticleMultithreading=1");
-                    }
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("DefaultParticleMultithreading=1"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "DefaultParticleMultithreading=1");
-                    }
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("DefaultParticleMultithreading=1"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "DefaultParticleMultithreading=1");
-                    }
-                }
             }
         }
         private void handleBackup()
@@ -519,6 +379,44 @@ namespace LoLUpdater
                 process.Start();
             }
         }
+        private void handleCfg(string setting)
+        {
+            if (File.Exists(Path.Combine("Config", "game.cfg")))
+            {
+                if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains(setting))
+                {
+                    File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + setting);
+                }
+            }
+            else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+            {
+                if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains(setting))
+                {
+                    File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + setting);
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains(setting))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + setting);
+                    }
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains(setting))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + setting);
+                    }
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
+                {
+                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains(setting))
+                    {
+                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + setting);
+                    }
+                }
+            }
+        }
         private void handleWindowsUpdate()
         {
             UpdateSession uSession = new UpdateSession();
@@ -592,34 +490,10 @@ namespace LoLUpdater
             lblDescription.Text = "";
         }
 
-        private void CgD3D9_Checked(object sender, RoutedEventArgs e)
-        {
-            CGCheck();
-        }
-
-        private void CgGL_Checked(object sender, RoutedEventArgs e)
-        {
-            CGCheck();
-        }
-
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
             CGCheck();
         }
 
-        private void Cg1_Checked(object sender, RoutedEventArgs e)
-        {
-            CGCheck();
-        }
-
-        private void CgD3D1_Checked(object sender, RoutedEventArgs e)
-        {
-            CGCheck();
-        }
-
-        private void CgGL1_Checked(object sender, RoutedEventArgs e)
-        {
-            CGCheck();
-        }
     }
 }
