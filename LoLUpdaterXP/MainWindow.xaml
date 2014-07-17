@@ -6,7 +6,7 @@
                 <RadioButton x:Name="Remove" Content="Uninstall" HorizontalAlignment="Left" Margin="10,29,0,0" VerticalAlignment="Top" Height="15" Width="64" ToolTip="Removes the patch" Foreground="#FFB59214"/>
             </Grid>
         </GroupBox>
-        <ListBox x:Name="CheckedListBox" HorizontalAlignment="Left" Height="83" Margin="277,20,0,0" VerticalAlignment="Top" Width="141" Foreground="#FFB59214">
+        <ListBox x:Name="CheckedListBox" HorizontalAlignment="Left" Height="83" Margin="277,20,0,0" VerticalAlignment="Top" Width="141" Foreground="#FFB59214" Background="Transparent">
             <CheckBox x:Name="Cg" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="CgD3D9" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
@@ -18,22 +18,22 @@
         <GroupBox Header="Description" HorizontalAlignment="Left" Height="110" Margin="7,103,0,0" VerticalAlignment="Top" Width="556" Foreground="#FFB59214" FontWeight="Bold">
             <TextBlock x:Name="lblDescription" Margin="10,4.24,-2,2.415" TextWrapping="Wrap" Foreground="#FFB59214" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </GroupBox>
-        <ListBox x:Name="CheckedListBox_Copy" HorizontalAlignment="Left" Height="43" Margin="105,22,0,0" VerticalAlignment="Top" Width="167" Foreground="#FFB59214">
+        <ListBox x:Name="CheckedListBox_Copy" HorizontalAlignment="Left" Height="43" Margin="105,22,0,0" VerticalAlignment="Top" Width="167" Foreground="#FFB59214" Background="Transparent">
             <CheckBox x:Name="AdobeAIR" Content="Adobe AIR.dll 14.0.0.143" ToolTip="Update for the PVP.NET Client" Checked="AdobeAIR_Checked" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="Flash" Content="NPSWF32.dll 14.0.0.146" ToolTip="Update for the PVP.NET Client" Checked="Flash_Checked" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
         <Label Content="Game Client Options" HorizontalAlignment="Left" Height="30" Margin="277,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
-        <ListBox x:Name="CheckedListBox_Copy1" HorizontalAlignment="Left" Height="66" Margin="423,20,0,0" VerticalAlignment="Top" Width="140" Foreground="#FFB59214">
+        <ListBox x:Name="CheckedListBox_Copy1" HorizontalAlignment="Left" Height="66" Margin="423,20,0,0" VerticalAlignment="Top" Width="140" Foreground="#FFB59214" Background="Transparent">
             <CheckBox x:Name="Cg1" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="CgD3D1" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="CgGL1" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
         <Label Content="Launcher Options" HorizontalAlignment="Left" Height="30" Margin="423,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
         <Button Name ="OK" Content="Go" HorizontalAlignment="Left" Margin="568,103,0,0" VerticalAlignment="Top" Width="168" Height="110" Click="OK_Click"/>
-        <ListBox HorizontalAlignment="Left" Height="66" VerticalAlignment="Top" Width="168" Margin="568,20,0,0" BorderThickness="1">
-            <CheckBox x:Name="Inking" Content="Inking=0" ToolTip="Performs a Windows Update" ToolTipService.ShowOnDisabled="True" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-            <CheckBox x:Name="AdvancedReflection" Content="AdvancedReflection=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-            <CheckBox x:Name="PerPixelPointLighting" Content="PerPixelPointLighting=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
+        <ListBox HorizontalAlignment="Left" Height="66" VerticalAlignment="Top" Width="168" Margin="568,20,0,0" BorderThickness="1" Background="Transparent">
+            <CheckBox x:Name="Inking" Content="Inking=0" ToolTip="Performs a Windows Update" ToolTipService.ShowOnDisabled="True" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
+            <CheckBox x:Name="AdvancedReflection" Content="AdvancedReflection=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
+            <CheckBox x:Name="PerPixelPointLighting" Content="PerPixelPointLighting=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
         <Label Content="Config Tweaks" HorizontalAlignment="Left" Height="30" Margin="563,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
     </Grid>
