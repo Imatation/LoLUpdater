@@ -316,7 +316,7 @@ namespace LoLUpdater
                         cg.StartInfo = startInfo;
                         cg.Start();
                         cg.WaitForExit();
-                    }
+                    } // Todo: else?
                 }
             }
             else
