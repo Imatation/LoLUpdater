@@ -53,11 +53,119 @@ namespace LoLUpdater
                 runCleanManager();
                 handleMouseHz();
                 if (Inking.IsChecked == true)
-                { handleinking(); }
+                {
+                    if (File.Exists(Path.Combine("Config", "game.cfg")))
+                    {
+                        if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("Inking=0"))
+                        {
+                            File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "Inking=0");
+                        }
+                    }
+                    else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                    {
+                        if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("Inking=0"))
+                        {
+                            File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "Inking=0");
+                        }
+                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                        {
+                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("Inking=0"))
+                            {
+                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "Inking=0");
+                            }
+                        }
+                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
+                        {
+                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("Inking=0"))
+                            {
+                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "Inking=0");
+                            }
+                        }
+                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
+                        {
+                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("Inking=0"))
+                            {
+                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "Inking=0");
+                            }
+                        }
+                    }
+                }
                 if (AdvancedReflection.IsChecked == true)
-                { handleAdvancedReflection(); }
+                {
+                    if (File.Exists(Path.Combine("Config", "game.cfg")))
+                    {
+                        if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("AdvancedReflection=0"))
+                        {
+                            File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "AdvancedReflection=0");
+                        }
+                    }
+                    else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                    {
+                        if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("AdvancedReflection=0"))
+                        {
+                            File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "AdvancedReflection=0");
+                        }
+                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                        {
+                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("AdvancedReflection=0"))
+                            {
+                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "AdvancedReflection=0");
+                            }
+                        }
+                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
+                        {
+                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("AdvancedReflection=0"))
+                            {
+                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "AdvancedReflection=0");
+                            }
+                        }
+                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
+                        {
+                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("AdvancedReflection=0"))
+                            {
+                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "AdvancedReflection=0");
+                            }
+                        }
+                    }
+                }
                 if (PerPixelPointLighting.IsChecked == true)
-                { handlePerPixelPointLighting(); }
+                {
+                    if (File.Exists(Path.Combine("Config", "game.cfg")))
+                    {
+                        if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("PerPixelPointLighting=0"))
+                        {
+                            File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
+                        }
+                    }
+                    else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                    {
+                        if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("PerPixelPointLighting=0"))
+                        {
+                            File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
+                        }
+                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                        {
+                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("PerPixelPointLighting=0"))
+                            {
+                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
+                            }
+                        }
+                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
+                        {
+                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("PerPixelPointLighting=0"))
+                            {
+                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
+                            }
+                        }
+                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
+                        {
+                            if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("PerPixelPointLighting=0"))
+                            {
+                                File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
+                            }
+                        }
+                    }
+                }
             }
 
             else if (Remove.IsChecked == true)
@@ -107,120 +215,6 @@ namespace LoLUpdater
                     if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("DefaultParticleMultithreading=1"))
                     {
                         File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "DefaultParticleMultithreading=1");
-                    }
-                }
-            }
-        }
-        private void handleinking()
-        {
-            if (File.Exists(Path.Combine("Config", "game.cfg")))
-            {
-                if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("Inking=0"))
-                {
-                    File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "Inking=0");
-                }
-            }
-            else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-            {
-                if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("Inking=0"))
-                {
-                    File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "Inking=0");
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("Inking=0"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "Inking=0");
-                    }
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("Inking=0"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "Inking=0");
-                    }
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("Inking=0"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "Inking=0");
-                    }
-                }
-            }
-        }
-        private void handleAdvancedReflection()
-        {
-            if (File.Exists(Path.Combine("Config", "game.cfg")))
-            {
-                if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("AdvancedReflection=0"))
-                {
-                    File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "AdvancedReflection=0");
-                }
-            }
-            else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-            {
-                if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("AdvancedReflection=0"))
-                {
-                    File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "AdvancedReflection=0");
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("AdvancedReflection=0"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "AdvancedReflection=0");
-                    }
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("AdvancedReflection=0"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "AdvancedReflection=0");
-                    }
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("AdvancedReflection=0"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "AdvancedReflection=0");
-                    }
-                }
-            }
-        }
-        private void handlePerPixelPointLighting()
-        {
-            if (File.Exists(Path.Combine("Config", "game.cfg")))
-            {
-                if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains("PerPixelPointLighting=0"))
-                {
-                    File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
-                }
-            }
-            else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-            {
-                if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains("PerPixelPointLighting=0"))
-                {
-                    File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains("PerPixelPointLighting=0"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
-                    }
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains("PerPixelPointLighting=0"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
-                    }
-                }
-                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
-                {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains("PerPixelPointLighting=0"))
-                    {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + "PerPixelPointLighting=0");
                     }
                 }
             }
