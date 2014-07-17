@@ -28,7 +28,7 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
-        <ListBox HorizontalAlignment="Left" Height="46" VerticalAlignment="Top" Width="147" Margin="568,20,0,0" BorderThickness="1">
+        <ListBox HorizontalAlignment="Left" Height="55" VerticalAlignment="Top" Width="147" Margin="568,20,0,0" BorderThickness="1">
             <CheckBox x:Name="WinUpdate" Content="Windows Update" ToolTip="Performs a Windows Update" ToolTipService.ShowOnDisabled="True" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="Visual" Content="Visual Options" ToolTip="Change how Windows looks" Foreground="#FFB59214" Background="#FF0A5593" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
