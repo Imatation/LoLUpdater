@@ -77,28 +77,28 @@ namespace LoLUpdater
         {
             get
             {
-                return Path.Combine(gameVersion, "Cg.dll");
+                return Path.Combine("deploy", "Cg.dll");
             }
         }
         public string deployCgGLPath
         {
             get
             {
-                return Path.Combine(gameVersion, "CgGL.dll");
+                return Path.Combine("deploy", "CgGL.dll");
             }
         }
         public string deployCgD3D9Path
         {
             get
             {
-                return Path.Combine(gameVersion, "CgD3D9.dll");
+                return Path.Combine("deploy", "CgD3D9.dll");
             }
         }
         public string deployTbbPath
         {
             get
             {
-                return Path.Combine(gameVersion, "Cg.dll");
+                return Path.Combine("deploy", "tbb.dll");
             }
         }
         public string deployAdobeAirPath
