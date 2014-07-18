@@ -1,13 +1,8 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
-[assembly: AssemblyTitle("LoLUpdater Launcher")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("LoLUpdater")]
-[assembly: AssemblyCopyright("Copyright ©  2014 Ilja Korsun")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyCopyright("Copyright © 2014 Ilja Korsun")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: ComVisible(false)]
+[assembly: AssemblyTitle("LoL Patcher")]
+[assembly: AssemblyDescription("An easy to use application that drastically increases performance of the game, League of Legends.")]
