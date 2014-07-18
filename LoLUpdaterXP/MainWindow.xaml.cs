@@ -42,7 +42,6 @@ namespace LoLUpdater
                 handleCGInstall();
                 handleAdobeAndTBB();
                 runCleanManager();
-                handleMouseHz();
                 if (Inking.IsChecked == true)
                 {
                     handleCfg("Inking=0");
@@ -341,32 +340,6 @@ namespace LoLUpdater
             cm.Arguments = "sagerun:1";
             process.StartInfo = cm;
             process.Start();
-        }
-        private void handleMouseHz()
-        {
-            Version win8version = new Version(6, 2, 9200, 0);
-            if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= win8version)
-            {
-
-                RegistryKey mousehz;
-
-                if (Environment.Is64BitProcess)
-                {
-                    mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-                }
-                else
-                {
-                    mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft", "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-                }
-                mousehz.SetValue("NoDTToDITMouseBatch", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), RegistryValueKind.String);
-                var cmd = new ProcessStartInfo();
-                var process = new Process();
-                cmd.FileName = "cmd.exe";
-                cmd.Verb = "runas";
-                cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
-                process.StartInfo = cmd;
-                process.Start();
-            }
         }
         private void handleCfg(string setting)
         {

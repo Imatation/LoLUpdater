@@ -11,7 +11,6 @@ namespace LoLUpdater
     public partial class MainWindow : Window
     {
         private LoLFiles lolFiles = new LoLFiles();
-
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
@@ -67,7 +66,6 @@ namespace LoLUpdater
                     handleCfg("PerPixelPointLighting=0");
                 }
             }
-
             else if (Remove.IsChecked == true)
             {
                 taskProgress.Tag = "Removing Patch...";
@@ -358,7 +356,6 @@ namespace LoLUpdater
             Version win8version = new Version(6, 2, 9200, 0);
             if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= win8version)
             {
-
                 RegistryKey mousehz;
 
                 if (Environment.Is64BitProcess)
@@ -442,10 +439,10 @@ namespace LoLUpdater
             switch (chkBox.Name)
             {
                 case "AdobeAIR":
-                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client";
+                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client.";
                     break;
                 case "Flash":
-                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the built in Flash player in the Air Client";
+                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the built in Flash player in the Air Client.";
                     break;
                 case "Cg":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
@@ -457,13 +454,13 @@ namespace LoLUpdater
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
                 case "tbb":
-                    lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL";
+                    lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL.";
                     break;
                 case "WinUpdate":
-                    lblDescription.Text = "Performs a Windows Update on the computer, might take some time. (Requires the app to be run as administratior)";
+                    lblDescription.Text = "Performs a Windows Update on the computer, might take some time.";
                     break;
                 case "Visual":
-                    lblDescription.Text = "Enables you to edit the visual style of Windows";
+                    lblDescription.Text = "Enables you to edit the visual style of Windows.";
                     break;
                 case "Cg1":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
@@ -475,13 +472,13 @@ namespace LoLUpdater
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
                 case "Inking":
-                    lblDescription.Text = "Takes off the new 'graphics'";
+                    lblDescription.Text = "Takes off the new 'graphics'.";
                     break;
                 case "AdvancedReflection":
-                    lblDescription.Text = "Takes off the reflections";
+                    lblDescription.Text = "Takes off the reflections.";
                     break;
                 case "PerPixelPointLighting":
-                    lblDescription.Text = "Takes off the particles";
+                    lblDescription.Text = "Takes off the particles.";
                     break;
             }
         }
@@ -494,6 +491,5 @@ namespace LoLUpdater
         {
             CGCheck();
         }
-
     }
 }
