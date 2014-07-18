@@ -9,16 +9,10 @@ namespace LoLUpdater
     {
         static void Main(string[] args)
         {
-
-
             string fileName = "version.txt";
             WebClient wc = new WebClient();
             wc.Credentials = new NetworkCredential("ikorsu", "lolapplication1");
             wc.DownloadFile("ftp://lol.jdhpro.com/lol.jdhpro.com/version.txt", fileName);
-
-
-
-
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             string latestversion = fvi.FileVersion;
