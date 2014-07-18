@@ -33,7 +33,7 @@ namespace LoLUpdater
                 WebClient wc1 = new WebClient();
                 wc1.Credentials = new NetworkCredential("ikorsu", "lolapplication1");
                 wc1.DownloadFile("ftp://lol.jdhpro.com/lol.jdhpro.com/LoLUpdaterLauncher.exe", fileName1);
-                Console.Write("Finished downloading, save to desktop.");
+                Console.Write("Finished downloading, saved to desktop.");
                 Console.ReadLine();
             }
             else
