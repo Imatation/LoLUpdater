@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoLUpdater
 {
@@ -75,7 +72,7 @@ namespace LoLUpdater
         {
             get
             {
-                return Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + 
+                return Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
                     new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
                     .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\";
             }
@@ -85,7 +82,7 @@ namespace LoLUpdater
         {
             get
             {
-                return Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + 
+                return Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" +
                     new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases"))
                     .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\";
             }
