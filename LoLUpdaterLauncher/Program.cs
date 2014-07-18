@@ -26,7 +26,7 @@ namespace LoLUpdater
             var version1 = new Version(latestversion);
             var version2 = new Version(currentversion);
             var result = version1.CompareTo(version2);
-            if (result < 0)
+            if (result > 0)
             {
                 Console.Write("Update found, Downloading...");
                 string fileName1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LoLUpdaterLauncher.exe");
