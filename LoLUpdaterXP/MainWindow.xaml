@@ -29,7 +29,7 @@
             <CheckBox x:Name="AdobeAIR" Content="Adobe AIR.dll 14.0.0.143" ToolTip="Update for the PVP.NET Client" Checked="AdobeAIR_Checked" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="Flash" Content="NPSWF32.dll 14.0.0.146" ToolTip="Update for the PVP.NET Client" Checked="Flash_Checked" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
-        <Label Content="Game Client Options" HorizontalAlignment="Left" Height="30" Margin="266,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
+        <Label Content="Game Client Options" HorizontalAlignment="Left" Height="30" Margin="261,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
         <ListBox x:Name="CheckedListBox_Copy1" HorizontalAlignment="Left" Height="84" Margin="402,22,0,0" VerticalAlignment="Top" Width="140" Foreground="#FFB59214" Background="Transparent">
             <CheckBox x:Name="Cg1" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
             <CheckBox x:Name="CgD3D1" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
