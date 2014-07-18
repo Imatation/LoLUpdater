@@ -7,9 +7,9 @@
             </Grid>
         </GroupBox>
         <ListBox x:Name="CheckedListBox" HorizontalAlignment="Left" Height="83" Margin="277,20,0,0" VerticalAlignment="Top" Width="141" Foreground="#FFB59214" Background="Transparent">
-            <CheckBox x:Name="Cg" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-            <CheckBox x:Name="CgD3D9" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-            <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
+            <CheckBox x:Name="Cg" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
+            <CheckBox x:Name="CgD3D9" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
+            <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
             <CheckBox x:Name="tbb" Content="tbb.dll 4.2.0.0" ToolTip="Update for the Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
         <Label Content="Air Client Options" HorizontalAlignment="Left" Height="30" Margin="105,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
@@ -24,9 +24,9 @@
         </ListBox>
         <Label Content="Game Client Options" HorizontalAlignment="Left" Height="30" Margin="277,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
         <ListBox x:Name="CheckedListBox_Copy1" HorizontalAlignment="Left" Height="66" Margin="423,20,0,0" VerticalAlignment="Top" Width="140" Foreground="#FFB59214" Background="Transparent">
-            <CheckBox x:Name="Cg1" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-            <CheckBox x:Name="CgD3D1" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-            <CheckBox x:Name="CgGL1" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
+            <CheckBox x:Name="Cg1" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
+            <CheckBox x:Name="CgD3D1" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
+            <CheckBox x:Name="CgGL1" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214"  MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
         </ListBox>
         <Label Content="Launcher Options" HorizontalAlignment="Left" Height="30" Margin="423,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
         <Button Name ="OK" Content="Go" HorizontalAlignment="Left" Margin="568,103,0,0" VerticalAlignment="Top" Width="168" Height="110" Click="OK_Click"/>
