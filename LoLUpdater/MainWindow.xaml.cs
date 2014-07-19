@@ -27,6 +27,12 @@ namespace LoLUpdater
                 proc[0].Kill();
                 proc[0].WaitForExit();
             }
+            if (Process.GetProcessesByName("LoLLauncher").Length > 0)
+            {
+                Process[] proc = Process.GetProcessesByName("LoLLauncher");
+                proc[0].Kill();
+                proc[0].WaitForExit();
+            }
             taskProgress.IsIndeterminate = true;
             if (Visual.IsChecked == true)
             {
@@ -56,10 +62,10 @@ namespace LoLUpdater
                 if (Inking.IsChecked == true)
                 {
                     handleCfg("Inking=0");
-                                    }
+                }
                 if (AdvancedReflection.IsChecked == true)
                 {
-                   handleCfg("AdvanceReflection=0");
+                    handleCfg("AdvanceReflection=0");
                 }
                 if (PerPixelPointLighting.IsChecked == true)
                 {
@@ -74,7 +80,7 @@ namespace LoLUpdater
             taskProgress.IsIndeterminate = false;
             taskProgress.Value = 100;
             taskProgress.Tag = "All Processes Completed Successfully!";
-            if (MessageBox.Show("It is recommended you do a restart after patching, would you like to do it?", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show("It is recommended you do a restart after patching", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
             }
@@ -314,7 +320,12 @@ namespace LoLUpdater
                         cg.StartInfo = startInfo;
                         cg.Start();
                         cg.WaitForExit();
-                    } // Todo: else?
+                    }
+                    else
+                    {
+
+
+                    }
                 }
             }
             else
@@ -332,6 +343,15 @@ namespace LoLUpdater
                         cg.Start();
                         cg.WaitForExit();
                     }
+                }
+                else
+                {
+                    Cg.IsChecked = false;
+                    CgD3D9.IsChecked = false;
+                    CgGL.IsChecked = false;
+                    Cg1.IsChecked = false;
+                    CgD3D1.IsChecked = false;
+                    CgGL1.IsChecked = false;
                 }
             }
         }

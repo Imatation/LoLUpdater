@@ -323,6 +323,15 @@ namespace LoLUpdater
                         cg.WaitForExit();
                     }
                 }
+                else
+                {
+                    Cg.IsChecked = false;
+                    CgD3D9.IsChecked = false;
+                    CgGL.IsChecked = false;
+                    Cg1.IsChecked = false;
+                    CgD3D1.IsChecked = false;
+                    CgGL1.IsChecked = false;
+                }
             }
         }
         private void adobeAlert()
