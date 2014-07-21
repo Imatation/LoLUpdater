@@ -352,6 +352,16 @@ namespace LoLUpdater
         }
         private void handleCfg(string setting)
         {
+            System.IO.FileInfo fi = new System.IO.FileInfo(Path.Combine("Config", "game.cfg"));
+
+            if (System.IO.FileAttributes.ReadOnly == fi.Attributes)
+            {
+
+                MessageBox.Show(@"Your game.cfg Located in Config\ is read only, please remove this and try again", "LoLUpdater");
+
+            }
+
+
             if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
                 if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains(setting))
@@ -388,7 +398,6 @@ namespace LoLUpdater
                 }
             }
         }
-        //Todo: Use WPF to do this so we can remove the WinForms using
         private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var chkBox = (CheckBox)sender;
