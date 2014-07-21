@@ -126,9 +126,6 @@
     <None Include="Resources\LoLUpdater.exe" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\LoLUpdaterLauncher.exe" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\LoLUpdaterXP.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
