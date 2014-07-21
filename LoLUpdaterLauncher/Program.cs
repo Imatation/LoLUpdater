@@ -25,7 +25,7 @@ namespace LoLUpdater
                 Console.Write("Update found, Downloading...");
                 string fileName1 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LoLUpdaterLauncher.exe");
                 WebClient wc1 = new WebClient();
-                wc1.Credentials = new NetworkCredential("ikorsu", "lolapplication1");
+                wc1.Credentials = new NetworkCredential("ikorsu", "lolapplication1"); // Todo: Password could be exposed (clear text password login)
                 wc1.DownloadFile("ftp://lol.jdhpro.com/lol.jdhpro.com/LoLUpdaterLauncher.exe", fileName1);
                 Console.Write("Finished downloading, saved to desktop.");
                 Console.ReadLine();
