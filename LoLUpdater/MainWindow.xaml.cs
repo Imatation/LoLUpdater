@@ -321,11 +321,6 @@ namespace LoLUpdater
                         cg.Start();
                         cg.WaitForExit();
                     }
-                    else
-                    {
-
-
-                    }
                 }
             }
             else
@@ -343,15 +338,6 @@ namespace LoLUpdater
                         cg.Start();
                         cg.WaitForExit();
                     }
-                }
-                else
-                {
-                    Cg.IsChecked = false;
-                    CgD3D9.IsChecked = false;
-                    CgGL.IsChecked = false;
-                    Cg1.IsChecked = false;
-                    CgD3D1.IsChecked = false;
-                    CgGL1.IsChecked = false;
                 }
             }
         }
@@ -398,18 +384,20 @@ namespace LoLUpdater
         }
         private void handleCfg(string setting)
         {
-            System.IO.FileInfo fi = new System.IO.FileInfo(Path.Combine("Config", "game.cfg"));
 
-            if (System.IO.FileAttributes.ReadOnly == fi.Attributes)
-            {
-
-                MessageBox.Show(@"Your game.cfg Located in Config\ is read only, please remove this and try again", "LoLUpdater");
-
-            }
 
 
             if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
+                System.IO.FileInfo fi = new System.IO.FileInfo(Path.Combine("Config", "game.cfg"));
+
+                if (System.IO.FileAttributes.ReadOnly == fi.Attributes)
+                {
+
+                    MessageBox.Show(@"Your game.cfg Located in Config\ is read only, please remove this and try again", "LoLUpdater");
+                    return;
+                }
+
                 if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains(setting))
                 {
                     File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + setting);
@@ -417,19 +405,57 @@ namespace LoLUpdater
             }
             else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
             {
+
+
                 if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains(setting))
                 {
                     File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + setting);
                 }
                 if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
                 {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains(setting))
+                    System.IO.FileInfo fi = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"));
+
+                    if (System.IO.FileAttributes.ReadOnly == fi.Attributes)
                     {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + setting);
+
+                        MessageBox.Show(@"Your game.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
+                        return;
+                    }
+
+
+
+                    if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")))
+                    {
+
+                        System.IO.FileInfo fi1 = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"));
+
+                        if (System.IO.FileAttributes.ReadOnly == fi1.Attributes)
+                        {
+
+                            MessageBox.Show(@"Your GamePermanent.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
+                            return;
+                        }
+
+
+                        if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains(setting))
+                        {
+                            File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + setting);
+                        }
                     }
                 }
                 if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
                 {
+
+                    System.IO.FileInfo fi1 = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"));
+
+                    if (System.IO.FileAttributes.ReadOnly == fi1.Attributes)
+                    {
+
+                        MessageBox.Show(@"Your GamePermanent_zh_MY.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
+                        return;
+                    }
+
+
                     if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains(setting))
                     {
                         File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + setting);
@@ -437,6 +463,17 @@ namespace LoLUpdater
                 }
                 if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
                 {
+
+
+                    System.IO.FileInfo fi1 = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"));
+
+                    if (System.IO.FileAttributes.ReadOnly == fi1.Attributes)
+                    {
+
+                        MessageBox.Show(@"Your GamePermanent_en_SG.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
+                        return;
+                    }
+
                     if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains(setting))
                     {
                         File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + setting);

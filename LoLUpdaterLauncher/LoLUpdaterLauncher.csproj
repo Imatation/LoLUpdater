@@ -69,7 +69,10 @@
     <ManifestKeyFile>LoLUpdaterLauncher_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>LoLUpdater.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -123,10 +126,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LoLUpdater.ico" />
     <None Include="Resources\LoLUpdater.exe" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\LoLUpdaterXP.exe" />
+    <None Include="Resources\lol.launcher.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

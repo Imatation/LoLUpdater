@@ -10,7 +10,6 @@ namespace LoLUpdater
     public partial class MainWindow : Window
     {
         private LoLFiles lolFiles = new LoLFiles();
-
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
@@ -24,6 +23,12 @@ namespace LoLUpdater
             if (Process.GetProcessesByName("LoLClient").Length > 0)
             {
                 Process[] proc = Process.GetProcessesByName("LoLClient");
+                proc[0].Kill();
+                proc[0].WaitForExit();
+            }
+            if (Process.GetProcessesByName("LoLLauncher").Length > 0)
+            {
+                Process[] proc = Process.GetProcessesByName("LoLLauncher");
                 proc[0].Kill();
                 proc[0].WaitForExit();
             }
@@ -55,7 +60,6 @@ namespace LoLUpdater
                     handleCfg("PerPixelPointLighting=0");
                 }
             }
-
             else if (Remove.IsChecked == true)
             {
                 taskProgress.Tag = "Removing Patch...";
@@ -64,7 +68,7 @@ namespace LoLUpdater
             taskProgress.IsIndeterminate = false;
             taskProgress.Value = 100;
             taskProgress.Tag = "All Processes Completed Successfully!";
-            if (MessageBox.Show("It is recommended you do a restart after patching, would you like to do it?", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show("It is recommended you do a restart after patching", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
             }
@@ -304,7 +308,7 @@ namespace LoLUpdater
                         cg.StartInfo = startInfo;
                         cg.Start();
                         cg.WaitForExit();
-                    } // Todo: else?
+                    }
                 }
             }
             else
@@ -322,15 +326,6 @@ namespace LoLUpdater
                         cg.Start();
                         cg.WaitForExit();
                     }
-                }
-                else
-                {
-                    Cg.IsChecked = false;
-                    CgD3D9.IsChecked = false;
-                    CgGL.IsChecked = false;
-                    Cg1.IsChecked = false;
-                    CgD3D1.IsChecked = false;
-                    CgGL1.IsChecked = false;
                 }
             }
         }
@@ -352,18 +347,20 @@ namespace LoLUpdater
         }
         private void handleCfg(string setting)
         {
-            System.IO.FileInfo fi = new System.IO.FileInfo(Path.Combine("Config", "game.cfg"));
 
-            if (System.IO.FileAttributes.ReadOnly == fi.Attributes)
-            {
-
-                MessageBox.Show(@"Your game.cfg Located in Config\ is read only, please remove this and try again", "LoLUpdater");
-
-            }
 
 
             if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
+                System.IO.FileInfo fi = new System.IO.FileInfo(Path.Combine("Config", "game.cfg"));
+
+                if (System.IO.FileAttributes.ReadOnly == fi.Attributes)
+                {
+
+                    MessageBox.Show(@"Your game.cfg Located in Config\ is read only, please remove this and try again", "LoLUpdater");
+                    return;
+                }
+
                 if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains(setting))
                 {
                     File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + setting);
@@ -371,19 +368,57 @@ namespace LoLUpdater
             }
             else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
             {
+
+
                 if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains(setting))
                 {
                     File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + setting);
                 }
                 if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
                 {
-                    if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains(setting))
+                    System.IO.FileInfo fi = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"));
+
+                    if (System.IO.FileAttributes.ReadOnly == fi.Attributes)
                     {
-                        File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + setting);
+
+                        MessageBox.Show(@"Your game.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
+                        return;
+                    }
+
+
+
+                    if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")))
+                    {
+
+                        System.IO.FileInfo fi1 = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"));
+
+                        if (System.IO.FileAttributes.ReadOnly == fi1.Attributes)
+                        {
+
+                            MessageBox.Show(@"Your GamePermanent.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
+                            return;
+                        }
+
+
+                        if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains(setting))
+                        {
+                            File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), Environment.NewLine + setting);
+                        }
                     }
                 }
                 if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
                 {
+
+                    System.IO.FileInfo fi1 = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"));
+
+                    if (System.IO.FileAttributes.ReadOnly == fi1.Attributes)
+                    {
+
+                        MessageBox.Show(@"Your GamePermanent_zh_MY.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
+                        return;
+                    }
+
+
                     if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains(setting))
                     {
                         File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"), Environment.NewLine + setting);
@@ -391,6 +426,17 @@ namespace LoLUpdater
                 }
                 if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
                 {
+
+
+                    System.IO.FileInfo fi1 = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"));
+
+                    if (System.IO.FileAttributes.ReadOnly == fi1.Attributes)
+                    {
+
+                        MessageBox.Show(@"Your GamePermanent_en_SG.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
+                        return;
+                    }
+
                     if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains(setting))
                     {
                         File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), Environment.NewLine + setting);
@@ -404,10 +450,10 @@ namespace LoLUpdater
             switch (chkBox.Name)
             {
                 case "AdobeAIR":
-                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client";
+                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client.";
                     break;
                 case "Flash":
-                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the built in Flash player in the Air Client";
+                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the built in Flash player in the Air Client.";
                     break;
                 case "Cg":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
@@ -419,7 +465,7 @@ namespace LoLUpdater
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
                 case "tbb":
-                    lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL";
+                    lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL.";
                     break;
                 case "Cg1":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
@@ -431,13 +477,13 @@ namespace LoLUpdater
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
                 case "Inking":
-                    lblDescription.Text = "Takes off the new 'graphics'";
+                    lblDescription.Text = "Takes off the new 'graphics'.";
                     break;
                 case "AdvancedReflection":
-                    lblDescription.Text = "Takes off the reflections";
+                    lblDescription.Text = "Takes off the reflections.";
                     break;
                 case "PerPixelPointLighting":
-                    lblDescription.Text = "Takes off the particles";
+                    lblDescription.Text = "Takes off the particles.";
                     break;
             }
         }

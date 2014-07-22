@@ -6,23 +6,18 @@
                 <RadioButton x:Name="Remove" Content="Uninstall" HorizontalAlignment="Left" Margin="10,60,0,-24" VerticalAlignment="Top" Height="15" Width="64" ToolTip="Removes the patch" Foreground="#FFB59214"/>
             </Grid>
         </GroupBox>
-        <ListBox x:Name="CheckedListBox" HorizontalAlignment="Left" Height="86" Margin="261,20,0,0" VerticalAlignment="Top" Width="141" Foreground="#FFB59214" Background="Transparent">
+        <ListBox x:Name="CheckedListBox" HorizontalAlignment="Left" Height="84" Margin="261,22,0,0" VerticalAlignment="Top" Width="141" Foreground="#FFB59214" Background="Transparent">
             <CheckBox x:Name="Cg" Content="cg.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
             <CheckBox x:Name="CgD3D9" Content="cgD3D9.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
             <CheckBox x:Name="CgGL" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
             <CheckBox x:Name="tbb" Content="tbb.dll 4.2.0.0" ToolTip="Update for the Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
         </ListBox>
-        <Button x:Name="OK" Content="Go" HorizontalAlignment="Left" Margin="694,111,0,0" Width="159" Click="OK_Click"  Height="100" VerticalAlignment="Top">
+        <Button x:Name="OK" Content="Go" HorizontalAlignment="Left" Margin="716,22,0,0" Width="137" Click="OK_Click"  Height="189" VerticalAlignment="Top">
         </Button>
-        <ListBox HorizontalAlignment="Left" Height="86" VerticalAlignment="Top" Width="147" Margin="542,20,0,0" BorderThickness="1" Background="Transparent">
-            <CheckBox x:Name="WinUpdate" Content="Windows Update" ToolTip="Performs a Windows Update" ToolTipService.ShowOnDisabled="True" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-            <CheckBox x:Name="Visual" Content="Visual Options" ToolTip="Change how Windows looks" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-        </ListBox>
         <Label Content="Air Client Options" HorizontalAlignment="Left" Height="30" Margin="94,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
-        <Label Content="Windows Utilities" HorizontalAlignment="Left" Height="26" Margin="542,-1,0,0" VerticalAlignment="Top" Width="110" Foreground="#FFB59214" FontWeight="Bold"/>
         <Label Content="Main" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="48" Foreground="#FFB59214" FontWeight="Bold" Margin="0,-1,0,0"/>
         <ProgressBar x:Name="taskProgress" HorizontalAlignment="Left" Height="22" Margin="0,221,0,0" VerticalAlignment="Top" Width="857" Foreground="#FF06B025" FontFamily="Segoe UI"/>
-        <GroupBox Header="Description" HorizontalAlignment="Left" Height="110" Margin="0,106,0,0" VerticalAlignment="Top" Width="689" FontWeight="Bold" Foreground="#FFB59214">
+        <GroupBox Header="Description" HorizontalAlignment="Left" Height="110" Margin="0,106,0,0" VerticalAlignment="Top" Width="710" FontWeight="Bold" Foreground="#FFB59214">
             <TextBlock x:Name="lblDescription" Margin="10,4.24,-2,2.415" TextWrapping="Wrap" Foreground="#FFB59214" FontWeight="Normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </GroupBox>
         <ListBox x:Name="CheckedListBox_Copy" HorizontalAlignment="Left" Height="84" Margin="94,22,0,0" VerticalAlignment="Top" Width="167" Foreground="#FFB59214" Background="Transparent">
@@ -36,8 +31,8 @@
             <CheckBox x:Name="CgGL1" Content="cgGL.dll 3.1.0.13" ToolTip="Update for the Launcher and Game" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"/>
         </ListBox>
         <Label Name="Launcher" Content="Launcher Options" HorizontalAlignment="Left" Height="30" Margin="402,-1,0,0" VerticalAlignment="Top" Width="129" Foreground="#FFB59214" FontWeight="Bold"/>
-        <Label Content="Config Tweaks" HorizontalAlignment="Left" Height="26" Margin="689,0,0,0" VerticalAlignment="Top" Width="110" Foreground="#FFB59214" FontWeight="Bold"/>
-        <ListBox HorizontalAlignment="Left" Height="86" VerticalAlignment="Top" Width="168" Margin="689,20,0,0" BorderThickness="1" Background="Transparent">
+        <Label Content="Config Tweaks" HorizontalAlignment="Left" Height="26" Margin="542,0,0,0" VerticalAlignment="Top" Width="110" Foreground="#FFB59214" FontWeight="Bold"/>
+        <ListBox HorizontalAlignment="Left" Height="84" VerticalAlignment="Top" Width="168" Margin="542,22,0,0" BorderThickness="1" Background="Transparent">
             <CheckBox x:Name="Inking" Content="Inking=0" ToolTip="Performs a Windows Update" ToolTipService.ShowOnDisabled="True" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="AdvancedReflection" Content="AdvancedReflection=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="PerPixelPointLighting" Content="PerPixelPointLighting=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
