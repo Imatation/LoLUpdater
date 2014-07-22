@@ -35,7 +35,7 @@
         <ListBox HorizontalAlignment="Left" Height="84" VerticalAlignment="Top" Width="168" Margin="542,22,0,0" BorderThickness="1" Background="Transparent">
             <CheckBox x:Name="Inking" Content="Inking=0" ToolTip="Performs a Windows Update" ToolTipService.ShowOnDisabled="True" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
             <CheckBox x:Name="AdvancedReflection" Content="AdvancedReflection=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
-            <CheckBox x:Name="PerPixelPointLighting" Content="PerPixelPointLighting=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"/>
+            <CheckBox x:Name="PerPixelPointLighting" Content="PerPixelPointLighting=0" ToolTip="Change how Windows looks" Foreground="#FFB59214" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" />
         </ListBox>
     </Grid>
 </Window>
