@@ -6,22 +6,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using WUApiLib;
-using System.Globalization;
-using System.Resources;
 namespace LoLUpdater
-
-
-
 {
     public partial class MainWindow : Window
     {
-
-        ResourceManager res_man;    // declare Resource manager to access to specific cultureinfo
-        CultureInfo cul;  
-
-
-
-
         private LoLFiles lolFiles = new LoLFiles();
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
@@ -570,15 +558,5 @@ namespace LoLUpdater
         {
             CGCheck();
         }
-        void switch_language(void)
-{
- if (vietnameseToolStripMenuItem.Checked == true)    //in vietnamese
- { 
-   cul = CultureInfo.CreateSpecificCulture("vi");    //create culture for vietnamese
- }          
- else                                                //in english
- {
-  cul = CultureInfo.CreateSpecificCulture("en");     //create culture for english
- }
     }
 }
