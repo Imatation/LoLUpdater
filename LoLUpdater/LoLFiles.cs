@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+
 namespace LoLUpdater
 {
-    class LoLFiles
+    internal class LoLFiles
     {
         public LoLFiles()
         {
@@ -16,7 +16,9 @@ namespace LoLUpdater
                 gameVersion = "Game";
             }
         }
+
         public string gameVersion { get; set; }
+
         public string backupCgPath
         {
             get
@@ -24,6 +26,7 @@ namespace LoLUpdater
                 return Path.Combine("Backup", "Cg.dll");
             }
         }
+
         public string backupCgGLPath
         {
             get
@@ -31,6 +34,7 @@ namespace LoLUpdater
                 return Path.Combine("Backup", "CgGL.dll");
             }
         }
+
         public string backupCgD3D9Path
         {
             get
@@ -38,6 +42,7 @@ namespace LoLUpdater
                 return Path.Combine("Backup", "CgD3D9.dll");
             }
         }
+
         public string backupTbbPath
         {
             get
@@ -45,6 +50,7 @@ namespace LoLUpdater
                 return Path.Combine("Backup", "tbb.dll");
             }
         }
+
         public string backupNPSWF32Path
         {
             get
@@ -52,6 +58,7 @@ namespace LoLUpdater
                 return Path.Combine("Backup", "NPSWF32.dll");
             }
         }
+
         public string backupAdobeAirPath
         {
             get
@@ -59,6 +66,7 @@ namespace LoLUpdater
                 return Path.Combine("Backup", "Adobe AIR.dll");
             }
         }
+
         public string lolGameClientSlnPath
         {
             get
@@ -66,6 +74,7 @@ namespace LoLUpdater
                 return Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\";
             }
         }
+
         public string lolAirClientPath
         {
             get
@@ -73,6 +82,7 @@ namespace LoLUpdater
                 return Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\";
             }
         }
+
         public string deployCgPath
         {
             get
@@ -80,6 +90,7 @@ namespace LoLUpdater
                 return Path.Combine("deploy", "Cg.dll");
             }
         }
+
         public string deployCgGLPath
         {
             get
@@ -87,6 +98,7 @@ namespace LoLUpdater
                 return Path.Combine("deploy", "CgGL.dll");
             }
         }
+
         public string deployCgD3D9Path
         {
             get
@@ -94,6 +106,7 @@ namespace LoLUpdater
                 return Path.Combine("deploy", "CgD3D9.dll");
             }
         }
+
         public string deployTbbPath
         {
             get
@@ -101,6 +114,7 @@ namespace LoLUpdater
                 return Path.Combine("deploy", "tbb.dll");
             }
         }
+
         public string deployAdobeAirPath
         {
             get
@@ -111,6 +125,7 @@ namespace LoLUpdater
                     return Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll");
             }
         }
+
         public string deployNPSWF32Path
         {
             get

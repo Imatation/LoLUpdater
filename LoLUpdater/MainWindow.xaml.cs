@@ -5,20 +5,25 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using WUApiLib;
+
 namespace LoLUpdater
 {
     public partial class MainWindow : Window
     {
         private LoLFiles lolFiles = new LoLFiles();
+
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
         }
+
         private void Flash_Checked(object sender, RoutedEventArgs e)
         {
             adobeAlert();
         }
+
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             if (Process.GetProcessesByName("LoLClient").Length > 0)
@@ -33,26 +38,20 @@ namespace LoLUpdater
                 proc[0].Kill();
                 proc[0].WaitForExit();
             }
-            taskProgress.IsIndeterminate = true;
             if (Visual.IsChecked == true)
             {
-                taskProgress.Tag = "Opening System Performance Properties...";
                 Process.Start("SystemPropertiesPerformance.exe");
             }
             if (WinUpdate.IsChecked == true)
             {
-                taskProgress.Tag = "Setting Up Windows Update...";
                 handleWindowsUpdate();
             }
-            taskProgress.Tag = "Performing Backup...";
             if (!Directory.Exists("Backup"))
             {
-                taskProgress.Tag = "Performing Backup...";
                 handleBackup();
             }
             if (Patch.IsChecked == true)
             {
-                taskProgress.Tag = "Patching...";
                 handleCfg("DefaultParticleMultithreading=1");
                 handlePandoUninstall();
                 handleCGInstall();
@@ -74,17 +73,14 @@ namespace LoLUpdater
             }
             else if (Remove.IsChecked == true)
             {
-                taskProgress.Tag = "Removing Patch...";
                 handleUninstall();
             }
-            taskProgress.IsIndeterminate = false;
-            taskProgress.Value = 100;
-            taskProgress.Tag = "All Processes Completed Successfully!";
             if (MessageBox.Show("It is recommended you do a restart after patching", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
             }
         }
+
         private void handleBackup()
         {
             if (!Directory.Exists("Backup"))
@@ -127,6 +123,7 @@ namespace LoLUpdater
                 }
             }
         }
+
         private void handleAdobeAndTBB()
         {
             if (Directory.Exists("Rads"))
@@ -188,6 +185,7 @@ namespace LoLUpdater
                 }
             }
         }
+
         private void handleCGInstall()
         {
             if (Directory.Exists("RADS"))
@@ -237,6 +235,7 @@ namespace LoLUpdater
                 }
             }
         }
+
         private void handlePandoUninstall()
         {
             if (Environment.Is64BitProcess == true)
@@ -264,6 +263,7 @@ namespace LoLUpdater
                 }
             }
         }
+
         private void handleUninstall()
         {
             if (Directory.Exists("RADS"))
@@ -304,6 +304,7 @@ namespace LoLUpdater
             }
             Directory.Delete("Backup", true);
         }
+
         private void CGCheck()
         {
             if (Environment.Is64BitProcess == true)
@@ -341,6 +342,7 @@ namespace LoLUpdater
                 }
             }
         }
+
         private void adobeAlert()
         {
             if (MessageBox.Show("We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
@@ -348,6 +350,7 @@ namespace LoLUpdater
                 Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
             }
         }
+
         private void runCleanManager()
         {
             var cm = new ProcessStartInfo();
@@ -357,6 +360,7 @@ namespace LoLUpdater
             process.StartInfo = cm;
             process.Start();
         }
+
         private void handleMouseHz()
         {
             Version win8version = new Version(6, 2, 9200, 0);
@@ -382,18 +386,15 @@ namespace LoLUpdater
                 process.Start();
             }
         }
+
         private void handleCfg(string setting)
         {
-
-
-
             if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
                 System.IO.FileInfo fi = new System.IO.FileInfo(Path.Combine("Config", "game.cfg"));
 
                 if (System.IO.FileAttributes.ReadOnly == fi.Attributes)
                 {
-
                     MessageBox.Show(@"Your game.cfg Located in Config\ is read only, please remove this and try again", "LoLUpdater");
                     return;
                 }
@@ -405,8 +406,6 @@ namespace LoLUpdater
             }
             else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
             {
-
-
                 if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains(setting))
                 {
                     File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), Environment.NewLine + setting);
@@ -417,25 +416,19 @@ namespace LoLUpdater
 
                     if (System.IO.FileAttributes.ReadOnly == fi.Attributes)
                     {
-
                         MessageBox.Show(@"Your game.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
                         return;
                     }
 
-
-
                     if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")))
                     {
-
                         System.IO.FileInfo fi1 = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"));
 
                         if (System.IO.FileAttributes.ReadOnly == fi1.Attributes)
                         {
-
                             MessageBox.Show(@"Your GamePermanent.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
                             return;
                         }
-
 
                         if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains(setting))
                         {
@@ -445,16 +438,13 @@ namespace LoLUpdater
                 }
                 if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
                 {
-
                     System.IO.FileInfo fi1 = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"));
 
                     if (System.IO.FileAttributes.ReadOnly == fi1.Attributes)
                     {
-
                         MessageBox.Show(@"Your GamePermanent_zh_MY.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
                         return;
                     }
-
 
                     if (!File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains(setting))
                     {
@@ -463,13 +453,10 @@ namespace LoLUpdater
                 }
                 if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
                 {
-
-
                     System.IO.FileInfo fi1 = new System.IO.FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"));
 
                     if (System.IO.FileAttributes.ReadOnly == fi1.Attributes)
                     {
-
                         MessageBox.Show(@"Your GamePermanent_en_SG.cfg Located in Game\DATA\CFG\defaults is read only, please remove this and try again", "LoLUpdater");
                         return;
                     }
@@ -481,6 +468,7 @@ namespace LoLUpdater
                 }
             }
         }
+
         private void handleWindowsUpdate()
         {
             UpdateSession uSession = new UpdateSession();
@@ -499,6 +487,7 @@ namespace LoLUpdater
             installer.Updates = updatesToInstall;
             IInstallationResult installationRes = installer.Install();
         }
+
         //Todo: Use WPF to do this so we can remove the WinForms using
         private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
@@ -508,47 +497,61 @@ namespace LoLUpdater
                 case "AdobeAIR":
                     lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client.";
                     break;
+
                 case "Flash":
                     lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the built in Flash player in the Air Client.";
                     break;
+
                 case "Cg":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
+
                 case "CgD3D9":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
+
                 case "CgGL":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
+
                 case "tbb":
                     lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL.";
                     break;
+
                 case "WinUpdate":
                     lblDescription.Text = "Performs a Windows Update on the computer, might take some time.";
                     break;
+
                 case "Visual":
                     lblDescription.Text = "Enables you to edit the visual style of Windows.";
                     break;
+
                 case "Cg1":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
+
                 case "CgD3D1":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
+
                 case "CgGL1":
                     lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
                     break;
+
                 case "Inking":
                     lblDescription.Text = "Takes off the new 'graphics'.";
                     break;
+
                 case "AdvancedReflection":
                     lblDescription.Text = "Takes off the reflections.";
                     break;
+
                 case "PerPixelPointLighting":
                     lblDescription.Text = "Takes off the particles.";
                     break;
             }
         }
+
         private void chkOption_MouseExit(object sender, System.Windows.Input.MouseEventArgs e)
         {
             lblDescription.Text = "";
@@ -557,6 +560,26 @@ namespace LoLUpdater
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
             CGCheck();
+        }
+
+        private void Image_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Xclose.Source = new BitmapImage(new Uri("Resources/closemouseenter.png", UriKind.Relative));
+        }
+
+        private void Image_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Xclose.Source = new BitmapImage(new Uri("Resources/close.png", UriKind.Relative));
+        }
+
+        private void Image_MouseEnter_1(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Xclose.Source = new BitmapImage(new Uri("Resources/minimizemouseeneter.png", UriKind.Relative));
+        }
+
+        private void Image_MouseLeave_1(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Xclose.Source = new BitmapImage(new Uri("Resources/minimize.png", UriKind.Relative));
         }
     }
 }
