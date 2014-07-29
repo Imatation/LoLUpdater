@@ -10,7 +10,7 @@ using WUApiLib;
 
 namespace LoLUpdater
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         private LoLFiles lolFiles = new LoLFiles();
 
@@ -574,12 +574,22 @@ namespace LoLUpdater
 
         private void Image_MouseEnter_1(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            Xclose.Source = new BitmapImage(new Uri("Resources/minimizemouseeneter.png", UriKind.Relative));
+            Xminimize.Source = new BitmapImage(new Uri("Resources/minimizemouseneter.png", UriKind.Relative));
         }
 
         private void Image_MouseLeave_1(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            Xclose.Source = new BitmapImage(new Uri("Resources/minimize.png", UriKind.Relative));
+            Xminimize.Source = new BitmapImage(new Uri("Resources/minimize.png", UriKind.Relative));
+        }
+
+        private void Xclose_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void Xminimize_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
         }
     }
 }
