@@ -121,9 +121,6 @@
   <data name="Cg_3_1_April2012_Setup" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cg-3.1 April2012 Setup.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="LoLUpdater" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LoLUpdater.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="NvidiaCGLicence" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NvidiaCGLicence.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>

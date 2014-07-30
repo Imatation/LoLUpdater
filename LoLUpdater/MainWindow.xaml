@@ -168,15 +168,15 @@
         </Style>
     </controls:MetroWindow.Resources>
 
-    <Grid Background="#2D2D30" Height="205" Width="781">
+    <Grid Background="#2D2D30" Height="205" Width="753">
 
-        <Image x:Name="Xclose" HorizontalAlignment="Left" Height="26" Margin="747,0,0,0" Source="Resources/close.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave" MouseDown="Xclose_MouseDown" />
-        <Image x:Name="Xminimize" HorizontalAlignment="Left" Height="26" Margin="713,0,0,0" Source="Resources/minimize.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter_1" MouseLeave="Image_MouseLeave_1" MouseDown="Xminimize_MouseDown" />
+        <Image x:Name="Xclose" HorizontalAlignment="Left" Height="26" Margin="719,0,0,0" Source="Resources/close.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave" MouseDown="Xclose_MouseDown" />
+        <Image x:Name="Xminimize" HorizontalAlignment="Left" Height="26" Margin="685,0,0,0" Source="Resources/minimize.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter_1" MouseLeave="Image_MouseLeave_1" MouseDown="Xminimize_MouseDown" />
 
-        <GroupBox Header="Desciption" HorizontalAlignment="Left" Margin="19,128,0,0" VerticalAlignment="Top" Height="40" Width="739" FontFamily="Open Sans">
+        <GroupBox Header="Desciption" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" Height="40" Width="733" FontFamily="Open Sans">
             <TextBlock Name="lblDescription" />
         </GroupBox>
-        <Button Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="19,173,0,0" VerticalAlignment="Top" Width="739" FontFamily="Open Sans" Click="OK_Click">
+        <Button Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top" Width="733" FontFamily="Open Sans" Click="OK_Click">
             <Button.Resources>
                 <Style x:Key="FocusVisual">
                     <Setter Property="Control.Template">
@@ -227,61 +227,57 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <TextBlock HorizontalAlignment="Left" Margin="10,8,0,0" TextWrapping="Wrap" Text="LoLUpdater" VerticalAlignment="Top" Foreground="Gray" />
-        <GroupBox Header="Main" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top" Height="99" Width="103" FontFamily="Open Sans" Foreground="White">
+        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="LoLUpdater" VerticalAlignment="Top" Foreground="Gray" />
+        <GroupBox Header="Main" HorizontalAlignment="Left" Margin="0,31,0,0" VerticalAlignment="Top" Height="99" Width="103" FontFamily="Open Sans" Foreground="White">
             <Grid>
                 <RadioButton x:Name="Remove" Content="Uninstall" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" FontFamily="Open Sans" Foreground="White"  Style="{DynamicResource RadioButtonStyle1}" />
                 <RadioButton x:Name="Patch" Content="Install" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontFamily="Open Sans" Foreground="White" Style="{DynamicResource RadioButtonStyle1}" />
             </Grid>
         </GroupBox>
-        <GroupBox Header="" HorizontalAlignment="Left" Margin="114,24,0,0" VerticalAlignment="Top" Height="99" Width="653">
-            <Grid>
-                <GroupBox Header="PvP.Net Options" HorizontalAlignment="Left" Margin="-6,-16,0,-6" VerticalAlignment="Top" Height="99" Width="111" FontFamily="Open Sans" Foreground="White">
+        <GroupBox Header="PvP.Net Options" HorizontalAlignment="Left" Margin="103,31,0,0" VerticalAlignment="Top" Height="99" Width="111" FontFamily="Open Sans" Foreground="White">
 
-                    <Grid Margin="0,0,-4,-5">
-                        <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,0,0" VerticalAlignment="Top" Width="107" Background="#2D2D30">
-                            <CheckBox x:Name="AdobeAIR" Content="Adobe AIR" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Flash_Checked" Style="{DynamicResource CheckboxStyle}" />
-                            <CheckBox x:Name="Flash" Content="Adobe Flash" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="AdobeAIR_Checked" Style="{DynamicResource CheckboxStyle}" />
-                        </ListBox>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Header="Game Options" HorizontalAlignment="Left" Margin="106,-16,0,-6" VerticalAlignment="Top" Height="99" Width="99" FontFamily="Open Sans" Foreground="White">
-                    <Grid Margin="0,0,0,-5">
-                        <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,-4,0" VerticalAlignment="Top" Width="95" Background="#2D2D30">
-                            <CheckBox x:Name="Cg" Content="Cg" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
-                            <CheckBox x:Name="CgD3D9" Content="CgD3D9" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked" Style="{DynamicResource CheckboxStyle}" />
-                            <CheckBox x:Name="CgGL" Content="CgGL" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
-                            <CheckBox x:Name="tbb" Content="TBB" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
-                        </ListBox>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Header="Launcher Options" HorizontalAlignment="Left" Margin="205,-16,0,-6" VerticalAlignment="Top" Height="99" Width="120" FontFamily="Open Sans" Foreground="White">
-                    <Grid Margin="0,0,0,-6">
-                        <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,-4,0" VerticalAlignment="Top" Width="116" Background="#2D2D30">
-                            <CheckBox x:Name="Cg1" Content="Cg" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked" Style="{DynamicResource CheckboxStyle}" />
-                            <CheckBox x:Name="CgD3D1" Content="CgD3D9" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
-                            <CheckBox x:Name="CgGL1" Content="CgGL" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"  Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
-                        </ListBox>
-                    </Grid>
-                </GroupBox>
+            <Grid Margin="0,0,-4,-5">
+                <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,0,0" VerticalAlignment="Top" Width="107" Background="#2D2D30">
+                    <CheckBox x:Name="AdobeAIR" Content="Adobe AIR" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Flash_Checked" Style="{DynamicResource CheckboxStyle}" />
+                    <CheckBox x:Name="Flash" Content="Adobe Flash" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="AdobeAIR_Checked" Style="{DynamicResource CheckboxStyle}" />
+                </ListBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Game Options" HorizontalAlignment="Left" Margin="214,31,0,0" VerticalAlignment="Top" Height="99" Width="99" FontFamily="Open Sans" Foreground="White">
+            <Grid Margin="0,0,0,-5">
+                <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,-4,0" VerticalAlignment="Top" Width="95" Background="#2D2D30">
+                    <CheckBox x:Name="Cg" Content="Cg" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
+                    <CheckBox x:Name="CgD3D9" Content="CgD3D9" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked" Style="{DynamicResource CheckboxStyle}" />
+                    <CheckBox x:Name="CgGL" Content="CgGL" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
+                    <CheckBox x:Name="tbb" Content="TBB" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
+                </ListBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Launcher Options" HorizontalAlignment="Left" Margin="313,31,0,0" VerticalAlignment="Top" Height="99" Width="120" FontFamily="Open Sans" Foreground="White">
+            <Grid Margin="0,0,0,-6">
+                <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,-4,0" VerticalAlignment="Top" Width="116" Background="#2D2D30">
+                    <CheckBox x:Name="Cg1" Content="Cg" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked" Style="{DynamicResource CheckboxStyle}" />
+                    <CheckBox x:Name="CgD3D1" Content="CgD3D9" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
+                    <CheckBox x:Name="CgGL1" Content="CgGL" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"  Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
+                </ListBox>
+            </Grid>
+        </GroupBox>
 
-                <GroupBox Header="Windows Utilities" HorizontalAlignment="Left" Margin="326,-16,0,-6" VerticalAlignment="Top" Height="99" Width="133" FontFamily="Open Sans" Foreground="White">
-                    <Grid Margin="0,0,0,-5">
-                        <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,-4,0" VerticalAlignment="Top" Width="129" Background="#2D2D30" SelectionChanged="ListBox_SelectionChanged">
-                            <CheckBox x:Name="WinUpdate" Content="Windows Update" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"  Style="{DynamicResource CheckboxStyle}" />
-                            <CheckBox x:Name="Visual" Content="Visual Options" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
-                        </ListBox>
-                    </Grid>
-                </GroupBox>
-                <GroupBox Header="Windows Utilities" HorizontalAlignment="Left" Margin="459,-16,-5,-6" VerticalAlignment="Top" Height="99" Width="187" FontFamily="Open Sans">
-                    <Grid Margin="0,0,0,-5">
-                        <ListBox HorizontalAlignment="Left" Height="83" VerticalAlignment="Top" Width="183" Margin="-4,-2,-4,0" Background="#2D2D30">
-                            <CheckBox x:Name="Inking" Content="No Inking" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
-                            <CheckBox x:Name="AdvancedReflection" Content="No Advanced Reflection" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
-                            <CheckBox x:Name="PerPixelPointLighting" Content="No PerPixelPointLightning" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
-                        </ListBox>
-                    </Grid>
-                </GroupBox>
+        <GroupBox Header="Windows Utilities" HorizontalAlignment="Left" Margin="433,31,0,0" VerticalAlignment="Top" Height="99" Width="133" FontFamily="Open Sans" Foreground="White">
+            <Grid Margin="0,0,0,-5">
+                <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,-4,0" VerticalAlignment="Top" Width="129" Background="#2D2D30" SelectionChanged="ListBox_SelectionChanged">
+                    <CheckBox x:Name="WinUpdate" Content="Windows Update" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"  Style="{DynamicResource CheckboxStyle}" />
+                    <CheckBox x:Name="Visual" Content="Visual Options" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
+                </ListBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Windows Utilities" HorizontalAlignment="Left" Margin="566,31,0,0" VerticalAlignment="Top" Height="99" Width="187" FontFamily="Open Sans">
+            <Grid Margin="0,0,0,-5">
+                <ListBox HorizontalAlignment="Left" Height="83" VerticalAlignment="Top" Width="183" Margin="-4,-2,-4,0" Background="#2D2D30">
+                    <CheckBox x:Name="Inking" Content="No Inking" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
+                    <CheckBox x:Name="AdvancedReflection" Content="No Advanced Reflection" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
+                    <CheckBox x:Name="PerPixelPointLighting" Content="No PerPixelPointLightning" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
+                </ListBox>
             </Grid>
         </GroupBox>
     </Grid>
