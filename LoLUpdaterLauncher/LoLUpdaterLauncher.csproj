@@ -128,8 +128,6 @@
   <ItemGroup>
     <Content Include="LoLUpdater.ico" />
     <None Include="Resources\LoLUpdater.exe" />
-    <None Include="Resources\LoLUpdaterXP.exe" />
-    <None Include="Resources\lol.launcher.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

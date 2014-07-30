@@ -591,5 +591,9 @@ namespace LoLUpdater
         {
             WindowState = WindowState.Minimized;
         }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        }
     }
 }

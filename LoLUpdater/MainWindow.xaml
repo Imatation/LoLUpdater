@@ -27,14 +27,14 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <SolidColorBrush x:Key="OptionMark.MouseOver.Background" Color="#FFFFFFFF" />
-        <SolidColorBrush x:Key="OptionMark.MouseOver.Border" Color="#FF3C7FB1" />
-        <SolidColorBrush x:Key="OptionMark.MouseOver.Glyph" Color="#FF3C7FB1" />
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Background" Color="#3E3E40" />
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Border" Color="#007ACC" />
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Glyph" Color="#007ACC" />
         <Style x:Key="CheckboxStyle" TargetType="{x:Type CheckBox}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-            <Setter Property="Background" Value="{StaticResource OptionMark.Static.Background}" />
+            <Setter Property="Background" Value="#2D2D30" />
             <Setter Property="BorderBrush" Value="{StaticResource OptionMark.Static.Border}" />
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+            <Setter Property="Foreground" Value="White" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -56,6 +56,7 @@
                             <Trigger Property="HasContent" Value="true">
                                 <Setter Property="FocusVisualStyle" Value="{StaticResource OptionMarkFocusVisual}" />
                                 <Setter Property="Padding" Value="4,-1,0,0" />
+                                <Setter Property="Foreground" Value="#007ACC" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="true">
                                 <Setter Property="Background" TargetName="checkBoxBorder" Value="#3E3E40" />
@@ -63,6 +64,7 @@
                                 <Setter Property="Fill" TargetName="optionMark" Value="{StaticResource OptionMark.MouseOver.Glyph}" />
                                 <Setter Property="Fill" TargetName="indeterminateMark" Value="{StaticResource OptionMark.MouseOver.Glyph}" />
                             </Trigger>
+
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Opacity" TargetName="templateRoot" Value="0.56" />
                             </Trigger>
@@ -104,8 +106,8 @@
                                 <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
-                                <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                                <Setter Property="Background" TargetName="Bd" Value="#3E3E40" />
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="#007ACC" />
                             </Trigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
@@ -119,45 +121,62 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="RadioButtonStyle1" TargetType="{x:Type RadioButton}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+            <Setter Property="Background" Value="#2D2D30" />
+            <Setter Property="BorderBrush" Value="{StaticResource OptionMark.Static.Border}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="True">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="radioButtonBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="100" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1,1,2,1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Grid x:Name="markGrid" Margin="2">
+                                    <Ellipse x:Name="optionMark" Fill="{TemplateBinding TextElement.Foreground}" MinWidth="6" MinHeight="6" Opacity="0" />
+                                </Grid>
+                            </Border>
+                            <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasContent" Value="true">
+                                <Setter Property="FocusVisualStyle" Value="{StaticResource OptionMarkFocusVisual}" />
+                                <Setter Property="Padding" Value="4,-1,0,0" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="radioButtonBorder" Value="#3E3E40" />
+                                <Setter Property="BorderBrush" TargetName="radioButtonBorder" Value="{StaticResource OptionMark.MouseOver.Border}" />
+                                <Setter Property="Fill" TargetName="optionMark" Value="#007ACC" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="templateRoot" Value="0.56" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Opacity" TargetName="optionMark" Value="1" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                <Setter Property="Opacity" TargetName="optionMark" Value="0.56" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </controls:MetroWindow.Resources>
 
-    <Grid Background="#2D2D30" Height="267">
-        <Image x:Name="Xclose" HorizontalAlignment="Left" Height="26" Margin="734,0,0,0" Source="Resources/close.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave" MouseDown="Xclose_MouseDown" />
-        <Image x:Name="Xminimize" HorizontalAlignment="Left" Height="26" Margin="700,0,0,0" Source="Resources/minimize.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter_1" MouseLeave="Image_MouseLeave_1" MouseDown="Xminimize_MouseDown" />
-        <GroupBox Header="Main" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top" Height="99" Width="105" FontFamily="Open Sans" Foreground="White">
-        </GroupBox>
-        <RadioButton Name="Remove" Content="Uninstall" HorizontalAlignment="Left" Margin="15,53,0,0" VerticalAlignment="Top" FontFamily="Open Sans" Foreground="White" />
-        <RadioButton Name="Patch" Content="Install" HorizontalAlignment="Left" Margin="15,38,0,0" VerticalAlignment="Top" FontFamily="Open Sans" Foreground="White" />
+    <Grid Background="#2D2D30" Height="205" Width="781">
 
-        <ListBox HorizontalAlignment="Left" Height="44" Margin="118,38,0,0" VerticalAlignment="Top" Width="105" Background="#2D2D30">
-            <CheckBox Name="AdobeAIR" Content="Adobe AIR" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Flash_Checked" />
-            <CheckBox Name="Flash" Content="Adobe Flash" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="AdobeAIR_Checked" />
-        </ListBox>
-        <GroupBox Header="PvP.Net Options" HorizontalAlignment="Left" Margin="116,24,0,0" VerticalAlignment="Top" Height="99" Width="109" FontFamily="Open Sans" Foreground="White" />
-        <GroupBox Header="Game Options" HorizontalAlignment="Left" Margin="226,24,0,0" VerticalAlignment="Top" Height="99" Width="99" FontFamily="Open Sans" Foreground="White" />
-        <ListBox HorizontalAlignment="Left" Height="83" Margin="328,38,0,0" VerticalAlignment="Top" Width="115" Background="#2D2D30">
-            <CheckBox Name="Cg1" Content="Cg" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked" Style="{DynamicResource CheckboxStyle}" />
-            <CheckBox Name="CgD3D1" Content="CgD3D9" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
-            <CheckBox Name="CgGL1" Content="CgGL" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"  Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
-        </ListBox>
-        <ListBox HorizontalAlignment="Left" Height="83" Margin="228,38,0,0" VerticalAlignment="Top" Width="95" Background="#2D2D30">
-            <CheckBox Name="Cg" Content="Cg" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
-            <CheckBox Name="CgD3D9" Content="CgD3D9" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked" Style="{DynamicResource CheckboxStyle}" />
-            <CheckBox Name="CgGL" Content="CgGL" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
-            <CheckBox Name="tbb" Content="TBB" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
-        </ListBox>
-        <GroupBox Header="Windows Utilities" HorizontalAlignment="Left" Margin="446,24,0,0" VerticalAlignment="Top" Height="99" Width="133" FontFamily="Open Sans" Foreground="White" />
-        <GroupBox Header="Launcher Options" HorizontalAlignment="Left" Margin="326,24,0,0" VerticalAlignment="Top" Height="99" Width="119" FontFamily="Open Sans" Foreground="White" />
-        <GroupBox Header="Windows Utilities" HorizontalAlignment="Left" Margin="580,24,0,0" VerticalAlignment="Top" Height="99" Width="188" FontFamily="Open Sans" />
-        <ListBox HorizontalAlignment="Left" Height="83" VerticalAlignment="Top" Width="184" Margin="582,38,0,0" Background="#2D2D30">
-            <CheckBox Name="Inking" Content="No Inking" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
-            <CheckBox Name="AdvancedReflection" Content="No Advanced Reflection" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
-            <CheckBox Name="PerPixelPointLighting" Content="No PerPixelPointLightning" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
-        </ListBox>
-        <GroupBox Header="Desciption" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" Height="100" Width="748" FontFamily="Open Sans">
-            <TextBlock Foreground="White" Name="lblDescription" HorizontalAlignment="Left" Margin="10,32,-2,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="728" />
+        <Image x:Name="Xclose" HorizontalAlignment="Left" Height="26" Margin="747,0,0,0" Source="Resources/close.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave" MouseDown="Xclose_MouseDown" />
+        <Image x:Name="Xminimize" HorizontalAlignment="Left" Height="26" Margin="713,0,0,0" Source="Resources/minimize.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter_1" MouseLeave="Image_MouseLeave_1" MouseDown="Xminimize_MouseDown" />
+
+        <GroupBox Header="Desciption" HorizontalAlignment="Left" Margin="19,128,0,0" VerticalAlignment="Top" Height="40" Width="739" FontFamily="Open Sans">
+            <TextBlock Name="lblDescription" />
         </GroupBox>
-        <Button Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="10,238,0,-10" VerticalAlignment="Top" Width="748" FontFamily="Open Sans" Click="OK_Click">
+        <Button Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="19,173,0,0" VerticalAlignment="Top" Width="739" FontFamily="Open Sans" Click="OK_Click">
             <Button.Resources>
                 <Style x:Key="FocusVisual">
                     <Setter Property="Control.Template">
@@ -209,9 +228,61 @@
             </Button.Resources>
         </Button>
         <TextBlock HorizontalAlignment="Left" Margin="10,8,0,0" TextWrapping="Wrap" Text="LoLUpdater" VerticalAlignment="Top" Foreground="Gray" />
-        <ListBox HorizontalAlignment="Left" Height="83" Margin="448,38,0,0" VerticalAlignment="Top" Width="129" Background="#2D2D30">
-            <CheckBox x:Name="WinUpdate" Content="Windows Update" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"  Style="{DynamicResource CheckboxStyle}" />
-            <CheckBox x:Name="Visual" Content="Visual Options" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
-        </ListBox>
+        <GroupBox Header="Main" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top" Height="99" Width="103" FontFamily="Open Sans" Foreground="White">
+            <Grid>
+                <RadioButton x:Name="Remove" Content="Uninstall" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" FontFamily="Open Sans" Foreground="White"  Style="{DynamicResource RadioButtonStyle1}" />
+                <RadioButton x:Name="Patch" Content="Install" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontFamily="Open Sans" Foreground="White" Style="{DynamicResource RadioButtonStyle1}" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="" HorizontalAlignment="Left" Margin="114,24,0,0" VerticalAlignment="Top" Height="99" Width="653">
+            <Grid>
+                <GroupBox Header="PvP.Net Options" HorizontalAlignment="Left" Margin="-6,-16,0,-6" VerticalAlignment="Top" Height="99" Width="111" FontFamily="Open Sans" Foreground="White">
+
+                    <Grid Margin="0,0,-4,-5">
+                        <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,0,0" VerticalAlignment="Top" Width="107" Background="#2D2D30">
+                            <CheckBox x:Name="AdobeAIR" Content="Adobe AIR" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Flash_Checked" Style="{DynamicResource CheckboxStyle}" />
+                            <CheckBox x:Name="Flash" Content="Adobe Flash" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="AdobeAIR_Checked" Style="{DynamicResource CheckboxStyle}" />
+                        </ListBox>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Game Options" HorizontalAlignment="Left" Margin="106,-16,0,-6" VerticalAlignment="Top" Height="99" Width="99" FontFamily="Open Sans" Foreground="White">
+                    <Grid Margin="0,0,0,-5">
+                        <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,-4,0" VerticalAlignment="Top" Width="95" Background="#2D2D30">
+                            <CheckBox x:Name="Cg" Content="Cg" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
+                            <CheckBox x:Name="CgD3D9" Content="CgD3D9" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked" Style="{DynamicResource CheckboxStyle}" />
+                            <CheckBox x:Name="CgGL" Content="CgGL" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
+                            <CheckBox x:Name="tbb" Content="TBB" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
+                        </ListBox>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Launcher Options" HorizontalAlignment="Left" Margin="205,-16,0,-6" VerticalAlignment="Top" Height="99" Width="120" FontFamily="Open Sans" Foreground="White">
+                    <Grid Margin="0,0,0,-6">
+                        <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,-4,0" VerticalAlignment="Top" Width="116" Background="#2D2D30">
+                            <CheckBox x:Name="Cg1" Content="Cg" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked" Style="{DynamicResource CheckboxStyle}" />
+                            <CheckBox x:Name="CgD3D1" Content="CgD3D9" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
+                            <CheckBox x:Name="CgGL1" Content="CgGL" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"  Checked="Cg_Checked"  Style="{DynamicResource CheckboxStyle}" />
+                        </ListBox>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="Windows Utilities" HorizontalAlignment="Left" Margin="326,-16,0,-6" VerticalAlignment="Top" Height="99" Width="133" FontFamily="Open Sans" Foreground="White">
+                    <Grid Margin="0,0,0,-5">
+                        <ListBox HorizontalAlignment="Left" Height="83" Margin="-4,-2,-4,0" VerticalAlignment="Top" Width="129" Background="#2D2D30" SelectionChanged="ListBox_SelectionChanged">
+                            <CheckBox x:Name="WinUpdate" Content="Windows Update" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit"  Style="{DynamicResource CheckboxStyle}" />
+                            <CheckBox x:Name="Visual" Content="Visual Options" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
+                        </ListBox>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Windows Utilities" HorizontalAlignment="Left" Margin="459,-16,-5,-6" VerticalAlignment="Top" Height="99" Width="187" FontFamily="Open Sans">
+                    <Grid Margin="0,0,0,-5">
+                        <ListBox HorizontalAlignment="Left" Height="83" VerticalAlignment="Top" Width="183" Margin="-4,-2,-4,0" Background="#2D2D30">
+                            <CheckBox x:Name="Inking" Content="No Inking" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
+                            <CheckBox x:Name="AdvancedReflection" Content="No Advanced Reflection" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
+                            <CheckBox x:Name="PerPixelPointLighting" Content="No PerPixelPointLightning" FontFamily="Open Sans" Foreground="White" MouseEnter="chkOption_MouseEnter" MouseLeave="chkOption_MouseExit" Style="{DynamicResource CheckboxStyle}" />
+                        </ListBox>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
     </Grid>
 </controls:MetroWindow>

@@ -1,13 +1,14 @@
 ﻿using System;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Reflection;
+
 namespace LoLUpdater
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             string fileName = "version.txt";
             WebClient wc = new WebClient();
@@ -48,8 +49,6 @@ namespace LoLUpdater
                 }
                 else if (System.Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version < winvistaversion || Environment.OSVersion.Version == null)
                 {
-                    File.WriteAllBytes("LoLUpdaterXP.exe", Properties.Resources.LoLUpdaterXP);
-                    Process.Start("LoLUpdaterXP.exe");
                 }
             }
         }

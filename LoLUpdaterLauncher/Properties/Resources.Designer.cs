@@ -71,26 +71,6 @@ namespace LoLUpdater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] LoLUpdater {
-            get {
-                object obj = ResourceManager.GetObject("LoLUpdater", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] LoLUpdaterXP {
-            get {
-                object obj = ResourceManager.GetObject("LoLUpdaterXP", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to License For Customer Use of NVIDIA Software
         ///IMPORTANT NOTICE -- READ CAREFULLY: This License For Customer Use of
         ///NVIDIA Software (&quot;LICENSE&quot;) is the agreement which governs use of the software of
