@@ -10,4 +10,6 @@ gems:
 - jemoji
 - jekyll-redirect-from
 - jekyll-sitemap
+sass:
+    style: :compressed
 exclude: ["node_modules"]
