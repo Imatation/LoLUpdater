@@ -75,7 +75,7 @@ namespace LoLUpdater
             {
                 handleUninstall();
             }
-            if (MessageBox.Show("It is recommended you do a restart after patching", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
             }
@@ -488,75 +488,6 @@ namespace LoLUpdater
             IInstallationResult installationRes = installer.Install();
         }
 
-        //Todo: Use WPF to do this so we can remove the WinForms using
-        private void chkOption_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            var chkBox = (CheckBox)sender;
-            switch (chkBox.Name)
-            {
-                case "AdobeAIR":
-                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client.";
-                    break;
-
-                case "Flash":
-                    lblDescription.Text = "Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the built in Flash player in the Air Client.";
-                    break;
-
-                case "Cg":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
-                    break;
-
-                case "CgD3D9":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
-                    break;
-
-                case "CgGL":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
-                    break;
-
-                case "tbb":
-                    lblDescription.Text = "Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL.";
-                    break;
-
-                case "WinUpdate":
-                    lblDescription.Text = "Performs a Windows Update on the computer, might take some time.";
-                    break;
-
-                case "Visual":
-                    lblDescription.Text = "Enables you to edit the visual style of Windows.";
-                    break;
-
-                case "Cg1":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
-                    break;
-
-                case "CgD3D1":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
-                    break;
-
-                case "CgGL1":
-                    lblDescription.Text = "Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader.";
-                    break;
-
-                case "Inking":
-                    lblDescription.Text = "Takes off the new 'graphics'.";
-                    break;
-
-                case "AdvancedReflection":
-                    lblDescription.Text = "Takes off the reflections.";
-                    break;
-
-                case "PerPixelPointLighting":
-                    lblDescription.Text = "Takes off the particles.";
-                    break;
-            }
-        }
-
-        private void chkOption_MouseExit(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            lblDescription.Text = "";
-        }
-
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
             CGCheck();
@@ -590,10 +521,6 @@ namespace LoLUpdater
         private void Xminimize_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             WindowState = WindowState.Minimized;
-        }
-
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
         }
     }
 }
