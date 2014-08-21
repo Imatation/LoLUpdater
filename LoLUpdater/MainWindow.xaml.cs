@@ -70,15 +70,20 @@ namespace LoLUpdater
                 {
                     handleCfg("PerPixelPointLighting=0");
                 }
+                if (MessageBox.Show("It is recommended you do a restart after installing the patch", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    Process.Start("shutdown.exe", "-r -t 0");
+                }
             }
             else if (Remove.IsChecked == true)
             {
                 handleUninstall();
+                if (MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    Process.Start("shutdown.exe", "-r -t 0");
+                }
             }
-            if (MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                Process.Start("shutdown.exe", "-r -t 0");
-            }
+
         }
 
         private void handleBackup()
