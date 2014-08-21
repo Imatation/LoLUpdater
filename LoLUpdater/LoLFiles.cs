@@ -9,131 +9,102 @@ namespace LoLUpdater
         {
             if (Directory.Exists("RADS"))
             {
-                gameVersion = "RADS";
+                GameVersion = "RADS";
             }
             else if (Directory.Exists("Game"))
             {
-                gameVersion = "Game";
+                GameVersion = "Game";
             }
         }
 
-        public string gameVersion { get; set; }
+        public string GameVersion { get; set; }
 
-        public string backupCgPath
+        public string BackupCgPath
+        {
+            get { return Path.Combine("Backup", "Cg.dll"); }
+        }
+
+        public string BackupCgGlPath
+        {
+            get { return Path.Combine("Backup", "CgGL.dll"); }
+        }
+
+        public string BackupCgD3D9Path
+        {
+            get { return Path.Combine("Backup", "CgD3D9.dll"); }
+        }
+
+        public string BackupTbbPath
+        {
+            get { return Path.Combine("Backup", "tbb.dll"); }
+        }
+
+        public string BackupNpswf32Path
+        {
+            get { return Path.Combine("Backup", "NPSWF32.dll"); }
+        }
+
+        public string BackupAdobeAirPath
+        {
+            get { return Path.Combine("Backup", "Adobe AIR.dll"); }
+        }
+
+        public string LolGameClientSlnPath
         {
             get
             {
-                return Path.Combine("Backup", "Cg.dll");
+                return Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
+                       new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
+                           .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\";
             }
         }
 
-        public string backupCgGLPath
+        public string LolAirClientPath
         {
             get
             {
-                return Path.Combine("Backup", "CgGL.dll");
+                return Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" +
+                       new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories()
+                           .OrderByDescending(d => d.CreationTime)
+                           .FirstOrDefault() + @"\";
             }
         }
 
-        public string backupCgD3D9Path
+        public string DeployCgPath
         {
-            get
-            {
-                return Path.Combine("Backup", "CgD3D9.dll");
-            }
+            get { return Path.Combine("deploy", "Cg.dll"); }
         }
 
-        public string backupTbbPath
+        public string DeployCgGlPath
         {
-            get
-            {
-                return Path.Combine("Backup", "tbb.dll");
-            }
+            get { return Path.Combine("deploy", "CgGL.dll"); }
         }
 
-        public string backupNPSWF32Path
+        public string DeployCgD3D9Path
         {
-            get
-            {
-                return Path.Combine("Backup", "NPSWF32.dll");
-            }
+            get { return Path.Combine("deploy", "CgD3D9.dll"); }
         }
 
-        public string backupAdobeAirPath
+        public string DeployTbbPath
         {
-            get
-            {
-                return Path.Combine("Backup", "Adobe AIR.dll");
-            }
+            get { return Path.Combine("deploy", "tbb.dll"); }
         }
 
-        public string lolGameClientSlnPath
+        public string DeployAdobeAirPath
         {
             get
             {
-                return Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\";
-            }
-        }
-
-        public string lolAirClientPath
-        {
-            get
-            {
-                return Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" + new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\";
-            }
-        }
-
-        public string deployCgPath
-        {
-            get
-            {
-                return Path.Combine("deploy", "Cg.dll");
-            }
-        }
-
-        public string deployCgGLPath
-        {
-            get
-            {
-                return Path.Combine("deploy", "CgGL.dll");
-            }
-        }
-
-        public string deployCgD3D9Path
-        {
-            get
-            {
-                return Path.Combine("deploy", "CgD3D9.dll");
-            }
-        }
-
-        public string deployTbbPath
-        {
-            get
-            {
-                return Path.Combine("deploy", "tbb.dll");
-            }
-        }
-
-        public string deployAdobeAirPath
-        {
-            get
-            {
-                if (gameVersion.Equals("RADS"))
+                if (GameVersion.Equals("RADS"))
                     return Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll");
-                else
-                    return Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll");
+                return Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll");
             }
         }
 
-        public string deployNPSWF32Path
+        public string DeployNpswf32Path
         {
             get
             {
-                if (gameVersion.Equals("RADS"))
-                    return Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll");
-                else
-                    return Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll");
+                return GameVersion.Equals("RADS") ? Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll") : Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll");
             }
         }
     }
