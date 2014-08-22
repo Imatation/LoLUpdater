@@ -58,6 +58,7 @@ namespace LoLUpdater
             proc[0].Kill();
             proc[0].WaitForExit();
         }
+
         private void HandlePatch()
         {
             HandleCfg("DefaultParticleMultithreading=1");
@@ -327,7 +328,7 @@ namespace LoLUpdater
         {
             ProcessStartInfo pmb;
             Process process;
-            
+
 
             if (Environment.Is64BitProcess)
             {
@@ -345,7 +346,6 @@ namespace LoLUpdater
 
                 pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
                     "Pando Networks", "Media Booster", "uninst.exe");
-
             }
             else
             {
@@ -363,7 +363,6 @@ namespace LoLUpdater
 
                 pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "Pando Networks", "Media Booster", "uninst.exe");
-
             }
             pmb.Arguments = "/silent";
             process.StartInfo = pmb;
@@ -424,7 +423,7 @@ namespace LoLUpdater
             }
             Directory.Delete("Backup", true);
             if (
-                 MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater",
+                MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
@@ -462,8 +461,6 @@ namespace LoLUpdater
                 cg = new Process {StartInfo = startInfo};
                 cg.Start();
                 cg.WaitForExit();
-
-
             }
             else
             {
@@ -477,7 +474,6 @@ namespace LoLUpdater
                 cg = new Process {StartInfo = startInfo};
                 cg.Start();
                 cg.WaitForExit();
-
             }
             Process.Start("NvidiaCGLicence.txt");
             if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",

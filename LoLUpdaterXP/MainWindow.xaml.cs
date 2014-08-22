@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 
 namespace LoLUpdaterXP
 {
@@ -48,6 +49,7 @@ namespace LoLUpdaterXP
             proc[0].Kill();
             proc[0].WaitForExit();
         }
+
         private void HandlePatch()
         {
             HandleCfg("DefaultParticleMultithreading=1");
@@ -316,6 +318,8 @@ namespace LoLUpdaterXP
         {
             ProcessStartInfo pmb;
             Process process;
+
+
             if (Environment.Is64BitProcess)
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
@@ -327,12 +331,11 @@ namespace LoLUpdaterXP
                         "Pando Networks", "Media Booster", "uninst.exe"),
                     Arguments = "/silent"
                 };
-                process = new Process { StartInfo = pmb };
+                process = new Process {StartInfo = pmb};
                 process.Start();
 
                 pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
                     "Pando Networks", "Media Booster", "uninst.exe");
-
             }
             else
             {
@@ -345,12 +348,11 @@ namespace LoLUpdaterXP
                         "Pando Networks", "Media Booster", "uninst.exe"),
                     Arguments = "/silent"
                 };
-                process = new Process { StartInfo = pmb };
+                process = new Process {StartInfo = pmb};
                 process.Start();
 
                 pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "Pando Networks", "Media Booster", "uninst.exe");
-
             }
             pmb.Arguments = "/silent";
             process.StartInfo = pmb;
@@ -411,7 +413,7 @@ namespace LoLUpdaterXP
             }
             Directory.Delete("Backup", true);
             if (
-                 MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater",
+                MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
@@ -445,12 +447,10 @@ namespace LoLUpdaterXP
                 if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
 
-                startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-                cg = new Process { StartInfo = startInfo };
+                startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+                cg = new Process {StartInfo = startInfo};
                 cg.Start();
                 cg.WaitForExit();
-
-
             }
             else
             {
@@ -460,11 +460,10 @@ namespace LoLUpdaterXP
                 if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
 
-                startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-                cg = new Process { StartInfo = startInfo };
+                startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+                cg = new Process {StartInfo = startInfo};
                 cg.Start();
                 cg.WaitForExit();
-
             }
             Process.Start("NvidiaCGLicence.txt");
             if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
@@ -490,13 +489,12 @@ namespace LoLUpdaterXP
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo { FileName = "cleanmgr.exe", Arguments = "sagerun:1" };
-            var process = new Process { StartInfo = cm };
+            var cm = new ProcessStartInfo {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
+            var process = new Process {StartInfo = cm};
             process.Start();
             process.WaitForExit();
         }
 
-   
 
         private static void HandleCfg(string setting)
         {
@@ -597,7 +595,6 @@ namespace LoLUpdaterXP
                 }
             }
         }
-
 
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
