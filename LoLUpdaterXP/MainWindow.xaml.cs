@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Microsoft.Win32;
 
 namespace LoLUpdaterXP
 {
@@ -49,6 +48,7 @@ namespace LoLUpdaterXP
             proc[0].Kill();
             proc[0].WaitForExit();
         }
+
         private void HandlePatch()
         {
             HandleCfg("DefaultParticleMultithreading=1");
@@ -162,13 +162,11 @@ namespace LoLUpdaterXP
                 }
                 if (Flash.IsChecked == true)
                 {
-
                     RadsAir(
-    Environment.Is64BitProcess
-        ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-        : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Resources",
-    "NPSWF32.dll");
-
+                        Environment.Is64BitProcess
+                            ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+                            : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Resources",
+                        "NPSWF32.dll");
                 }
             }
             if (!Directory.Exists("Game")) return;
@@ -179,19 +177,18 @@ namespace LoLUpdaterXP
             if (AdobeAir.IsChecked == true)
             {
                 GameAir(
-Environment.Is64BitProcess
-    ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-    : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), string.Empty,
-"Adobe AIR.dll");
+                    Environment.Is64BitProcess
+                        ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+                        : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), string.Empty,
+                    "Adobe AIR.dll");
             }
             if (Flash.IsChecked != true) return;
 
             GameAir(
-Environment.Is64BitProcess
-? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-: Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Resources",
-"NPSWF32.dll");
-
+                Environment.Is64BitProcess
+                    ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+                    : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Resources",
+                "NPSWF32.dll");
         }
 
         private static void RadsAir(string arch, string extension, string file)
@@ -294,7 +291,6 @@ Environment.Is64BitProcess
 
         private static void HandlePandoUninstall()
         {
-
             Process process;
             if (Environment.Is64BitProcess)
             {
@@ -303,8 +299,6 @@ Environment.Is64BitProcess
             else
             {
                 if (Pmb(out process, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles))) return;
-
-
             }
             process.Start();
             process.WaitForExit();
@@ -325,7 +319,7 @@ Environment.Is64BitProcess
                     "Pando Networks", "Media Booster", "uninst.exe"),
                 Arguments = "/silent"
             };
-            process = new Process { StartInfo = pmb };
+            process = new Process {StartInfo = pmb};
             return false;
         }
 
@@ -367,7 +361,7 @@ Environment.Is64BitProcess
             }
             Directory.Delete("Backup", true);
             if (
-                 MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater",
+                MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
@@ -411,7 +405,6 @@ Environment.Is64BitProcess
         }
 
 
-
         private static bool CgInstall(out Process cg, string arch)
         {
             if (File.Exists(Path.Combine(arch,
@@ -429,8 +422,8 @@ Environment.Is64BitProcess
                 return true;
             }
 
-            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-            cg = new Process { StartInfo = startInfo };
+            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+            cg = new Process {StartInfo = startInfo};
             return false;
         }
 
@@ -447,13 +440,12 @@ Environment.Is64BitProcess
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo { FileName = "cleanmgr.exe", Arguments = "sagerun:1" };
-            var process = new Process { StartInfo = cm };
+            var cm = new ProcessStartInfo {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
+            var process = new Process {StartInfo = cm};
             process.Start();
             process.WaitForExit();
         }
 
-    
 
         private static void HandleCfg(string setting)
         {
@@ -484,30 +476,26 @@ Environment.Is64BitProcess
 
         private static void Cfg(string setting, string file)
         {
-
             if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file))) ;
             {
                 var fi = new FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", file));
                 if (FileAttributes.ReadOnly == fi.Attributes)
                 {
                     MessageBox.Show(
-                        "Your " + file + @" Located in Game\DATA\CFG\defaults is read only, please remove this and try again",
+                        "Your " + file +
+                        @" Located in Game\DATA\CFG\defaults is read only, please remove this and try again",
                         "LoLUpdater");
                     return;
                 }
                 if (
-    !File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", file))
-        .Contains(setting))
+                    !File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", file))
+                        .Contains(setting))
                 {
                     File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", file),
                         Environment.NewLine + setting);
                 }
             }
-
         }
-
-
-
 
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
