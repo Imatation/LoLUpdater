@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Microsoft.Win32;
 
 namespace LoLUpdaterXP
 {
@@ -340,7 +339,7 @@ namespace LoLUpdaterXP
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "Pando Networks", "Media Booster", "uninst.exe"))) return;
 
-                pmb = new ProcessStartInfo()
+                pmb = new ProcessStartInfo
                 {
                     FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                         "Pando Networks", "Media Booster", "uninst.exe"),
@@ -472,9 +471,7 @@ namespace LoLUpdaterXP
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
             cg = new Process();
-            startInfo = new ProcessStartInfo();
-            startInfo.FileName = "Cg_3_1_April2012_Setup.exe";
-            startInfo.Arguments = "/silent";
+            startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
             cg.StartInfo = startInfo;
             cg.Start();
             cg.WaitForExit();
@@ -493,7 +490,7 @@ namespace LoLUpdaterXP
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo() { FileName = "cleanmgr.exe", Arguments = "sagerun:1" };
+            var cm = new ProcessStartInfo { FileName = "cleanmgr.exe", Arguments = "sagerun:1" };
             var process = new Process { StartInfo = cm };
             process.Start();
             process.WaitForExit();
