@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace LoLUpdater
+namespace LoLUpdaterXP
 {
     internal class LoLFiles
     {

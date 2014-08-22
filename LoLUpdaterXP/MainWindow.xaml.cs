@@ -138,7 +138,7 @@ namespace LoLUpdaterXP
         {
             if (Directory.Exists("Rads"))
             {
-                if (tbb.IsChecked == true)
+                if (Tbb.IsChecked == true)
                 {
                     File.Copy("tbb.dll",
                         Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
@@ -146,7 +146,7 @@ namespace LoLUpdaterXP
                             .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
                         Path.Combine("deploy", "tbb.dll"), true);
                 }
-                if (AdobeAIR.IsChecked == true)
+                if (AdobeAir.IsChecked == true)
                 {
                     if (Environment.Is64BitProcess)
                     {
@@ -194,11 +194,11 @@ namespace LoLUpdaterXP
                 }
             }
             if (!Directory.Exists("Game")) return;
-            if (tbb.IsChecked == true)
+            if (Tbb.IsChecked == true)
             {
                 File.Copy("tbb.dll", Path.Combine("Game", "tbb.dll"), true);
             }
-            if (AdobeAIR.IsChecked == true)
+            if (AdobeAir.IsChecked == true)
             {
                 if (Environment.Is64BitProcess)
                 {
@@ -257,7 +257,7 @@ namespace LoLUpdaterXP
                             .FirstOrDefault() + @"\" + Path.Combine("deploy", "Cg.dll"), true);
                 }
 
-                if (CgGL.IsChecked == true)
+                if (CgGl.IsChecked == true)
                 {
                     File.Copy(
                         Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
@@ -267,7 +267,7 @@ namespace LoLUpdaterXP
                             .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
                         Path.Combine("deploy", "CgGL.dll"), true);
                 }
-                if (CgGL1.IsChecked == true)
+                if (CgGl1.IsChecked == true)
                 {
                     File.Copy(
                         Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
@@ -308,7 +308,7 @@ namespace LoLUpdaterXP
                             "Cg.dll"), Path.Combine("Game", "Cg.dll"), true);
                 }
 
-                if (CgGL.IsChecked == true)
+                if (CgGl.IsChecked == true)
                 {
                     File.Copy(
                         Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),

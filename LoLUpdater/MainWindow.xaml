@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.AeroLite"
     Title="LoLUpdater" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen"
     ShowTitleBar="false" WindowTransitionsEnabled="False" ShowCloseButton="False" GlowBrush="#9B9FB9"
     Foreground="White" SizeToContent="WidthAndHeight">
@@ -20,7 +19,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <SolidColorBrush x:Key="OptionMark.Static.Background" Color="#FFFFFFFF" />
         <SolidColorBrush x:Key="OptionMark.Static.Border" Color="#FF707070" />
         <Style x:Key="OptionMarkFocusVisual">
             <Setter Property="Control.Template">
@@ -33,7 +31,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <SolidColorBrush x:Key="OptionMark.MouseOver.Background" Color="#3E3E40" />
         <SolidColorBrush x:Key="OptionMark.MouseOver.Border" Color="#007ACC" />
         <SolidColorBrush x:Key="OptionMark.MouseOver.Glyph" Color="#007ACC" />
         <Style x:Key="CheckboxStyle" TargetType="{x:Type CheckBox}">
@@ -144,7 +141,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="RadioButtonStyle1" TargetType="{x:Type RadioButton}">
+        <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="Background" Value="#2D2D30" />
             <Setter Property="BorderBrush" Value="{StaticResource OptionMark.Static.Border}" />
@@ -225,13 +222,6 @@
                 </Style>
                 <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD" />
                 <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070" />
-                <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD" />
-                <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1" />
-                <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6" />
-                <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B" />
-                <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4" />
-                <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5" />
-                <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383" />
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
                     <Setter Property="Background" Value="{StaticResource Button.Static.Background}" />
@@ -275,67 +265,67 @@
                   Width="76" Foreground="White">
             <Grid>
                 <RadioButton x:Name="Remove" Content="Uninstall" HorizontalAlignment="Left" Margin="0,15,0,0"
-                             VerticalAlignment="Top" Foreground="White" Style="{DynamicResource RadioButtonStyle1}" />
+                             VerticalAlignment="Top" Style="{DynamicResource RadioButtonStyle}" />
                 <RadioButton x:Name="Patch" Content="Install" HorizontalAlignment="Left" VerticalAlignment="Top"
-                             Foreground="White" Style="{DynamicResource RadioButtonStyle1}" IsChecked="True" />
+                             Style="{DynamicResource RadioButtonStyle}" IsChecked="True" />
             </Grid>
         </GroupBox>
 
         <ListBox HorizontalAlignment="Left" Height="43" Margin="78,39,0,0" VerticalAlignment="Top" Width="99"
                  Background="#2D2D30">
-            <CheckBox x:Name="AdobeAIR" Content="Adobe AIR" Foreground="White" Checked="Flash_Checked"
+            <CheckBox x:Name="AdobeAir" Content="Adobe AIR" Checked="Flash_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client." />
-            <CheckBox x:Name="Flash" Content="Adobe Flash" Foreground="White" Checked="AdobeAIR_Checked"
+            <CheckBox x:Name="Flash" Content="Adobe Flash" Checked="AdobeAIR_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the built in Flash player in the Air Client." />
         </ListBox>
 
         <ListBox HorizontalAlignment="Left" Height="82" Margin="178,39,0,0" VerticalAlignment="Top" Width="78"
                  Background="#2D2D30">
-            <CheckBox x:Name="Cg" Content="Cg" Foreground="White" Checked="Cg_Checked"
+            <CheckBox x:Name="Cg" Content="Cg" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
-            <CheckBox x:Name="CgD3D9" Content="CgD3D9" Foreground="White" Checked="Cg_Checked"
+            <CheckBox x:Name="CgD3D9" Content="CgD3D9" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
-            <CheckBox x:Name="CgGL" Content="CgGL" Foreground="White" Checked="Cg_Checked"
+            <CheckBox x:Name="CgGl" Content="CgGL" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
-            <CheckBox x:Name="tbb" Content="TBB" Foreground="White" Style="{DynamicResource CheckboxStyle}"
+            <CheckBox x:Name="Tbb" Content="TBB" Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL." />
         </ListBox>
 
         <ListBox HorizontalAlignment="Left" Height="62" Margin="257,39,0,0" VerticalAlignment="Top" Width="81"
                  Background="#2D2D30">
-            <CheckBox x:Name="Cg1" Content="Cg" Foreground="White" Checked="Cg_Checked"
+            <CheckBox x:Name="Cg1" Content="Cg" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
-            <CheckBox x:Name="CgD3D1" Content="CgD3D9" Foreground="White" Checked="Cg_Checked"
+            <CheckBox x:Name="CgD3D1" Content="CgD3D9" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
-            <CheckBox x:Name="CgGL1" Content="CgGL" Foreground="White" Checked="Cg_Checked"
+            <CheckBox x:Name="CgGl1" Content="CgGL" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
         </ListBox>
 
         <ListBox HorizontalAlignment="Left" Height="43" Margin="339,39,0,0" VerticalAlignment="Top" Width="126"
                  Background="#2D2D30">
-            <CheckBox x:Name="WinUpdate" Content="Windows Update" Foreground="White"
+            <CheckBox x:Name="WinUpdate" Content="Windows Update"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Performs a Windows Update on the computer, might take some time." />
-            <CheckBox x:Name="Visual" Content="Visual Options" Foreground="White"
+            <CheckBox x:Name="Visual" Content="Visual Options"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Enables you to edit the visual style of Windows." />
         </ListBox>
 
         <ListBox HorizontalAlignment="Left" Height="62" VerticalAlignment="Top" Width="172" Margin="466,39,0,0"
                  Background="#2D2D30">
-            <CheckBox x:Name="Inking" Content="No Inking" Foreground="White" Style="{DynamicResource CheckboxStyle}"
+            <CheckBox x:Name="Inking" Content="No Inking" Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Turns off the new 'graphics'" />
-            <CheckBox x:Name="AdvancedReflection" Content="No Advanced Reflection" Foreground="White"
+            <CheckBox x:Name="AdvancedReflection" Content="No Advanced Reflection"
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the reflections." />
-            <CheckBox x:Name="PerPixelPointLighting" Content="No PerPixelPointLightning" Foreground="White"
+            <CheckBox x:Name="PerPixelPointLighting" Content="No PerPixelPointLightning"
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the particles." />
         </ListBox>
         <TextBlock HorizontalAlignment="Left" Margin="78,23,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
