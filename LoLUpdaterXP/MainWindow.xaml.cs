@@ -26,18 +26,8 @@ namespace LoLUpdaterXP
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            if (Process.GetProcessesByName("LoLClient").Length > 0)
-            {
-                var proc = Process.GetProcessesByName("LoLClient");
-                proc[0].Kill();
-                proc[0].WaitForExit();
-            }
-            if (Process.GetProcessesByName("LoLLauncher").Length > 0)
-            {
-                var proc = Process.GetProcessesByName("LoLLauncher");
-                proc[0].Kill();
-                proc[0].WaitForExit();
-            }
+            Kill("LoLClient");
+            Kill("LoLLauncher");
             if (!Directory.Exists("Backup"))
             {
                 HandleBackup();
@@ -49,7 +39,6 @@ namespace LoLUpdaterXP
                 HandleCgInstall();
                 HandleAdobeAndTbb();
                 RunCleanManager();
-                HandleMouseHz();
                 if (Inking.IsChecked == true)
                 {
                     HandleCfg("Inking=0");
@@ -81,6 +70,16 @@ namespace LoLUpdaterXP
             }
         }
 
+        private static void Kill(string process)
+        {
+            if (Process.GetProcessesByName(process).Length > 0)
+            {
+                var proc = Process.GetProcessesByName(process);
+                proc[0].Kill();
+                proc[0].WaitForExit();
+            }
+        }
+
         private void HandleBackup()
         {
             if (Directory.Exists("Backup")) return;
@@ -108,30 +107,37 @@ namespace LoLUpdaterXP
             {
                 if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
                 {
-                    File.Copy(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"),
-                        Path.Combine("Backup", "game.cfg"), true);
-                    File.Copy(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"),
-                        Path.Combine("Backup", "GamePermanent.cfg"), true);
+                    GameBackup("game.cfg");
+                    GameBackup("GamePermanent.cfg");
                     if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
                     {
-                        File.Copy(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"),
-                            Path.Combine("Backup", "GamePermanent_zh_MY.cfg"), true);
+                        GameBackup("GamePermanent_zh_MY.cfg");
                     }
                     if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
                     {
-                        File.Copy(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_én_SG.cfg"),
-                            Path.Combine("Backup", "GamePermanent_en_SG.cfg"), true);
+                        GameBackup("GamePermanent_en_SG.cfg");
                     }
                 }
-                File.Copy(Path.Combine("Game", "Cg.dll"), Path.Combine("Backup", "Cg.dll"), true);
-                File.Copy(Path.Combine("Game", "CgGL.dll"), Path.Combine("Backup", "CgGL.dll"), true);
-                File.Copy(Path.Combine("Game", "CgD3D9.dll"), Path.Combine("Backup", "CgD3D9.dll"), true);
-                File.Copy(Path.Combine("Game", "tbb.dll"), Path.Combine("Backup", "tbb.dll"), true);
+                GameFileBackup("Cg.dll");
+                GameFileBackup("CgGL.dll");
+                GameFileBackup("CgD3D9.dll");
+                GameFileBackup("tbb.dll");
                 File.Copy(Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"),
                     Path.Combine("Backup", "Adobe AIR.dll"), true);
                 File.Copy(Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"),
                     Path.Combine("Backup", "NPSWF32.dll"), true);
             }
+        }
+
+        private static void GameFileBackup(string file)
+        {
+            File.Copy(Path.Combine("Game", file), Path.Combine("Backup", file), true);
+        }
+
+        private static void GameBackup(string file)
+        {
+            File.Copy(Path.Combine("Game", "DATA", "CFG", "defaults", file),
+                Path.Combine("Backup", file), true);
         }
 
         private void HandleAdobeAndTbb()
@@ -238,90 +244,77 @@ namespace LoLUpdaterXP
             {
                 if (Cg.IsChecked == true)
                 {
-                    File.Copy(
-                        Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
-                            "Cg.dll"),
-                        Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
-                        new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
-                            .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                        Path.Combine("deploy", "Cg.dll"), true);
+                    RadSsln("Cg.dll");
                 }
                 if (Cg1.IsChecked == true)
                 {
-                    File.Copy(
-                        Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
-                            "Cg.dll"),
-                        Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" +
-                        new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories()
-                            .OrderByDescending(d => d.CreationTime)
-                            .FirstOrDefault() + @"\" + Path.Combine("deploy", "Cg.dll"), true);
+                    Radslaunch("Cg.dll");
                 }
 
                 if (CgGl.IsChecked == true)
                 {
-                    File.Copy(
-                        Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
-                            "CgGL.dll"),
-                        Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
-                        new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
-                            .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                        Path.Combine("deploy", "CgGL.dll"), true);
+                    RadSsln("CgGL.dll");
                 }
                 if (CgGl1.IsChecked == true)
                 {
-                    File.Copy(
-                        Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
-                            "CgGL.dll"),
-                        Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" +
-                        new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories()
-                            .OrderByDescending(d => d.CreationTime)
-                            .FirstOrDefault() + @"\" + Path.Combine("deploy", "CgGL.dll"), true);
+                    Radslaunch("CgGL.dll");
                 }
 
                 if (CgD3D9.IsChecked == true)
                 {
-                    File.Copy(
-                        Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
-                            "CgD3D9.dll"),
-                        Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
-                        new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
-                            .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                        Path.Combine("deploy", "CgD3D9.dll"), true);
+                    RadSsln("CgD3D9.dll");
                 }
                 if (CgD3D1.IsChecked == true)
                 {
-                    File.Copy(
-                        Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
-                            "CgD3D9.dll"),
-                        Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" +
-                        new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories()
-                            .OrderByDescending(d => d.CreationTime)
-                            .FirstOrDefault() + @"\" + Path.Combine("deploy", "CgD3D9.dll"), true);
+                    Radslaunch("CgD3D9.dll");
                 }
             }
             else if (Directory.Exists("Game"))
             {
                 if (Cg.IsChecked == true)
                 {
-                    File.Copy(
-                        Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
-                            "Cg.dll"), Path.Combine("Game", "Cg.dll"), true);
+                    Game("Cg.dll");
                 }
 
                 if (CgGl.IsChecked == true)
                 {
-                    File.Copy(
-                        Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
-                            "CgGL.dll"), Path.Combine("Game", "CgGL.dll"), true);
+                    Game("CgGL.dll");
                 }
 
                 if (CgD3D9.IsChecked == true)
                 {
-                    File.Copy(
-                        Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
-                            "CgD3D9.dll"), Path.Combine("Game", "CgD3D9.dll"), true);
+                    Game("CgD3D9.dll");
                 }
             }
+        }
+
+        private static void Game(string file)
+        {
+            File.Copy(
+                Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
+                    file), Path.Combine("Game", file), true);
+        }
+
+        private static void Radslaunch(string file)
+        {
+            File.Copy(
+                Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
+                    file),
+                Path.Combine("RADS", "projects", "lol_launcher", "releases") + @"\" +
+                new DirectoryInfo(Path.Combine("RADS", "projects", "lol_launcher", "releases")).GetDirectories()
+                    .OrderByDescending(d => d.CreationTime)
+                    .FirstOrDefault() + @"\" + Path.Combine("deploy", file), true);
+        }
+
+        private static void RadSsln(string file)
+        {
+            File.Copy(
+                Path.Combine(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User),
+                    file),
+                Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
+                new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
+                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
+                Path.Combine("deploy", file), true);
         }
 
         private static void HandlePandoUninstall()
@@ -360,41 +353,10 @@ namespace LoLUpdaterXP
                 {
                     File.Copy(Path.Combine("Backup", "game.cfg"), Path.Combine("Config", "game.cfg"), true);
                 }
-                File.Copy(Path.Combine("Backup", "Cg.dll"),
-                    Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
-                    new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
-                        .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                    Path.Combine("deploy", "Cg.dll"), true);
-                File.Copy(Path.Combine("Backup", "Cg.dll"),
-                    Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
-                    new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
-                        .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                    Path.Combine("deploy", "Cg.dll"), true);
-                File.Copy(Path.Combine("Backup", "CgGL.dll"),
-                    Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
-                    new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
-                        .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                    Path.Combine("deploy", "CgGL.dll"), true);
-                File.Copy(Path.Combine("Backup", "CgGL.dll"),
-                    Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
-                    new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
-                        .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                    Path.Combine("deploy", "CgGL.dll"), true);
-                File.Copy(Path.Combine("Backup", "CgD3D9.dll"),
-                    Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
-                    new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
-                        .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                    Path.Combine("deploy", "CgD3D9.dll"), true);
-                File.Copy(Path.Combine("Backup", "CgD3D9.dll"),
-                    Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
-                    new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
-                        .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                    Path.Combine("deploy", "CgD3D9.dll"), true);
-                File.Copy(Path.Combine("Backup", "tbb.dll"),
-                    Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
-                    new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
-                        .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                    Path.Combine("deploy", "CgD3D9.dll"), true);
+                UninstallRads("Cg.dll");
+                UninstallRads("CgGL.dll");
+                UninstallRads("CgD3D9.dll");
+                UninstallRads("tbb.dll");
                 File.Copy(Path.Combine("Backup", "NPSWF32.dll"),
                     Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" +
                     new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories()
@@ -408,9 +370,9 @@ namespace LoLUpdaterXP
                         .FirstOrDefault() + @"\" +
                     Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), true);
             }
-            else if (Directory.Exists("Games"))
+            else if (Directory.Exists("Game"))
             {
-                File.Copy(Path.Combine("Backup", "game.cfg"),
+                File.Copy(Path.Combine("Backup", "a.cfg"),
                     Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"), true);
                 File.Copy(Path.Combine("Backup", "GamePermanent.cfg"),
                     Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg"), true);
@@ -425,16 +387,30 @@ namespace LoLUpdaterXP
                     File.Copy(Path.Combine("Backup", "GamePermanent_en_SG.cfg"),
                         Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"), true);
                 }
-                File.Copy(Path.Combine("Backup", "Cg.dll"), Path.Combine("Game", "Cg.dll"), true);
-                File.Copy(Path.Combine("Backup", "CgGL.dll"), Path.Combine("Game", "CgGL.dll"), true);
-                File.Copy(Path.Combine("Backup", "CgD3D9.dll"), Path.Combine("Game", "CgD3D9.dll"), true);
-                File.Copy(Path.Combine("Backup", "tbb.dll"), Path.Combine("Game", "tbb.dll"), true);
+                UninstallGame("Cg.dll");
+                UninstallGame("CgGL.dll");
+                UninstallGame("CgD3D9.dll");
+                UninstallGame("tbb.dll");
                 File.Copy(Path.Combine("Backup", "NPSWF32.dll"),
                     Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll"), true);
                 File.Copy(Path.Combine("Backup", "Adobe AIR.dll"),
                     Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), true);
             }
             Directory.Delete("Backup", true);
+        }
+
+        private static void UninstallGame(string file)
+        {
+            File.Copy(Path.Combine("Backup", file), Path.Combine("Game", file), true);
+        }
+
+        private static void UninstallRads(string file)
+        {
+            File.Copy(Path.Combine("Backup", file),
+                Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases") + @"\" +
+                new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
+                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
+                Path.Combine("deploy", file), true);
         }
 
         private static void CgCheck()
@@ -490,37 +466,7 @@ namespace LoLUpdaterXP
             process.Start();
         }
 
-        private static void HandleMouseHz()
-        {
-            var win8Version = new Version(6, 2, 9200, 0);
-            if (Environment.OSVersion.Platform != PlatformID.Win32NT || Environment.OSVersion.Version < win8Version)
-                return;
-            RegistryKey mousehz;
-
-            if (Environment.Is64BitProcess)
-            {
-                mousehz =
-                    Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT",
-                        "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
-            else
-            {
-                mousehz =
-                    Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft",
-                        "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
-            if (mousehz != null)
-                mousehz.SetValue("NoDTToDITMouseBatch",
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
-                    RegistryValueKind.String);
-            var cmd = new ProcessStartInfo();
-            var process = new Process();
-            cmd.FileName = "cmd.exe";
-            cmd.Verb = "runas";
-            cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
-            process.StartInfo = cmd;
-            process.Start();
-        }
+      
 
         private static void HandleCfg(string setting)
         {
@@ -622,6 +568,7 @@ namespace LoLUpdaterXP
             }
         }
 
+ 
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
