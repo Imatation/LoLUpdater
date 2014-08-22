@@ -34,39 +34,11 @@ namespace LoLUpdaterXP
             }
             if (Patch.IsChecked == true)
             {
-                HandleCfg("DefaultParticleMultithreading=1");
-                HandlePandoUninstall();
-                HandleCgInstall();
-                HandleAdobeAndTbb();
-                RunCleanManager();
-                if (Inking.IsChecked == true)
-                {
-                    HandleCfg("Inking=0");
-                }
-                if (AdvancedReflection.IsChecked == true)
-                {
-                    HandleCfg("AdvanceReflection=0");
-                }
-                if (PerPixelPointLighting.IsChecked == true)
-                {
-                    HandleCfg("PerPixelPointLighting=0");
-                }
-                if (
-                    MessageBox.Show("It is recommended you do a restart after installing the patch", "LoLUpdater",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    Process.Start("shutdown.exe", "-r -t 0");
-                }
+                HandlePatch();
             }
             else if (Remove.IsChecked == true)
             {
                 HandleUninstall();
-                if (
-                    MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    Process.Start("shutdown.exe", "-r -t 0");
-                }
             }
         }
 
@@ -76,6 +48,33 @@ namespace LoLUpdaterXP
             var proc = Process.GetProcessesByName(process);
             proc[0].Kill();
             proc[0].WaitForExit();
+        }
+
+        private void HandlePatch()
+        {
+            HandleCfg("DefaultParticleMultithreading=1");
+            HandlePandoUninstall();
+            HandleCgInstall();
+            HandleAdobeAndTbb();
+            RunCleanManager();
+            if (Inking.IsChecked == true)
+            {
+                HandleCfg("Inking=0");
+            }
+            if (AdvancedReflection.IsChecked == true)
+            {
+                HandleCfg("AdvanceReflection=0");
+            }
+            if (PerPixelPointLighting.IsChecked == true)
+            {
+                HandleCfg("PerPixelPointLighting=0");
+            }
+            if (
+                MessageBox.Show("It is recommended you do a restart after installing the patch", "LoLUpdater",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                Process.Start("shutdown.exe", "-r -t 0");
+            }
         }
 
         private void HandleBackup()
@@ -317,10 +316,13 @@ namespace LoLUpdaterXP
 
         private static void HandlePandoUninstall()
         {
+            var pmb = new ProcessStartInfo();
+            var process = new Process();
             if (Environment.Is64BitProcess)
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
                     "Pando Networks", "Media Booster", "uninst.exe"))) return;
+<<<<<<< HEAD
                 var pmb = new ProcessStartInfo
                 {
                     FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
@@ -329,11 +331,16 @@ namespace LoLUpdaterXP
                 };
                 var process = new Process { StartInfo = pmb };
                 process.Start();
+=======
+                pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    "Pando Networks", "Media Booster", "uninst.exe");
+>>>>>>> origin/master
             }
             else
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "Pando Networks", "Media Booster", "uninst.exe"))) return;
+<<<<<<< HEAD
                 var pmb = new ProcessStartInfo()
                 {
                     FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
@@ -342,7 +349,15 @@ namespace LoLUpdaterXP
                 };
                 var process = new Process { StartInfo = pmb };
                 process.Start();
+=======
+                pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                    "Pando Networks", "Media Booster", "uninst.exe");
+>>>>>>> origin/master
             }
+            pmb.Arguments = "/silent";
+            process.StartInfo = pmb;
+            process.Start();
+            process.WaitForExit();
         }
 
         private static void HandleUninstall()
@@ -397,6 +412,12 @@ namespace LoLUpdaterXP
                     Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll"), true);
             }
             Directory.Delete("Backup", true);
+            if (
+                MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                Process.Start("shutdown.exe", "-r -t 0");
+            }
         }
 
         private static void UninstallGame(string file)
@@ -419,6 +440,7 @@ namespace LoLUpdaterXP
             {
                 if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
                     "NVIDIA Corporation", "Cg", "Bin", "cg.dll"))) return;
+<<<<<<< HEAD
                 Process.Start("NvidiaCGLicence.txt");
                 if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
@@ -427,11 +449,14 @@ namespace LoLUpdaterXP
                 var cg = new Process { StartInfo = startInfo };
                 cg.Start();
                 cg.WaitForExit();
+=======
+>>>>>>> origin/master
             }
             else
             {
                 if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "NVIDIA Corporation", "Cg", "Bin", "cg.dll"))) return;
+<<<<<<< HEAD
                 Process.Start("NvidiaCGLicence.txt");
                 if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
@@ -440,7 +465,20 @@ namespace LoLUpdaterXP
                 var cg = new Process { StartInfo = startInfo };
                 cg.Start();
                 cg.WaitForExit();
+=======
+>>>>>>> origin/master
             }
+            Process.Start("NvidiaCGLicence.txt");
+            if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                return;
+            var cg = new Process();
+            var startInfo = new ProcessStartInfo();
+            startInfo.FileName = "Cg_3_1_April2012_Setup.exe";
+            startInfo.Arguments = "/silent";
+            cg.StartInfo = startInfo;
+            cg.Start();
+            cg.WaitForExit();
         }
 
         private static void AdobeAlert()
@@ -459,6 +497,7 @@ namespace LoLUpdaterXP
             var cm = new ProcessStartInfo() { FileName = "cleanmgr.exe", Arguments = "sagerun:1" };
             var process = new Process { StartInfo = cm };
             process.Start();
+            process.WaitForExit();
         }
 
 
