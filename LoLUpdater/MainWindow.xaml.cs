@@ -78,8 +78,13 @@ namespace LoLUpdater
             {
                 HandleCfg("PerPixelPointLighting=0");
             }
+            Reboot("Installing");
+        }
+
+        private static void Reboot(string message)
+        {
             if (
-                MessageBox.Show("It is recommended you do a restart after installing the patch", "LoLUpdater",
+                MessageBox.Show("It is recommended you do a restart after " + message + " the patch", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
@@ -376,12 +381,7 @@ Environment.Is64BitProcess
                 UninstallGameAir(string.Empty, "Adobe AIR.dll");
             }
             Directory.Delete("Backup", true);
-            if (
-                 MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                Process.Start("shutdown.exe", "-r -t 0");
-            }
+            Reboot("Removing");
         }
 
         private static void UninstallGameAir(string extension, string file)
