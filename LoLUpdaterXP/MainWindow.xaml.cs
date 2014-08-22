@@ -314,46 +314,30 @@ namespace LoLUpdaterXP
 
         private static void HandlePandoUninstall()
         {
-            ProcessStartInfo pmb;
+            ProcessStartInfo pmb = new ProcessStartInfo
+            {
+                Arguments = "/silent"
+            };
+
             Process process;
             if (Environment.Is64BitProcess)
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
                     "Pando Networks", "Media Booster", "uninst.exe"))) return;
 
-                pmb = new ProcessStartInfo
-                {
-                    FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                        "Pando Networks", "Media Booster", "uninst.exe"),
-                    Arguments = "/silent"
-                };
-                process = new Process { StartInfo = pmb };
-                process.Start();
-
                 pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                    "Pando Networks", "Media Booster", "uninst.exe");
-
+                        "Pando Networks", "Media Booster", "uninst.exe");
             }
             else
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "Pando Networks", "Media Booster", "uninst.exe"))) return;
 
-                pmb = new ProcessStartInfo
-                {
-                    FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                        "Pando Networks", "Media Booster", "uninst.exe"),
-                    Arguments = "/silent"
-                };
-                process = new Process { StartInfo = pmb };
-                process.Start();
-
                 pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "Pando Networks", "Media Booster", "uninst.exe");
 
             }
-            pmb.Arguments = "/silent";
-            process.StartInfo = pmb;
+            process = new Process { StartInfo = pmb };
             process.Start();
             process.WaitForExit();
         }
@@ -440,39 +424,19 @@ namespace LoLUpdaterXP
             {
                 if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
                     "NVIDIA Corporation", "Cg", "Bin", "cg.dll"))) return;
-
-                Process.Start("NvidiaCGLicence.txt");
-                if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-
-                startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-                cg = new Process { StartInfo = startInfo };
-                cg.Start();
-                cg.WaitForExit();
-
-
             }
             else
             {
                 if (File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "NVIDIA Corporation", "Cg", "Bin", "cg.dll"))) return;
-                Process.Start("NvidiaCGLicence.txt");
-                if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-
-                startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-                cg = new Process { StartInfo = startInfo };
-                cg.Start();
-                cg.WaitForExit();
-
             }
             Process.Start("NvidiaCGLicence.txt");
             if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
-            cg = new Process();
-            startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
-            cg.StartInfo = startInfo;
+
+            startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+            cg = new Process { StartInfo = startInfo };
             cg.Start();
             cg.WaitForExit();
         }
