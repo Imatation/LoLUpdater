@@ -422,7 +422,7 @@ Environment.Is64BitProcess
 
 
 
-        private static bool CgInstall(out Process cg, string arch)
+        private static bool CgFix(out Process cg, string arch)
         {
             if (File.Exists(Path.Combine(arch,
                 "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
@@ -441,6 +441,8 @@ Environment.Is64BitProcess
 
             var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
             cg = new Process { StartInfo = startInfo };
+            cg.Start();
+            cg.WaitForExit();
             return false;
         }
 
@@ -572,11 +574,11 @@ Environment.Is64BitProcess
             Process cg;
             if (Environment.Is64BitProcess)
             {
-                if (CgInstall(out cg, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))) return;
+                if (CgFix(out cg, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))) return;
             }
             else
             {
-                if (CgInstall(out cg, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles))) return;
+                if (CgFix(out cg, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles))) return;
             }
             cg.Start();
             cg.WaitForExit();

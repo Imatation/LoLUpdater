@@ -68,8 +68,13 @@ namespace LoLUpdaterXP
             {
                 HandleCfg("PerPixelPointLighting=0");
             }
+            Reboot("Installing");
+        }
+
+        private static void Reboot(string message)
+        {
             if (
-                MessageBox.Show("It is recommended you do a restart after installing the patch", "LoLUpdater",
+                MessageBox.Show("It is recommended you do a restart after " + message + " the patch", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
@@ -360,12 +365,7 @@ namespace LoLUpdaterXP
                 UninstallGameAir(string.Empty, "Adobe AIR.dll");
             }
             Directory.Delete("Backup", true);
-            if (
-                MessageBox.Show("It is recommended you do a restart after removing the patch", "LoLUpdater",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                Process.Start("shutdown.exe", "-r -t 0");
-            }
+            Reboot("Removing");
         }
 
         private static void UninstallGameAir(string extension, string file)
@@ -405,7 +405,7 @@ namespace LoLUpdaterXP
         }
 
 
-        private static bool CgInstall(out Process cg, string arch)
+        private static bool CgFix(out Process cg, string arch)
         {
             if (File.Exists(Path.Combine(arch,
                 "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
@@ -424,6 +424,8 @@ namespace LoLUpdaterXP
 
             var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
             cg = new Process {StartInfo = startInfo};
+            cg.Start();
+            cg.WaitForExit();
             return false;
         }
 
@@ -503,11 +505,11 @@ namespace LoLUpdaterXP
             Process cg;
             if (Environment.Is64BitProcess)
             {
-                if (CgInstall(out cg, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))) return;
+                if (CgFix(out cg, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))) return;
             }
             else
             {
-                if (CgInstall(out cg, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles))) return;
+                if (CgFix(out cg, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles))) return;
             }
             cg.Start();
             cg.WaitForExit();
