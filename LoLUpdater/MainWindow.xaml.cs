@@ -332,24 +332,26 @@ namespace LoLUpdater
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
                     "Pando Networks", "Media Booster", "uninst.exe"))) return;
-                var pmb = new ProcessStartInfo();
-                var process = new Process();
-                pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                    "Pando Networks", "Media Booster", "uninst.exe");
-                pmb.Arguments = "/silent";
-                process.StartInfo = pmb;
+                var pmb = new ProcessStartInfo
+                {
+                    FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                        "Pando Networks", "Media Booster", "uninst.exe"),
+                    Arguments = "/silent"
+                };
+                var process = new Process {StartInfo = pmb};
                 process.Start();
             }
             else
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "Pando Networks", "Media Booster", "uninst.exe"))) return;
-                var pmb = new ProcessStartInfo();
-                var process = new Process();
-                pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                    "Pando Networks", "Media Booster", "uninst.exe");
-                pmb.Arguments = "/silent";
-                process.StartInfo = pmb;
+                var pmb = new ProcessStartInfo()
+                {
+                    FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                        "Pando Networks", "Media Booster", "uninst.exe"),
+                    Arguments = "/silent"
+                };
+                var process = new Process {StartInfo = pmb};
                 process.Start();
             }
         }
@@ -431,11 +433,9 @@ namespace LoLUpdater
                 Process.Start("NvidiaCGLicence.txt");
                 if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-                var cg = new Process();
-                var startInfo = new ProcessStartInfo();
-                startInfo.FileName = "Cg_3_1_April2012_Setup.exe";
-                startInfo.Arguments = "/silent";
-                cg.StartInfo = startInfo;
+
+                var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+                var cg = new Process {StartInfo = startInfo};
                 cg.Start();
                 cg.WaitForExit();
             }
@@ -446,9 +446,9 @@ namespace LoLUpdater
                 Process.Start("NvidiaCGLicence.txt");
                 if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-                var cg = new Process();
+
                 var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
-                cg.StartInfo = startInfo;
+                var cg = new Process {StartInfo = startInfo};
                 cg.Start();
                 cg.WaitForExit();
             }
@@ -467,11 +467,8 @@ namespace LoLUpdater
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo();
-            var process = new Process();
-            cm.FileName = "cleanmgr.exe";
-            cm.Arguments = "sagerun:1";
-            process.StartInfo = cm;
+            var cm = new ProcessStartInfo() {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
+            var process = new Process {StartInfo = cm};
             process.Start();
         }
 
@@ -498,12 +495,13 @@ namespace LoLUpdater
                 mousehz.SetValue("NoDTToDITMouseBatch",
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
                     RegistryValueKind.String);
-            var cmd = new ProcessStartInfo();
-            var process = new Process();
-            cmd.FileName = "cmd.exe";
-            cmd.Verb = "runas";
-            cmd.Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache";
-            process.StartInfo = cmd;
+            var cmd = new ProcessStartInfo()
+            {
+                FileName = "cmd.exe",
+                Verb = "runas",
+                Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache"
+            };
+            var process = new Process {StartInfo = cmd};
             process.Start();
         }
 

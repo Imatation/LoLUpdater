@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using LoLUpdater;
 using Microsoft.Win32;
 
 namespace LoLUpdaterXP
@@ -28,6 +27,7 @@ namespace LoLUpdaterXP
         {
             Kill("LoLClient");
             Kill("LoLLauncher");
+            Kill("League of Legends");
             if (!Directory.Exists("Backup"))
             {
                 HandleBackup();
@@ -72,12 +72,10 @@ namespace LoLUpdaterXP
 
         private static void Kill(string process)
         {
-            if (Process.GetProcessesByName(process).Length > 0)
-            {
-                var proc = Process.GetProcessesByName(process);
-                proc[0].Kill();
-                proc[0].WaitForExit();
-            }
+            if (Process.GetProcessesByName(process).Length <= 0) return;
+            var proc = Process.GetProcessesByName(process);
+            proc[0].Kill();
+            proc[0].WaitForExit();
         }
 
         private void HandleBackup()
@@ -323,24 +321,26 @@ namespace LoLUpdaterXP
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
                     "Pando Networks", "Media Booster", "uninst.exe"))) return;
-                var pmb = new ProcessStartInfo();
-                var process = new Process();
-                pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                    "Pando Networks", "Media Booster", "uninst.exe");
-                pmb.Arguments = "/silent";
-                process.StartInfo = pmb;
+                var pmb = new ProcessStartInfo
+                {
+                    FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                        "Pando Networks", "Media Booster", "uninst.exe"),
+                    Arguments = "/silent"
+                };
+                var process = new Process { StartInfo = pmb };
                 process.Start();
             }
             else
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "Pando Networks", "Media Booster", "uninst.exe"))) return;
-                var pmb = new ProcessStartInfo();
-                var process = new Process();
-                pmb.FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                    "Pando Networks", "Media Booster", "uninst.exe");
-                pmb.Arguments = "/silent";
-                process.StartInfo = pmb;
+                var pmb = new ProcessStartInfo()
+                {
+                    FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                        "Pando Networks", "Media Booster", "uninst.exe"),
+                    Arguments = "/silent"
+                };
+                var process = new Process { StartInfo = pmb };
                 process.Start();
             }
         }
@@ -422,11 +422,9 @@ namespace LoLUpdaterXP
                 Process.Start("NvidiaCGLicence.txt");
                 if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-                var cg = new Process();
-                var startInfo = new ProcessStartInfo();
-                startInfo.FileName = "Cg_3_1_April2012_Setup.exe";
-                startInfo.Arguments = "/silent";
-                cg.StartInfo = startInfo;
+
+                var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+                var cg = new Process { StartInfo = startInfo };
                 cg.Start();
                 cg.WaitForExit();
             }
@@ -437,9 +435,9 @@ namespace LoLUpdaterXP
                 Process.Start("NvidiaCGLicence.txt");
                 if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
-                var cg = new Process();
+
                 var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-                cg.StartInfo = startInfo;
+                var cg = new Process { StartInfo = startInfo };
                 cg.Start();
                 cg.WaitForExit();
             }
@@ -458,15 +456,12 @@ namespace LoLUpdaterXP
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo();
-            var process = new Process();
-            cm.FileName = "cleanmgr.exe";
-            cm.Arguments = "sagerun:1";
-            process.StartInfo = cm;
+            var cm = new ProcessStartInfo() { FileName = "cleanmgr.exe", Arguments = "sagerun:1" };
+            var process = new Process { StartInfo = cm };
             process.Start();
         }
 
-      
+
 
         private static void HandleCfg(string setting)
         {
@@ -568,7 +563,6 @@ namespace LoLUpdaterXP
             }
         }
 
- 
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
