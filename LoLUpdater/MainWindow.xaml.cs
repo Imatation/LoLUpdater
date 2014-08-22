@@ -327,6 +327,8 @@ namespace LoLUpdater
         {
             ProcessStartInfo pmb;
             Process process;
+            
+
             if (Environment.Is64BitProcess)
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
