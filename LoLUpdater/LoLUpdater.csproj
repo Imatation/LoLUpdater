@@ -117,6 +117,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <SplashScreen Include="Resources\logo.png" />
     <Content Include="Resources\minimize.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

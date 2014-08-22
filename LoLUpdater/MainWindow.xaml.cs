@@ -53,12 +53,10 @@ namespace LoLUpdater
 
         private static void Kill(string process)
         {
-            if (Process.GetProcessesByName(process).Length > 0)
-            {
-                var proc = Process.GetProcessesByName(process);
-                proc[0].Kill();
-                proc[0].WaitForExit();
-            }
+            if (Process.GetProcessesByName(process).Length <= 0) return;
+            var proc = Process.GetProcessesByName(process);
+            proc[0].Kill();
+            proc[0].WaitForExit();
         }
         private void HandlePatch()
         {
@@ -333,6 +331,8 @@ namespace LoLUpdater
             };
 
             Process process;
+            
+
             if (Environment.Is64BitProcess)
             {
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
@@ -446,6 +446,7 @@ namespace LoLUpdater
             if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
+
             startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
             cg = new Process { StartInfo = startInfo };
             cg.Start();
@@ -465,7 +466,7 @@ namespace LoLUpdater
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo() {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
+            var cm = new ProcessStartInfo {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
             var process = new Process {StartInfo = cm};
             process.Start();
             process.WaitForExit();
@@ -494,7 +495,7 @@ namespace LoLUpdater
                 mousehz.SetValue("NoDTToDITMouseBatch",
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
                     RegistryValueKind.String);
-            var cmd = new ProcessStartInfo()
+            var cmd = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
                 Verb = "runas",
