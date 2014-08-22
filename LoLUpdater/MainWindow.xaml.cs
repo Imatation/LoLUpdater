@@ -53,12 +53,10 @@ namespace LoLUpdater
 
         private static void Kill(string process)
         {
-            if (Process.GetProcessesByName(process).Length > 0)
-            {
-                var proc = Process.GetProcessesByName(process);
-                proc[0].Kill();
-                proc[0].WaitForExit();
-            }
+            if (Process.GetProcessesByName(process).Length <= 0) return;
+            var proc = Process.GetProcessesByName(process);
+            proc[0].Kill();
+            proc[0].WaitForExit();
         }
         private void HandlePatch()
         {
@@ -352,7 +350,7 @@ namespace LoLUpdater
                 if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "Pando Networks", "Media Booster", "uninst.exe"))) return;
 
-                pmb = new ProcessStartInfo()
+                pmb = new ProcessStartInfo
                 {
                     FileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                         "Pando Networks", "Media Booster", "uninst.exe"),
@@ -484,9 +482,7 @@ namespace LoLUpdater
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
             cg = new Process();
-            startInfo = new ProcessStartInfo();
-            startInfo.FileName = "Cg_3_1_April2012_Setup.exe";
-            startInfo.Arguments = "/silent";
+            startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
             cg.StartInfo = startInfo;
             cg.Start();
             cg.WaitForExit();
@@ -505,7 +501,7 @@ namespace LoLUpdater
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo() {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
+            var cm = new ProcessStartInfo {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
             var process = new Process {StartInfo = cm};
             process.Start();
             process.WaitForExit();
@@ -534,7 +530,7 @@ namespace LoLUpdater
                 mousehz.SetValue("NoDTToDITMouseBatch",
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
                     RegistryValueKind.String);
-            var cmd = new ProcessStartInfo()
+            var cmd = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
                 Verb = "runas",
