@@ -94,7 +94,9 @@ namespace LoLUpdaterXP
         {
             get
             {
-                return GameVersion.Equals("RADS") ? Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll") : Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll");
+                return GameVersion.Equals("RADS")
+                    ? Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll")
+                    : Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll");
             }
         }
 
@@ -102,7 +104,9 @@ namespace LoLUpdaterXP
         {
             get
             {
-                return GameVersion.Equals("RADS") ? Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll") : Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll");
+                return GameVersion.Equals("RADS")
+                    ? Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll")
+                    : Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources", "NPSWF32.dll");
             }
         }
     }
