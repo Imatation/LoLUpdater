@@ -44,12 +44,10 @@ namespace LoLUpdaterXP
 
         private static void Kill(string process)
         {
-            if (Process.GetProcessesByName(process).Length > 0)
-            {
-                var proc = Process.GetProcessesByName(process);
-                proc[0].Kill();
-                proc[0].WaitForExit();
-            }
+            if (Process.GetProcessesByName(process).Length <= 0) return;
+            var proc = Process.GetProcessesByName(process);
+            proc[0].Kill();
+            proc[0].WaitForExit();
         }
         private void HandlePatch()
         {
