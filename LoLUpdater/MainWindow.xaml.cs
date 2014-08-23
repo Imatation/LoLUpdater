@@ -60,8 +60,10 @@ namespace LoLUpdater
         private void HandlePatch()
         {
             HandleCfg("DefaultParticleMultithreading=1");
-            HandlePandoUninstall();
-            HandleCgInstall();
+            Pmb(Environment.Is64BitProcess
+                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            HandleCgInstall(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User));
             HandleAdobeAndTbb();
             RunCleanManager();
             HandleMouseHz(Environment.Is64BitProcess
@@ -154,7 +156,7 @@ namespace LoLUpdater
 
         private void HandleAdobeAndTbb()
         {
-            if (Directory.Exists("Rads"))
+            if (Directory.Exists("RADS"))
             {
                 if (Tbb.IsChecked == true)
                 {
@@ -229,9 +231,9 @@ namespace LoLUpdater
         }
 
 
-        private void HandleCgInstall()
+        private void HandleCgInstall(string cgBinPath)
         {
-            var cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+            
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
@@ -299,13 +301,7 @@ namespace LoLUpdater
         }
 
 
-        private static void HandlePandoUninstall()
-        {
-            Process process;
-            Pmb(Environment.Is64BitProcess
-                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
-        }
+
 
         private static void Pmb(string arch)
         {

@@ -25,7 +25,6 @@ namespace LoLUpdaterXP
             Kill("LoLClient");
             Kill("LoLLauncher");
             Kill("League of Legends");
-            
             if (!Directory.Exists("Backup"))
             {
                 HandleBackup();
@@ -51,8 +50,10 @@ namespace LoLUpdaterXP
         private void HandlePatch()
         {
             HandleCfg("DefaultParticleMultithreading=1");
-            HandlePandoUninstall();
-            HandleCgInstall();
+            Pmb(Environment.Is64BitProcess
+                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            HandleCgInstall(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User));
             HandleAdobeAndTbb();
             RunCleanManager();
             if (Inking.IsChecked == true)
@@ -73,7 +74,8 @@ namespace LoLUpdaterXP
         private static void Reboot(string message)
         {
             if (
-                MessageBox.Show(String.Format("It is recommended you do a restart after {0} the patch", message), "LoLUpdater",
+                MessageBox.Show(String.Format("It is recommended you do a restart after {0} the patch", message),
+                    "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
@@ -141,7 +143,7 @@ namespace LoLUpdaterXP
 
         private void HandleAdobeAndTbb()
         {
-            if (Directory.Exists("Rads"))
+            if (Directory.Exists("RADS"))
             {
                 if (Tbb.IsChecked == true)
                 {
@@ -216,9 +218,9 @@ namespace LoLUpdaterXP
         }
 
 
-        private void HandleCgInstall()
+        private void HandleCgInstall(string cgBinPath)
         {
-            var cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
@@ -286,13 +288,7 @@ namespace LoLUpdaterXP
         }
 
 
-        private static void HandlePandoUninstall()
-        {
-            Process process;
-            Pmb(Environment.Is64BitProcess
-                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
-        }
+
 
         private static void Pmb(string arch)
         {
@@ -368,8 +364,6 @@ namespace LoLUpdaterXP
         }
 
 
-
-
         private static void CgFix(string arch)
         {
             if (File.Exists(Path.Combine(arch,
@@ -409,8 +403,6 @@ namespace LoLUpdaterXP
             process.Start();
             process.WaitForExit();
         }
-
-      
 
         private static void HandleCfg(string setting)
         {
@@ -462,8 +454,6 @@ namespace LoLUpdaterXP
             }
         }
 
-
-     
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
