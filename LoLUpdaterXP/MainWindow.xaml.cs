@@ -354,27 +354,6 @@ namespace LoLUpdaterXP
         }
 
 
-        private static void CgFix()
-        {
-            if (File.Exists(Path.Combine(Arch,
-                "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
-            {
-                return;
-            }
-
-            Process.Start("NvidiaCGLicence.txt");
-            if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
-                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-            {
-                return;
-            }
-
-            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
-            var cg = new Process {StartInfo = startInfo};
-            cg.Start();
-            cg.WaitForExit();
-        }
-
         private static void AdobeAlert()
         {
             if (
@@ -448,7 +427,23 @@ namespace LoLUpdaterXP
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            CgFix();
+            if (File.Exists(Path.Combine(Arch,
+                "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
+            {
+                return;
+            }
+
+            Process.Start("NvidiaCGLicence.txt");
+            if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
+                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+            var cg = new Process { StartInfo = startInfo };
+            cg.Start();
+            cg.WaitForExit();
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
