@@ -63,7 +63,7 @@ namespace LoLUpdater
             Pmb(Environment.Is64BitProcess
                 ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
                 : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
-            HandleCgInstall(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User));
+            HandleCgInstall();
             HandleAdobeAndTbb();
             RunCleanManager();
             HandleMouseHz(Environment.Is64BitProcess
@@ -231,8 +231,9 @@ namespace LoLUpdater
         }
 
 
-        private void HandleCgInstall(string cgBinPath)
+        private void HandleCgInstall()
         {
+            var cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
