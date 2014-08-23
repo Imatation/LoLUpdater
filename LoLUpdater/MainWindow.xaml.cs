@@ -253,7 +253,7 @@ namespace LoLUpdater
                 {
                     AdvancedCopy(
                         "Cg.dll", cgBinPath,
-                        "projects", "lol_game_client_sln", "deploy");
+                        "solutions", "lol_game_client_sln", "deploy");
                 }
                 if (CgGl1.IsChecked == true)
                 {
