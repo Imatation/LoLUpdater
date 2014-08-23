@@ -36,7 +36,7 @@
         <Style x:Key="CheckboxStyle" TargetType="{x:Type CheckBox}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="Background" Value="#2D2D30" />
-            <Setter Property="BorderBrush" Value="{StaticResource OptionMark.Static.Border}" />>
+            <Setter Property="BorderBrush" Value="{StaticResource OptionMark.Static.Border}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Template">
                 <Setter.Value>
