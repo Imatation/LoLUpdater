@@ -220,7 +220,6 @@ namespace LoLUpdaterXP
 
         private void HandleCgInstall(string cgBinPath)
         {
-
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
@@ -288,8 +287,6 @@ namespace LoLUpdaterXP
         }
 
 
-
-
         private static void Pmb(string arch)
         {
             if (!File.Exists(Path.Combine(arch,
@@ -300,7 +297,7 @@ namespace LoLUpdaterXP
                     "Pando Networks", "Media Booster", "uninst.exe"),
                 Arguments = "/silent"
             };
-            var process = new Process { StartInfo = pmb };
+            var process = new Process {StartInfo = pmb};
             process.Start();
             process.WaitForExit();
         }
@@ -379,8 +376,8 @@ namespace LoLUpdaterXP
                 return;
             }
 
-            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-            var cg = new Process { StartInfo = startInfo };
+            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+            var cg = new Process {StartInfo = startInfo};
             cg.Start();
             cg.WaitForExit();
         }
@@ -398,8 +395,8 @@ namespace LoLUpdaterXP
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo { FileName = "cleanmgr.exe", Arguments = "sagerun:1" };
-            var process = new Process { StartInfo = cm };
+            var cm = new ProcessStartInfo {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
+            var process = new Process {StartInfo = cm};
             process.Start();
             process.WaitForExit();
         }
@@ -439,7 +436,8 @@ namespace LoLUpdaterXP
                 if (FileAttributes.ReadOnly == fi.Attributes)
                 {
                     MessageBox.Show(String.Format(
-                           @"Your {0} Located in Game\DATA\CFG\defaults is read only, please remove this and try again", file),
+                        @"Your {0} Located in Game\DATA\CFG\defaults is read only, please remove this and try again",
+                        file),
                         "LoLUpdater");
                     return;
                 }

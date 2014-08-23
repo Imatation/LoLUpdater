@@ -233,7 +233,6 @@ namespace LoLUpdater
 
         private void HandleCgInstall(string cgBinPath)
         {
-            
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
@@ -299,8 +298,6 @@ namespace LoLUpdater
                 }
             }
         }
-
-
 
 
         private static void Pmb(string arch)
@@ -475,7 +472,8 @@ namespace LoLUpdater
                 if (FileAttributes.ReadOnly == fi.Attributes)
                 {
                     MessageBox.Show(String.Format(
-                        @"Your {0} Located in Game\DATA\CFG\defaults is read only, please remove this and try again",file),
+                        @"Your {0} Located in Game\DATA\CFG\defaults is read only, please remove this and try again",
+                        file),
                         "LoLUpdater");
                     return;
                 }
