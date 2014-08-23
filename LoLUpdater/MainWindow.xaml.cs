@@ -12,6 +12,10 @@ namespace LoLUpdater
 {
     public partial class MainWindow
     {
+        private static string arch = Environment.Is64BitProcess
+            ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+            : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             AdobeAlert();
@@ -60,13 +64,11 @@ namespace LoLUpdater
         private void HandlePatch()
         {
             HandleCfg("DefaultParticleMultithreading=1");
-            Pmb(Environment.Is64BitProcess
-                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            Pmb();
             HandleCgInstall(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User));
             HandleAdobeAndTbb();
             RunCleanManager();
-            HandleMouseHz(Environment.Is64BitProcess
+            HandleMouseHz(!Environment.Is64BitProcess
                 ? string.Empty
                 : "WoW64Node");
             if (Inking.IsChecked == true)
@@ -156,35 +158,32 @@ namespace LoLUpdater
 
         private void HandleAdobeAndTbb()
         {
+            var airPath = Path.Combine(arch, "Common Files", "Adobe AIR", "Versions", "1.0");
+
             if (Directory.Exists("RADS"))
             {
                 if (Tbb.IsChecked == true)
                 {
                     AdvancedCopy("tbb.dll", string.Empty, "solutions", "lol_game_client_sln", "deploy");
                 }
+
                 if (AdobeAir.IsChecked == true)
                 {
                     AdvancedCopy(
                         "Adobe AIR.dll",
-                        Environment.Is64BitProcess
-                            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                                "Common Files", "Adobe AIR", "Versions", "1.0")
-                            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                                "Common Files", "Adobe AIR", "Versions", "1.0"
-                                ), "projects",
-                        "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
+                        airPath,
+                        "projects",
+                        "lol_air_client",
+                        Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
                 }
                 if (Flash.IsChecked == true)
                 {
                     AdvancedCopy(
                         "NPSWF32.dll",
-                        Environment.Is64BitProcess
-                            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                                "Common Files", "Adobe AIR", "Versions", "1.0", "Resources")
-                            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                                "Common Files", "Adobe AIR", "Versions", "1.0", "Resources"
-                                ), "projects",
-                        "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
+                        airPath,
+                        "projects",
+                        "lol_air_client",
+                        Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
                 }
             }
             if (!Directory.Exists("Game")) return;
@@ -198,22 +197,14 @@ namespace LoLUpdater
             {
                 GameCopy(
                     "Adobe AIR.dll",
-                    Environment.Is64BitProcess
-                        ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                            "Common Files", "Adobe AIR", "Versions", "1.0")
-                        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                            "Common Files", "Adobe AIR", "Versions", "1.0"),
+                    airPath,
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0"));
             }
             if (Flash.IsChecked == true)
             {
                 GameCopy(
                     "NPSWF32.dll",
-                    Environment.Is64BitProcess
-                        ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                            "Common Files", "Adobe AIR", "Versions", "1.0", "Resources")
-                        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                            "Common Files", "Adobe AIR", "Versions", "1.0", "Resources"),
+                    airPath,
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources"));
             }
         }
@@ -300,14 +291,14 @@ namespace LoLUpdater
         }
 
 
-        private static void Pmb(string arch)
+        private static void Pmb()
         {
-            if (!File.Exists(Path.Combine(arch,
-                "Pando Networks", "Media Booster", "uninst.exe"))) return;
+            var pmbUninstall = Path.Combine(arch,
+                "Pando Networks", "Media Booster", "uninst.exe");
+            if (!File.Exists(pmbUninstall)) return;
             var pmb = new ProcessStartInfo
             {
-                FileName = Path.Combine(arch,
-                    "Pando Networks", "Media Booster", "uninst.exe"),
+                FileName = pmbUninstall,
                 Arguments = "/silent"
             };
             var process = new Process {StartInfo = pmb};
@@ -374,7 +365,7 @@ namespace LoLUpdater
         }
 
 
-        private static void CgFix(string arch)
+        private static void CgFix(object sender)
         {
             if (File.Exists(Path.Combine(arch,
                 "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
@@ -386,6 +377,7 @@ namespace LoLUpdater
             if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
+                sender.isChecked = false;
                 return;
             }
 
@@ -508,9 +500,7 @@ namespace LoLUpdater
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            CgFix(Environment.Is64BitProcess
-                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            CgFix(sender);
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)

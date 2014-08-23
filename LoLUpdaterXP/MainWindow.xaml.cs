@@ -10,6 +10,10 @@ namespace LoLUpdaterXP
 {
     public partial class MainWindow
     {
+        private static string arch = Environment.Is64BitProcess
+            ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+            : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             AdobeAlert();
@@ -50,10 +54,7 @@ namespace LoLUpdaterXP
         private void HandlePatch()
         {
             HandleCfg("DefaultParticleMultithreading=1");
-            Pmb(Environment.Is64BitProcess
-                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
-            HandleCgInstall(Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User));
+            Pmb();
             HandleAdobeAndTbb();
             RunCleanManager();
             if (Inking.IsChecked == true)
@@ -143,6 +144,8 @@ namespace LoLUpdaterXP
 
         private void HandleAdobeAndTbb()
         {
+            var airPath = Path.Combine(arch, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources");
+
             if (Directory.Exists("RADS"))
             {
                 if (Tbb.IsChecked == true)
@@ -153,24 +156,16 @@ namespace LoLUpdaterXP
                 {
                     AdvancedCopy(
                         "Adobe AIR.dll",
-                        Environment.Is64BitProcess
-                            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                                "Common Files", "Adobe AIR", "Versions", "1.0")
-                            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                                "Common Files", "Adobe AIR", "Versions", "1.0"
-                                ), "projects",
+                        airPath,
+                        "projects",
                         "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
                 }
                 if (Flash.IsChecked == true)
                 {
                     AdvancedCopy(
                         "NPSWF32.dll",
-                        Environment.Is64BitProcess
-                            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                                "Common Files", "Adobe AIR", "Versions", "1.0", "Resources")
-                            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                                "Common Files", "Adobe AIR", "Versions", "1.0", "Resources"
-                                ), "projects",
+                        airPath,
+                        "projects",
                         "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
                 }
             }
@@ -185,22 +180,14 @@ namespace LoLUpdaterXP
             {
                 GameCopy(
                     "Adobe AIR.dll",
-                    Environment.Is64BitProcess
-                        ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                            "Common Files", "Adobe AIR", "Versions", "1.0")
-                        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                            "Common Files", "Adobe AIR", "Versions", "1.0"),
+                    airPath,
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0"));
             }
             if (Flash.IsChecked == true)
             {
                 GameCopy(
                     "NPSWF32.dll",
-                    Environment.Is64BitProcess
-                        ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                            "Common Files", "Adobe AIR", "Versions", "1.0", "Resources")
-                        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                            "Common Files", "Adobe AIR", "Versions", "1.0", "Resources"),
+                    airPath,
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources"));
             }
         }
@@ -287,14 +274,14 @@ namespace LoLUpdaterXP
         }
 
 
-        private static void Pmb(string arch)
+        private static void Pmb()
         {
-            if (!File.Exists(Path.Combine(arch,
-                "Pando Networks", "Media Booster", "uninst.exe"))) return;
+            var pmbUninstall = Path.Combine(arch,
+                "Pando Networks", "Media Booster", "uninst.exe");
+            if (!File.Exists(pmbUninstall)) return;
             var pmb = new ProcessStartInfo
             {
-                FileName = Path.Combine(arch,
-                    "Pando Networks", "Media Booster", "uninst.exe"),
+                FileName = pmbUninstall,
                 Arguments = "/silent"
             };
             var process = new Process {StartInfo = pmb};
@@ -361,7 +348,7 @@ namespace LoLUpdaterXP
         }
 
 
-        private static void CgFix(string arch)
+        private static void CgFix(object sender)
         {
             if (File.Exists(Path.Combine(arch,
                 "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
@@ -373,6 +360,7 @@ namespace LoLUpdaterXP
             if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
+                sender.isChecked = false;
                 return;
             }
 
@@ -454,9 +442,7 @@ namespace LoLUpdaterXP
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            CgFix(Environment.Is64BitProcess
-                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            CgFix(sender);
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
