@@ -373,8 +373,10 @@ namespace LoLUpdaterXP
 
         private static void AdobeAlert()
         {
+
             if (
-                MessageBox.Show(
+                !File.Exists(Path.Combine(arch, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources", "Adobe AIR.dll")) &&
+                MessageBox.Show(                   
                     "We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.",
                     "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
