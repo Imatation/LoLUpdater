@@ -146,7 +146,7 @@ namespace LoLUpdaterXP
         private void HandleAdobeAndTbb()
         {
             var airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
-            var flashPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources");
+            var flashPath = Path.Combine(airPath, "Resources");
 
             if (Directory.Exists("RADS"))
             {
