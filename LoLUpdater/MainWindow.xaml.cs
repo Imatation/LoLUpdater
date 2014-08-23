@@ -64,7 +64,9 @@ namespace LoLUpdater
             HandleCgInstall();
             HandleAdobeAndTbb();
             RunCleanManager();
-            HandleMouseHz();
+            HandleMouseHz(Environment.Is64BitProcess
+       ? string.Empty
+       : "WoW64Node");
             if (Inking.IsChecked == true)
             {
                 HandleCfg("Inking=0");
@@ -419,23 +421,15 @@ namespace LoLUpdater
             process.WaitForExit();
         }
 
-        private static void HandleMouseHz()
+        private static void HandleMouseHz(string arch)
         {
             var win8Version = new Version(6, 2, 9200, 0);
             if (Environment.OSVersion.Platform != PlatformID.Win32NT || Environment.OSVersion.Version < win8Version)
                 return;
-            RegistryKey mousehz;
 
-            if (Environment.Is64BitProcess)
-            {
-                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT",
-                        "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
-            else
-            {
-                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft",
-                        "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-            }
+
+            var mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", arch, "Microsoft",
+                "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
             if (mousehz != null)
                 mousehz.SetValue("NoDTToDITMouseBatch",
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
