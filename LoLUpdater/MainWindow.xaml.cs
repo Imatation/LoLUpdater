@@ -67,7 +67,7 @@ namespace LoLUpdater
             HandleCgInstall();
             HandleAdobeAndTbb();
             RunCleanManager();
-            HandleMouseHz(!Environment.Is64BitProcess
+            HandleMouseHz(Environment.Is64BitProcess
                 ? string.Empty
                 : "WoW64Node");
             if (Inking.IsChecked == true)
