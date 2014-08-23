@@ -72,7 +72,7 @@ namespace LoLUpdaterXP
         private static void Reboot(string message)
         {
             if (
-                MessageBox.Show("It is recommended you do a restart after " + message + " the patch", "LoLUpdater",
+                MessageBox.Show(String.Format("It is recommended you do a restart after {0} the patch", message), "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
@@ -378,28 +378,29 @@ namespace LoLUpdaterXP
         }
 
 
-        private static bool CgFix(out Process cg, string arch)
+        private static void CgFix(string arch)
         {
             if (File.Exists(Path.Combine(arch,
                 "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
             {
-                cg = null;
-                return true;
+                return;
             }
 
             Process.Start("NvidiaCGLicence.txt");
             if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
-                cg = null;
-                return true;
+                return;
             }
 
             var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+<<<<<<< HEAD
             cg = new Process { StartInfo = startInfo };
+=======
+            var cg = new Process { StartInfo = startInfo };
+>>>>>>> origin/master
             cg.Start();
             cg.WaitForExit();
-            return false;
         }
 
         private static void AdobeAlert()
@@ -479,14 +480,12 @@ namespace LoLUpdaterXP
             Process cg;
             if (Environment.Is64BitProcess)
             {
-                if (CgFix(out cg, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))) return;
+                CgFix(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86));
             }
             else
             {
-                if (CgFix(out cg, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles))) return;
+                CgFix(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
             }
-            cg.Start();
-            cg.WaitForExit();
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
