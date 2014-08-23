@@ -324,7 +324,7 @@ namespace LoLUpdaterXP
 
                 UninstallRads("tbb.dll", "deploy", "solutions", "lol_game_client_sln");
 
-                UninstallRads("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
+                UninstallRads("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"),
                     "projects", "lol_air_client");
                 UninstallRads("NPSWF32.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
                     "projects", "lol_air_client");

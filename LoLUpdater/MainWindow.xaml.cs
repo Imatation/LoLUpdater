@@ -337,7 +337,7 @@ namespace LoLUpdater
 
                 UninstallRads("tbb.dll", "deploy", "solutions", "lol_game_client_sln");
 
-                UninstallRads("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
+                UninstallRads("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"),
                     "projects", "lol_air_client");
                 UninstallRads("NPSWF32.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
                     "projects", "lol_air_client");
@@ -475,7 +475,7 @@ namespace LoLUpdater
                 if (FileAttributes.ReadOnly == fi.Attributes)
                 {
                     MessageBox.Show(String.Format(
-                        @"Your {0} Located in Game\DATA\CFG\defaults is read only, please remove this and try again",file ),
+                        @"Your {0} Located in Game\DATA\CFG\defaults is read only, please remove this and try again",file),
                         "LoLUpdater");
                     return;
                 }
