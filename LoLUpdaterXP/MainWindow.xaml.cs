@@ -289,35 +289,24 @@ namespace LoLUpdaterXP
         private static void HandlePandoUninstall()
         {
             Process process;
-            if (Environment.Is64BitProcess)
-            {
-                if (Pmb(out process, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))) return;
-            }
-            else
-            {
-                if (Pmb(out process, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles))) return;
-            }
-            process.Start();
-            process.WaitForExit();
+            Pmb(Environment.Is64BitProcess
+                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
         }
 
-        private static bool Pmb(out Process process, string arch)
+        private static void Pmb(string arch)
         {
             if (!File.Exists(Path.Combine(arch,
-                "Pando Networks", "Media Booster", "uninst.exe")))
-            {
-                process = null;
-                return true;
-            }
-
+                "Pando Networks", "Media Booster", "uninst.exe"))) return;
             var pmb = new ProcessStartInfo
             {
                 FileName = Path.Combine(arch,
                     "Pando Networks", "Media Booster", "uninst.exe"),
                 Arguments = "/silent"
             };
-            process = new Process { StartInfo = pmb };
-            return false;
+            var process = new Process { StartInfo = pmb };
+            process.Start();
+            process.WaitForExit();
         }
 
 

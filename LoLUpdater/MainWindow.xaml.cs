@@ -83,7 +83,8 @@ namespace LoLUpdater
         private static void Reboot(string message)
         {
             if (
-                MessageBox.Show(String.Format("It is recommended you do a restart after {0} the patch", message), "LoLUpdater",
+                MessageBox.Show(String.Format("It is recommended you do a restart after {0} the patch", message),
+                    "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
@@ -299,35 +300,24 @@ namespace LoLUpdater
         private static void HandlePandoUninstall()
         {
             Process process;
-            if (Environment.Is64BitProcess)
-            {
-                if (Pmb(out process, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86))) return;
-            }
-            else
-            {
-                if (Pmb(out process, Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles))) return;
-            }
-            process.Start();
-            process.WaitForExit();
+            Pmb(Environment.Is64BitProcess
+                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
         }
 
-        private static bool Pmb(out Process process, string arch)
+        private static void Pmb(string arch)
         {
             if (!File.Exists(Path.Combine(arch,
-                "Pando Networks", "Media Booster", "uninst.exe")))
-            {
-                process = null;
-                return true;
-            }
-
+                "Pando Networks", "Media Booster", "uninst.exe"))) return;
             var pmb = new ProcessStartInfo
             {
                 FileName = Path.Combine(arch,
                     "Pando Networks", "Media Booster", "uninst.exe"),
                 Arguments = "/silent"
             };
-            process = new Process {StartInfo = pmb};
-            return false;
+            var process = new Process { StartInfo = pmb };
+            process.Start();
+            process.WaitForExit();
         }
 
 
@@ -389,8 +379,6 @@ namespace LoLUpdater
         }
 
 
-
-
         private static void CgFix(string arch)
         {
             if (File.Exists(Path.Combine(arch,
@@ -406,8 +394,8 @@ namespace LoLUpdater
                 return;
             }
 
-            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-            var cg = new Process { StartInfo = startInfo };
+            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+            var cg = new Process {StartInfo = startInfo};
             cg.Start();
             cg.WaitForExit();
         }
@@ -440,14 +428,12 @@ namespace LoLUpdater
 
             if (Environment.Is64BitProcess)
             {
-                mousehz =
-                    Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT",
+                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows NT",
                         "CurrentVersion", "AppCompatFlags", "Layers"));
             }
             else
             {
-                mousehz =
-                    Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft",
+                mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", "WoW64Node", "Microsoft",
                         "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
             }
             if (mousehz != null)
