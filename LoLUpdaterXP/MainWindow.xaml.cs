@@ -54,7 +54,8 @@ namespace LoLUpdaterXP
         private void HandlePatch()
         {
             HandleCfg("DefaultParticleMultithreading=1");
-            Pmb();
+            HandlePmbUninstall();
+            HandleCgInstall();
             HandleAdobeAndTbb();
             RunCleanManager();
             if (Inking.IsChecked == true)
@@ -91,42 +92,42 @@ namespace LoLUpdaterXP
             {
                 if (File.Exists(Path.Combine("Config", "game.cfg")))
                 {
-                    GameCopy("game.cfg", "Config", "Backup");
+                    Copy("game.cfg", "Config", "Backup");
                 }
-                RadsBackup("solutions", "lol_game_client_sln", "Cg.dll", string.Empty);
-                RadsBackup("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty);
-                RadsBackup("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty);
-                RadsBackup("solutions", "lol_game_client_sln", "tbb.dll", string.Empty);
-                RadsBackup("projects", "lol_air_client", "Adobe AIR.dll", Path.Combine("Adobe Air", "Versions", "1.0"));
-                RadsBackup("projects", "lol_air_client", "NPSWF32.dll",
+                Backup("solutions", "lol_game_client_sln", "Cg.dll", string.Empty);
+                Backup("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty);
+                Backup("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty);
+                Backup("solutions", "lol_game_client_sln", "tbb.dll", string.Empty);
+                Backup("projects", "lol_air_client", "Adobe AIR.dll", Path.Combine("Adobe Air", "Versions", "1.0"));
+                Backup("projects", "lol_air_client", "NPSWF32.dll",
                     Path.Combine("Adobe Air", "Versions", "1.0", "Resources"));
             }
             else if (Directory.Exists("Game"))
             {
                 if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
                 {
-                    GameCopy("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
-                    GameCopy("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
+                    Copy("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
+                    Copy("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
                     if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
                     {
-                        GameCopy("GamePermanent_zh_MY.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
-                        GameCopy("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
+                        Copy("GamePermanent_zh_MY.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
+                        Copy("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
                     }
                     if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
                     {
-                        GameCopy("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
+                        Copy("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
                     }
                 }
-                GameCopy("Cg.dll", "Game", "Backup");
-                GameCopy("CgGL.dll", "Game", "Backup");
-                GameCopy("CgD3D9.dll", "Game", "Backup");
-                GameCopy("tbb.dll", "Game", "Backup");
-                GameCopy("Adobe AIR.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"), "Backup");
-                GameCopy("NPSWF32.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"), "Backup");
+                Copy("Cg.dll", "Game", "Backup");
+                Copy("CgGL.dll", "Game", "Backup");
+                Copy("CgD3D9.dll", "Game", "Backup");
+                Copy("tbb.dll", "Game", "Backup");
+                Copy("Adobe AIR.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"), "Backup");
+                Copy("NPSWF32.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"), "Backup");
             }
         }
 
-        private static void RadsBackup(string folder, string folder1, string file, string extension)
+        private static void Backup(string folder, string folder1, string file, string extension)
         {
             File.Copy(Path.Combine(Path.Combine("RADS", folder, folder1, "releases") + @"\" +
                                    new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
@@ -136,7 +137,7 @@ namespace LoLUpdaterXP
         }
 
 
-        private static void GameCopy(string file, string from, string to)
+        private static void Copy(string file, string from, string to)
         {
             File.Copy(Path.Combine(from, file),
                 Path.Combine(to, file), true);
@@ -172,20 +173,20 @@ namespace LoLUpdaterXP
             if (!Directory.Exists("Game")) return;
             if (Tbb.IsChecked == true)
             {
-                GameCopy("tbb.dll",
+                Copy("tbb.dll",
                     string.Empty,
                     Path.Combine("Game", "tbb.dll"));
             }
             if (AdobeAir.IsChecked == true)
             {
-                GameCopy(
+                Copy(
                     "Adobe AIR.dll",
                     airPath,
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0"));
             }
             if (Flash.IsChecked == true)
             {
-                GameCopy(
+                Copy(
                     "NPSWF32.dll",
                     airPath,
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources"));
@@ -205,8 +206,9 @@ namespace LoLUpdaterXP
         }
 
 
-        private void HandleCgInstall(string cgBinPath)
+        private void HandleCgInstall()
         {
+            var cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
@@ -252,21 +254,21 @@ namespace LoLUpdaterXP
             {
                 if (Cg.IsChecked == true)
                 {
-                    GameCopy("Cg.dll",
+                    Copy("Cg.dll",
                         cgBinPath,
                         "Game");
                 }
 
                 if (CgGl.IsChecked == true)
                 {
-                    GameCopy("CgGL.dll",
+                    Copy("CgGL.dll",
                         cgBinPath,
                         "Game");
                 }
 
                 if (CgD3D9.IsChecked == true)
                 {
-                    GameCopy("CgD3D9.dll",
+                    Copy("CgD3D9.dll",
                         cgBinPath,
                         "Game");
                 }
@@ -274,7 +276,7 @@ namespace LoLUpdaterXP
         }
 
 
-        private static void Pmb()
+        private static void HandlePmbUninstall()
         {
             var pmbUninstall = Path.Combine(arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
@@ -284,7 +286,7 @@ namespace LoLUpdaterXP
                 FileName = pmbUninstall,
                 Arguments = "/silent"
             };
-            var process = new Process {StartInfo = pmb};
+            var process = new Process { StartInfo = pmb };
             process.Start();
             process.WaitForExit();
         }
@@ -298,47 +300,47 @@ namespace LoLUpdaterXP
                 {
                     File.Copy(Path.Combine("Backup", "game.cfg"), Path.Combine("Config", "game.cfg"), true);
                 }
-                UninstallRads("Cg.dll", "deploy", "solutions", "lol_game_client_sln");
-                UninstallRads("CgGL.dll", "deploy", "solutions", "lol_game_client_sln");
-                UninstallRads("CgD3D9.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("Cg.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("CgGL.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("CgD3D9.dll", "deploy", "solutions", "lol_game_client_sln");
 
-                UninstallRads("Cg.dll", "deploy", "projects", "lol_launcher");
-                UninstallRads("CgGL.dll", "deploy", "projects", "lol_launcher");
-                UninstallRads("CgD3D9.dll", "deploy", "projects", "lol_launcher");
+                Uninstall("Cg.dll", "deploy", "projects", "lol_launcher");
+                Uninstall("CgGL.dll", "deploy", "projects", "lol_launcher");
+                Uninstall("CgD3D9.dll", "deploy", "projects", "lol_launcher");
 
-                UninstallRads("tbb.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("tbb.dll", "deploy", "solutions", "lol_game_client_sln");
 
-                UninstallRads("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"),
+                Uninstall("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"),
                     "projects", "lol_air_client");
-                UninstallRads("NPSWF32.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
+                Uninstall("NPSWF32.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
                     "projects", "lol_air_client");
             }
             else if (Directory.Exists("Game"))
             {
-                GameCopy("game.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
-                GameCopy("GamePermanent.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
+                Copy("game.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
+                Copy("GamePermanent.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
 
                 if (File.Exists(Path.Combine("Backup", "GamePermanent_zh_MY.cfg")))
                 {
-                    GameCopy("GamePermanent_zh_MY.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
+                    Copy("GamePermanent_zh_MY.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
                 }
                 if (File.Exists(Path.Combine("Backup", "GamePermanent_en_SG.cfg")))
                 {
-                    GameCopy("GamePermanent_en_SG.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
+                    Copy("GamePermanent_en_SG.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
                 }
-                GameCopy("Cg.dll", "Backup", "Game");
-                GameCopy("CgGL.dll", "Backup", "Game");
-                GameCopy("CgD3D9.dll", "Backup", "Game");
-                GameCopy("tbb.dll", "Backup", "Game");
-                GameCopy("Adobe AIR.dll", "Backup", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"));
-                GameCopy("NPSWF32.dll", "Backup", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"));
+                Copy("Cg.dll", "Backup", "Game");
+                Copy("CgGL.dll", "Backup", "Game");
+                Copy("CgD3D9.dll", "Backup", "Game");
+                Copy("tbb.dll", "Backup", "Game");
+                Copy("Adobe AIR.dll", "Backup", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"));
+                Copy("NPSWF32.dll", "Backup", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"));
             }
             Directory.Delete("Backup", true);
             Reboot("Removing");
         }
 
 
-        private static void UninstallRads(string file, string extension, string folder, string folder1)
+        private static void Uninstall(string file, string extension, string folder, string folder1)
         {
             File.Copy(Path.Combine("Backup", file),
                 Path.Combine("RADS", folder, folder1, "releases") + @"\" +
@@ -360,12 +362,11 @@ namespace LoLUpdaterXP
             if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
             {
-                sender.isChecked = false;
                 return;
             }
 
-            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
-            var cg = new Process {StartInfo = startInfo};
+            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+            var cg = new Process { StartInfo = startInfo };
             cg.Start();
             cg.WaitForExit();
         }
@@ -383,8 +384,8 @@ namespace LoLUpdaterXP
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
-            var process = new Process {StartInfo = cm};
+            var cm = new ProcessStartInfo { FileName = "cleanmgr.exe", Arguments = "sagerun:1" };
+            var process = new Process { StartInfo = cm };
             process.Start();
             process.WaitForExit();
         }
@@ -418,7 +419,7 @@ namespace LoLUpdaterXP
 
         private static void Cfg(string setting, string file)
         {
-            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file))) ;
+            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file)));
             {
                 var fi = new FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", file));
                 if (FileAttributes.ReadOnly == fi.Attributes)
@@ -438,7 +439,6 @@ namespace LoLUpdaterXP
                 }
             }
         }
-
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {

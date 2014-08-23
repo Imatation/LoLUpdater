@@ -44,7 +44,7 @@
   <ItemGroup>
     <Reference Include="MahApps.Metro, Version=0.15.0.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MahApps.Metro.0.15.0-ALPHA2\lib\net45\MahApps.Metro.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Riot Games\League of Legends\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework.AeroLite" />
