@@ -381,7 +381,7 @@ namespace LoLUpdater
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
+            var cm = new ProcessStartInfo {Arguments = "sagerun:1", FileName = "cleanmgr.exe"};
             var process = new Process {StartInfo = cm};
             process.Start();
             process.WaitForExit();
@@ -439,7 +439,7 @@ namespace LoLUpdater
 
         private static void Cfg(string setting, string file)
         {
-            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file)));
+            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file))) ;
             {
                 var fi = new FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", file));
                 if (FileAttributes.ReadOnly == fi.Attributes)
@@ -494,8 +494,8 @@ namespace LoLUpdater
                 return;
             }
 
-            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-            var cg = new Process { StartInfo = startInfo };
+            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+            var cg = new Process {StartInfo = startInfo};
             cg.Start();
             cg.WaitForExit();
         }

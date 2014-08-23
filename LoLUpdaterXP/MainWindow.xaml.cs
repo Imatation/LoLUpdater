@@ -367,7 +367,7 @@ namespace LoLUpdaterXP
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
+            var cm = new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" };
             var process = new Process {StartInfo = cm};
             process.Start();
             process.WaitForExit();
@@ -440,8 +440,8 @@ namespace LoLUpdaterXP
                 return;
             }
 
-            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-            var cg = new Process { StartInfo = startInfo };
+            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+            var cg = new Process {StartInfo = startInfo};
             cg.Start();
             cg.WaitForExit();
         }
