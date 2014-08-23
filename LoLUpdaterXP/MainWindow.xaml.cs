@@ -297,7 +297,7 @@ namespace LoLUpdaterXP
                     "Pando Networks", "Media Booster", "uninst.exe"),
                 Arguments = "/silent"
             };
-            var process = new Process {StartInfo = pmb};
+            var process = new Process { StartInfo = pmb };
             process.Start();
             process.WaitForExit();
         }
@@ -311,19 +311,19 @@ namespace LoLUpdaterXP
                 {
                     File.Copy(Path.Combine("Backup", "game.cfg"), Path.Combine("Config", "game.cfg"), true);
                 }
-                UninstallRads("Cg.dll", "deploy", "solutions", "lol_game_client_sln");
-                UninstallRads("CgGL.dll", "deploy", "solutions", "lol_game_client_sln");
-                UninstallRads("CgD3D9.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("Cg.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("CgGL.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("CgD3D9.dll", "deploy", "solutions", "lol_game_client_sln");
 
-                UninstallRads("Cg.dll", "deploy", "projects", "lol_launcher");
-                UninstallRads("CgGL.dll", "deploy", "projects", "lol_launcher");
-                UninstallRads("CgD3D9.dll", "deploy", "projects", "lol_launcher");
+                Uninstall("Cg.dll", "deploy", "projects", "lol_launcher");
+                Uninstall("CgGL.dll", "deploy", "projects", "lol_launcher");
+                Uninstall("CgD3D9.dll", "deploy", "projects", "lol_launcher");
 
-                UninstallRads("tbb.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("tbb.dll", "deploy", "solutions", "lol_game_client_sln");
 
-                UninstallRads("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"),
+                Uninstall("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"),
                     "projects", "lol_air_client");
-                UninstallRads("NPSWF32.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
+                Uninstall("NPSWF32.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
                     "projects", "lol_air_client");
             }
             else if (Directory.Exists("Game"))
@@ -351,7 +351,7 @@ namespace LoLUpdaterXP
         }
 
 
-        private static void UninstallRads(string file, string extension, string folder, string folder1)
+        private static void Uninstall(string file, string extension, string folder, string folder1)
         {
             File.Copy(Path.Combine("Backup", file),
                 Path.Combine("RADS", folder, folder1, "releases") + @"\" +
@@ -376,8 +376,8 @@ namespace LoLUpdaterXP
                 return;
             }
 
-            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
-            var cg = new Process {StartInfo = startInfo};
+            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+            var cg = new Process { StartInfo = startInfo };
             cg.Start();
             cg.WaitForExit();
         }
@@ -395,8 +395,8 @@ namespace LoLUpdaterXP
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
-            var process = new Process {StartInfo = cm};
+            var cm = new ProcessStartInfo { FileName = "cleanmgr.exe", Arguments = "sagerun:1" };
+            var process = new Process { StartInfo = cm };
             process.Start();
             process.WaitForExit();
         }
@@ -450,7 +450,6 @@ namespace LoLUpdaterXP
                 }
             }
         }
-
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {

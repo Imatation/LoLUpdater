@@ -324,19 +324,19 @@ namespace LoLUpdater
                 {
                     File.Copy(Path.Combine("Backup", "game.cfg"), Path.Combine("Config", "game.cfg"), true);
                 }
-                UninstallRads("Cg.dll", "deploy", "solutions", "lol_game_client_sln");
-                UninstallRads("CgGL.dll", "deploy", "solutions", "lol_game_client_sln");
-                UninstallRads("CgD3D9.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("Cg.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("CgGL.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("CgD3D9.dll", "deploy", "solutions", "lol_game_client_sln");
 
-                UninstallRads("Cg.dll", "deploy", "projects", "lol_launcher");
-                UninstallRads("CgGL.dll", "deploy", "projects", "lol_launcher");
-                UninstallRads("CgD3D9.dll", "deploy", "projects", "lol_launcher");
+                Uninstall("Cg.dll", "deploy", "projects", "lol_launcher");
+                Uninstall("CgGL.dll", "deploy", "projects", "lol_launcher");
+                Uninstall("CgD3D9.dll", "deploy", "projects", "lol_launcher");
 
-                UninstallRads("tbb.dll", "deploy", "solutions", "lol_game_client_sln");
+                Uninstall("tbb.dll", "deploy", "solutions", "lol_game_client_sln");
 
-                UninstallRads("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"),
+                Uninstall("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"),
                     "projects", "lol_air_client");
-                UninstallRads("NPSWF32.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
+                Uninstall("NPSWF32.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
                     "projects", "lol_air_client");
             }
             else if (Directory.Exists("Game"))
@@ -364,7 +364,7 @@ namespace LoLUpdater
         }
 
 
-        private static void UninstallRads(string file, string extension, string folder, string folder1)
+        private static void Uninstall(string file, string extension, string folder, string folder1)
         {
             File.Copy(Path.Combine("Backup", file),
                 Path.Combine("RADS", folder, folder1, "releases") + @"\" +
