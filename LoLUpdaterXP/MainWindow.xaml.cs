@@ -358,7 +358,7 @@ namespace LoLUpdaterXP
         {
             File.Copy(Path.Combine("Backup", file),
                 Path.Combine("RADS", folder, folder1, "releases") + @"\" +
-                new DirectoryInfo(Path.Combine("RADS", "solutions", "lol_game_client_sln", "releases"))
+                new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
                     .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
                 Path.Combine(extension, file), true);
         }
