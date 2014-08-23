@@ -438,10 +438,9 @@ namespace LoLUpdaterXP
                 var fi = new FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", file));
                 if (FileAttributes.ReadOnly == fi.Attributes)
                 {
-                    MessageBox.Show(
-                        "Your " + file +
-                        @" Located in Game\DATA\CFG\defaults is read only, please remove this and try again",
-                        "LoLUpdater");
+                    MessageBox.Show(String.Format(
+                        @"Your {0} Located in Game\DATA\CFG\defaults is read only, please remove this and try again",
+                        "LoLUpdater"), file);
                     return;
                 }
                 if (
