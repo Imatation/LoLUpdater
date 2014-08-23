@@ -58,7 +58,6 @@ namespace LoLUpdaterXP
             HandleAdobeAndTbb();
             RunCleanManager();
             HandlePmbUninstall();
-
             if (Inking.IsChecked == true)
             {
                 HandleCfg("Inking=0");
@@ -147,6 +146,7 @@ namespace LoLUpdaterXP
         private void HandleAdobeAndTbb()
         {
             var airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
+            var flashPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources");
 
             if (Directory.Exists("RADS"))
             {
@@ -168,7 +168,7 @@ namespace LoLUpdaterXP
                 {
                     AdvancedCopy(
                         "NPSWF32.dll",
-                        airPath,
+                        flashPath,
                         "projects",
                         "lol_air_client",
                         Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
@@ -192,7 +192,7 @@ namespace LoLUpdaterXP
             {
                 Copy(
                     "NPSWF32.dll",
-                    airPath,
+                    flashPath,
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources"));
             }
         }

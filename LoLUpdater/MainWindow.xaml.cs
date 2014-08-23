@@ -159,6 +159,7 @@ namespace LoLUpdater
         private void HandleAdobeAndTbb()
         {
             var airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
+            var flashPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources");
 
             if (Directory.Exists("RADS"))
             {
@@ -180,7 +181,7 @@ namespace LoLUpdater
                 {
                     AdvancedCopy(
                         "NPSWF32.dll",
-                        airPath,
+                        flashPath,
                         "projects",
                         "lol_air_client",
                         Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
@@ -204,7 +205,7 @@ namespace LoLUpdater
             {
                 Copy(
                     "NPSWF32.dll",
-                    airPath,
+                    flashPath,
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources"));
             }
         }
