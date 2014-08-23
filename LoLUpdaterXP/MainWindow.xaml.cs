@@ -74,7 +74,7 @@ namespace LoLUpdaterXP
         private static void Reboot(string message)
         {
             if (
-                MessageBox.Show("It is recommended you do a restart after " + message + " the patch", "LoLUpdater",
+                MessageBox.Show(String.Format("It is recommended you do a restart after {0} the patch", message), "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("shutdown.exe", "-r -t 0");
