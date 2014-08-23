@@ -12,6 +12,10 @@ namespace LoLUpdater
 {
     public partial class MainWindow
     {
+        private static readonly string Reg = Environment.Is64BitProcess
+            ? string.Empty
+            : "WoW64Node";
+
         private static readonly string Arch = Environment.Is64BitProcess
             ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
             : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
@@ -68,9 +72,7 @@ namespace LoLUpdater
             HandleAdobeAndTbb();
             RunCleanManager();
             HandlePmbUninstall();
-            HandleMouseHz(Environment.Is64BitProcess
-                ? string.Empty
-                : "WoW64Node");
+            HandleMouseHz();
             if (Inking.IsChecked == true)
             {
                 HandleCfg("Inking=0");
@@ -407,14 +409,14 @@ namespace LoLUpdater
             process.WaitForExit();
         }
 
-        private static void HandleMouseHz(string arch)
+        private static void HandleMouseHz()
         {
             var win8Version = new Version(6, 2, 9200, 0);
             if (Environment.OSVersion.Platform != PlatformID.Win32NT || Environment.OSVersion.Version < win8Version)
                 return;
 
 
-            var mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", arch, "Microsoft",
+            var mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", Reg, "Microsoft",
                 "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
             if (mousehz != null)
                 mousehz.SetValue("NoDTToDITMouseBatch",
