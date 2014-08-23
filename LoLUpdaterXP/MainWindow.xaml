@@ -35,7 +35,6 @@
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
             <Setter Property="Background" Value="#2D2D30" />
             <Setter Property="BorderBrush" Value="{StaticResource OptionMark.Static.Border}" />
-            <Setter Property="Foreground" Value="White" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -270,49 +269,49 @@
 
         <ListBox HorizontalAlignment="Left" Height="43" Margin="78,39,0,0" VerticalAlignment="Top" Width="99"
                  Background="#2D2D30">
-            <CheckBox x:Name="AdobeAir" Content="Adobe AIR" Checked="Flash_Checked"
+            <CheckBox Foreground="White" x:Name="AdobeAir" Content="Adobe AIR" Checked="Flash_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client." />
-            <CheckBox x:Name="Flash" Content="Adobe Flash" Checked="AdobeAIR_Checked"
+            <CheckBox Foreground="White" x:Name="Flash" Content="Adobe Flash" Checked="AdobeAIR_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client." />
         </ListBox>
 
         <ListBox HorizontalAlignment="Left" Height="82" Margin="178,39,0,0" VerticalAlignment="Top" Width="78"
                  Background="#2D2D30">
-            <CheckBox x:Name="Cg" Content="Cg" Checked="Cg_Checked"
+            <CheckBox Foreground="White" x:Name="Cg" Content="Cg" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
-            <CheckBox x:Name="CgD3D9" Content="CgD3D9" Checked="Cg_Checked"
+            <CheckBox Foreground="White" x:Name="CgD3D9" Content="CgD3D9" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
-            <CheckBox x:Name="CgGl" Content="CgGL" Checked="Cg_Checked"
+            <CheckBox Foreground="White" x:Name="CgGl" Content="CgGL" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
-            <CheckBox x:Name="Tbb" Content="TBB" Style="{DynamicResource CheckboxStyle}"
+            <CheckBox Foreground="White" x:Name="Tbb" Content="TBB" Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL." />
         </ListBox>
 
         <ListBox HorizontalAlignment="Left" Height="62" Margin="257,39,0,0" VerticalAlignment="Top" Width="81"
                  Background="#2D2D30">
-            <CheckBox x:Name="Cg1" Content="Cg" Checked="Cg_Checked"
+            <CheckBox Foreground="White" x:Name="Cg1" Content="Cg" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
-            <CheckBox x:Name="CgD3D1" Content="CgD3D9" Checked="Cg_Checked"
+            <CheckBox Foreground="White" x:Name="CgD3D1" Content="CgD3D9" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
-            <CheckBox x:Name="CgGl1" Content="CgGL" Checked="Cg_Checked"
+            <CheckBox Foreground="White" x:Name="CgGl1" Content="CgGL" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
         </ListBox>
 
         <ListBox HorizontalAlignment="Left" Height="62" VerticalAlignment="Top" Width="172" Margin="339,39,0,0"
                  Background="#2D2D30">
-            <CheckBox x:Name="Inking" Content="No Inking" Style="{DynamicResource CheckboxStyle}"
+            <CheckBox Foreground="White" x:Name="Inking" Content="No Inking" Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Turns off the new 'graphics'." />
-            <CheckBox x:Name="AdvancedReflection" Content="No Advanced Reflection"
+            <CheckBox Foreground="White" x:Name="AdvancedReflection" Content="No Advanced Reflection"
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the reflections." />
-            <CheckBox x:Name="PerPixelPointLighting" Content="No PerPixelPointLightning"
+            <CheckBox Foreground="White" x:Name="PerPixelPointLighting" Content="No PerPixelPointLightning"
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the particles." />
         </ListBox>
         <TextBlock HorizontalAlignment="Left" Margin="78,23,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
