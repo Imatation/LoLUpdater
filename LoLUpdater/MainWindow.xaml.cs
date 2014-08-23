@@ -12,7 +12,7 @@ namespace LoLUpdater
 {
     public partial class MainWindow
     {
-        private static string arch = Environment.Is64BitProcess
+        private static readonly string Arch = Environment.Is64BitProcess
             ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
             : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
@@ -67,6 +67,7 @@ namespace LoLUpdater
             HandleCgInstall();
             HandleAdobeAndTbb();
             RunCleanManager();
+            HandlePmbUninstall();
             HandleMouseHz(Environment.Is64BitProcess
                 ? string.Empty
                 : "WoW64Node");
@@ -157,7 +158,7 @@ namespace LoLUpdater
 
         private void HandleAdobeAndTbb()
         {
-            var airPath = Path.Combine(arch, "Common Files", "Adobe AIR", "Versions", "1.0");
+            var airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
 
             if (Directory.Exists("RADS"))
             {
@@ -293,7 +294,7 @@ namespace LoLUpdater
 
         private static void HandlePmbUninstall()
         {
-            var pmbUninstall = Path.Combine(arch,
+            var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
             var pmb = new ProcessStartInfo
@@ -365,9 +366,9 @@ namespace LoLUpdater
         }
 
 
-        private static void CgFix(object sender)
+        private static void CgFix()
         {
-            if (File.Exists(Path.Combine(arch,
+            if (File.Exists(Path.Combine(Arch,
                 "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
             {
                 return;
@@ -500,7 +501,7 @@ namespace LoLUpdater
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            CgFix(sender);
+            CgFix();
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)

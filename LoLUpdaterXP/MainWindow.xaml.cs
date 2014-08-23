@@ -10,7 +10,7 @@ namespace LoLUpdaterXP
 {
     public partial class MainWindow
     {
-        private static string arch = Environment.Is64BitProcess
+        private static readonly string Arch = Environment.Is64BitProcess
             ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
             : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
@@ -54,10 +54,11 @@ namespace LoLUpdaterXP
         private void HandlePatch()
         {
             HandleCfg("DefaultParticleMultithreading=1");
-            HandlePmbUninstall();
             HandleCgInstall();
             HandleAdobeAndTbb();
             RunCleanManager();
+            HandlePmbUninstall();
+
             if (Inking.IsChecked == true)
             {
                 HandleCfg("Inking=0");
@@ -145,7 +146,7 @@ namespace LoLUpdaterXP
 
         private void HandleAdobeAndTbb()
         {
-            var airPath = Path.Combine(arch, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources");
+            var airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
 
             if (Directory.Exists("RADS"))
             {
@@ -153,13 +154,15 @@ namespace LoLUpdaterXP
                 {
                     AdvancedCopy("tbb.dll", string.Empty, "solutions", "lol_game_client_sln", "deploy");
                 }
+
                 if (AdobeAir.IsChecked == true)
                 {
                     AdvancedCopy(
                         "Adobe AIR.dll",
                         airPath,
                         "projects",
-                        "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
+                        "lol_air_client",
+                        Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
                 }
                 if (Flash.IsChecked == true)
                 {
@@ -167,7 +170,8 @@ namespace LoLUpdaterXP
                         "NPSWF32.dll",
                         airPath,
                         "projects",
-                        "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
+                        "lol_air_client",
+                        Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
                 }
             }
             if (!Directory.Exists("Game")) return;
@@ -278,7 +282,7 @@ namespace LoLUpdaterXP
 
         private static void HandlePmbUninstall()
         {
-            var pmbUninstall = Path.Combine(arch,
+            var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
             var pmb = new ProcessStartInfo
@@ -286,7 +290,7 @@ namespace LoLUpdaterXP
                 FileName = pmbUninstall,
                 Arguments = "/silent"
             };
-            var process = new Process { StartInfo = pmb };
+            var process = new Process {StartInfo = pmb};
             process.Start();
             process.WaitForExit();
         }
@@ -350,9 +354,9 @@ namespace LoLUpdaterXP
         }
 
 
-        private static void CgFix(object sender)
+        private static void CgFix()
         {
-            if (File.Exists(Path.Combine(arch,
+            if (File.Exists(Path.Combine(Arch,
                 "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
             {
                 return;
@@ -365,8 +369,8 @@ namespace LoLUpdaterXP
                 return;
             }
 
-            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-            var cg = new Process { StartInfo = startInfo };
+            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+            var cg = new Process {StartInfo = startInfo};
             cg.Start();
             cg.WaitForExit();
         }
@@ -386,11 +390,12 @@ namespace LoLUpdaterXP
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo { FileName = "cleanmgr.exe", Arguments = "sagerun:1" };
-            var process = new Process { StartInfo = cm };
+            var cm = new ProcessStartInfo {FileName = "cleanmgr.exe", Arguments = "sagerun:1"};
+            var process = new Process {StartInfo = cm};
             process.Start();
             process.WaitForExit();
         }
+
 
         private static void HandleCfg(string setting)
         {
@@ -421,7 +426,7 @@ namespace LoLUpdaterXP
 
         private static void Cfg(string setting, string file)
         {
-            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file)));
+            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file))) ;
             {
                 var fi = new FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", file));
                 if (FileAttributes.ReadOnly == fi.Attributes)
@@ -442,9 +447,10 @@ namespace LoLUpdaterXP
             }
         }
 
+
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            CgFix(sender);
+            CgFix();
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
