@@ -389,12 +389,9 @@ namespace LoLUpdater
         }
 
 
-<<<<<<< HEAD
-        private static bool CgFix(out Process cg, string arch)
-=======
+
 
         private static void CgFix(string arch)
->>>>>>> origin/master
         {
             if (File.Exists(Path.Combine(arch,
                 "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
@@ -409,13 +406,8 @@ namespace LoLUpdater
                 return;
             }
 
-<<<<<<< HEAD
-            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
-            cg = new Process {StartInfo = startInfo};
-=======
             var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
             var cg = new Process { StartInfo = startInfo };
->>>>>>> origin/master
             cg.Start();
             cg.WaitForExit();
         }
@@ -543,14 +535,9 @@ namespace LoLUpdater
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            if (Environment.Is64BitProcess)
-            {
-                CgFix(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86));
-            }
-            else
-            {
-                CgFix(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
-            }
+            CgFix(Environment.Is64BitProcess
+                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)

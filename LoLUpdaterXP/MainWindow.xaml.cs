@@ -25,6 +25,7 @@ namespace LoLUpdaterXP
             Kill("LoLClient");
             Kill("LoLLauncher");
             Kill("League of Legends");
+            
             if (!Directory.Exists("Backup"))
             {
                 HandleBackup();
@@ -378,6 +379,8 @@ namespace LoLUpdaterXP
         }
 
 
+
+
         private static void CgFix(string arch)
         {
             if (File.Exists(Path.Combine(arch,
@@ -394,11 +397,7 @@ namespace LoLUpdaterXP
             }
 
             var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-<<<<<<< HEAD
-            cg = new Process { StartInfo = startInfo };
-=======
             var cg = new Process { StartInfo = startInfo };
->>>>>>> origin/master
             cg.Start();
             cg.WaitForExit();
         }
@@ -421,6 +420,8 @@ namespace LoLUpdaterXP
             process.Start();
             process.WaitForExit();
         }
+
+      
 
         private static void HandleCfg(string setting)
         {
@@ -473,19 +474,13 @@ namespace LoLUpdaterXP
         }
 
 
-
+     
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            Process cg;
-            if (Environment.Is64BitProcess)
-            {
-                CgFix(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86));
-            }
-            else
-            {
-                CgFix(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
-            }
+            CgFix(Environment.Is64BitProcess
+                ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
