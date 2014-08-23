@@ -65,8 +65,8 @@ namespace LoLUpdater
             HandleAdobeAndTbb();
             RunCleanManager();
             HandleMouseHz(Environment.Is64BitProcess
-       ? string.Empty
-       : "WoW64Node");
+                ? string.Empty
+                : "WoW64Node");
             if (Inking.IsChecked == true)
             {
                 HandleCfg("Inking=0");
@@ -251,7 +251,7 @@ namespace LoLUpdater
                 {
                     AdvancedCopy(
                         "Cg.dll", cgBinPath,
-                        "projects", "lol_launcher", "deploy");
+                        "projects", "lol_game_client_sln", "deploy");
                 }
                 if (CgGl1.IsChecked == true)
                 {
@@ -317,7 +317,7 @@ namespace LoLUpdater
                     "Pando Networks", "Media Booster", "uninst.exe"),
                 Arguments = "/silent"
             };
-            var process = new Process { StartInfo = pmb };
+            var process = new Process {StartInfo = pmb};
             process.Start();
             process.WaitForExit();
         }

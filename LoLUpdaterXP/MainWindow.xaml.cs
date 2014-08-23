@@ -238,7 +238,7 @@ namespace LoLUpdaterXP
                 {
                     AdvancedCopy(
                         "Cg.dll", cgBinPath,
-                        "projects", "lol_launcher", "deploy");
+                        "projects", "lol_game_client_sln", "deploy");
                 }
                 if (CgGl1.IsChecked == true)
                 {
