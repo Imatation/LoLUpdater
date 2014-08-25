@@ -356,12 +356,35 @@ namespace LoLUpdaterXP
 
         private static void AdobeAlert()
         {
+            string airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
+
             if (
+                !File.Exists(Path.Combine(airPath, "Adobe Air.dll")) &&
                 MessageBox.Show(
                     "We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.",
                     "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
+            }
+            else
+            {
+                var fileVersion = FileVersionInfo.GetVersionInfo(Path.Combine(airPath, "Adobe Air.dll")).FileVersion.Split(".".ToCharArray());
+                float versionNumber = float.Parse(String.Format("{0}.{1}", fileVersion[0], fileVersion[1]), System.Globalization.CultureInfo.InvariantCulture);
+                if (
+                    versionNumber < 14.0 &&
+                    MessageBox.Show(
+                        "The Adobe Air version which is installed on your computer is outdated. Do you want to update it to ensure greater performance gains in the LoL client?",
+                        "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    // Don't know how to do this silently, doesn't work if air hasn't checked for updates (though it prompts after a short time)
+                    var airUpdate = new ProcessStartInfo
+                    {
+                        FileName = Path.Combine(airPath, "Resources", "Adobe AIR Updater.exe"),
+                    };
+                    var process = new Process { StartInfo = airUpdate };
+                    process.Start();
+                    process.WaitForExit();
+                }
             }
         }
 
