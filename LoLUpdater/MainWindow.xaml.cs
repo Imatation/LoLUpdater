@@ -505,14 +505,16 @@ namespace LoLUpdater
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
             var cgPath = Path.Combine(Arch, "NVIDIA Corporation", "Cg", "Bin", "cg.dll");
-            var fileRecent = FileVersionInfo.GetVersionInfo(cgPath).FileVersion == "3.1.0013";
-            if (File.Exists(cgPath) &&
-                fileRecent ||
-                !fileRecent &&
-                MessageBox.Show("You already have Nvdia CG installed. Do you want to update it?", "LoLUpdater",
-                MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            if (File.Exists(cgPath))
             {
-                return;
+                var fileRecent = FileVersionInfo.GetVersionInfo(cgPath).FileVersion == "3.1.0013";
+                if (fileRecent ||
+                    !fileRecent &&
+                    MessageBox.Show("You already have Nvdia CG installed. Do you want to update it?", "LoLUpdater",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                {
+                    return;
+                }
             }
 
             Process.Start("NvidiaCGLicence.txt");
