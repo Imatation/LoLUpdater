@@ -368,8 +368,8 @@ namespace LoLUpdaterXP
             }
             else
             {
-                var fileVersion = FileVersionInfo.GetVersionInfo(Path.Combine(airPath, "Adobe Air.dll")).FileVersion.Split(".".ToCharArray());
-                float versionNumber = float.Parse(String.Format("{0}.{1}", fileVersion[0], fileVersion[1]), System.Globalization.CultureInfo.InvariantCulture);
+                var productVersion = FileVersionInfo.GetVersionInfo(Path.Combine(airPath, "Adobe Air.dll")).ProductVersion;
+                float versionNumber = float.Parse(productVersion, System.Globalization.CultureInfo.InvariantCulture);
                 if (
                     versionNumber < 14.0 &&
                     MessageBox.Show(
