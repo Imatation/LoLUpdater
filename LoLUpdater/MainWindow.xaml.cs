@@ -12,6 +12,7 @@ namespace LoLUpdater
 {
     public partial class MainWindow
     {
+        private static readonly string CgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
         private static readonly string Reg = Environment.Is64BitProcess
             ? string.Empty
             : "WoW64Node";
@@ -19,7 +20,7 @@ namespace LoLUpdater
         private static readonly string Arch = Environment.Is64BitProcess
             ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
             : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-
+        private static readonly string AirPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             AdobeAlert();
@@ -160,7 +161,6 @@ namespace LoLUpdater
 
         private void HandleAdobeAndTbb()
         {
-            var airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
             var flashPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources");
 
             if (Directory.Exists("RADS"))
@@ -174,7 +174,7 @@ namespace LoLUpdater
                 {
                     AdvancedCopy(
                         "Adobe AIR.dll",
-                        airPath,
+                        AirPath,
                         "projects",
                         "lol_air_client",
                         Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
@@ -200,7 +200,7 @@ namespace LoLUpdater
             {
                 Copy(
                     "Adobe AIR.dll",
-                    airPath,
+                    AirPath,
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0"));
             }
             if (Flash.IsChecked == true)
@@ -227,45 +227,45 @@ namespace LoLUpdater
 
         private void HandleCgInstall()
         {
-            var cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "Cg.dll", cgBinPath,
+                        "Cg.dll", CgBinPath,
                         "solutions", "lol_game_client_sln", "deploy");
                 }
                 if (Cg1.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "Cg.dll", cgBinPath,
+                        "Cg.dll", CgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
 
                 if (CgGl.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "Cg.dll", cgBinPath,
+                        "Cg.dll", CgBinPath,
                         "solutions", "lol_game_client_sln", "deploy");
                 }
                 if (CgGl1.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "CgGL.dll", cgBinPath,
+                        "CgGL.dll", CgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
 
                 if (CgD3D9.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "CgD3D9.dll", cgBinPath,
+                        "CgD3D9.dll", CgBinPath,
                         "solutions", "lol_game_client_sln", "deploy");
                 }
                 if (CgD3D1.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "CgD3D9.dll", cgBinPath,
+                        "CgD3D9.dll", CgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
             }
@@ -274,21 +274,21 @@ namespace LoLUpdater
                 if (Cg.IsChecked == true)
                 {
                     Copy("Cg.dll",
-                        cgBinPath,
+                        CgBinPath,
                         "Game");
                 }
 
                 if (CgGl.IsChecked == true)
                 {
                     Copy("CgGL.dll",
-                        cgBinPath,
+                        CgBinPath,
                         "Game");
                 }
 
                 if (CgD3D9.IsChecked == true)
                 {
                     Copy("CgD3D9.dll",
-                        cgBinPath,
+                        CgBinPath,
                         "Game");
                 }
             }
@@ -305,7 +305,7 @@ namespace LoLUpdater
                 FileName = pmbUninstall,
                 Arguments = "/silent"
             };
-            var process = new Process {StartInfo = pmb};
+            var process = new Process { StartInfo = pmb };
             process.Start();
             process.WaitForExit();
         }
@@ -370,19 +370,48 @@ namespace LoLUpdater
 
         private static void AdobeAlert()
         {
-            if (
-                MessageBox.Show(
+
+            var myFileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" +
+                                                   new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client",
+                                                       "releases"))
+                                                       .GetDirectories()
+                                                       .OrderByDescending(d => d.CreationTime)
+                                                       .FirstOrDefault() + @"\" +
+                                                   Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll")).FileVersion;
+
+            var current = myFileVersionInfo;
+            var version0 = new Version(current);
+            var version = new Version(14, 0, 0, 178);
+            if (current == null)
+            {
+                if (
+                    MessageBox.Show(
                     "We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.",
                     "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
+                }
+                return;
+            }
+            var result = version0.CompareTo(version);
+            if (result > 0)
+            { return; }
+            if (result < 0)
             {
-                Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
+                if (
+                    MessageBox.Show(
+                        "We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.",
+                        "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
+                }
             }
         }
 
         private static void RunCleanManager()
         {
-            var cm = new ProcessStartInfo {Arguments = "sagerun:1", FileName = "cleanmgr.exe"};
-            var process = new Process {StartInfo = cm};
+            var cm = new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" };
+            var process = new Process { StartInfo = cm };
             process.Start();
             process.WaitForExit();
         }
@@ -406,7 +435,7 @@ namespace LoLUpdater
                 Verb = "runas",
                 Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache"
             };
-            var process = new Process {StartInfo = cmd};
+            var process = new Process { StartInfo = cmd };
             process.Start();
         }
 
@@ -481,12 +510,24 @@ namespace LoLUpdater
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            if (File.Exists(Path.Combine(Arch,
-                "NVIDIA Corporation", "Cg", "Bin", "cg.dll")))
+            ProcessStartInfo startInfo;
+            Process cg;
+            if (FileVersionInfo.GetVersionInfo(Path.Combine(CgBinPath, "cg.dll")).ProductVersion == null)
             {
+                startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+                cg = new Process { StartInfo = startInfo };
+                cg.Start();
+                cg.WaitForExit();
                 return;
-            }
 
+            }
+            var versionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(CgBinPath, "cg.dll")).ProductVersion;
+
+            var test1 = new Version(versionInfo);
+            var test2 = new Version(3, 1, 0013);
+            var result = test1.CompareTo(test2);
+
+            if (result >= 0) return;
             Process.Start("NvidiaCGLicence.txt");
             if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
@@ -494,11 +535,12 @@ namespace LoLUpdater
                 return;
             }
 
-            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
-            var cg = new Process {StartInfo = startInfo};
+            startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+            cg = new Process { StartInfo = startInfo };
             cg.Start();
             cg.WaitForExit();
         }
+
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
         {
