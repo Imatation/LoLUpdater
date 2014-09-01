@@ -161,7 +161,12 @@ namespace LoLUpdater
 
         private void HandleAdobeAndTbb()
         {
+<<<<<<< HEAD
             var flashPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources");
+=======
+            var airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
+            var flashPath = Path.Combine(airPath, "Resources");
+>>>>>>> origin/master
 
             if (Directory.Exists("RADS"))
             {
@@ -370,6 +375,7 @@ namespace LoLUpdater
 
         private static void AdobeAlert()
         {
+<<<<<<< HEAD
 
             var myFileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" +
                                                    new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client",
@@ -386,6 +392,12 @@ namespace LoLUpdater
             {
                 if (
                     MessageBox.Show(
+=======
+            string airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
+            if (
+                !File.Exists(Path.Combine(airPath, "Adobe Air.dll")) &&
+                MessageBox.Show(
+>>>>>>> origin/master
                     "We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.",
                     "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
@@ -404,6 +416,26 @@ namespace LoLUpdater
                         "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
+                }
+            }
+            else
+            {
+                var productVersion = FileVersionInfo.GetVersionInfo(Path.Combine(airPath, "Adobe Air.dll")).ProductVersion;
+                float versionNumber = float.Parse(productVersion, System.Globalization.CultureInfo.InvariantCulture);
+                if (
+                    versionNumber < 14.0 &&
+                    MessageBox.Show(
+                        "The Adobe Air version which is installed on your computer is outdated. Do you want to update it to ensure greater performance gains in the LoL client?",
+                        "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    // Don't know how to do this silently, doesn't work if air hasn't checked for updates (though it prompts after a short time)
+                    var airUpdate = new ProcessStartInfo
+                    {
+                        FileName = Path.Combine(airPath, "Resources", "Adobe AIR Updater.exe"),
+                    };
+                    var process = new Process { StartInfo = airUpdate };
+                    process.Start();
+                    process.WaitForExit();
                 }
             }
         }
@@ -510,6 +542,7 @@ namespace LoLUpdater
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
+<<<<<<< HEAD
             ProcessStartInfo startInfo;
             Process cg;
             if (FileVersionInfo.GetVersionInfo(Path.Combine(CgBinPath, "cg.dll")).ProductVersion == null)
@@ -520,6 +553,19 @@ namespace LoLUpdater
                 cg.WaitForExit();
                 return;
 
+=======
+            var cgPath = Path.Combine(Arch, "NVIDIA Corporation", "Cg", "Bin", "cg.dll");
+            if (File.Exists(cgPath))
+            {
+                var fileRecent = FileVersionInfo.GetVersionInfo(cgPath).FileVersion == "3.1.0013";
+                if (fileRecent ||
+                    !fileRecent &&
+                    MessageBox.Show("You already have Nvdia CG installed. Do you want to update it?", "LoLUpdater",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                {
+                    return;
+                }
+>>>>>>> origin/master
             }
             var versionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(CgBinPath, "cg.dll")).ProductVersion;
 
