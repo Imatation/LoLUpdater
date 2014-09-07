@@ -10,6 +10,7 @@ namespace LoLUpdaterXP
 {
     public partial class MainWindow
     {
+        private static string CgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
         private static readonly string Arch = Environment.Is64BitProcess
             ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
             : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
@@ -356,35 +357,31 @@ namespace LoLUpdaterXP
 
         private static void AdobeAlert()
         {
-            string airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
+            if (!File.Exists(Path.Combine(AirPath, "Adobe AIR.dll")))
+                InstallAir();
 
-            if (
-                !File.Exists(Path.Combine(airPath, "Adobe Air.dll")) &&
-                MessageBox.Show(
-                    "We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.",
-                    "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(AirPath, "Adobe AIR.dll")).FileVersion);
+            var latestVersion = new Version("14.0");
+
+            if (currentVersion < latestVersion)
             {
-                Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
-            }
-            else
-            {
-                var productVersion = FileVersionInfo.GetVersionInfo(Path.Combine(airPath, "Adobe Air.dll")).ProductVersion;
-                float versionNumber = float.Parse(productVersion, System.Globalization.CultureInfo.InvariantCulture);
                 if (
-                    versionNumber < 14.0 &&
                     MessageBox.Show(
                         "The Adobe Air version which is installed on your computer is outdated. Do you want to update it to ensure greater performance gains in the LoL client?",
                         "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    // Don't know how to do this silently, doesn't work if air hasn't checked for updates (though it prompts after a short time)
-                    var airUpdate = new ProcessStartInfo
-                    {
-                        FileName = Path.Combine(airPath, "Resources", "Adobe AIR Updater.exe"),
-                    };
-                    var process = new Process { StartInfo = airUpdate };
-                    process.Start();
-                    process.WaitForExit();
+                    InstallAir();
                 }
+            }
+        }
+
+        private static void InstallAir()
+        {
+            if (MessageBox.Show(
+                "We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.",
+                "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
             }
         }
 
@@ -448,21 +445,30 @@ namespace LoLUpdaterXP
         }
 
 
-        private void Cg_Checked(object sender, RoutedEventArgs e)
+        private static void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            var cgPath = Path.Combine(Arch, "NVIDIA Corporation", "Cg", "Bin", "cg.dll");
-            if (File.Exists(cgPath))
+            if (CgBinPath == null || !File.Exists(Path.Combine(CgBinPath, "cg.dll")))
             {
-                var fileRecent = FileVersionInfo.GetVersionInfo(cgPath).FileVersion == "3.1.0013";
-                if (fileRecent ||
-                    !fileRecent &&
+                InstallCg();
+
+                CgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+            }
+            else
+            {
+                var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(CgBinPath, "cg.dll")).FileVersion);
+                var latestVersion = new Version("3.1.0013");
+                if (
+                    currentVersion < latestVersion &&
                     MessageBox.Show("You already have Nvdia CG installed. Do you want to update it?", "LoLUpdater",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    return;
+                    InstallCg();
                 }
             }
+        }
 
+        private static void InstallCg()
+        {
             Process.Start("NvidiaCGLicence.txt");
             if (MessageBox.Show("By clicking Yes you agree to NvidiaCGs Licence", "LoLUpdater",
                 MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
@@ -470,8 +476,11 @@ namespace LoLUpdaterXP
                 return;
             }
 
-            var startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
-            var cg = new Process {StartInfo = startInfo};
+            ProcessStartInfo startInfo;
+            Process cg;
+
+            startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+            cg = new Process { StartInfo = startInfo };
             cg.Start();
             cg.WaitForExit();
         }
