@@ -161,12 +161,8 @@ namespace LoLUpdater
 
         private void HandleAdobeAndTbb()
         {
-<<<<<<< HEAD
-            var flashPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0", "Resources");
-=======
             var airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
             var flashPath = Path.Combine(airPath, "Resources");
->>>>>>> origin/master
 
             if (Directory.Exists("RADS"))
             {
@@ -375,7 +371,6 @@ namespace LoLUpdater
 
         private static void AdobeAlert()
         {
-<<<<<<< HEAD
 
             var myFileVersionInfo = FileVersionInfo.GetVersionInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases") + @"\" +
                                                    new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client",
@@ -388,16 +383,15 @@ namespace LoLUpdater
             var current = myFileVersionInfo;
             var version0 = new Version(current);
             var version = new Version(14, 0, 0, 178);
+                                        var airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
             if (current == null)
             {
-                if (
-                    MessageBox.Show(
-=======
-            string airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
+
+
+
             if (
                 !File.Exists(Path.Combine(airPath, "Adobe Air.dll")) &&
                 MessageBox.Show(
->>>>>>> origin/master
                     "We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.",
                     "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
@@ -500,7 +494,7 @@ namespace LoLUpdater
 
         private static void Cfg(string setting, string file)
         {
-            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file))) ;
+            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file)))
             {
                 var fi = new FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", file));
                 if (FileAttributes.ReadOnly == fi.Attributes)
@@ -542,30 +536,27 @@ namespace LoLUpdater
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
-<<<<<<< HEAD
             ProcessStartInfo startInfo;
             Process cg;
             if (FileVersionInfo.GetVersionInfo(Path.Combine(CgBinPath, "cg.dll")).ProductVersion == null)
             {
-                startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-                cg = new Process { StartInfo = startInfo };
+                startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+                cg = new Process {StartInfo = startInfo};
                 cg.Start();
                 cg.WaitForExit();
                 return;
-
-=======
+            }
             var cgPath = Path.Combine(Arch, "NVIDIA Corporation", "Cg", "Bin", "cg.dll");
             if (File.Exists(cgPath))
             {
                 var fileRecent = FileVersionInfo.GetVersionInfo(cgPath).FileVersion == "3.1.0013";
-                if (fileRecent ||
+                if (
                     !fileRecent &&
                     MessageBox.Show("You already have Nvdia CG installed. Do you want to update it?", "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
                 {
                     return;
                 }
->>>>>>> origin/master
             }
             var versionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(CgBinPath, "cg.dll")).ProductVersion;
 
@@ -581,8 +572,8 @@ namespace LoLUpdater
                 return;
             }
 
-            startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-            cg = new Process { StartInfo = startInfo };
+            startInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"};
+            cg = new Process {StartInfo = startInfo};
             cg.Start();
             cg.WaitForExit();
         }
