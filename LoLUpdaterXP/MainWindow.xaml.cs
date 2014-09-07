@@ -5,16 +5,21 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 
 namespace LoLUpdaterXP
 {
     public partial class MainWindow
     {
-        private static string CgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+        private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+        private static readonly string Reg = Environment.Is64BitProcess
+            ? string.Empty
+            : "WoW64Node";
+
         private static readonly string Arch = Environment.Is64BitProcess
             ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
             : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-
+        private static readonly string AirPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             AdobeAlert();
@@ -59,6 +64,7 @@ namespace LoLUpdaterXP
             HandleAdobeAndTbb();
             RunCleanManager();
             HandlePmbUninstall();
+            HandleMouseHz();
             if (Inking.IsChecked == true)
             {
                 HandleCfg("Inking=0");
@@ -160,7 +166,7 @@ namespace LoLUpdaterXP
                 {
                     AdvancedCopy(
                         "Adobe AIR.dll",
-                        airPath,
+                        AirPath,
                         "projects",
                         "lol_air_client",
                         Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
@@ -186,7 +192,7 @@ namespace LoLUpdaterXP
             {
                 Copy(
                     "Adobe AIR.dll",
-                    airPath,
+                    AirPath,
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0"));
             }
             if (Flash.IsChecked == true)
@@ -213,45 +219,45 @@ namespace LoLUpdaterXP
 
         private void HandleCgInstall()
         {
-            var cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "Cg.dll", cgBinPath,
+                        "Cg.dll", _cgBinPath,
                         "solutions", "lol_game_client_sln", "deploy");
                 }
                 if (Cg1.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "Cg.dll", cgBinPath,
+                        "Cg.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
 
                 if (CgGl.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "Cg.dll", cgBinPath,
+                        "Cg.dll", _cgBinPath,
                         "solutions", "lol_game_client_sln", "deploy");
                 }
                 if (CgGl1.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "CgGL.dll", cgBinPath,
+                        "CgGL.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
 
                 if (CgD3D9.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "CgD3D9.dll", cgBinPath,
+                        "CgD3D9.dll", _cgBinPath,
                         "solutions", "lol_game_client_sln", "deploy");
                 }
                 if (CgD3D1.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "CgD3D9.dll", cgBinPath,
+                        "CgD3D9.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
             }
@@ -260,21 +266,21 @@ namespace LoLUpdaterXP
                 if (Cg.IsChecked == true)
                 {
                     Copy("Cg.dll",
-                        cgBinPath,
+                        _cgBinPath,
                         "Game");
                 }
 
                 if (CgGl.IsChecked == true)
                 {
                     Copy("CgGL.dll",
-                        cgBinPath,
+                        _cgBinPath,
                         "Game");
                 }
 
                 if (CgD3D9.IsChecked == true)
                 {
                     Copy("CgD3D9.dll",
-                        cgBinPath,
+                        _cgBinPath,
                         "Game");
                 }
             }
@@ -291,7 +297,7 @@ namespace LoLUpdaterXP
                 FileName = pmbUninstall,
                 Arguments = "/silent"
             };
-            var process = new Process {StartInfo = pmb};
+            var process = new Process { StartInfo = pmb };
             process.Start();
             process.WaitForExit();
         }
@@ -354,7 +360,6 @@ namespace LoLUpdaterXP
                 Path.Combine(extension, file), true);
         }
 
-
         private static void AdobeAlert()
         {
             if (!File.Exists(Path.Combine(AirPath, "Adobe AIR.dll")))
@@ -388,11 +393,33 @@ namespace LoLUpdaterXP
         private static void RunCleanManager()
         {
             var cm = new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" };
-            var process = new Process {StartInfo = cm};
+            var process = new Process { StartInfo = cm };
             process.Start();
             process.WaitForExit();
         }
 
+        private static void HandleMouseHz()
+        {
+            var win8Version = new Version(6, 2, 9200, 0);
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT || Environment.OSVersion.Version < win8Version)
+                return;
+
+
+            var mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", Reg, "Microsoft",
+                "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+            if (mousehz != null)
+                mousehz.SetValue("NoDTToDITMouseBatch",
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
+                    RegistryValueKind.String);
+            var cmd = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Verb = "runas",
+                Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache"
+            };
+            var process = new Process { StartInfo = cmd };
+            process.Start();
+        }
 
         private static void HandleCfg(string setting)
         {
@@ -423,7 +450,7 @@ namespace LoLUpdaterXP
 
         private static void Cfg(string setting, string file)
         {
-            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file))) ;
+            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file)))
             {
                 var fi = new FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", file));
                 if (FileAttributes.ReadOnly == fi.Attributes)
@@ -445,17 +472,19 @@ namespace LoLUpdaterXP
         }
 
 
+
+
         private static void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            if (CgBinPath == null || !File.Exists(Path.Combine(CgBinPath, "cg.dll")))
+            if (_cgBinPath == null || !File.Exists(Path.Combine(_cgBinPath, "cg.dll")))
             {
                 InstallCg();
 
-                CgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+                _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
             }
             else
             {
-                var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(CgBinPath, "cg.dll")).FileVersion);
+                var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion);
                 var latestVersion = new Version("3.1.0013");
                 if (
                     currentVersion < latestVersion &&
@@ -476,14 +505,12 @@ namespace LoLUpdaterXP
                 return;
             }
 
-            ProcessStartInfo startInfo;
-            Process cg;
-
-            startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-            cg = new Process { StartInfo = startInfo };
+            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+            var cg = new Process { StartInfo = startInfo };
             cg.Start();
             cg.WaitForExit();
         }
+
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
         {

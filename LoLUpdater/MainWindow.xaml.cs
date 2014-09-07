@@ -12,7 +12,7 @@ namespace LoLUpdater
 {
     public partial class MainWindow
     {
-        private static string CgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+        private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
         private static readonly string Reg = Environment.Is64BitProcess
             ? string.Empty
             : "WoW64Node";
@@ -234,39 +234,39 @@ namespace LoLUpdater
                 if (Cg.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "Cg.dll", CgBinPath,
+                        "Cg.dll", _cgBinPath,
                         "solutions", "lol_game_client_sln", "deploy");
                 }
                 if (Cg1.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "Cg.dll", CgBinPath,
+                        "Cg.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
 
                 if (CgGl.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "Cg.dll", CgBinPath,
+                        "Cg.dll", _cgBinPath,
                         "solutions", "lol_game_client_sln", "deploy");
                 }
                 if (CgGl1.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "CgGL.dll", CgBinPath,
+                        "CgGL.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
 
                 if (CgD3D9.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "CgD3D9.dll", CgBinPath,
+                        "CgD3D9.dll", _cgBinPath,
                         "solutions", "lol_game_client_sln", "deploy");
                 }
                 if (CgD3D1.IsChecked == true)
                 {
                     AdvancedCopy(
-                        "CgD3D9.dll", CgBinPath,
+                        "CgD3D9.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
             }
@@ -275,21 +275,21 @@ namespace LoLUpdater
                 if (Cg.IsChecked == true)
                 {
                     Copy("Cg.dll",
-                        CgBinPath,
+                        _cgBinPath,
                         "Game");
                 }
 
                 if (CgGl.IsChecked == true)
                 {
                     Copy("CgGL.dll",
-                        CgBinPath,
+                        _cgBinPath,
                         "Game");
                 }
 
                 if (CgD3D9.IsChecked == true)
                 {
                     Copy("CgD3D9.dll",
-                        CgBinPath,
+                        _cgBinPath,
                         "Game");
                 }
             }
@@ -501,15 +501,15 @@ namespace LoLUpdater
 
         private static void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            if (CgBinPath == null || !File.Exists(Path.Combine(CgBinPath, "cg.dll")))
+            if (_cgBinPath == null || !File.Exists(Path.Combine(_cgBinPath, "cg.dll")))
             {
                 InstallCg();
 
-                CgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+                _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
             }
             else
             {
-                var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(CgBinPath, "cg.dll")).FileVersion);
+                var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion);
                 var latestVersion = new Version("3.1.0013");
                 if (
                     currentVersion < latestVersion &&
@@ -530,11 +530,8 @@ namespace LoLUpdater
                 return;
             }
 
-            ProcessStartInfo startInfo;
-            Process cg;
-
-            startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-            cg = new Process { StartInfo = startInfo };
+            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
+            var cg = new Process { StartInfo = startInfo };
             cg.Start();
             cg.WaitForExit();
         }
