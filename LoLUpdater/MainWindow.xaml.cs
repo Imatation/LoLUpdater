@@ -372,20 +372,23 @@ namespace LoLUpdater
         {
             if (!File.Exists(Path.Combine(AirPath, "Adobe AIR.dll")))
                 InstallAir();
-
-            var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(AirPath, "Adobe AIR.dll")).FileVersion);
-            var latestVersion = new Version("14.0");
-
-            if (currentVersion < latestVersion)
+            else
             {
-                if (
-                    MessageBox.Show(
-                        "The Adobe Air version which is installed on your computer is outdated. Do you want to update it to ensure greater performance gains in the LoL client?",
-                        "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    InstallAir();
+                    var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(AirPath, "Adobe AIR.dll")).FileVersion);
+                    var latestVersion = new Version("14.0");
+
+                    if (currentVersion >= latestVersion) return;
+                    if (
+                        MessageBox.Show(
+                            "The Adobe Air version which is installed on your computer is outdated. Do you want to update it to ensure greater performance gains in the LoL client?",
+                            "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        InstallAir();
+                    }
                 }
             }
+
         }
 
         private static void InstallAir()
