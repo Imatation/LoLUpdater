@@ -12,7 +12,7 @@ namespace LoLUpdater
 {
     public partial class MainWindow
     {
-        private static readonly string CgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+        private static string CgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
         private static readonly string Reg = Environment.Is64BitProcess
             ? string.Empty
             : "WoW64Node";
@@ -380,11 +380,10 @@ namespace LoLUpdater
                                                        .FirstOrDefault() + @"\" +
                                                    Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Adobe AIR.dll")).FileVersion;
 
-            var current = myFileVersionInfo;
-            var version0 = new Version(current);
+            var version0 = new Version(myFileVersionInfo);
             var version = new Version(14, 0, 0, 178);
                                         var airPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
-            if (current == null)
+            if (myFileVersionInfo == null)
             {
 
 
@@ -415,22 +414,18 @@ namespace LoLUpdater
             else
             {
                 var productVersion = FileVersionInfo.GetVersionInfo(Path.Combine(airPath, "Adobe Air.dll")).ProductVersion;
-                float versionNumber = float.Parse(productVersion, System.Globalization.CultureInfo.InvariantCulture);
-                if (
-                    versionNumber < 14.0 &&
-                    MessageBox.Show(
-                        "The Adobe Air version which is installed on your computer is outdated. Do you want to update it to ensure greater performance gains in the LoL client?",
-                        "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                var versionNumber = float.Parse(productVersion, System.Globalization.CultureInfo.InvariantCulture);
+                if (!(versionNumber < 14.0) || MessageBox.Show(
+                    "The Adobe Air version which is installed on your computer is outdated. Do you want to update it to ensure greater performance gains in the LoL client?",
+                    "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+                // Don't know how to do this silently, doesn't work if air hasn't checked for updates (though it prompts after a short time)
+                var airUpdate = new ProcessStartInfo
                 {
-                    // Don't know how to do this silently, doesn't work if air hasn't checked for updates (though it prompts after a short time)
-                    var airUpdate = new ProcessStartInfo
-                    {
-                        FileName = Path.Combine(airPath, "Resources", "Adobe AIR Updater.exe"),
-                    };
-                    var process = new Process { StartInfo = airUpdate };
-                    process.Start();
-                    process.WaitForExit();
-                }
+                    FileName = Path.Combine(airPath, "Resources", "Adobe AIR Updater.exe"),
+                };
+                var process = new Process { StartInfo = airUpdate };
+                process.Start();
+                process.WaitForExit();
             }
         }
 
