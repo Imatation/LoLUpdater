@@ -499,7 +499,7 @@ namespace LoLUpdater
             installer.Install();
         }
 
-        private static void Cg_Checked(object sender, RoutedEventArgs e)
+        private void Cg_Checked(object sender, RoutedEventArgs e)
         {
             if (_cgBinPath == null || !File.Exists(Path.Combine(_cgBinPath, "cg.dll")))
             {
