@@ -194,7 +194,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid Background="#2D2D30" Height="156" HorizontalAlignment="Left" Width="512" Margin="0,0,-1,0">
+    <Grid Background="#2D2D30" Height="132" HorizontalAlignment="Left" Width="512" Margin="0,0,-1,0">
 
         <Image x:Name="Xclose" HorizontalAlignment="Left" Height="26" Margin="478,0,0,0" Source="Resources/close.png"
                VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave"
@@ -202,7 +202,7 @@
         <Image x:Name="Xminimize" HorizontalAlignment="Left" Height="26" Margin="444,0,0,0"
                Source="Resources/minimize.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter_1"
                MouseLeave="Image_MouseLeave_1" MouseDown="Xminimize_MouseDown" RenderTransformOrigin="-0.868,0.577" />
-        <Button Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="1,126,0,0"
+        <Button Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="2,111,0,0"
                 VerticalAlignment="Top" Width="510" Click="OK_Click">
             <Button.Resources>
                 <Style x:Key="FocusVisual">
@@ -257,17 +257,17 @@
         </Button>
         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="LoLUpdater"
                    VerticalAlignment="Top" Foreground="Gray" />
-        <GroupBox Header="Main" HorizontalAlignment="Left" Margin="1,31,0,0" VerticalAlignment="Top" Height="51"
+        <GroupBox Header="Main" HorizontalAlignment="Left" Margin="0,23,0,0" VerticalAlignment="Top" Height="83"
                   Width="76" Foreground="White">
             <Grid>
-                <RadioButton x:Name="Remove" Content="Uninstall" HorizontalAlignment="Left" Margin="0,15,0,0"
+                <RadioButton x:Name="Remove" Content="Uninstall" HorizontalAlignment="Left" Margin="0,36,0,0"
                              VerticalAlignment="Top" Style="{DynamicResource RadioButtonStyle}" />
                 <RadioButton x:Name="Patch" Content="Install" HorizontalAlignment="Left" VerticalAlignment="Top"
-                             Style="{DynamicResource RadioButtonStyle}" IsChecked="True" />
+                             Style="{DynamicResource RadioButtonStyle}" IsChecked="True" Margin="0,10,0,0" />
             </Grid>
         </GroupBox>
 
-        <ListBox HorizontalAlignment="Left" Height="43" Margin="78,39,0,0" VerticalAlignment="Top" Width="99"
+        <ListBox HorizontalAlignment="Left" Height="67" Margin="78,39,0,0" VerticalAlignment="Top" Width="99"
                  Background="#2D2D30">
             <CheckBox Foreground="White" x:Name="AdobeAir" Content="Adobe AIR" Checked="Flash_Checked"
                       Style="{DynamicResource CheckboxStyle}"
@@ -277,7 +277,7 @@
                       ToolTip="Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the PvP.NET client." />
         </ListBox>
 
-        <ListBox HorizontalAlignment="Left" Height="82" Margin="178,39,0,0" VerticalAlignment="Top" Width="78"
+        <ListBox HorizontalAlignment="Left" Height="67" Margin="178,39,0,0" VerticalAlignment="Top" Width="78"
                  Background="#2D2D30">
             <CheckBox Foreground="White" x:Name="Cg" Content="Cg" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
@@ -292,7 +292,7 @@
                       ToolTip="Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL." />
         </ListBox>
 
-        <ListBox HorizontalAlignment="Left" Height="62" Margin="257,39,0,0" VerticalAlignment="Top" Width="81"
+        <ListBox HorizontalAlignment="Left" Height="67" Margin="257,39,0,0" VerticalAlignment="Top" Width="81"
                  Background="#2D2D30">
             <CheckBox Foreground="White" x:Name="Cg1" Content="Cg" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
@@ -305,7 +305,7 @@
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
         </ListBox>
 
-        <ListBox HorizontalAlignment="Left" Height="62" VerticalAlignment="Top" Width="172" Margin="339,39,0,0"
+        <ListBox HorizontalAlignment="Left" Height="67" VerticalAlignment="Top" Width="172" Margin="339,39,0,0"
                  Background="#2D2D30">
             <CheckBox Foreground="White" x:Name="Inking" Content="No Inking" Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Turns off the new 'graphics'." />
