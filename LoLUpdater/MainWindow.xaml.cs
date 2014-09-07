@@ -376,7 +376,7 @@ namespace LoLUpdater
             {
                 {
                     var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(AirPath, "Adobe AIR.dll")).FileVersion);
-                    var latestVersion = new Version("14.0");
+                    var latestVersion = new Version("14.0.0.178");
 
                     if (currentVersion >= latestVersion) return;
                     if (

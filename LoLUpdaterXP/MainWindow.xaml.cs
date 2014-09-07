@@ -542,5 +542,10 @@ namespace LoLUpdaterXP
         {
             WindowState = WindowState.Minimized;
         }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
     }
 }
