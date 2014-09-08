@@ -199,10 +199,10 @@
 
     <Grid Background="#2D2D30" HorizontalAlignment="Left" Width="720" Margin="0,0,-1,0">
 
-        <Image x:Name="Xclose" HorizontalAlignment="Left" Height="26" Margin="605,0,0,0" Source="Resources/close.png"
+        <Image x:Name="Xclose" HorizontalAlignment="Left" Height="26" Margin="686,0,0,0" Source="Resources/close.png"
                VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave"
                MouseDown="Xclose_MouseDown" />
-        <Image x:Name="Xminimize" HorizontalAlignment="Left" Height="26" Margin="571,0,0,0"
+        <Image x:Name="Xminimize" HorizontalAlignment="Left" Height="26" Margin="652,0,0,0"
                Source="Resources/minimize.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter_1"
                MouseLeave="Image_MouseLeave_1" MouseDown="Xminimize_MouseDown" RenderTransformOrigin="-0.868,0.577" />
         <Button Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="1,116,0,0"
