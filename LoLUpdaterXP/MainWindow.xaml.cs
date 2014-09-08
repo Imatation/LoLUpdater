@@ -233,6 +233,12 @@ namespace LoLUpdaterXP
                         "Cg.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
+                if (Cg2.IsChecked == true)
+                {
+                    AdvancedCopy(
+                        "Cg.dll", _cgBinPath,
+                        "projects", "lol_patcher", "deploy");
+                }
 
                 if (CgGl.IsChecked == true)
                 {
@@ -246,6 +252,12 @@ namespace LoLUpdaterXP
                         "CgGL.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
+                if (CgGl2.IsChecked == true)
+                {
+                    AdvancedCopy(
+                        "CgGL.dll", _cgBinPath,
+                        "projects", "lol_patcher", "deploy");
+                }
 
                 if (CgD3D9.IsChecked == true)
                 {
@@ -258,6 +270,12 @@ namespace LoLUpdaterXP
                     AdvancedCopy(
                         "CgD3D9.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
+                }
+                if (CgD3D2.IsChecked == true)
+                {
+                    AdvancedCopy(
+                        "CgD3D9.dll", _cgBinPath,
+                        "projects", "lol_patcher", "deploy");
                 }
             }
             else if (Directory.Exists("Game"))
@@ -365,20 +383,21 @@ namespace LoLUpdaterXP
                 InstallAir();
             else
             {
-                var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(AirPath, "Adobe AIR.dll")).FileVersion);
-                var latestVersion = new Version("14.0.0.178");
-
-                if (currentVersion >= latestVersion) return;
-                if (
-                    MessageBox.Show(
-                        "The Adobe Air version which is installed on your computer is outdated. Do you want to update it to ensure greater performance gains in the LoL client?",
-                        "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    InstallAir();
-                }
+                    var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(AirPath, "Adobe AIR.dll")).FileVersion);
+                    var latestVersion = new Version("14.0.0.178");
 
+                    if (currentVersion >= latestVersion) return;
+                    if (
+                        MessageBox.Show(
+                            "The Adobe Air version which is installed on your computer is outdated. Do you want to update it to ensure greater performance gains in the LoL client?",
+                            "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        InstallAir();
+                    }
+                }
             }
-            
+
         }
 
         private static void InstallAir()
@@ -472,9 +491,6 @@ namespace LoLUpdaterXP
             }
         }
 
-
-
-
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
             if (_cgBinPath == null || !File.Exists(Path.Combine(_cgBinPath, "cg.dll")))
@@ -541,11 +557,6 @@ namespace LoLUpdaterXP
         private void Xminimize_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowState = WindowState.Minimized;
-        }
-
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
         }
     }
 }

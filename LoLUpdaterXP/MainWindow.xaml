@@ -195,7 +195,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid Background="#2D2D30" Height="132" HorizontalAlignment="Left" Width="512" Margin="0,0,-1,0">
+    <Grid Background="#2D2D30" Height="132" HorizontalAlignment="Left" Width="594" Margin="0,0,-1,0">
 
         <Image x:Name="Xclose" HorizontalAlignment="Left" Height="26" Margin="478,0,0,0" Source="Resources/close.png"
                VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave"
@@ -204,7 +204,7 @@
                Source="Resources/minimize.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter_1"
                MouseLeave="Image_MouseLeave_1" MouseDown="Xminimize_MouseDown" RenderTransformOrigin="-0.868,0.577" />
         <Button Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="2,111,0,0"
-                VerticalAlignment="Top" Width="510" Click="OK_Click">
+                VerticalAlignment="Top" Width="589" Click="OK_Click">
             <Button.Resources>
                 <Style x:Key="FocusVisual">
                     <Setter Property="Control.Template">
@@ -306,7 +306,7 @@
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
         </ListBox>
 
-        <ListBox HorizontalAlignment="Left" Height="67" VerticalAlignment="Top" Width="172" Margin="339,39,0,0"
+        <ListBox HorizontalAlignment="Left" Height="67" VerticalAlignment="Top" Width="172" Margin="421,39,-1,0"
                  Background="#2D2D30">
             <CheckBox Foreground="White" x:Name="Inking" Content="No Inking" Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Turns off the new 'graphics'." />
@@ -321,7 +321,21 @@
                    VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="257,23,0,0" TextWrapping="Wrap" Text="Launcher"
                    VerticalAlignment="Top" />
-        <TextBlock HorizontalAlignment="Left" Margin="339,23,0,0" TextWrapping="Wrap" Text="Config Tweaks"
+        <TextBlock HorizontalAlignment="Left" Margin="421,23,0,0" TextWrapping="Wrap" Text="Config Tweaks"
                    VerticalAlignment="Top" />
+        <TextBlock HorizontalAlignment="Left" Margin="339,23,0,0" TextWrapping="Wrap" Text="Patcher"
+        	VerticalAlignment="Top" />
+        <ListBox HorizontalAlignment="Left" Height="67" Margin="339,39,0,0" VerticalAlignment="Top" Width="81"
+        	Background="#2D2D30">
+            <CheckBox Foreground="White" x:Name="Cg2" Content="Cg" Checked="Cg_Checked"
+        		Style="{DynamicResource CheckboxStyle}"
+        		ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
+            <CheckBox Foreground="White" x:Name="CgD3D2" Content="CgD3D9" Checked="Cg_Checked"
+        		Style="{DynamicResource CheckboxStyle}"
+        		ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
+            <CheckBox Foreground="White" x:Name="CgGl2" Content="CgGL" Checked="Cg_Checked"
+        		Style="{DynamicResource CheckboxStyle}"
+        		ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
+        </ListBox>
     </Grid>
 </Window>

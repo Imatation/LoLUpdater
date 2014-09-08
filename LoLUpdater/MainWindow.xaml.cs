@@ -242,6 +242,12 @@ namespace LoLUpdater
                         "Cg.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
+                if (Cg2.IsChecked == true)
+                {
+                    AdvancedCopy(
+                        "Cg.dll", _cgBinPath,
+                        "projects", "lol_patcher", "deploy");
+                }
 
                 if (CgGl.IsChecked == true)
                 {
@@ -255,6 +261,12 @@ namespace LoLUpdater
                         "CgGL.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
                 }
+                if (CgGl2.IsChecked == true)
+                {
+                    AdvancedCopy(
+                        "CgGL.dll", _cgBinPath,
+                        "projects", "lol_patcher", "deploy");
+                }
 
                 if (CgD3D9.IsChecked == true)
                 {
@@ -267,6 +279,12 @@ namespace LoLUpdater
                     AdvancedCopy(
                         "CgD3D9.dll", _cgBinPath,
                         "projects", "lol_launcher", "deploy");
+                }
+                if (CgD3D2.IsChecked == true)
+                {
+                    AdvancedCopy(
+                        "CgD3D9.dll", _cgBinPath,
+                        "projects", "lol_patcher", "deploy");
                 }
             }
             else if (Directory.Exists("Game"))
