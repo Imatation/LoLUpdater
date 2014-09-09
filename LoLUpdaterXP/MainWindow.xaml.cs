@@ -551,7 +551,7 @@ namespace LoLUpdaterXP
 
         private void Xclose_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Environment.Exit(0);
+            Close();
         }
 
         private void Xminimize_MouseDown(object sender, MouseButtonEventArgs e)
