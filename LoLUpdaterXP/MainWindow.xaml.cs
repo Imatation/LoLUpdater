@@ -11,6 +11,7 @@ namespace LoLUpdaterXP
 {
     public partial class MainWindow
     {
+        private static readonly string GameCfg = Path.Combine("Game", "DATA", "CFG", "defaults");
         private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
         private static readonly string Reg = Environment.Is64BitProcess
             ? string.Empty
@@ -345,16 +346,21 @@ namespace LoLUpdaterXP
             }
             else if (Directory.Exists("Game"))
             {
-                Copy("game.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
-                Copy("GamePermanent.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
-
-                if (File.Exists(Path.Combine("Backup", "GamePermanent_zh_MY.cfg")))
+                if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
                 {
-                    Copy("GamePermanent_zh_MY.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
+                    Copy("game.cfg", "Backup", GameCfg);
                 }
-                if (File.Exists(Path.Combine("Backup", "GamePermanent_en_SG.cfg")))
+                if (File.Exists(Path.Combine(GameCfg, "GamePermanent")))
                 {
-                    Copy("GamePermanent_en_SG.cfg", "Backup", Path.Combine("Game", "DATA", "CFG", "defaults"));
+                    Copy("GamePermanent.cfg", "Backup", GameCfg);
+                }
+                if (File.Exists(Path.Combine(GameCfg, "GamePermanent_zh_MY.cfg")))
+                {
+                    Copy("GamePermanent_zh_MY.cfg", "Backup", GameCfg);
+                }
+                if (File.Exists(Path.Combine(GameCfg, "GamePermanent_en_SG.cfg")))
+                {
+                    Copy("GamePermanent_en_SG.cfg", "Backup", GameCfg);
                 }
                 Copy("Cg.dll", "Backup", "Game");
                 Copy("CgGL.dll", "Backup", "Game");
@@ -447,7 +453,7 @@ namespace LoLUpdaterXP
             {
                 var fi = new FileInfo(Path.Combine("Config", "game.cfg"));
 
-                if (FileAttributes.ReadOnly == fi.Attributes)
+                if (fi.Attributes == FileAttributes.ReadOnly)
                 {
                     MessageBox.Show(@"Your game.cfg Located in Config\ is read only, please remove this and try again",
                         "LoLUpdater");
@@ -459,7 +465,7 @@ namespace LoLUpdaterXP
                     File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + setting);
                 }
             }
-            else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+            else if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
             {
                 Cfg(setting, "game.cfg");
                 Cfg(setting, "GamePermanent.cfg");
@@ -470,9 +476,9 @@ namespace LoLUpdaterXP
 
         private static void Cfg(string setting, string file)
         {
-            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", file)))
+            if (!File.Exists(Path.Combine(GameCfg, file)))
             {
-                var fi = new FileInfo(Path.Combine("Game", "DATA", "CFG", "defaults", file));
+                var fi = new FileInfo(Path.Combine(GameCfg, file));
                 if (FileAttributes.ReadOnly == fi.Attributes)
                 {
                     MessageBox.Show(String.Format(
@@ -482,14 +488,15 @@ namespace LoLUpdaterXP
                     return;
                 }
                 if (
-                    !File.ReadAllText(Path.Combine("Game", "DATA", "CFG", "defaults", file))
+                    !File.ReadAllText(Path.Combine(GameCfg, file))
                         .Contains(setting))
                 {
-                    File.AppendAllText(Path.Combine("Game", "DATA", "CFG", "defaults", file),
+                    File.AppendAllText(Path.Combine(GameCfg, file),
                         Environment.NewLine + setting);
                 }
             }
         }
+
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
@@ -558,7 +565,6 @@ namespace LoLUpdaterXP
         {
             WindowState = WindowState.Minimized;
         }
-
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
