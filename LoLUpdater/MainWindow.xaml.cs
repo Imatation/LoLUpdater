@@ -79,7 +79,7 @@ namespace LoLUpdater
             _wasPatched = false;
         }
 
-        private void MainGrid_Loaded(object sender, RoutedEventArgs e)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             if (!Directory.Exists("mods"))
             {
@@ -206,6 +206,7 @@ namespace LoLUpdater
                 }
 
                 PatchButton.IsEnabled = true;
+
                 RemoveButton.IsEnabled = true;
 
                 LocationTextbox.Text = Path.Combine(finalDirectory, "deploy");
@@ -354,16 +355,16 @@ namespace LoLUpdater
             File.AppendAllText("debug.log", @"Patching " + modName + patchNumber + Environment.NewLine);
 
             var filePart = fileLocation.Split('/');
-            var FileName = filePart[filePart.Length - 1];
+            var fileName = filePart[filePart.Length - 1];
 
-            var LocationText = "";
+            var locationText = "";
             Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
             {
-                LocationText = LocationTextbox.Text;
+                locationText = LocationTextbox.Text;
             }));
 
             //Wait for UI thread to respond...
-            while (String.IsNullOrEmpty(LocationText))
+            while (String.IsNullOrEmpty(locationText))
             {
             }
 
@@ -371,38 +372,40 @@ namespace LoLUpdater
             {
                 Directory.CreateDirectory(Path.Combine("temp", fileLocation.Replace(".dat", "")));
 
-                string n = "";
-                foreach (string s in filePart.Take(filePart.Length - 1))
+                var n = "";
+                foreach (var s in filePart.Take(filePart.Length - 1))
                 {
                     n = Path.Combine(n, s);
-                    if (!Directory.Exists(Path.Combine(LocationText, "LESsBackup", IntendedVersion, n)))
+                    if (!Directory.Exists(Path.Combine(locationText, "LESsBackup", IntendedVersion, n)))
                     {
-                        Directory.CreateDirectory(Path.Combine(LocationText, "LESsBackup", IntendedVersion, n));
+                        Directory.CreateDirectory(Path.Combine(locationText, "LESsBackup", IntendedVersion, n));
                     }
                 }
-                if (!File.Exists(Path.Combine(LocationText, "LESsBackup", IntendedVersion, fileLocation)))
+                if (!File.Exists(Path.Combine(locationText, "LESsBackup", IntendedVersion, fileLocation)))
                 {
-                    File.Copy(Path.Combine(LocationText, fileLocation), Path.Combine(LocationText, "LESsBackup", IntendedVersion, fileLocation));
+                    File.Copy(Path.Combine(locationText, fileLocation), Path.Combine(locationText, "LESsBackup", IntendedVersion, fileLocation));
                 }
 
-                File.Copy(Path.Combine(LocationText, fileLocation), Path.Combine("temp", fileLocation.Replace(".dat", ""), FileName));
+                File.Copy(Path.Combine(locationText, fileLocation), Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
 
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
                     StatusLabel.Content = "Exporting patch " + modName;
                 }));
 
-                File.AppendAllText("debug.log", "Running abcexport" + Environment.NewLine);
+                File.AppendAllText("debug.log", @"Running abcexport" + Environment.NewLine);
 
-                ProcessStartInfo Export = new ProcessStartInfo();
-                Export.FileName = "abcexport.exe";
-                Export.CreateNoWindow = true;
-                Export.UseShellExecute = false;
-                Export.Arguments = Path.Combine("temp", fileLocation.Replace(".dat", ""), FileName);
-                var ExportProc = Process.Start(Export);
-                if (ExportProc != null)
+                var export = new ProcessStartInfo
                 {
-                    ExportProc.WaitForExit();
+                    FileName = "abcexport.exe",
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    Arguments = Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName)
+                };
+                var exportProc = Process.Start(export);
+                if (exportProc != null)
+                {
+                    exportProc.WaitForExit();
                 }
 
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
@@ -460,7 +463,7 @@ namespace LoLUpdater
             var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
             //Find the directory that has the requested class
-            foreach (string s in from s in foundDirectories let m = Directory.GetFiles(s) let x = Path.Combine(s, Class + ".class.asasm") where m.Contains(x) select s)
+            foreach (var s in from s in foundDirectories let m = Directory.GetFiles(s) let x = Path.Combine(s, Class + ".class.asasm") where m.Contains(x) select s)
             {
                 finalDirectory = s;
             }
@@ -541,8 +544,8 @@ namespace LoLUpdater
 
             var h = new WorstHack
             {
-                FileName = FileName,
-                LocationText = LocationText,
+                FileName = fileName,
+                LocationText = locationText,
                 ReAssembleLocation = finalDirectory.Substring(0, finalDirectory.IndexOf("com", StringComparison.Ordinal)).Replace("temp\\", ""),
                 FileLocation = fileLocation
             };
@@ -639,8 +642,8 @@ namespace LoLUpdater
 
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            OK.IsEnabled = false;
-            OK.Content = "Working...";
+            Ok.IsEnabled = false;
+            Ok.Content = "Working...";
             Kill("LoLClient");
             Kill("LoLLauncher");
             Kill("League of Legends");
@@ -689,8 +692,8 @@ namespace LoLUpdater
             {
                 HandleUninstall();
             }
-            OK.Content = "Go";
-            OK.IsEnabled = true;
+            Ok.Content = "Go";
+            Ok.IsEnabled = true;
         }
 
         private static void Kill(string process)
