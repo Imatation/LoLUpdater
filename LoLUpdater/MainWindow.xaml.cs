@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Reflection;c
 using System.Security.Principal;
 using System.Threading;
 using System.Windows;
@@ -1107,7 +1107,7 @@ namespace LoLUpdater
 
             var cg = new Process
             {
-                StartInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"}
+                StartInfo = new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent"}
             };
             cg.Start();
             cg.WaitForExit();
