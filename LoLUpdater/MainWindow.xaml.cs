@@ -50,10 +50,6 @@ namespace LoLUpdater
         {
             InitializeComponent();
             _reassembleLocations = new List<WorstHack>();
-            if (File.Exists("debug.log"))
-                File.Delete("debug.log");
-
-            File.Create("debug.log").Dispose();
 
             if (Directory.Exists("temp"))
             {
@@ -111,19 +107,17 @@ namespace LoLUpdater
             {
                 while (reader.Read())
                 {
-                    if (reader.IsStartElement())
+                    if (!reader.IsStartElement()) continue;
+                    switch (reader.Name)
                     {
-                        switch (reader.Name)
-                        {
-                            case "name":
-                                reader.Read();
-                                ModNameLabel.Content = reader.Value;
-                                break;
-                            case "description":
-                                reader.Read();
-                                ModDescriptionBox.Text = reader.Value;
-                                break;
-                        }
+                        case "name":
+                            reader.Read();
+                            ModNameLabel.Content = reader.Value;
+                            break;
+                        case "description":
+                            reader.Read();
+                            ModDescriptionBox.Text = reader.Value;
+                            break;
                     }
                 }
             }
@@ -145,7 +139,6 @@ namespace LoLUpdater
             var result = findLeagueDialog.ShowDialog();
 
             if (result != true) return;
-            File.AppendAllText("debug.log", findLeagueDialog.FileName + Environment.NewLine);
             var filename = findLeagueDialog.FileName.Replace("lol.launcher.exe", "")
                 .Replace("lol.launcher.admin.exe", "");
             if (filename.Contains("lol.exe"))
@@ -162,9 +155,6 @@ namespace LoLUpdater
             else
             {
                 var radLocation = Path.Combine(filename, "RADS", "projects", "lol_air_client", "releases");
-
-                File.AppendAllText("debug.log", filename + Environment.NewLine + radLocation + Environment.NewLine);
-
                 var versionDirectories = Directory.GetDirectories(radLocation);
                 var finalDirectory = "";
                 var version = "";
@@ -200,12 +190,11 @@ namespace LoLUpdater
                         finalDirectory = x;
                     }
 
-                    File.AppendAllText("debug.log", x + Environment.NewLine + compareVersion + Environment.NewLine);
                 }
 
                 if (version != IntendedVersion)
                 {
-                    MessageBoxResult versionMismatchResult =
+                    var versionMismatchResult =
                         MessageBox.Show(
                             "This version of LESs is intended for " + IntendedVersion +
                             ". Your current version of League of Legends is " + version +
@@ -357,9 +346,6 @@ namespace LoLUpdater
                     fileLocation = s.Substring(1);
                 }
             }
-
-            File.AppendAllText("debug.log", @"Patching " + modName + patchNumber + Environment.NewLine);
-
             var filePart = fileLocation.Split('/');
             var fileName = filePart[filePart.Length - 1];
 
@@ -396,9 +382,6 @@ namespace LoLUpdater
 
                 Dispatcher.BeginInvoke(DispatcherPriority.Input,
                     new ThreadStart(() => { StatusLabel.Content = "Exporting patch " + modName; }));
-
-                File.AppendAllText("debug.log", @"Running abcexport" + Environment.NewLine);
-
                 var export = new ProcessStartInfo
                 {
                     FileName = "abcexport.exe",
@@ -416,9 +399,6 @@ namespace LoLUpdater
                     new ThreadStart(() => { StatusLabel.Content = "Disassembling patch (" + modName + ")"; }));
 
                 var abcFiles = Directory.GetFiles(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*.abc");
-
-                File.AppendAllText("debug.log", @"Got " + abcFiles.Length + @" files" + Environment.NewLine);
-
                 foreach (var disasmProc in abcFiles.Select(s => new ProcessStartInfo
                 {
                     FileName = "rabcdasm.exe",
@@ -433,7 +413,6 @@ namespace LoLUpdater
 
             if (tryFindClass.IndexOf(':') == 0)
             {
-                File.AppendAllText("debug.log", @"INVALID MOD!!!" + Environment.NewLine);
                 throw new Exception("Invalid mod " + modName);
             }
 
@@ -460,8 +439,6 @@ namespace LoLUpdater
 
             if (foundDirectories.Count == 0)
             {
-                File.AppendAllText("debug.log",
-                    @"No class matching " + searchFor + @" for mod " + modName + Environment.NewLine);
                 throw new Exception("No class matching " + searchFor + " for mod " + modName);
             }
 
@@ -500,7 +477,6 @@ namespace LoLUpdater
 
             if (traitStartPosition == 0)
             {
-                File.AppendAllText("debug.log", @"Trait start location was not found! Corrupt mod?");
                 throw new Exception("Trait start location was not found! Corrupt mod?");
             }
 
@@ -523,9 +499,6 @@ namespace LoLUpdater
 
                 if (traitEndLocation < traitStartPosition)
                 {
-                    File.AppendAllText("debug.log",
-                        @"Trait end location was smaller than trait start location! " + traitEndLocation + @", " +
-                        traitStartPosition);
                     throw new Exception("Trait end location was smaller than trait start location! " + traitEndLocation +
                                         ", " + traitStartPosition);
                 }
@@ -590,11 +563,6 @@ namespace LoLUpdater
                         data.ReAssembleLocation + data.FileName.Replace(".dat", "") + "-" + abcNumber + ".main.asasm")
             };
             var reAsmProc = Process.Start(reAsm);
-            while (reAsmProc != null && !reAsmProc.StandardError.EndOfStream)
-            {
-                var line = reAsmProc.StandardError.ReadLine();
-                File.AppendAllText("debug.log", line + Environment.NewLine);
-            }
             if (reAsmProc != null)
             {
                 reAsmProc.WaitForExit();
@@ -612,11 +580,6 @@ namespace LoLUpdater
                         data.ReAssembleLocation + data.FileName.Replace(".dat", "") + "-" + abcNumber + ".main.abc")
             };
             var finalPatchProc = Process.Start(doPatch);
-            while (finalPatchProc != null && !finalPatchProc.StandardError.EndOfStream)
-            {
-                var line = finalPatchProc.StandardError.ReadLine();
-                File.AppendAllText("debug.log", line + Environment.NewLine);
-            }
             if (finalPatchProc != null)
             {
                 finalPatchProc.WaitForExit();
