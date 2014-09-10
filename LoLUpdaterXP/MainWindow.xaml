@@ -323,7 +323,7 @@
         <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="596,38,0,46" VerticalAlignment="Stretch" Width="230" SelectionChanged="ModsListBox_SelectionChanged"/>
         <TextBox Name="ModDescriptionBox" HorizontalAlignment="Left" Height="100" Margin="831,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="223"/>
         <Label Name="ModNameLabel" Content="" HorizontalAlignment="Left" Margin="422,140,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="18" RenderTransformOrigin="45.8,1.706"/>
-        <Button Name="FindButton" Content="Right-Click Me First" HorizontalAlignment="Right" Margin="0,141,710,0" VerticalAlignment="Top" Width="165" Height="30" FontSize="14" MouseDown="FindButton_MouseDown"/>
+        <Button Name="FindButton" Content="Right-Click Me First" HorizontalAlignment="Right" Margin="0,141,710,0" VerticalAlignment="Top" Width="165" Height="30" FontSize="14"/>
         <TextBlock HorizontalAlignment="Left" Margin="78,23,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
                    VerticalAlignment="Top" RenderTransformOrigin="0.107,0.731" />
         <TextBlock HorizontalAlignment="Left" Margin="178,23,0,0" TextWrapping="Wrap" Text="Game Client"

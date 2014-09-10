@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Security.Principal;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,7 +46,7 @@ namespace LoLUpdaterXP
         {
             InitializeComponent();
             _reassembleLocations = new List<WorstHack>();
-
+            FindButton.AddHandler(MouseDownEvent, new RoutedEventHandler(FindButton_MouseDown), true);
             if (Directory.Exists("temp"))
             {
                 DeletePathWithLongFileNames(Path.GetFullPath("temp"));
@@ -54,7 +56,8 @@ namespace LoLUpdaterXP
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         }
 
-        private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        private void CurrentDomain_FirstChanceException(object sender,
+            System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
             var ex = e.Exception;
             MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
@@ -214,6 +217,11 @@ namespace LoLUpdaterXP
                 modCollection = ModsListBox.Items;
             }));
 
+            // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
+            while (modCollection == null)
+            {
+            }
+
             Directory.CreateDirectory("temp");
 
             foreach (var x in modCollection)
@@ -235,12 +243,11 @@ namespace LoLUpdaterXP
                     }
                 }));
 
-                //Wait for UI thread to respond...
                 while (isBoxChecked == null || String.IsNullOrEmpty(boxName))
                 {
                 }
 
-                if (!(bool) isBoxChecked) continue;
+                if (!(bool)isBoxChecked) continue;
                 var amountOfPatches = 1;
 
                 using (var reader = XmlReader.Create(Path.Combine("mods", boxName, "info.xml")))
@@ -311,7 +318,7 @@ namespace LoLUpdaterXP
                 {
                     traitToModify = s.Substring(3);
                 }
-                else if (s.StartsWith("@+@"))//Insert the new trait above this one
+                else if (s.StartsWith("@+@"))
                 {
                     traitToModify = s.Substring(3);
                     isNewTrait = true;
@@ -333,7 +340,6 @@ namespace LoLUpdaterXP
                 locationText = LocationTextbox.Text;
             }));
 
-            //Wait for UI thread to respond...
             while (String.IsNullOrEmpty(locationText))
             {
             }
@@ -353,17 +359,19 @@ namespace LoLUpdaterXP
                 }
                 if (!File.Exists(Path.Combine(locationText, "LESsBackup", IntendedVersion, fileLocation)))
                 {
-                    File.Copy(Path.Combine(locationText, fileLocation), Path.Combine(locationText, "LESsBackup", IntendedVersion, fileLocation));
+                    File.Copy(Path.Combine(locationText, fileLocation),
+                        Path.Combine(locationText, "LESsBackup", IntendedVersion, fileLocation));
                 }
 
-                File.Copy(Path.Combine(locationText, fileLocation), Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
+                File.Copy(Path.Combine(locationText, fileLocation),
+                    Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
 
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
                     StatusLabel.Content = "Exporting patch " + modName;
                 }));
 
-                File.AppendAllText("debug.log",  @"Running abcexport" + Environment.NewLine);
+                File.AppendAllText("debug.log", @"Running abcexport" + Environment.NewLine);
 
                 var export = new ProcessStartInfo
                 {
@@ -405,9 +413,9 @@ namespace LoLUpdaterXP
                 throw new Exception("Invalid mod " + modName);
             }
 
-            var directories = Directory.GetDirectories(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*", SearchOption.AllDirectories).ToList();
-
-            //Get all directories that match the requested class to modify
+            var directories =
+                Directory.GetDirectories(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*",
+                    SearchOption.AllDirectories).ToList();
             var searchFor = tryFindClass.Substring(0, tryFindClass.IndexOf(':'));
             var foundDirectories = new List<string>();
             foreach (var s in directories)
@@ -426,21 +434,24 @@ namespace LoLUpdaterXP
 
             if (foundDirectories.Count == 0)
             {
-                File.AppendAllText("debug.log", @"No class matching " + searchFor + @" for mod " + modName + Environment.NewLine);
+                File.AppendAllText("debug.log",
+                    @"No class matching " + searchFor + @" for mod " + modName + Environment.NewLine);
                 throw new Exception("No class matching " + searchFor + " for mod " + modName);
             }
 
             var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
-            //Find the directory that has the requested class
-            foreach (var s in from s in foundDirectories let m = Directory.GetFiles(s) let x = Path.Combine(s, Class + ".class.asasm") where m.Contains(x) select s)
+            foreach (var s in from s in foundDirectories
+                              let m = Directory.GetFiles(s)
+                              let x = Path.Combine(s, Class + ".class.asasm")
+                              where m.Contains(x)
+                              select s)
             {
                 finalDirectory = s;
             }
 
             var classModifier = File.ReadAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"));
 
-            //return if the new trait already exists
             if (isNewTrait)
             {
                 if (classModifier.Any(l => l == modDetails[3]))
@@ -451,7 +462,6 @@ namespace LoLUpdaterXP
 
             var traitStartPosition = 0;
             var traitEndLocation = 0;
-            //Get location of trait
             for (var i = 0; i < classModifier.Length; i++)
             {
                 if (classModifier[i] != traitToModify) continue;
@@ -467,7 +477,6 @@ namespace LoLUpdaterXP
 
             if (!isNewTrait)
             {
-                //Get end location of trait
                 for (var i = traitStartPosition; i < classModifier.Length; i++)
                 {
                     if (classModifier[i].Trim() != "end ; method") continue;
@@ -484,8 +493,11 @@ namespace LoLUpdaterXP
 
                 if (traitEndLocation < traitStartPosition)
                 {
-                    File.AppendAllText("debug.log", @"Trait end location was smaller than trait start location! " + traitEndLocation + @", " + traitStartPosition);
-                    throw new Exception("Trait end location was smaller than trait start location! " + traitEndLocation + ", " + traitStartPosition);
+                    File.AppendAllText("debug.log",
+                        @"Trait end location was smaller than trait start location! " + traitEndLocation + @", " +
+                        traitStartPosition);
+                    throw new Exception("Trait end location was smaller than trait start location! " + traitEndLocation +
+                                        ", " + traitStartPosition);
                 }
 
                 var startTrait = new string[traitStartPosition];
@@ -506,7 +518,8 @@ namespace LoLUpdaterXP
                 var finalClass = new string[classModifier.Length + (modDetails.Length - 3)];
                 Array.Copy(classModifier, 0, finalClass, 0, traitStartPosition);
                 Array.Copy(modDetails, 3, finalClass, traitStartPosition, modDetails.Length - 3);
-                Array.Copy(classModifier, traitStartPosition, finalClass, traitStartPosition + modDetails.Length - 3, classModifier.Length - traitStartPosition);
+                Array.Copy(classModifier, traitStartPosition, finalClass, traitStartPosition + modDetails.Length - 3,
+                    classModifier.Length - traitStartPosition);
 
                 File.Delete(Path.Combine(finalDirectory, Class + ".class.asasm"));
                 File.WriteAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"), finalClass);
@@ -516,7 +529,9 @@ namespace LoLUpdaterXP
             {
                 FileName = fileName,
                 LocationText = locationText,
-                ReAssembleLocation = finalDirectory.Substring(0, finalDirectory.IndexOf("com", StringComparison.Ordinal)).Replace("temp\\", ""),
+                ReAssembleLocation =
+                    finalDirectory.Substring(0, finalDirectory.IndexOf("com", StringComparison.Ordinal))
+                        .Replace("temp\\", ""),
                 FileLocation = fileLocation
             };
 
@@ -1046,6 +1061,9 @@ namespace LoLUpdaterXP
                 }
             }
         }
+
+
+      
 
 
         private void Cg_Checked(object sender, RoutedEventArgs e)

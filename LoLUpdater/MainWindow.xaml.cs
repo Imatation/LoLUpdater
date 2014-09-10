@@ -47,7 +47,7 @@ namespace LoLUpdater
         {
             InitializeComponent();
             _reassembleLocations = new List<WorstHack>();
-
+            FindButton.AddHandler(MouseDownEvent, new RoutedEventHandler(FindButton_MouseDown), true);
             if (Directory.Exists("temp"))
             {
                 DeletePathWithLongFileNames(Path.GetFullPath("temp"));
@@ -218,6 +218,11 @@ namespace LoLUpdater
                 modCollection = ModsListBox.Items;
             }));
 
+// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
+            while (modCollection == null)
+            {
+            }
+
             Directory.CreateDirectory("temp");
 
             foreach (var x in modCollection)
@@ -239,12 +244,11 @@ namespace LoLUpdater
                     }
                 }));
 
-                //Wait for UI thread to respond...
                 while (isBoxChecked == null || String.IsNullOrEmpty(boxName))
                 {
                 }
 
-                if (!(bool)isBoxChecked) continue;
+                if (!(bool) isBoxChecked) continue;
                 var amountOfPatches = 1;
 
                 using (var reader = XmlReader.Create(Path.Combine("mods", boxName, "info.xml")))
@@ -315,7 +319,7 @@ namespace LoLUpdater
                 {
                     traitToModify = s.Substring(3);
                 }
-                else if (s.StartsWith("@+@")) //Insert the new trait above this one
+                else if (s.StartsWith("@+@"))
                 {
                     traitToModify = s.Substring(3);
                     isNewTrait = true;
@@ -337,7 +341,6 @@ namespace LoLUpdater
                 locationText = LocationTextbox.Text;
             }));
 
-            //Wait for UI thread to respond...
             while (String.IsNullOrEmpty(locationText))
             {
             }
@@ -414,8 +417,6 @@ namespace LoLUpdater
             var directories =
                 Directory.GetDirectories(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*",
                     SearchOption.AllDirectories).ToList();
-
-            //Get all directories that match the requested class to modify
             var searchFor = tryFindClass.Substring(0, tryFindClass.IndexOf(':'));
             var foundDirectories = new List<string>();
             foreach (var s in directories)
@@ -441,7 +442,6 @@ namespace LoLUpdater
 
             var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
-            //Find the directory that has the requested class
             foreach (var s in from s in foundDirectories
                               let m = Directory.GetFiles(s)
                               let x = Path.Combine(s, Class + ".class.asasm")
@@ -453,7 +453,6 @@ namespace LoLUpdater
 
             var classModifier = File.ReadAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"));
 
-            //return if the new trait already exists
             if (isNewTrait)
             {
                 if (classModifier.Any(l => l == modDetails[3]))
@@ -464,7 +463,6 @@ namespace LoLUpdater
 
             var traitStartPosition = 0;
             var traitEndLocation = 0;
-            //Get location of trait
             for (var i = 0; i < classModifier.Length; i++)
             {
                 if (classModifier[i] != traitToModify) continue;
@@ -480,7 +478,6 @@ namespace LoLUpdater
 
             if (!isNewTrait)
             {
-                //Get end location of trait
                 for (var i = traitStartPosition; i < classModifier.Length; i++)
                 {
                     if (classModifier[i].Trim() != "end ; method") continue;
