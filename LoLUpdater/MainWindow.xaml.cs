@@ -1165,7 +1165,7 @@ namespace LoLUpdater
             WindowState = WindowState.Minimized;
         }
 
-        private void WinUpdate_OnChecked(object sender, RoutedEventArgs e)
+        private void WinUpdate_Checked(object sender, RoutedEventArgs e)
         {
             var identity = WindowsIdentity.GetCurrent();
             if (identity == null) return;
