@@ -66,12 +66,7 @@ namespace LoLUpdaterXP
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!Directory.Exists("mods"))
-            {
-                MessageBox.Show("Missing mods directory. Ensure that all files were extracted properly.",
-                    "Missing files");
-            }
-            else
+            if (Directory.Exists("mods"))
             {
                 var modList = Directory.GetDirectories("mods");
 
@@ -82,6 +77,11 @@ namespace LoLUpdaterXP
                         check.IsChecked = false;
                     ModsListBox.Items.Add(check);
                 }
+            }
+            else
+            {
+                MessageBox.Show("Missing mods directory. Ensure that all files were extracted properly.",
+                    "Missing files");
             }
         }
 
