@@ -1107,7 +1107,7 @@ namespace LoLUpdater
 
             var cg = new Process
             {
-                StartInfo = new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent"}
+                StartInfo = new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact"}
             };
             cg.Start();
             cg.WaitForExit();
