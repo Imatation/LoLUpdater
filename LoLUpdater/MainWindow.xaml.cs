@@ -36,9 +36,6 @@ namespace LoLUpdater
 
         private static readonly string AirPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
 
-
-        // START OF LES
-
         private const string IntendedVersion = "0.0.1.105";
 
         private readonly BackgroundWorker _worker = new BackgroundWorker();
@@ -55,17 +52,9 @@ namespace LoLUpdater
             {
                 DeletePathWithLongFileNames(Path.GetFullPath("temp"));
             }
-
-            if (Directory.Exists(Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), "wm")))
-                MessageBox.Show(
-                    "You may have malware on your system due to getting this application from an unknown source. Please delete C:/wm/ and the file inside it and then download this application from http://da.viddiaz.com/LESs");
-
             _worker.DoWork += worker_DoWork;
             _worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-            if (!Debugger.IsAttached)
-            {
-                AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
-            }
+            AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         }
 
         private void CurrentDomain_FirstChanceException(object sender,
@@ -88,7 +77,7 @@ namespace LoLUpdater
 
             foreach (var mod in modList)
             {
-                var check = new CheckBox {IsChecked = true, Content = mod.Replace("mods\\", "")};
+                var check = new CheckBox { IsChecked = true, Content = mod.Replace("mods\\", "") };
                 if (File.Exists(Path.Combine(mod, "disabled")))
                     check.IsChecked = false;
                 ModsListBox.Items.Add(check);
@@ -97,12 +86,12 @@ namespace LoLUpdater
 
         private void ModsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var box = (CheckBox) ModsListBox.SelectedItem;
+            var box = (CheckBox)ModsListBox.SelectedItem;
 
             if (box == null)
                 return;
 
-            var selectedMod = (string) box.Content;
+            var selectedMod = (string)box.Content;
             using (var reader = XmlReader.Create(Path.Combine("mods", selectedMod, "info.xml")))
             {
                 while (reader.Read())
@@ -135,18 +124,15 @@ namespace LoLUpdater
                 DefaultExt = ".exe",
                 Filter = "League of Legends Launcher|lol.launcher*.exe|Garena Launcher|lol.exe"
             };
-
             var result = findLeagueDialog.ShowDialog();
-
             if (result != true) return;
             var filename = findLeagueDialog.FileName.Replace("lol.launcher.exe", "")
                 .Replace("lol.launcher.admin.exe", "");
             if (filename.Contains("lol.exe"))
             {
-                //Ga ga ga garena
 
                 PatchButton.IsEnabled = true;
-                RemoveButton.IsEnabled = false; //Can't automatically remove on garena installations!
+                RemoveButton.IsEnabled = false;
 
                 filename = filename.Replace("lol.exe", "");
 
@@ -161,9 +147,9 @@ namespace LoLUpdater
                 uint versionCompare = 0;
                 foreach (var x in versionDirectories)
                 {
-                    var compare1 = x.Substring(x.LastIndexOfAny(new[] {'\\', '/'}) + 1);
+                    var compare1 = x.Substring(x.LastIndexOfAny(new[] { '\\', '/' }) + 1);
 
-                    var versionParts = compare1.Split(new[] {'.'});
+                    var versionParts = compare1.Split(new[] { '.' });
 
                     if (!compare1.Contains(".") || versionParts.Length != 4)
                     {
@@ -173,23 +159,19 @@ namespace LoLUpdater
                     uint compareVersion;
                     try
                     {
-                        //versions have the format "x.x.x.x" where every x can be a value between 0 and 255 
                         compareVersion = Convert.ToUInt32(versionParts[0]) << 24 |
                                          Convert.ToUInt32(versionParts[1]) << 16 |
                                          Convert.ToUInt32(versionParts[2]) << 8 | Convert.ToUInt32(versionParts[3]);
                     }
-                    catch (FormatException) //can happen for directories like "0.0.0.asasd"
+                    catch (FormatException)
                     {
                         continue;
                     }
 
-                    if (compareVersion > versionCompare)
-                    {
-                        versionCompare = compareVersion;
-                        version = x.Replace(radLocation + "\\", "");
-                        finalDirectory = x;
-                    }
-
+                    if (compareVersion <= versionCompare) continue;
+                    versionCompare = compareVersion;
+                    version = x.Replace(radLocation + "\\", "");
+                    finalDirectory = x;
                 }
 
                 if (version != IntendedVersion)
@@ -234,24 +216,24 @@ namespace LoLUpdater
             Dispatcher.BeginInvoke(DispatcherPriority.Input,
                 new ThreadStart(() => { modCollection = ModsListBox.Items; }));
 
-            //Wait for UI thread to respond...
-            while (modCollection == null)
-            {
-            }
+            // Remove the 3 lines below if LES works.
+            // while (modCollection == null)
+            //  {
+            //  }
 
             Directory.CreateDirectory("temp");
 
             foreach (var x in modCollection)
             {
-                var box = (CheckBox) x;
+                var box = (CheckBox)x;
                 bool? isBoxChecked = null;
                 var boxName = "";
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    if (box.IsChecked != null && (bool) box.IsChecked)
+                    if (box.IsChecked != null && (bool)box.IsChecked)
                     {
                         isBoxChecked = true;
-                        boxName = (string) box.Content;
+                        boxName = (string)box.Content;
                     }
                     else
                     {
@@ -260,12 +242,11 @@ namespace LoLUpdater
                     }
                 }));
 
-                //Wait for UI thread to respond...
                 while (isBoxChecked == null || String.IsNullOrEmpty(boxName))
                 {
                 }
 
-                if (!(bool) isBoxChecked) continue;
+                if (!(bool)isBoxChecked) continue;
                 var amountOfPatches = 1;
 
                 using (var reader = XmlReader.Create(Path.Combine("mods", boxName, "info.xml")))
@@ -336,7 +317,7 @@ namespace LoLUpdater
                 {
                     traitToModify = s.Substring(3);
                 }
-                else if (s.StartsWith("@+@")) //Insert the new trait above this one
+                else if (s.StartsWith("@+@"))
                 {
                     traitToModify = s.Substring(3);
                     isNewTrait = true;
@@ -353,7 +334,6 @@ namespace LoLUpdater
             Dispatcher.BeginInvoke(DispatcherPriority.Input,
                 new ThreadStart(() => { locationText = LocationTextbox.Text; }));
 
-            //Wait for UI thread to respond...
             while (String.IsNullOrEmpty(locationText))
             {
             }
@@ -420,7 +400,6 @@ namespace LoLUpdater
                 Directory.GetDirectories(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*",
                     SearchOption.AllDirectories).ToList();
 
-            //Get all directories that match the requested class to modify
             var searchFor = tryFindClass.Substring(0, tryFindClass.IndexOf(':'));
             var foundDirectories = new List<string>();
             foreach (var s in directories)
@@ -444,19 +423,17 @@ namespace LoLUpdater
 
             var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
-            //Find the directory that has the requested class
             foreach (var s in from s in foundDirectories
-                let m = Directory.GetFiles(s)
-                let x = Path.Combine(s, Class + ".class.asasm")
-                where m.Contains(x)
-                select s)
+                              let m = Directory.GetFiles(s)
+                              let x = Path.Combine(s, Class + ".class.asasm")
+                              where m.Contains(x)
+                              select s)
             {
                 finalDirectory = s;
             }
 
             var classModifier = File.ReadAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"));
 
-            //return if the new trait already exists
             if (isNewTrait)
             {
                 if (classModifier.Any(l => l == modDetails[3]))
@@ -467,7 +444,6 @@ namespace LoLUpdater
 
             var traitStartPosition = 0;
             var traitEndLocation = 0;
-            //Get location of trait
             for (var i = 0; i < classModifier.Length; i++)
             {
                 if (classModifier[i] != traitToModify) continue;
@@ -482,7 +458,6 @@ namespace LoLUpdater
 
             if (!isNewTrait)
             {
-                //Get end location of trait
                 for (var i = traitStartPosition; i < classModifier.Length; i++)
                 {
                     if (classModifier[i].Trim() != "end ; method") continue;
@@ -603,9 +578,6 @@ namespace LoLUpdater
         }
 
 
-        //cbf doing this properly, just do a quick thing that works just as well
-
-
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             AdobeAlert();
@@ -685,7 +657,7 @@ namespace LoLUpdater
             HandleCfg("DefaultParticleMultithreading=1");
             HandleCgInstall();
             HandleAdobeAndTbb();
-            Process.Start(new ProcessStartInfo {Arguments = "sagerun:1", FileName = "cleanmgr.exe"});
+            Process.Start(new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" });
             HandlePmbUninstall();
             HandleMouseHz();
             if (Inking.IsChecked == true)
@@ -931,7 +903,7 @@ namespace LoLUpdater
             var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
-            Process.Start(new ProcessStartInfo {FileName = pmbUninstall, Arguments = "/silent"});
+            Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/silent" });
         }
 
 
@@ -1154,7 +1126,7 @@ namespace LoLUpdater
 
             var cg = new Process
             {
-                StartInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"}
+                StartInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" }
             };
             cg.Start();
             cg.WaitForExit();
