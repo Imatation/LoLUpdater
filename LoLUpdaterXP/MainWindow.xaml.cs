@@ -12,7 +12,10 @@ namespace LoLUpdaterXP
     public partial class MainWindow
     {
         private static readonly string GameCfg = Path.Combine("Game", "DATA", "CFG", "defaults");
-        private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+
+        private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
+            EnvironmentVariableTarget.User);
+
         private static readonly string Reg = Environment.Is64BitProcess
             ? string.Empty
             : "WoW64Node";
@@ -20,7 +23,9 @@ namespace LoLUpdaterXP
         private static readonly string Arch = Environment.Is64BitProcess
             ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
             : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+
         private static readonly string AirPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
+
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             AdobeAlert();
@@ -63,7 +68,7 @@ namespace LoLUpdaterXP
             HandleCfg("DefaultParticleMultithreading=1");
             HandleCgInstall();
             HandleAdobeAndTbb();
-            RunCleanManager();
+            Process.Start(new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" });
             HandlePmbUninstall();
             HandleMouseHz();
             if (Inking.IsChecked == true)
@@ -219,7 +224,6 @@ namespace LoLUpdaterXP
 
         private void HandleCgInstall()
         {
-
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
@@ -310,14 +314,7 @@ namespace LoLUpdaterXP
             var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
-            var pmb = new ProcessStartInfo
-            {
-                FileName = pmbUninstall,
-                Arguments = "/silent"
-            };
-            var process = new Process { StartInfo = pmb };
-            process.Start();
-            process.WaitForExit();
+            Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/silent" });
         }
 
 
@@ -390,7 +387,8 @@ namespace LoLUpdaterXP
             else
             {
                 {
-                    var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(AirPath, "Adobe AIR.dll")).FileVersion);
+                    var currentVersion =
+                        new Version(FileVersionInfo.GetVersionInfo(Path.Combine(AirPath, "Adobe AIR.dll")).FileVersion);
                     var latestVersion = new Version("14.0.0.178");
 
                     if (currentVersion >= latestVersion) return;
@@ -403,7 +401,6 @@ namespace LoLUpdaterXP
                     }
                 }
             }
-
         }
 
         private static void InstallAir()
@@ -414,14 +411,6 @@ namespace LoLUpdaterXP
             {
                 Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
             }
-        }
-
-        private static void RunCleanManager()
-        {
-            var cm = new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" };
-            var process = new Process { StartInfo = cm };
-            process.Start();
-            process.WaitForExit();
         }
 
         private static void HandleMouseHz()
@@ -437,14 +426,12 @@ namespace LoLUpdaterXP
                 mousehz.SetValue("NoDTToDITMouseBatch",
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
                     RegistryValueKind.String);
-            var cmd = new ProcessStartInfo
+            Process.Start(new ProcessStartInfo
             {
                 FileName = "cmd.exe",
                 Verb = "runas",
                 Arguments = "/C Rundll32 apphelp.dll,ShimFlushCache"
-            };
-            var process = new Process { StartInfo = cmd };
-            process.Start();
+            });
         }
 
         private static void HandleCfg(string setting)
@@ -508,12 +495,13 @@ namespace LoLUpdaterXP
             }
             else
             {
-                var currentVersion = new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion);
+                var currentVersion =
+                    new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion);
                 var latestVersion = new Version("3.1.0013");
                 if (
                     currentVersion < latestVersion &&
                     MessageBox.Show("You already have Nvdia CG installed. Do you want to update it?", "LoLUpdater",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     InstallCg();
                 }
@@ -529,8 +517,10 @@ namespace LoLUpdaterXP
                 return;
             }
 
-            var startInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" };
-            var cg = new Process { StartInfo = startInfo };
+            var cg = new Process
+            {
+                StartInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" }
+            };
             cg.Start();
             cg.WaitForExit();
         }
@@ -564,10 +554,6 @@ namespace LoLUpdaterXP
         private void Xminimize_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowState = WindowState.Minimized;
-        }
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
         }
     }
 }
