@@ -329,7 +329,6 @@ namespace LoLUpdaterXP
                 }
             }
 
-            File.AppendAllText("debug.log", @"Patching " + modName + patchNumber + Environment.NewLine);
 
             var filePart = fileLocation.Split('/');
             var fileName = filePart[filePart.Length - 1];
@@ -371,7 +370,6 @@ namespace LoLUpdaterXP
                     StatusLabel.Content = "Exporting patch " + modName;
                 }));
 
-                File.AppendAllText("debug.log", @"Running abcexport" + Environment.NewLine);
 
                 var export = new ProcessStartInfo
                 {
@@ -393,7 +391,6 @@ namespace LoLUpdaterXP
 
                 var abcFiles = Directory.GetFiles(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*.abc");
 
-                File.AppendAllText("debug.log", @"Got " + abcFiles.Length + @" files" + Environment.NewLine);
 
                 foreach (var disasmProc in abcFiles.Select(s => new ProcessStartInfo
                 {
@@ -409,7 +406,6 @@ namespace LoLUpdaterXP
 
             if (tryFindClass.IndexOf(':') == 0)
             {
-                File.AppendAllText("debug.log", @"INVALID MOD!!!" + Environment.NewLine);
                 throw new Exception("Invalid mod " + modName);
             }
 
@@ -434,8 +430,6 @@ namespace LoLUpdaterXP
 
             if (foundDirectories.Count == 0)
             {
-                File.AppendAllText("debug.log",
-                    @"No class matching " + searchFor + @" for mod " + modName + Environment.NewLine);
                 throw new Exception("No class matching " + searchFor + " for mod " + modName);
             }
 
@@ -471,7 +465,6 @@ namespace LoLUpdaterXP
 
             if (traitStartPosition == 0)
             {
-                File.AppendAllText("debug.log", @"Trait start location was not found! Corrupt mod?");
                 throw new Exception("Trait start location was not found! Corrupt mod?");
             }
 
@@ -493,9 +486,6 @@ namespace LoLUpdaterXP
 
                 if (traitEndLocation < traitStartPosition)
                 {
-                    File.AppendAllText("debug.log",
-                        @"Trait end location was smaller than trait start location! " + traitEndLocation + @", " +
-                        traitStartPosition);
                     throw new Exception("Trait end location was smaller than trait start location! " + traitEndLocation +
                                         ", " + traitStartPosition);
                 }

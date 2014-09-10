@@ -77,7 +77,7 @@ namespace LoLUpdater
 
             foreach (var mod in modList)
             {
-                var check = new CheckBox { IsChecked = true, Content = mod.Replace("mods\\", "") };
+                var check = new CheckBox {IsChecked = true, Content = mod.Replace("mods\\", "")};
                 if (File.Exists(Path.Combine(mod, "disabled")))
                     check.IsChecked = false;
                 ModsListBox.Items.Add(check);
@@ -86,12 +86,12 @@ namespace LoLUpdater
 
         private void ModsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var box = (CheckBox)ModsListBox.SelectedItem;
+            var box = (CheckBox) ModsListBox.SelectedItem;
 
             if (box == null)
                 return;
 
-            var selectedMod = (string)box.Content;
+            var selectedMod = (string) box.Content;
             using (var reader = XmlReader.Create(Path.Combine("mods", selectedMod, "info.xml")))
             {
                 while (reader.Read())
@@ -130,7 +130,6 @@ namespace LoLUpdater
                 .Replace("lol.launcher.admin.exe", "");
             if (filename.Contains("lol.exe"))
             {
-
                 PatchButton.IsEnabled = true;
                 RemoveButton.IsEnabled = false;
 
@@ -147,9 +146,9 @@ namespace LoLUpdater
                 uint versionCompare = 0;
                 foreach (var x in versionDirectories)
                 {
-                    var compare1 = x.Substring(x.LastIndexOfAny(new[] { '\\', '/' }) + 1);
+                    var compare1 = x.Substring(x.LastIndexOfAny(new[] {'\\', '/'}) + 1);
 
-                    var versionParts = compare1.Split(new[] { '.' });
+                    var versionParts = compare1.Split(new[] {'.'});
 
                     if (!compare1.Contains(".") || versionParts.Length != 4)
                     {
@@ -213,10 +212,8 @@ namespace LoLUpdater
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             ItemCollection modCollection = null;
-            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-            {
-                modCollection = ModsListBox.Items;
-            }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                new ThreadStart(() => { modCollection = ModsListBox.Items; }));
 
 // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
             while (modCollection == null)
@@ -227,15 +224,15 @@ namespace LoLUpdater
 
             foreach (var x in modCollection)
             {
-                var box = (CheckBox)x;
+                var box = (CheckBox) x;
                 bool? isBoxChecked = null;
                 var boxName = "";
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    if (box.IsChecked != null && (bool)box.IsChecked)
+                    if (box.IsChecked != null && (bool) box.IsChecked)
                     {
                         isBoxChecked = true;
-                        boxName = (string)box.Content;
+                        boxName = (string) box.Content;
                     }
                     else
                     {
@@ -330,16 +327,12 @@ namespace LoLUpdater
                 }
             }
 
-            File.AppendAllText("debug.log", @"Patching " + modName + patchNumber + Environment.NewLine);
-
             var filePart = fileLocation.Split('/');
             var fileName = filePart[filePart.Length - 1];
 
             var locationText = "";
-            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-            {
-                locationText = LocationTextbox.Text;
-            }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                new ThreadStart(() => { locationText = LocationTextbox.Text; }));
 
             while (String.IsNullOrEmpty(locationText))
             {
@@ -367,12 +360,9 @@ namespace LoLUpdater
                 File.Copy(Path.Combine(locationText, fileLocation),
                     Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-                {
-                    StatusLabel.Content = "Exporting patch " + modName;
-                }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                    new ThreadStart(() => { StatusLabel.Content = "Exporting patch " + modName; }));
 
-                File.AppendAllText("debug.log", @"Running abcexport" + Environment.NewLine);
 
                 var export = new ProcessStartInfo
                 {
@@ -387,14 +377,11 @@ namespace LoLUpdater
                     exportProc.WaitForExit();
                 }
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-                {
-                    StatusLabel.Content = "Disassembling patch (" + modName + ")";
-                }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                    new ThreadStart(() => { StatusLabel.Content = "Disassembling patch (" + modName + ")"; }));
 
                 var abcFiles = Directory.GetFiles(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*.abc");
 
-                File.AppendAllText("debug.log", @"Got " + abcFiles.Length + @" files" + Environment.NewLine);
 
                 foreach (var disasmProc in abcFiles.Select(s => new ProcessStartInfo
                 {
@@ -410,7 +397,6 @@ namespace LoLUpdater
 
             if (tryFindClass.IndexOf(':') == 0)
             {
-                File.AppendAllText("debug.log", @"INVALID MOD!!!" + Environment.NewLine);
                 throw new Exception("Invalid mod " + modName);
             }
 
@@ -435,18 +421,16 @@ namespace LoLUpdater
 
             if (foundDirectories.Count == 0)
             {
-                File.AppendAllText("debug.log",
-                    @"No class matching " + searchFor + @" for mod " + modName + Environment.NewLine);
                 throw new Exception("No class matching " + searchFor + " for mod " + modName);
             }
 
             var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
             foreach (var s in from s in foundDirectories
-                              let m = Directory.GetFiles(s)
-                              let x = Path.Combine(s, Class + ".class.asasm")
-                              where m.Contains(x)
-                              select s)
+                let m = Directory.GetFiles(s)
+                let x = Path.Combine(s, Class + ".class.asasm")
+                where m.Contains(x)
+                select s)
             {
                 finalDirectory = s;
             }
@@ -472,7 +456,6 @@ namespace LoLUpdater
 
             if (traitStartPosition == 0)
             {
-                File.AppendAllText("debug.log", @"Trait start location was not found! Corrupt mod?");
                 throw new Exception("Trait start location was not found! Corrupt mod?");
             }
 
@@ -494,9 +477,6 @@ namespace LoLUpdater
 
                 if (traitEndLocation < traitStartPosition)
                 {
-                    File.AppendAllText("debug.log",
-                        @"Trait end location was smaller than trait start location! " + traitEndLocation + @", " +
-                        traitStartPosition);
                     throw new Exception("Trait end location was smaller than trait start location! " + traitEndLocation +
                                         ", " + traitStartPosition);
                 }
@@ -655,7 +635,7 @@ namespace LoLUpdater
             HandleCfg("DefaultParticleMultithreading=1");
             HandleCgInstall();
             HandleAdobeAndTbb();
-            Process.Start(new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" });
+            Process.Start(new ProcessStartInfo {Arguments = "sagerun:1", FileName = "cleanmgr.exe"});
             HandlePmbUninstall();
             HandleMouseHz();
             if (Inking.IsChecked == true)
@@ -901,7 +881,7 @@ namespace LoLUpdater
             var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
-            Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/silent" });
+            Process.Start(new ProcessStartInfo {FileName = pmbUninstall, Arguments = "/silent"});
         }
 
 
@@ -1125,7 +1105,7 @@ namespace LoLUpdater
 
             var cg = new Process
             {
-                StartInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" }
+                StartInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"}
             };
             cg.Start();
             cg.WaitForExit();
