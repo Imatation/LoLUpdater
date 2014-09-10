@@ -72,15 +72,17 @@ namespace LoLUpdater
                 MessageBox.Show("Missing mods directory. Ensure that all files were extracted properly.",
                     "Missing files");
             }
-
-            var modList = Directory.GetDirectories("mods");
-
-            foreach (var mod in modList)
+            else
             {
-                var check = new CheckBox {IsChecked = true, Content = mod.Replace("mods\\", "")};
-                if (File.Exists(Path.Combine(mod, "disabled")))
-                    check.IsChecked = false;
-                ModsListBox.Items.Add(check);
+                var modList = Directory.GetDirectories("mods");
+
+                foreach (var mod in modList)
+                {
+                    var check = new CheckBox { IsChecked = true, Content = mod.Replace("mods\\", "") };
+                    if (File.Exists(Path.Combine(mod, "disabled")))
+                        check.IsChecked = false;
+                    ModsListBox.Items.Add(check);
+                }
             }
         }
 
