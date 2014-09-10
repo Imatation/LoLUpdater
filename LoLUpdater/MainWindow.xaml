@@ -312,7 +312,7 @@
 
         <ListBox HorizontalAlignment="Left" Height="72" Margin="420,39,0,0" VerticalAlignment="Top" Width="126"
                  Background="#2D2D30">
-            <CheckBox Foreground="White" Name="WinUpdate" Content="Windows Update"
+            <CheckBox Foreground="White" Name="WinUpdate" Content="Windows Update" Checked="WinUpdate_OnChecked"
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Performs a Windows Update on the computer, might take some time." />
             <CheckBox Foreground="White" Name="Visual" Content="Visual Options"

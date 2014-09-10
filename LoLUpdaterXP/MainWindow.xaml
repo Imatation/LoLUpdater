@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Loaded="MainWindow_Loaded"
-    MouseDown="Window_MouseDown"
     Title="LoLUpdater" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen"
     Foreground="White" SizeToContent="WidthAndHeight" Height="184" Width="1065">
     <Window.Resources>

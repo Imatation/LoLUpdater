@@ -213,13 +213,10 @@ namespace LoLUpdater
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             ItemCollection modCollection = null;
-            Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                new ThreadStart(() => { modCollection = ModsListBox.Items; }));
-
-            // Remove the 3 lines below if LES works.
-            // while (modCollection == null)
-            //  {
-            //  }
+            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+            {
+                modCollection = ModsListBox.Items;
+            }));
 
             Directory.CreateDirectory("temp");
 
@@ -242,6 +239,7 @@ namespace LoLUpdater
                     }
                 }));
 
+                //Wait for UI thread to respond...
                 while (isBoxChecked == null || String.IsNullOrEmpty(boxName))
                 {
                 }
@@ -286,8 +284,8 @@ namespace LoLUpdater
             DeletePathWithLongFileNames(Path.GetFullPath("temp"));
         }
 
-        private void worker_RunWorkerCompleted(object sender,
-            RunWorkerCompletedEventArgs e)
+
+        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             MessageBox.Show(_wasPatched
                 ? "LESs has been successfully patched into League of Legends!"
@@ -317,7 +315,7 @@ namespace LoLUpdater
                 {
                     traitToModify = s.Substring(3);
                 }
-                else if (s.StartsWith("@+@"))
+                else if (s.StartsWith("@+@")) //Insert the new trait above this one
                 {
                     traitToModify = s.Substring(3);
                     isNewTrait = true;
@@ -327,13 +325,19 @@ namespace LoLUpdater
                     fileLocation = s.Substring(1);
                 }
             }
+
+            File.AppendAllText("debug.log", @"Patching " + modName + patchNumber + Environment.NewLine);
+
             var filePart = fileLocation.Split('/');
             var fileName = filePart[filePart.Length - 1];
 
             var locationText = "";
-            Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                new ThreadStart(() => { locationText = LocationTextbox.Text; }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+            {
+                locationText = LocationTextbox.Text;
+            }));
 
+            //Wait for UI thread to respond...
             while (String.IsNullOrEmpty(locationText))
             {
             }
@@ -360,8 +364,13 @@ namespace LoLUpdater
                 File.Copy(Path.Combine(locationText, fileLocation),
                     Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                    new ThreadStart(() => { StatusLabel.Content = "Exporting patch " + modName; }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                {
+                    StatusLabel.Content = "Exporting patch " + modName;
+                }));
+
+                File.AppendAllText("debug.log", @"Running abcexport" + Environment.NewLine);
+
                 var export = new ProcessStartInfo
                 {
                     FileName = "abcexport.exe",
@@ -375,10 +384,15 @@ namespace LoLUpdater
                     exportProc.WaitForExit();
                 }
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                    new ThreadStart(() => { StatusLabel.Content = "Disassembling patch (" + modName + ")"; }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                {
+                    StatusLabel.Content = "Disassembling patch (" + modName + ")";
+                }));
 
                 var abcFiles = Directory.GetFiles(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*.abc");
+
+                File.AppendAllText("debug.log", @"Got " + abcFiles.Length + @" files" + Environment.NewLine);
+
                 foreach (var disasmProc in abcFiles.Select(s => new ProcessStartInfo
                 {
                     FileName = "rabcdasm.exe",
@@ -393,6 +407,7 @@ namespace LoLUpdater
 
             if (tryFindClass.IndexOf(':') == 0)
             {
+                File.AppendAllText("debug.log", @"INVALID MOD!!!" + Environment.NewLine);
                 throw new Exception("Invalid mod " + modName);
             }
 
@@ -400,6 +415,7 @@ namespace LoLUpdater
                 Directory.GetDirectories(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*",
                     SearchOption.AllDirectories).ToList();
 
+            //Get all directories that match the requested class to modify
             var searchFor = tryFindClass.Substring(0, tryFindClass.IndexOf(':'));
             var foundDirectories = new List<string>();
             foreach (var s in directories)
@@ -418,11 +434,14 @@ namespace LoLUpdater
 
             if (foundDirectories.Count == 0)
             {
+                File.AppendAllText("debug.log",
+                    @"No class matching " + searchFor + @" for mod " + modName + Environment.NewLine);
                 throw new Exception("No class matching " + searchFor + " for mod " + modName);
             }
 
             var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
+            //Find the directory that has the requested class
             foreach (var s in from s in foundDirectories
                               let m = Directory.GetFiles(s)
                               let x = Path.Combine(s, Class + ".class.asasm")
@@ -434,6 +453,7 @@ namespace LoLUpdater
 
             var classModifier = File.ReadAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"));
 
+            //return if the new trait already exists
             if (isNewTrait)
             {
                 if (classModifier.Any(l => l == modDetails[3]))
@@ -444,6 +464,7 @@ namespace LoLUpdater
 
             var traitStartPosition = 0;
             var traitEndLocation = 0;
+            //Get location of trait
             for (var i = 0; i < classModifier.Length; i++)
             {
                 if (classModifier[i] != traitToModify) continue;
@@ -453,11 +474,13 @@ namespace LoLUpdater
 
             if (traitStartPosition == 0)
             {
+                File.AppendAllText("debug.log", @"Trait start location was not found! Corrupt mod?");
                 throw new Exception("Trait start location was not found! Corrupt mod?");
             }
 
             if (!isNewTrait)
             {
+                //Get end location of trait
                 for (var i = traitStartPosition; i < classModifier.Length; i++)
                 {
                     if (classModifier[i].Trim() != "end ; method") continue;
@@ -474,6 +497,9 @@ namespace LoLUpdater
 
                 if (traitEndLocation < traitStartPosition)
                 {
+                    File.AppendAllText("debug.log",
+                        @"Trait end location was smaller than trait start location! " + traitEndLocation + @", " +
+                        traitStartPosition);
                     throw new Exception("Trait end location was smaller than trait start location! " + traitEndLocation +
                                         ", " + traitStartPosition);
                 }
@@ -601,31 +627,6 @@ namespace LoLUpdater
             }
             if (WinUpdate.IsChecked == true)
             {
-                var identity = WindowsIdentity.GetCurrent();
-                if (identity != null)
-                {
-                    var pricipal = new WindowsPrincipal(identity);
-                    if (!pricipal.IsInRole(WindowsBuiltInRole.Administrator))
-                    {
-                        if (
-                            MessageBox.Show(
-                                "The Windows Update features requires the application to be run as administrator, would you like to restart it with admin privileges",
-                                "LoLUpdater",
-                                MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                        {
-                            Process.Start(new ProcessStartInfo
-                            {
-                                Verb = "runas",
-                                FileName = Assembly.GetExecutingAssembly().Location
-                            });
-                        }
-                        else
-                        {
-                            WinUpdate.IsChecked = false;
-                            return;
-                        }
-                    }
-                }
                 HandleWindowsUpdate();
             }
             if (!Directory.Exists("Backup"))
@@ -1092,6 +1093,7 @@ namespace LoLUpdater
             installer.Install();
         }
 
+
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
             if (_cgBinPath == null || !File.Exists(Path.Combine(_cgBinPath, "cg.dll")))
@@ -1161,6 +1163,30 @@ namespace LoLUpdater
         private void Xminimize_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+
+        private void WinUpdate_OnChecked(object sender, RoutedEventArgs e)
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            if (identity == null) return;
+            var pricipal = new WindowsPrincipal(identity);
+            if (pricipal.IsInRole(WindowsBuiltInRole.Administrator)) return;
+            if (
+                MessageBox.Show(
+                    "The Windows Update features requires the application to be run as administrator, would you like to restart it with admin privileges",
+                    "LoLUpdater",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    Verb = "runas",
+                    FileName = Assembly.GetExecutingAssembly().Location
+                });
+            }
+            else
+            {
+                WinUpdate.IsChecked = false;
+            }
         }
     }
 
