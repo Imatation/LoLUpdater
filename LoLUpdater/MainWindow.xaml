@@ -329,13 +329,13 @@
             <CheckBox Foreground="White" x:Name="PerPixelPointLighting" Content="No PerPixelPointLightning"
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the particles." />
         </ListBox>
-        <Button x:Name="PatchButton" Content="Install LES" HorizontalAlignment="Right" Margin="0,0,565,13" VerticalAlignment="Bottom" Height="30" Width="100" Background="#FF98CB89" FontSize="16" FontWeight="Bold" IsEnabled="False" Click="PatchButton_Click"/>
-        <Button x:Name="RemoveButton" Content="Remove LES" HorizontalAlignment="Right" Margin="0,0,670,13" VerticalAlignment="Bottom" Height="30" Width="100" Background="#FF98CB89" FontSize="16" FontWeight="Bold" IsEnabled="False" Click="RemoveButton_Click" />
-        <Label x:Name="StatusLabel" Content="Waiting..." HorizontalAlignment="Left" Margin="632,0,0,13" VerticalAlignment="Bottom" FontWeight="Light" FontStyle="Italic" FontSize="14" Foreground="#FF595959"/>
+        <Button x:Name="PatchButton" Content="Install LES" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="30" Width="100" Background="#FF98CB89" FontSize="16" FontWeight="Bold" IsEnabled="False" Click="PatchButton_Click"/>
+        <Button x:Name="RemoveButton" Content="Remove LES" HorizontalAlignment="Right" Margin="0,0,115,10" VerticalAlignment="Bottom" Height="30" Width="100" Background="#FF98CB89" FontSize="16" FontWeight="Bold" IsEnabled="False" Click="RemoveButton_Click" />
+        <Label x:Name="StatusLabel" Content="Waiting..." HorizontalAlignment="Left" Margin="724,0,0,10" VerticalAlignment="Bottom" FontWeight="Light" FontStyle="Italic" FontSize="14" Foreground="#FF595959"/>
         <TextBox x:Name="LocationTextbox" Padding="3,0,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="30" Margin="0,141,880,0" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" IsReadOnly="True"/>
-        <ListBox x:Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,49" VerticalAlignment="Stretch" Width="230" SelectionChanged="ModsListBox_SelectionChanged"/>
-        <TextBox x:Name="ModDescriptionBox" HorizontalAlignment="Left" Height="96" Margin="959,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="220"/>
-        <Label x:Name="ModNameLabel" Content="" HorizontalAlignment="Left" Margin="722,137,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="18" RenderTransformOrigin="45.8,1.706"/>
+        <ListBox x:Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,47" VerticalAlignment="Stretch" Width="230" SelectionChanged="ModsListBox_SelectionChanged"/>
+        <TextBox x:Name="ModDescriptionBox" HorizontalAlignment="Left" Height="100" Margin="959,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="223"/>
+        <Label x:Name="ModNameLabel" Content="" HorizontalAlignment="Left" Margin="422,140,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="18" RenderTransformOrigin="45.8,1.706"/>
         <Button x:Name="FindButton" Content="Locate" HorizontalAlignment="Right" Margin="0,141,775,0" VerticalAlignment="Top" Width="100" Height="30" FontSize="14" MouseDown="FindButton_MouseDown"/>
         <TextBlock HorizontalAlignment="Left" Margin="78,23,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
                    VerticalAlignment="Top" RenderTransformOrigin="0.107,0.731" />

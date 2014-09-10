@@ -22,6 +22,7 @@ namespace LoLUpdater
     public partial class MainWindow
     {
         private static readonly string GameCfg = Path.Combine("Game", "DATA", "CFG", "defaults");
+
         private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
             EnvironmentVariableTarget.User);
 
@@ -36,11 +37,9 @@ namespace LoLUpdater
         private static readonly string AirPath = Path.Combine(Arch, "Common Files", "Adobe AIR", "Versions", "1.0");
 
 
-
-
         // START OF LES
 
-        const string IntendedVersion = "0.0.1.105";
+        private const string IntendedVersion = "0.0.1.105";
 
         private readonly BackgroundWorker _worker = new BackgroundWorker();
         private bool _wasPatched = true;
@@ -62,7 +61,8 @@ namespace LoLUpdater
             }
 
             if (Directory.Exists(Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), "wm")))
-                MessageBox.Show("You may have malware on your system due to getting this application from an unknown source. Please delete C:/wm/ and the file inside it and then download this application from http://da.viddiaz.com/LESs");
+                MessageBox.Show(
+                    "You may have malware on your system due to getting this application from an unknown source. Please delete C:/wm/ and the file inside it and then download this application from http://da.viddiaz.com/LESs");
 
             _worker.DoWork += worker_DoWork;
             _worker.RunWorkerCompleted += worker_RunWorkerCompleted;
@@ -72,7 +72,8 @@ namespace LoLUpdater
             }
         }
 
-        void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        private void CurrentDomain_FirstChanceException(object sender,
+            System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
             var ex = e.Exception;
             MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
@@ -83,7 +84,8 @@ namespace LoLUpdater
         {
             if (!Directory.Exists("mods"))
             {
-                MessageBox.Show("Missing mods directory. Ensure that all files were extracted properly.", "Missing files");
+                MessageBox.Show("Missing mods directory. Ensure that all files were extracted properly.",
+                    "Missing files");
             }
 
             var modList = Directory.GetDirectories("mods");
@@ -99,12 +101,12 @@ namespace LoLUpdater
 
         private void ModsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var box = (CheckBox)ModsListBox.SelectedItem;
+            var box = (CheckBox) ModsListBox.SelectedItem;
 
             if (box == null)
                 return;
 
-            var selectedMod = (string)box.Content;
+            var selectedMod = (string) box.Content;
             using (var reader = XmlReader.Create(Path.Combine("mods", selectedMod, "info.xml")))
             {
                 while (reader.Read())
@@ -144,7 +146,8 @@ namespace LoLUpdater
 
             if (result != true) return;
             File.AppendAllText("debug.log", findLeagueDialog.FileName + Environment.NewLine);
-            var filename = findLeagueDialog.FileName.Replace("lol.launcher.exe", "").Replace("lol.launcher.admin.exe", "");
+            var filename = findLeagueDialog.FileName.Replace("lol.launcher.exe", "")
+                .Replace("lol.launcher.admin.exe", "");
             if (filename.Contains("lol.exe"))
             {
                 //Ga ga ga garena
@@ -168,11 +171,11 @@ namespace LoLUpdater
                 uint versionCompare = 0;
                 foreach (var x in versionDirectories)
                 {
-                    var compare1 = x.Substring(x.LastIndexOfAny(new[] { '\\', '/' }) + 1);
+                    var compare1 = x.Substring(x.LastIndexOfAny(new[] {'\\', '/'}) + 1);
 
-                    var versionParts = compare1.Split(new[] { '.' });
+                    var versionParts = compare1.Split(new[] {'.'});
 
-                    if (!compare1.Contains(".")||versionParts.Length!=4)
+                    if (!compare1.Contains(".") || versionParts.Length != 4)
                     {
                         continue;
                     }
@@ -181,7 +184,9 @@ namespace LoLUpdater
                     try
                     {
                         //versions have the format "x.x.x.x" where every x can be a value between 0 and 255 
-                        compareVersion = Convert.ToUInt32(versionParts[0]) << 24 | Convert.ToUInt32(versionParts[1]) << 16 | Convert.ToUInt32(versionParts[2]) << 8 | Convert.ToUInt32(versionParts[3]);
+                        compareVersion = Convert.ToUInt32(versionParts[0]) << 24 |
+                                         Convert.ToUInt32(versionParts[1]) << 16 |
+                                         Convert.ToUInt32(versionParts[2]) << 8 | Convert.ToUInt32(versionParts[3]);
                     }
                     catch (FormatException) //can happen for directories like "0.0.0.asasd"
                     {
@@ -200,7 +205,11 @@ namespace LoLUpdater
 
                 if (version != IntendedVersion)
                 {
-                    MessageBoxResult versionMismatchResult = MessageBox.Show("This version of LESs is intended for " + IntendedVersion + ". Your current version of League of Legends is " + version + ". Continue? This could harm your installation.", "Invalid Version", MessageBoxButton.YesNo);
+                    MessageBoxResult versionMismatchResult =
+                        MessageBox.Show(
+                            "This version of LESs is intended for " + IntendedVersion +
+                            ". Your current version of League of Legends is " + version +
+                            ". Continue? This could harm your installation.", "Invalid Version", MessageBoxButton.YesNo);
                     if (versionMismatchResult == MessageBoxResult.No)
                         return;
                 }
@@ -218,7 +227,6 @@ namespace LoLUpdater
 
         private void PatchButton_Click(object sender, RoutedEventArgs e)
         {
-
             _worker.RunWorkerAsync();
         }
 
@@ -234,10 +242,8 @@ namespace LoLUpdater
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             ItemCollection modCollection = null;
-            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-            {
-                modCollection = ModsListBox.Items;
-            }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                new ThreadStart(() => { modCollection = ModsListBox.Items; }));
 
             //Wait for UI thread to respond...
             while (modCollection == null)
@@ -248,15 +254,15 @@ namespace LoLUpdater
 
             foreach (var x in modCollection)
             {
-                var box = (CheckBox)x;
+                var box = (CheckBox) x;
                 bool? isBoxChecked = null;
                 var boxName = "";
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    if (box.IsChecked != null && (bool)box.IsChecked)
+                    if (box.IsChecked != null && (bool) box.IsChecked)
                     {
                         isBoxChecked = true;
-                        boxName = (string)box.Content;
+                        boxName = (string) box.Content;
                     }
                     else
                     {
@@ -311,7 +317,7 @@ namespace LoLUpdater
         }
 
         private void worker_RunWorkerCompleted(object sender,
-                                       RunWorkerCompletedEventArgs e)
+            RunWorkerCompletedEventArgs e)
         {
             MessageBox.Show(_wasPatched
                 ? "LESs has been successfully patched into League of Legends!"
@@ -341,7 +347,7 @@ namespace LoLUpdater
                 {
                     traitToModify = s.Substring(3);
                 }
-                else if (s.StartsWith("@+@"))//Insert the new trait above this one
+                else if (s.StartsWith("@+@")) //Insert the new trait above this one
                 {
                     traitToModify = s.Substring(3);
                     isNewTrait = true;
@@ -358,10 +364,8 @@ namespace LoLUpdater
             var fileName = filePart[filePart.Length - 1];
 
             var locationText = "";
-            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-            {
-                locationText = LocationTextbox.Text;
-            }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                new ThreadStart(() => { locationText = LocationTextbox.Text; }));
 
             //Wait for UI thread to respond...
             while (String.IsNullOrEmpty(locationText))
@@ -383,15 +387,15 @@ namespace LoLUpdater
                 }
                 if (!File.Exists(Path.Combine(locationText, "LESsBackup", IntendedVersion, fileLocation)))
                 {
-                    File.Copy(Path.Combine(locationText, fileLocation), Path.Combine(locationText, "LESsBackup", IntendedVersion, fileLocation));
+                    File.Copy(Path.Combine(locationText, fileLocation),
+                        Path.Combine(locationText, "LESsBackup", IntendedVersion, fileLocation));
                 }
 
-                File.Copy(Path.Combine(locationText, fileLocation), Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
+                File.Copy(Path.Combine(locationText, fileLocation),
+                    Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-                {
-                    StatusLabel.Content = "Exporting patch " + modName;
-                }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                    new ThreadStart(() => { StatusLabel.Content = "Exporting patch " + modName; }));
 
                 File.AppendAllText("debug.log", @"Running abcexport" + Environment.NewLine);
 
@@ -408,10 +412,8 @@ namespace LoLUpdater
                     exportProc.WaitForExit();
                 }
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-                {
-                    StatusLabel.Content = "Disassembling patch (" + modName + ")";
-                }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                    new ThreadStart(() => { StatusLabel.Content = "Disassembling patch (" + modName + ")"; }));
 
                 var abcFiles = Directory.GetFiles(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*.abc");
 
@@ -428,14 +430,16 @@ namespace LoLUpdater
                     disasmProc.WaitForExit();
                 }
             }
-            
+
             if (tryFindClass.IndexOf(':') == 0)
             {
                 File.AppendAllText("debug.log", @"INVALID MOD!!!" + Environment.NewLine);
                 throw new Exception("Invalid mod " + modName);
             }
 
-            var directories = Directory.GetDirectories(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*", SearchOption.AllDirectories).ToList();
+            var directories =
+                Directory.GetDirectories(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*",
+                    SearchOption.AllDirectories).ToList();
 
             //Get all directories that match the requested class to modify
             var searchFor = tryFindClass.Substring(0, tryFindClass.IndexOf(':'));
@@ -456,14 +460,19 @@ namespace LoLUpdater
 
             if (foundDirectories.Count == 0)
             {
-                File.AppendAllText("debug.log", @"No class matching " + searchFor + @" for mod " + modName + Environment.NewLine);
+                File.AppendAllText("debug.log",
+                    @"No class matching " + searchFor + @" for mod " + modName + Environment.NewLine);
                 throw new Exception("No class matching " + searchFor + " for mod " + modName);
             }
 
             var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
             //Find the directory that has the requested class
-            foreach (var s in from s in foundDirectories let m = Directory.GetFiles(s) let x = Path.Combine(s, Class + ".class.asasm") where m.Contains(x) select s)
+            foreach (var s in from s in foundDirectories
+                let m = Directory.GetFiles(s)
+                let x = Path.Combine(s, Class + ".class.asasm")
+                where m.Contains(x)
+                select s)
             {
                 finalDirectory = s;
             }
@@ -514,8 +523,11 @@ namespace LoLUpdater
 
                 if (traitEndLocation < traitStartPosition)
                 {
-                    File.AppendAllText("debug.log", @"Trait end location was smaller than trait start location! " + traitEndLocation + @", " + traitStartPosition);
-                    throw new Exception("Trait end location was smaller than trait start location! " + traitEndLocation + ", " + traitStartPosition);
+                    File.AppendAllText("debug.log",
+                        @"Trait end location was smaller than trait start location! " + traitEndLocation + @", " +
+                        traitStartPosition);
+                    throw new Exception("Trait end location was smaller than trait start location! " + traitEndLocation +
+                                        ", " + traitStartPosition);
                 }
 
                 var startTrait = new string[traitStartPosition];
@@ -536,7 +548,8 @@ namespace LoLUpdater
                 var finalClass = new string[classModifier.Length + (modDetails.Length - 3)];
                 Array.Copy(classModifier, 0, finalClass, 0, traitStartPosition);
                 Array.Copy(modDetails, 3, finalClass, traitStartPosition, modDetails.Length - 3);
-                Array.Copy(classModifier, traitStartPosition, finalClass, traitStartPosition + modDetails.Length - 3, classModifier.Length - traitStartPosition);
+                Array.Copy(classModifier, traitStartPosition, finalClass, traitStartPosition + modDetails.Length - 3,
+                    classModifier.Length - traitStartPosition);
 
                 File.Delete(Path.Combine(finalDirectory, Class + ".class.asasm"));
                 File.WriteAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"), finalClass);
@@ -546,7 +559,9 @@ namespace LoLUpdater
             {
                 FileName = fileName,
                 LocationText = locationText,
-                ReAssembleLocation = finalDirectory.Substring(0, finalDirectory.IndexOf("com", StringComparison.Ordinal)).Replace("temp\\", ""),
+                ReAssembleLocation =
+                    finalDirectory.Substring(0, finalDirectory.IndexOf("com", StringComparison.Ordinal))
+                        .Replace("temp\\", ""),
                 FileLocation = fileLocation
             };
 
@@ -556,12 +571,13 @@ namespace LoLUpdater
 
         private void Repackage(WorstHack data)
         {
-            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-            {
-                StatusLabel.Content = "Patching mods to client...";
-            }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                new ThreadStart(() => { StatusLabel.Content = "Patching mods to client..."; }));
 
-            var abcNumber = data.ReAssembleLocation.Substring(data.ReAssembleLocation.IndexOf('-')).Replace("-", "").Replace("\\", "");
+            var abcNumber =
+                data.ReAssembleLocation.Substring(data.ReAssembleLocation.IndexOf('-'))
+                    .Replace("-", "")
+                    .Replace("\\", "");
 
             var reAsm = new ProcessStartInfo
             {
@@ -609,12 +625,11 @@ namespace LoLUpdater
 
         private void CopyToClient(WorstHack data)
         {
-            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-            {
-                StatusLabel.Content = "Patched " + data.FileName + "!";
-            }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                new ThreadStart(() => { StatusLabel.Content = "Patched " + data.FileName + "!"; }));
 
-            File.Copy(Path.Combine("temp", data.FileLocation.Replace(".dat", ""), data.FileName), Path.Combine(data.LocationText, data.FileLocation), true);
+            File.Copy(Path.Combine("temp", data.FileLocation.Replace(".dat", ""), data.FileName),
+                Path.Combine(data.LocationText, data.FileLocation), true);
         }
 
         private static void DeletePathWithLongFileNames(string path)
@@ -623,13 +638,11 @@ namespace LoLUpdater
             var fso = new Scripting.FileSystemObject();
             fso.DeleteFolder(tmpPath, true);
         }
-    
-
-    //cbf doing this properly, just do a quick thing that works just as well
 
 
+        //cbf doing this properly, just do a quick thing that works just as well
 
-       
+
         private void AdobeAIR_Checked(object sender, RoutedEventArgs e)
         {
             AdobeAlert();
@@ -709,7 +722,7 @@ namespace LoLUpdater
             HandleCfg("DefaultParticleMultithreading=1");
             HandleCgInstall();
             HandleAdobeAndTbb();
-            Process.Start(new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" });
+            Process.Start(new ProcessStartInfo {Arguments = "sagerun:1", FileName = "cleanmgr.exe"});
             HandlePmbUninstall();
             HandleMouseHz();
             if (Inking.IsChecked == true)
@@ -955,7 +968,7 @@ namespace LoLUpdater
             var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
-            Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/silent" });
+            Process.Start(new ProcessStartInfo {FileName = pmbUninstall, Arguments = "/silent"});
         }
 
 
@@ -1178,7 +1191,7 @@ namespace LoLUpdater
 
             var cg = new Process
             {
-                StartInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" }
+                StartInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"}
             };
             cg.Start();
             cg.WaitForExit();
@@ -1215,6 +1228,7 @@ namespace LoLUpdater
             WindowState = WindowState.Minimized;
         }
     }
+
     public class WorstHack
     {
         public string ReAssembleLocation { get; set; }
