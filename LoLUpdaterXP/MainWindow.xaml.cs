@@ -54,8 +54,7 @@ namespace LoLUpdaterXP
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
         }
 
-        private void CurrentDomain_FirstChanceException(object sender,
-            System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
             var ex = e.Exception;
             MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
@@ -283,8 +282,7 @@ namespace LoLUpdaterXP
             DeletePathWithLongFileNames(Path.GetFullPath("temp"));
         }
 
-        private void worker_RunWorkerCompleted(object sender,
-            RunWorkerCompletedEventArgs e)
+        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             MessageBox.Show(_wasPatched
                 ? "LESs has been successfully patched into League of Legends!"
@@ -1107,6 +1105,11 @@ namespace LoLUpdaterXP
         private void Xminimize_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 
