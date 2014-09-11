@@ -3,7 +3,6 @@
     x:Class="LoLUpdaterXP.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Loaded="MainWindow_Loaded"
     Title="LoLUpdater" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen"
     Foreground="White" SizeToContent="WidthAndHeight" Height="149" Width="1057.667">
     <Window.Resources>
