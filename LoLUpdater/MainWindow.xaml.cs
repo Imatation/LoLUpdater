@@ -73,7 +73,7 @@ namespace LoLUpdater
 
                 foreach (var mod in modList)
                 {
-                    var check = new CheckBox { IsChecked = true, Content = mod.Replace("mods\\", "") };
+                    var check = new CheckBox {IsChecked = true, Content = mod.Replace("mods\\", "")};
                     if (File.Exists(Path.Combine(mod, "disabled")))
                         check.IsChecked = false;
                     ModsListBox.Items.Add(check);
@@ -101,10 +101,6 @@ namespace LoLUpdater
                     if (!reader.IsStartElement()) continue;
                     switch (reader.Name)
                     {
-                        case "name":
-                            reader.Read();
-                            ModNameLabel.Content = reader.Value;
-                            break;
                         case "description":
                             reader.Read();
                             ModDescriptionBox.Text = reader.Value;
@@ -1107,7 +1103,8 @@ namespace LoLUpdater
 
             var cg = new Process
             {
-                StartInfo = new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact"}
+                StartInfo =
+                    new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact"}
             };
             cg.Start();
             cg.WaitForExit();

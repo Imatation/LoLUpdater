@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Security.Principal;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,9 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml;
 using Microsoft.Win32;
-using WUApiLib;
 
-namespace LoLUpdater
+namespace LoLUpdaterXP
 {
     public partial class MainWindow
     {
@@ -73,7 +70,7 @@ namespace LoLUpdater
 
                 foreach (var mod in modList)
                 {
-                    var check = new CheckBox { IsChecked = true, Content = mod.Replace("mods\\", "") };
+                    var check = new CheckBox {IsChecked = true, Content = mod.Replace("mods\\", "")};
                     if (File.Exists(Path.Combine(mod, "disabled")))
                         check.IsChecked = false;
                     ModsListBox.Items.Add(check);
@@ -101,10 +98,6 @@ namespace LoLUpdater
                     if (!reader.IsStartElement()) continue;
                     switch (reader.Name)
                     {
-                        case "name":
-                            reader.Read();
-                            ModNameLabel.Content = reader.Value;
-                            break;
                         case "description":
                             reader.Read();
                             ModDescriptionBox.Text = reader.Value;
@@ -217,7 +210,7 @@ namespace LoLUpdater
             Dispatcher.BeginInvoke(DispatcherPriority.Input,
                 new ThreadStart(() => { modCollection = ModsListBox.Items; }));
 
-// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
+            // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
             while (modCollection == null)
             {
             }
@@ -600,14 +593,6 @@ namespace LoLUpdater
             Kill("LoLClient");
             Kill("LoLLauncher");
             Kill("League of Legends");
-            if (Visual.IsChecked == true)
-            {
-                Process.Start("SystemPropertiesPerformance.exe");
-            }
-            if (WinUpdate.IsChecked == true)
-            {
-                HandleWindowsUpdate();
-            }
             if (!Directory.Exists("Backup"))
             {
                 HandleBackup();
@@ -1054,25 +1039,6 @@ namespace LoLUpdater
         }
 
 
-        private static void HandleWindowsUpdate()
-        {
-            var uSession = new UpdateSession();
-            var uSearcher = uSession.CreateUpdateSearcher();
-            var uResult = uSearcher.Search("IsInstalled=0 and BrowseOnly=0 and Type='Software'");
-            var downloader = uSession.CreateUpdateDownloader();
-            downloader.Updates = uResult.Updates;
-            downloader.Download();
-            var updatesToInstall = new UpdateCollection();
-            foreach (var update in uResult.Updates.Cast<IUpdate>().Where(update => update.IsDownloaded))
-            {
-                updatesToInstall.Add(update);
-            }
-            var installer = uSession.CreateUpdateInstaller();
-            installer.Updates = updatesToInstall;
-            installer.Install();
-        }
-
-
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
             if (_cgBinPath == null || !File.Exists(Path.Combine(_cgBinPath, "cg.dll")))
@@ -1107,7 +1073,8 @@ namespace LoLUpdater
 
             var cg = new Process
             {
-                StartInfo = new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact"}
+                StartInfo =
+                    new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact"}
             };
             cg.Start();
             cg.WaitForExit();
@@ -1142,30 +1109,6 @@ namespace LoLUpdater
         private void Xminimize_MouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowState = WindowState.Minimized;
-        }
-
-        private void WinUpdate_Checked(object sender, RoutedEventArgs e)
-        {
-            var identity = WindowsIdentity.GetCurrent();
-            if (identity == null) return;
-            var pricipal = new WindowsPrincipal(identity);
-            if (pricipal.IsInRole(WindowsBuiltInRole.Administrator)) return;
-            if (
-                MessageBox.Show(
-                    "The Windows Update features requires the application to be run as administrator, would you like to restart it with admin privileges",
-                    "LoLUpdater",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    Verb = "runas",
-                    FileName = Assembly.GetExecutingAssembly().Location
-                });
-            }
-            else
-            {
-                WinUpdate.IsChecked = false;
-            }
         }
     }
 

@@ -9,6 +9,44 @@
     ShowTitleBar="false" WindowTransitionsEnabled="False" ShowCloseButton="False" GlowBrush="#9B9FB9"
     Foreground="White" SizeToContent="WidthAndHeight" Height="184">
     <controls:MetroWindow.Resources>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD" />
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070" />
+        <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{DynamicResource FocusVisual}" />
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+
+                                Background="#2D2D30" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="#3E3E40" />
+                                <Setter Property="BorderBrush" TargetName="border" Value="#007ACC" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="#3E3E40" />
+                                <Setter Property="BorderBrush" TargetName="border" Value="#007ACC" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -206,60 +244,8 @@
         <Image Name="Xminimize" HorizontalAlignment="Left" Height="26" Margin="1124,0,0,0"
                Source="Resources/minimize.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter_1"
                MouseLeave="Image_MouseLeave_1" MouseDown="Xminimize_MouseDown" RenderTransformOrigin="-0.868,0.577" />
-        <Button Name="Ok" Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="3,121,0,0"
-                VerticalAlignment="Top" Width="716" Click="OK_Click">
-
-            <Button.Resources>
-                <Style x:Key="FocusVisual">
-                    <Setter Property="Control.Template">
-                        <Setter.Value>
-                            <ControlTemplate>
-                                <Rectangle Margin="2" SnapsToDevicePixels="true"
-                                           Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                                           StrokeThickness="1" StrokeDashArray="1 2" />
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-                <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD" />
-                <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070" />
-                <Style TargetType="{x:Type Button}">
-                    <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-                    <Setter Property="Background" Value="{StaticResource Button.Static.Background}" />
-                    <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}" />
-                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-                    <Setter Property="BorderThickness" Value="1" />
-                    <Setter Property="HorizontalContentAlignment" Value="Center" />
-                    <Setter Property="VerticalContentAlignment" Value="Center" />
-                    <Setter Property="Padding" Value="1" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type Button}">
-                                <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}"
-                                        Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
-                                    <ContentPresenter x:Name="contentPresenter" Focusable="False"
-                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                      Margin="{TemplateBinding Padding}" RecognizesAccessKey="True"
-                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="true">
-                                        <Setter Property="Background" TargetName="border" Value="#3E3E40" />
-                                        <Setter Property="BorderBrush" TargetName="border" Value="#007ACC" />
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="true">
-                                        <Setter Property="Background" TargetName="border" Value="#3E3E40" />
-                                        <Setter Property="BorderBrush" TargetName="border" Value="#007ACC" />
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Button.Resources>
-        </Button>
+        <Button Name="Ok" Background="#2D2D30" Content="Go" HorizontalAlignment="Left" Margin="3,121,0,0"
+                VerticalAlignment="Top" Width="716" Click="OK_Click" Style="{DynamicResource ButtonStyle}" />
         <TextBlock HorizontalAlignment="Left" Margin="10,2,0,0" TextWrapping="Wrap" Text="LoLUpdater"
                    VerticalAlignment="Top" Foreground="Gray" />
         <GroupBox Header="Main" HorizontalAlignment="Left" Margin="1,23,0,0" VerticalAlignment="Top" Height="88"
@@ -329,13 +315,26 @@
             <CheckBox Foreground="White" Name="PerPixelPointLighting" Content="No PerPixelPointLightning"
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the particles." />
         </ListBox>
-        <Button Name="PatchButton" Content="Install LES" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="30" Width="100" Background="#FF98CB89" FontSize="16" FontWeight="Bold" IsEnabled="False" Click="PatchButton_Click"/>
-        <Button Name="RemoveButton" Content="Remove LES" HorizontalAlignment="Right" Margin="0,0,115,10" VerticalAlignment="Bottom" Height="30" Width="100" Background="#FF98CB89" FontSize="16" FontWeight="Bold" IsEnabled="False" Click="RemoveButton_Click" />
-        <Label Name="StatusLabel" Content="Waiting..." HorizontalAlignment="Left" Margin="719,0,0,8" VerticalAlignment="Bottom" FontWeight="Light" FontStyle="Italic" FontSize="14" Foreground="#FF595959" Height="30"/>
-        <TextBox Text="Directory for lol.launcher (or lol.exe) for LES" Name="LocationTextbox" Padding="3,0,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="30" Margin="0,146,528,0" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" IsReadOnly="True"/>
-        <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,45" VerticalAlignment="Stretch" Width="230" SelectionChanged="ModsListBox_SelectionChanged" Background="#2D2D30"/>
-        <TextBox Name="ModDescriptionBox" HorizontalAlignment="Left" Height="100" Margin="959,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="223" Background="#2D2D30"/>
-        <Button Name="FindButton" Content="Locate!" HorizontalAlignment="Right" Margin="0,146,473,0" VerticalAlignment="Top" Width="50" Height="30" FontSize="14"/>
+        <Button Name="PatchButton" Content="Install LES" HorizontalAlignment="Right" Margin="0,0,10,10"
+                VerticalAlignment="Bottom" Height="30" Width="100" IsEnabled="False" Click="PatchButton_Click"
+                Style="{DynamicResource ButtonStyle}" />
+        <Button Name="RemoveButton" Content="Remove LES" HorizontalAlignment="Right" Margin="0,0,115,10"
+                VerticalAlignment="Bottom" Height="30" Width="100" IsEnabled="False" Click="RemoveButton_Click"
+                Style="{DynamicResource ButtonStyle}" />
+        <Label Name="StatusLabel" Content="Waiting..." HorizontalAlignment="Left" Margin="719,0,0,8"
+               VerticalAlignment="Bottom" FontWeight="Light" FontStyle="Italic" FontSize="14" Foreground="#FF595959"
+               Height="30" />
+        <TextBox Text="Directory for lol.launcher (or lol.exe) for LES" Name="LocationTextbox" Padding="3,0,0,0"
+                 VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="30" Margin="0,146,528,0"
+                 TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" IsReadOnly="True" />
+        <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,45" VerticalAlignment="Stretch"
+                 Width="230" SelectionChanged="ModsListBox_SelectionChanged" Background="#2D2D30" />
+        <TextBox Foreground="White" Name="ModDescriptionBox" HorizontalAlignment="Left" Height="100" Margin="959,39,0,0"
+                 TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 Width="223" Background="#2D2D30" />
+        <Button Name="FindButton" Content="Locate!" HorizontalAlignment="Right" Margin="0,146,473,0"
+                VerticalAlignment="Top" Width="50" Height="30" Style="{DynamicResource ButtonStyle}" />
         <TextBlock HorizontalAlignment="Left" Margin="78,23,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
                    VerticalAlignment="Top" RenderTransformOrigin="0.107,0.731" />
         <TextBlock HorizontalAlignment="Left" Margin="178,23,0,0" TextWrapping="Wrap" Text="Game Client"
@@ -347,18 +346,18 @@
         <TextBlock HorizontalAlignment="Left" Margin="547,23,0,0" TextWrapping="Wrap" Text="Config Tweaks"
                    VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
         <ListBox HorizontalAlignment="Left" Height="77" Margin="338,39,0,0" VerticalAlignment="Top" Width="81"
-        	Background="#2D2D30">
+                 Background="#2D2D30">
             <CheckBox Foreground="White" Name="Cg2" Content="Cg" Checked="Cg_Checked"
-        		Style="{DynamicResource CheckboxStyle}"
-        		ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
+                      Style="{DynamicResource CheckboxStyle}"
+                      ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
             <CheckBox Foreground="White" Name="CgD3D2" Content="CgD3D9" Checked="Cg_Checked"
-        		Style="{DynamicResource CheckboxStyle}"
-        		ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
+                      Style="{DynamicResource CheckboxStyle}"
+                      ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
             <CheckBox Foreground="White" Name="CgGl2" Content="CgGL" Checked="Cg_Checked"
-        		Style="{DynamicResource CheckboxStyle}"
-        		ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
+                      Style="{DynamicResource CheckboxStyle}"
+                      ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
         </ListBox>
         <TextBlock HorizontalAlignment="Left" Margin="338,23,0,0" TextWrapping="Wrap" Text="Patcher"
-        	VerticalAlignment="Top" />
+                   VerticalAlignment="Top" />
     </Grid>
 </controls:MetroWindow>
