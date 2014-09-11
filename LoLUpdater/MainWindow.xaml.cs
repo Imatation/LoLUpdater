@@ -67,22 +67,20 @@ namespace LoLUpdater
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            if (Directory.Exists("mods"))
-            {
-                var modList = Directory.GetDirectories("mods");
-
-                foreach (var mod in modList)
-                {
-                    var check = new CheckBox { IsChecked = true, Content = mod.Replace("mods\\", "") };
-                    if (File.Exists(Path.Combine(mod, "disabled")))
-                        check.IsChecked = false;
-                    ModsListBox.Items.Add(check);
-                }
-            }
-            else
+            if (!Directory.Exists("mods"))
             {
                 MessageBox.Show("Missing mods directory. Ensure that all files were extracted properly.",
                     "Missing files");
+            }
+
+            var modList = Directory.GetDirectories("mods");
+
+            foreach (var mod in modList)
+            {
+                var check = new CheckBox {IsChecked = true, Content = mod.Replace("mods\\", "")};
+                if (File.Exists(Path.Combine(mod, "disabled")))
+                    check.IsChecked = false;
+                ModsListBox.Items.Add(check);
             }
         }
 
@@ -1107,7 +1105,7 @@ namespace LoLUpdater
 
             var cg = new Process
             {
-                StartInfo = new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact"}
+                StartInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"}
             };
             cg.Start();
             cg.WaitForExit();
