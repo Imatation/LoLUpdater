@@ -321,16 +321,20 @@
                  TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Width="223" Background="#2D2D30" />
-        <TextBlock HorizontalAlignment="Left" Margin="78,23,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
+        <TextBlock HorizontalAlignment="Left" Margin="78,22,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
                    VerticalAlignment="Top" RenderTransformOrigin="0.107,0.731" />
-        <TextBlock HorizontalAlignment="Left" Margin="178,23,0,0" TextWrapping="Wrap" Text="Game Client"
+        <TextBlock HorizontalAlignment="Left" Margin="178,22,0,0" TextWrapping="Wrap" Text="Game Client"
                    VerticalAlignment="Top" />
-        <TextBlock HorizontalAlignment="Left" Margin="257,23,0,0" TextWrapping="Wrap" Text="Launcher"
+        <TextBlock HorizontalAlignment="Left" Margin="257,22,0,0" TextWrapping="Wrap" Text="Launcher"
                    VerticalAlignment="Top" />
-        <TextBlock HorizontalAlignment="Left" Margin="420,24,0,0" TextWrapping="Wrap" Text="Windows Utilities"
+        <TextBlock HorizontalAlignment="Left" Margin="420,22,0,0" TextWrapping="Wrap" Text="Windows Utilities"
                    VerticalAlignment="Top" />
-        <TextBlock HorizontalAlignment="Left" Margin="547,23,0,0" TextWrapping="Wrap" Text="Config Tweaks"
+        <TextBlock HorizontalAlignment="Left" Margin="547,22,0,0" TextWrapping="Wrap" Text="Config Tweaks"
                    VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
+        <TextBlock HorizontalAlignment="Left" Margin="724,24,0,0" TextWrapping="Wrap" Text="LES"
+        	VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
+        <TextBlock HorizontalAlignment="Left" Margin="959,22,0,0" TextWrapping="Wrap" Text="LES mod description"
+        	VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
         <ListBox HorizontalAlignment="Left" Height="77" Margin="338,39,0,0" VerticalAlignment="Top" Width="81"
                  Background="#2D2D30">
             <CheckBox Foreground="White" Name="Cg2" Content="Cg" Checked="Cg_Checked"
@@ -343,7 +347,7 @@
                       Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
         </ListBox>
-        <TextBlock HorizontalAlignment="Left" Margin="338,23,0,0" TextWrapping="Wrap" Text="Patcher"
+        <TextBlock HorizontalAlignment="Left" Margin="338,22,0,0" TextWrapping="Wrap" Text="Patcher"
                    VerticalAlignment="Top" />
     </Grid>
 </controls:MetroWindow>
