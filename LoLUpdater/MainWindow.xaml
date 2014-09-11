@@ -316,7 +316,7 @@
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the particles." />
         </ListBox>
         <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,33" VerticalAlignment="Stretch"
-                 Width="230" SelectionChanged="ModsListBox_SelectionChanged" Background="#2D2D30" />
+                 Width="230" Height="76" SelectionChanged="ModsListBox_SelectionChanged" Background="#2D2D30" />
         <TextBox Foreground="White" Name="ModDescriptionBox" HorizontalAlignment="Left" Height="77" Margin="959,39,0,0"
                  TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -331,7 +331,7 @@
                    VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="547,22,0,0" TextWrapping="Wrap" Text="Config Tweaks"
                    VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
-        <TextBlock HorizontalAlignment="Left" Margin="724,24,0,0" TextWrapping="Wrap" Text="LES"
+        <TextBlock HorizontalAlignment="Left" Margin="724,22,0,0" TextWrapping="Wrap" Text="LES"
         	VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
         <TextBlock HorizontalAlignment="Left" Margin="959,22,0,0" TextWrapping="Wrap" Text="LES mod description"
         	VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />

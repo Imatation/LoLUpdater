@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml;
@@ -73,7 +74,7 @@ namespace LoLUpdater
 
                 foreach (var mod in modList)
                 {
-                    var check = new CheckBox {IsChecked = true, Content = mod.Replace("mods\\", "")};
+                    var check = new CheckBox {IsChecked = true, Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)), Content = mod.Replace("mods\\", "")};
                     if (File.Exists(Path.Combine(mod, "disabled")))
                         check.IsChecked = false;
                     ModsListBox.Items.Add(check);
