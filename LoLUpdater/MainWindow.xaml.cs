@@ -582,7 +582,7 @@ namespace LoLUpdater
         {
             if (Directory.Exists("Backup")) return;
             Directory.CreateDirectory("Backup");
-            Directory.CreateDirectory(Path.Combine("Backup", IntendedVersion));§
+            Directory.CreateDirectory(Path.Combine("Backup", IntendedVersion));
             if (Directory.Exists("RADS"))
             {
                 if (File.Exists(Path.Combine("Config", "game.cfg")))

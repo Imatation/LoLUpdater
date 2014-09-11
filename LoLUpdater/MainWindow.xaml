@@ -315,10 +315,10 @@
             <CheckBox Foreground="White" Name="PerPixelPointLighting" Content="No PerPixelPointLightning"
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the particles." />
         </ListBox>
-        <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,33" VerticalAlignment="Stretch"
+        <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="720,39,0,34" VerticalAlignment="Stretch"
                  Width="230" Height="76" SelectionChanged="ModsListBox_SelectionChanged" Background="#2D2D30" />
-        <TextBox Foreground="White" Name="ModDescriptionBox" HorizontalAlignment="Left" Height="77" Margin="959,39,0,0"
-                 TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True"
+        <TextBlock Foreground="White" Name="ModDescriptionBox" HorizontalAlignment="Left" Height="77" Margin="951,39,0,0"
+                 TextWrapping="Wrap" VerticalAlignment="Top"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Width="223" Background="#2D2D30" />
         <TextBlock HorizontalAlignment="Left" Margin="78,22,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
@@ -331,9 +331,9 @@
                    VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="547,22,0,0" TextWrapping="Wrap" Text="Config Tweaks"
                    VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
-        <TextBlock HorizontalAlignment="Left" Margin="724,22,0,0" TextWrapping="Wrap" Text="LES"
+        <TextBlock HorizontalAlignment="Left" Margin="720,22,0,0" TextWrapping="Wrap" Text="LES"
         	VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
-        <TextBlock HorizontalAlignment="Left" Margin="959,22,0,0" TextWrapping="Wrap" Text="LES mod description"
+        <TextBlock HorizontalAlignment="Left" Margin="951,22,0,0" TextWrapping="Wrap" Text="LES mod description"
         	VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
         <ListBox HorizontalAlignment="Left" Height="77" Margin="338,39,0,0" VerticalAlignment="Top" Width="81"
                  Background="#2D2D30">
