@@ -76,7 +76,7 @@ namespace LoLUpdaterXP
 
             foreach (var mod in modList)
             {
-                var check = new CheckBox {IsChecked = true, Content = mod.Replace("mods\\", "")};
+                var check = new CheckBox { IsChecked = true, Content = mod.Replace("mods\\", "") };
                 if (File.Exists(Path.Combine(mod, "disabled")))
                     check.IsChecked = false;
                 ModsListBox.Items.Add(check);
@@ -85,12 +85,12 @@ namespace LoLUpdaterXP
 
         private void ModsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var box = (CheckBox) ModsListBox.SelectedItem;
+            var box = (CheckBox)ModsListBox.SelectedItem;
 
             if (box == null)
                 return;
 
-            var selectedMod = (string) box.Content;
+            var selectedMod = (string)box.Content;
             using (var reader = XmlReader.Create(Path.Combine("mods", selectedMod, "info.xml")))
             {
                 while (reader.Read())
@@ -129,6 +129,7 @@ namespace LoLUpdaterXP
                 .Replace("lol.launcher.admin.exe", "");
             if (filename.Contains("lol.exe"))
             {
+
                 PatchButton.IsEnabled = true;
                 RemoveButton.IsEnabled = false;
 
@@ -145,9 +146,9 @@ namespace LoLUpdaterXP
                 uint versionCompare = 0;
                 foreach (var x in versionDirectories)
                 {
-                    var compare1 = x.Substring(x.LastIndexOfAny(new[] {'\\', '/'}) + 1);
+                    var compare1 = x.Substring(x.LastIndexOfAny(new[] { '\\', '/' }) + 1);
 
-                    var versionParts = compare1.Split(new[] {'.'});
+                    var versionParts = compare1.Split(new[] { '.' });
 
                     if (!compare1.Contains(".") || versionParts.Length != 4)
                     {
@@ -211,8 +212,10 @@ namespace LoLUpdaterXP
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             ItemCollection modCollection = null;
-            Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                new ThreadStart(() => { modCollection = ModsListBox.Items; }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+            {
+                modCollection = ModsListBox.Items;
+            }));
 
             // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
             while (modCollection == null)
@@ -223,15 +226,15 @@ namespace LoLUpdaterXP
 
             foreach (var x in modCollection)
             {
-                var box = (CheckBox) x;
+                var box = (CheckBox)x;
                 bool? isBoxChecked = null;
                 var boxName = "";
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    if (box.IsChecked != null && (bool) box.IsChecked)
+                    if (box.IsChecked != null && (bool)box.IsChecked)
                     {
                         isBoxChecked = true;
-                        boxName = (string) box.Content;
+                        boxName = (string)box.Content;
                     }
                     else
                     {
@@ -244,7 +247,7 @@ namespace LoLUpdaterXP
                 {
                 }
 
-                if (!(bool) isBoxChecked) continue;
+                if (!(bool)isBoxChecked) continue;
                 var amountOfPatches = 1;
 
                 using (var reader = XmlReader.Create(Path.Combine("mods", boxName, "info.xml")))
@@ -331,8 +334,10 @@ namespace LoLUpdaterXP
             var fileName = filePart[filePart.Length - 1];
 
             var locationText = "";
-            Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                new ThreadStart(() => { locationText = LocationTextbox.Text; }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+            {
+                locationText = LocationTextbox.Text;
+            }));
 
             while (String.IsNullOrEmpty(locationText))
             {
@@ -360,8 +365,10 @@ namespace LoLUpdaterXP
                 File.Copy(Path.Combine(locationText, fileLocation),
                     Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                    new ThreadStart(() => { StatusLabel.Content = "Exporting patch " + modName; }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                {
+                    StatusLabel.Content = "Exporting patch " + modName;
+                }));
 
 
                 var export = new ProcessStartInfo
@@ -377,8 +384,10 @@ namespace LoLUpdaterXP
                     exportProc.WaitForExit();
                 }
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                    new ThreadStart(() => { StatusLabel.Content = "Disassembling patch (" + modName + ")"; }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
+                {
+                    StatusLabel.Content = "Disassembling patch (" + modName + ")";
+                }));
 
                 var abcFiles = Directory.GetFiles(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*.abc");
 
@@ -427,10 +436,10 @@ namespace LoLUpdaterXP
             var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
             foreach (var s in from s in foundDirectories
-                let m = Directory.GetFiles(s)
-                let x = Path.Combine(s, Class + ".class.asasm")
-                where m.Contains(x)
-                select s)
+                              let m = Directory.GetFiles(s)
+                              let x = Path.Combine(s, Class + ".class.asasm")
+                              where m.Contains(x)
+                              select s)
             {
                 finalDirectory = s;
             }
@@ -627,7 +636,7 @@ namespace LoLUpdaterXP
             HandleCfg("DefaultParticleMultithreading=1");
             HandleCgInstall();
             HandleAdobeAndTbb();
-            Process.Start(new ProcessStartInfo {Arguments = "sagerun:1", FileName = "cleanmgr.exe"});
+            Process.Start(new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" });
             HandlePmbUninstall();
             HandleMouseHz();
             if (Inking.IsChecked == true)
@@ -873,7 +882,7 @@ namespace LoLUpdaterXP
             var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
-            Process.Start(new ProcessStartInfo {FileName = pmbUninstall, Arguments = "/silent"});
+            Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/silent" });
         }
 
 
@@ -1044,6 +1053,9 @@ namespace LoLUpdaterXP
         }
 
 
+      
+
+
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
             if (_cgBinPath == null || !File.Exists(Path.Combine(_cgBinPath, "cg.dll")))
@@ -1078,7 +1090,7 @@ namespace LoLUpdaterXP
 
             var cg = new Process
             {
-                StartInfo = new ProcessStartInfo {FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent"}
+                StartInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" }
             };
             cg.Start();
             cg.WaitForExit();
@@ -1114,6 +1126,7 @@ namespace LoLUpdaterXP
         {
             WindowState = WindowState.Minimized;
         }
+
     }
 
     public class WorstHack
