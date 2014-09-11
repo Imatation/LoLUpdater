@@ -260,7 +260,7 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="LoLUpdater"
+        <TextBlock HorizontalAlignment="Left" Margin="10,2,0,0" TextWrapping="Wrap" Text="LoLUpdater"
                    VerticalAlignment="Top" Foreground="Gray" />
         <GroupBox Header="Main" HorizontalAlignment="Left" Margin="1,23,0,0" VerticalAlignment="Top" Height="88"
                   Width="76" Foreground="White">
@@ -331,11 +331,11 @@
         </ListBox>
         <Button Name="PatchButton" Content="Install LES" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="30" Width="100" Background="#FF98CB89" FontSize="16" FontWeight="Bold" IsEnabled="False" Click="PatchButton_Click"/>
         <Button Name="RemoveButton" Content="Remove LES" HorizontalAlignment="Right" Margin="0,0,115,10" VerticalAlignment="Bottom" Height="30" Width="100" Background="#FF98CB89" FontSize="16" FontWeight="Bold" IsEnabled="False" Click="RemoveButton_Click" />
-        <Label Name="StatusLabel" Content="Waiting..." HorizontalAlignment="Left" Margin="724,0,0,10" VerticalAlignment="Bottom" FontWeight="Light" FontStyle="Italic" FontSize="14" Foreground="#FF595959"/>
-        <TextBox Name="LocationTextbox" Padding="3,0,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="30" Margin="0,146,880,0" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" IsReadOnly="True"/>
-        <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,43" VerticalAlignment="Stretch" Width="230" SelectionChanged="ModsListBox_SelectionChanged"/>
-        <TextBox Name="ModDescriptionBox" HorizontalAlignment="Left" Height="100" Margin="959,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="223"/>
-        <Button Name="FindButton" Content="Locate!" HorizontalAlignment="Right" Margin="0,144,710,0" VerticalAlignment="Top" Width="165" Height="30" FontSize="14"/>
+        <Label Name="StatusLabel" Content="Waiting..." HorizontalAlignment="Left" Margin="719,0,0,8" VerticalAlignment="Bottom" FontWeight="Light" FontStyle="Italic" FontSize="14" Foreground="#FF595959" Height="30"/>
+        <TextBox Text="Directory for lol.launcher (or lol.exe) for LES" Name="LocationTextbox" Padding="3,0,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="30" Margin="0,146,528,0" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" IsReadOnly="True"/>
+        <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,45" VerticalAlignment="Stretch" Width="230" SelectionChanged="ModsListBox_SelectionChanged" Background="#2D2D30"/>
+        <TextBox Name="ModDescriptionBox" HorizontalAlignment="Left" Height="100" Margin="959,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="223" Background="#2D2D30"/>
+        <Button Name="FindButton" Content="Locate!" HorizontalAlignment="Right" Margin="0,146,473,0" VerticalAlignment="Top" Width="50" Height="30" FontSize="14"/>
         <TextBlock HorizontalAlignment="Left" Margin="78,23,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
                    VerticalAlignment="Top" RenderTransformOrigin="0.107,0.731" />
         <TextBlock HorizontalAlignment="Left" Margin="178,23,0,0" TextWrapping="Wrap" Text="Game Client"
