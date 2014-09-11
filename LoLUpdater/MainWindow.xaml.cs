@@ -99,10 +99,6 @@ namespace LoLUpdater
                     if (!reader.IsStartElement()) continue;
                     switch (reader.Name)
                     {
-                        case "name":
-                            reader.Read();
-                            ModNameLabel.Content = reader.Value;
-                            break;
                         case "description":
                             reader.Read();
                             ModDescriptionBox.Text = reader.Value;

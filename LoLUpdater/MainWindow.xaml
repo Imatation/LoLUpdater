@@ -206,7 +206,7 @@
         <Image Name="Xminimize" HorizontalAlignment="Left" Height="26" Margin="1124,0,0,0"
                Source="Resources/minimize.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter_1"
                MouseLeave="Image_MouseLeave_1" MouseDown="Xminimize_MouseDown" RenderTransformOrigin="-0.868,0.577" />
-        <Button Name="Ok" Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="1,116,0,0"
+        <Button Name="Ok" Background="#2D2D30" Foreground="White" Content="Go" HorizontalAlignment="Left" Margin="3,121,0,0"
                 VerticalAlignment="Top" Width="716" Click="OK_Click">
 
             <Button.Resources>
@@ -272,7 +272,7 @@
             </Grid>
         </GroupBox>
 
-        <ListBox HorizontalAlignment="Left" Height="72" Margin="78,39,0,0" VerticalAlignment="Top" Width="99"
+        <ListBox HorizontalAlignment="Left" Height="77" Margin="78,39,0,0" VerticalAlignment="Top" Width="99"
                  Background="#2D2D30">
             <CheckBox Foreground="White" Name="AdobeAir" Content="Adobe AIR" Checked="Flash_Checked"
                       Style="{DynamicResource CheckboxStyle}"
@@ -282,7 +282,7 @@
                       ToolTip="Provides you a link to the Adobe AIR redistributable so you can install it before patching. This upgrades the built in Flash player in the Air Client." />
         </ListBox>
 
-        <ListBox HorizontalAlignment="Left" Height="72" Margin="178,39,0,0" VerticalAlignment="Top" Width="78"
+        <ListBox HorizontalAlignment="Left" Height="77" Margin="178,39,0,0" VerticalAlignment="Top" Width="78"
                  Background="#2D2D30">
             <CheckBox Foreground="White" Name="Cg" Content="Cg" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
@@ -297,7 +297,7 @@
                       ToolTip="Installs a custom lightweight tbb.dll file that increases the fps of the game, This makes multiprocessing available for LoL." />
         </ListBox>
 
-        <ListBox HorizontalAlignment="Left" Height="72" Margin="257,39,0,0" VerticalAlignment="Top" Width="81"
+        <ListBox HorizontalAlignment="Left" Height="77" Margin="257,39,0,0" VerticalAlignment="Top" Width="81"
                  Background="#2D2D30">
             <CheckBox Foreground="White" Name="Cg1" Content="Cg" Checked="Cg_Checked"
                       Style="{DynamicResource CheckboxStyle}"
@@ -310,7 +310,7 @@
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
         </ListBox>
 
-        <ListBox HorizontalAlignment="Left" Height="72" Margin="420,39,0,0" VerticalAlignment="Top" Width="126"
+        <ListBox HorizontalAlignment="Left" Height="77" Margin="420,39,0,0" VerticalAlignment="Top" Width="126"
                  Background="#2D2D30">
             <CheckBox Foreground="White" Name="WinUpdate" Content="Windows Update" Checked="WinUpdate_Checked"
                       Style="{DynamicResource CheckboxStyle}"
@@ -320,7 +320,7 @@
                       ToolTip="Enables you to edit the visual style of Windows." />
         </ListBox>
 
-        <ListBox HorizontalAlignment="Left" Height="72" VerticalAlignment="Top" Width="172" Margin="547,39,-1,0"
+        <ListBox HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="172" Margin="547,39,0,0"
                  Background="#2D2D30">
             <CheckBox Foreground="White" Name="Inking" Content="No Inking" Style="{DynamicResource CheckboxStyle}"
                       ToolTip="Turns off the new 'graphics'" />
@@ -332,11 +332,10 @@
         <Button Name="PatchButton" Content="Install LES" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Height="30" Width="100" Background="#FF98CB89" FontSize="16" FontWeight="Bold" IsEnabled="False" Click="PatchButton_Click"/>
         <Button Name="RemoveButton" Content="Remove LES" HorizontalAlignment="Right" Margin="0,0,115,10" VerticalAlignment="Bottom" Height="30" Width="100" Background="#FF98CB89" FontSize="16" FontWeight="Bold" IsEnabled="False" Click="RemoveButton_Click" />
         <Label Name="StatusLabel" Content="Waiting..." HorizontalAlignment="Left" Margin="724,0,0,10" VerticalAlignment="Bottom" FontWeight="Light" FontStyle="Italic" FontSize="14" Foreground="#FF595959"/>
-        <TextBox Name="LocationTextbox" Padding="3,0,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="30" Margin="0,141,880,0" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" IsReadOnly="True"/>
-        <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,47" VerticalAlignment="Stretch" Width="230" SelectionChanged="ModsListBox_SelectionChanged"/>
+        <TextBox Name="LocationTextbox" Padding="3,0,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="30" Margin="0,146,880,0" TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" IsReadOnly="True"/>
+        <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,43" VerticalAlignment="Stretch" Width="230" SelectionChanged="ModsListBox_SelectionChanged"/>
         <TextBox Name="ModDescriptionBox" HorizontalAlignment="Left" Height="100" Margin="959,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Width="223"/>
-        <Label Name="ModNameLabel" Content="" HorizontalAlignment="Left" Margin="422,140,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="18" RenderTransformOrigin="45.8,1.706"/>
-        <Button Name="FindButton" Content="Right-Click Me First" HorizontalAlignment="Right" Margin="0,141,710,0" VerticalAlignment="Top" Width="165" Height="30" FontSize="14"/>
+        <Button Name="FindButton" Content="Locate!" HorizontalAlignment="Right" Margin="0,144,710,0" VerticalAlignment="Top" Width="165" Height="30" FontSize="14"/>
         <TextBlock HorizontalAlignment="Left" Margin="78,23,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
                    VerticalAlignment="Top" RenderTransformOrigin="0.107,0.731" />
         <TextBlock HorizontalAlignment="Left" Margin="178,23,0,0" TextWrapping="Wrap" Text="Game Client"
@@ -347,7 +346,7 @@
                    VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="547,23,0,0" TextWrapping="Wrap" Text="Config Tweaks"
                    VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
-        <ListBox HorizontalAlignment="Left" Height="72" Margin="338,39,0,0" VerticalAlignment="Top" Width="81"
+        <ListBox HorizontalAlignment="Left" Height="77" Margin="338,39,0,0" VerticalAlignment="Top" Width="81"
         	Background="#2D2D30">
             <CheckBox Foreground="White" Name="Cg2" Content="Cg" Checked="Cg_Checked"
         		Style="{DynamicResource CheckboxStyle}"
