@@ -74,7 +74,12 @@ namespace LoLUpdater
 
                 foreach (var mod in modList)
                 {
-                    var check = new CheckBox {IsChecked = true, Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)), Content = mod.Replace("mods\\", "")};
+                    var check = new CheckBox
+                    {
+                        IsChecked = true,
+                        Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
+                        Content = mod.Replace("mods\\", "")
+                    };
                     if (File.Exists(Path.Combine(mod, "disabled")))
                         check.IsChecked = false;
                     ModsListBox.Items.Add(check);
@@ -110,7 +115,6 @@ namespace LoLUpdater
                 }
             }
         }
-
 
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
@@ -248,21 +252,13 @@ namespace LoLUpdater
                 foreach (var s in filePart.Take(filePart.Length - 1))
                 {
                     n = Path.Combine(n, s);
-                    if (!Directory.Exists(Path.Combine(locationText, "LESsBackup", IntendedVersion, n)))
-                    {
-                        Directory.CreateDirectory(Path.Combine(locationText, "LESsBackup", IntendedVersion, n));
-                    }
+                    Directory.CreateDirectory(Path.Combine("Backup", IntendedVersion, n));
                 }
-                if (!File.Exists(Path.Combine(locationText, "LESsBackup", IntendedVersion, fileLocation)))
-                {
-                    File.Copy(Path.Combine(locationText, fileLocation),
-                        Path.Combine(locationText, "LESsBackup", IntendedVersion, fileLocation));
-                }
+                File.Copy(Path.Combine(locationText, fileLocation),
+                    Path.Combine("Backup", IntendedVersion, fileLocation));
 
                 File.Copy(Path.Combine(locationText, fileLocation),
                     Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
-
-                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() => { }));
 
 
                 var export = new ProcessStartInfo
@@ -461,7 +457,6 @@ namespace LoLUpdater
 
         private static void CopyToClient(WorstHack data)
         {
-
             File.Copy(Path.Combine("temp", data.FileLocation.Replace(".dat", ""), data.FileName),
                 Path.Combine(data.LocationText, data.FileLocation), true);
         }
@@ -495,7 +490,7 @@ namespace LoLUpdater
             {
                 _location = Path.Combine("lol.exe", "Air");
             }
-            else if  (Directory.Exists("RADS"))
+            else if (Directory.Exists("RADS"))
             {
                 var firstOrDefault = new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases"))
                     .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault();
@@ -509,9 +504,10 @@ namespace LoLUpdater
                     {
                         _location = Path.Combine(version, "deploy");
                         if (MessageBox.Show(
-                                "This version of LESs is intended for " + IntendedVersion +
-                                ". Your current version of League of Legends is " + version +
-                                ". Continue? This could harm your installation.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                            "This version of LESs is intended for " + IntendedVersion +
+                            ". Your current version of League of Legends is " + version +
+                            ". Continue? This could harm your installation.", "LoLUpdater", MessageBoxButton.YesNo) ==
+                            MessageBoxResult.No)
                             return;
                     }
                 }
@@ -586,7 +582,7 @@ namespace LoLUpdater
         {
             if (Directory.Exists("Backup")) return;
             Directory.CreateDirectory("Backup");
-            Directory.CreateDirectory(Path.Combine("Backup", IntendedVersion));
+            Directory.CreateDirectory(Path.Combine("Backup", IntendedVersion));§
             if (Directory.Exists("RADS"))
             {
                 if (File.Exists(Path.Combine("Config", "game.cfg")))
