@@ -493,11 +493,11 @@ namespace LoLUpdaterXP
                     .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault();
                 if (firstOrDefault != null)
                 {
-                    var version = firstOrDefault.ToString();
-                    if (version == IntendedVersion)
+                    var version = Path.Combine("RADS", "projects", "lol_air_client", "releases", firstOrDefault.ToString());
+                    if (firstOrDefault.ToString() == IntendedVersion)
                         _location = Path.Combine(version, "deploy");
 
-                    else if (version != IntendedVersion)
+                    else if (firstOrDefault.ToString() != IntendedVersion)
                     {
                         _location = Path.Combine(version, "deploy");
                         if (MessageBox.Show(
