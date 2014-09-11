@@ -15,8 +15,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml;
 using Microsoft.Win32;
+using WUApiLib;
 
-namespace LoLUpdaterXP
+namespace LoLUpdater
 {
     public partial class MainWindow
     {
@@ -66,31 +67,33 @@ namespace LoLUpdaterXP
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!Directory.Exists("mods"))
+            if (Directory.Exists("mods"))
+            {
+                var modList = Directory.GetDirectories("mods");
+
+                foreach (var mod in modList)
+                {
+                    var check = new CheckBox { IsChecked = true, Content = mod.Replace("mods\\", "") };
+                    if (File.Exists(Path.Combine(mod, "disabled")))
+                        check.IsChecked = false;
+                    ModsListBox.Items.Add(check);
+                }
+            }
+            else
             {
                 MessageBox.Show("Missing mods directory. Ensure that all files were extracted properly.",
                     "Missing files");
-            }
-
-            var modList = Directory.GetDirectories("mods");
-
-            foreach (var mod in modList)
-            {
-                var check = new CheckBox { IsChecked = true, Content = mod.Replace("mods\\", "") };
-                if (File.Exists(Path.Combine(mod, "disabled")))
-                    check.IsChecked = false;
-                ModsListBox.Items.Add(check);
             }
         }
 
         private void ModsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var box = (CheckBox)ModsListBox.SelectedItem;
+            var box = (CheckBox) ModsListBox.SelectedItem;
 
             if (box == null)
                 return;
 
-            var selectedMod = (string)box.Content;
+            var selectedMod = (string) box.Content;
             using (var reader = XmlReader.Create(Path.Combine("mods", selectedMod, "info.xml")))
             {
                 while (reader.Read())
@@ -129,7 +132,6 @@ namespace LoLUpdaterXP
                 .Replace("lol.launcher.admin.exe", "");
             if (filename.Contains("lol.exe"))
             {
-
                 PatchButton.IsEnabled = true;
                 RemoveButton.IsEnabled = false;
 
@@ -146,9 +148,9 @@ namespace LoLUpdaterXP
                 uint versionCompare = 0;
                 foreach (var x in versionDirectories)
                 {
-                    var compare1 = x.Substring(x.LastIndexOfAny(new[] { '\\', '/' }) + 1);
+                    var compare1 = x.Substring(x.LastIndexOfAny(new[] {'\\', '/'}) + 1);
 
-                    var versionParts = compare1.Split(new[] { '.' });
+                    var versionParts = compare1.Split(new[] {'.'});
 
                     if (!compare1.Contains(".") || versionParts.Length != 4)
                     {
@@ -212,12 +214,10 @@ namespace LoLUpdaterXP
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             ItemCollection modCollection = null;
-            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-            {
-                modCollection = ModsListBox.Items;
-            }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                new ThreadStart(() => { modCollection = ModsListBox.Items; }));
 
-            // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
+// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
             while (modCollection == null)
             {
             }
@@ -226,15 +226,15 @@ namespace LoLUpdaterXP
 
             foreach (var x in modCollection)
             {
-                var box = (CheckBox)x;
+                var box = (CheckBox) x;
                 bool? isBoxChecked = null;
                 var boxName = "";
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    if (box.IsChecked != null && (bool)box.IsChecked)
+                    if (box.IsChecked != null && (bool) box.IsChecked)
                     {
                         isBoxChecked = true;
-                        boxName = (string)box.Content;
+                        boxName = (string) box.Content;
                     }
                     else
                     {
@@ -247,7 +247,7 @@ namespace LoLUpdaterXP
                 {
                 }
 
-                if (!(bool)isBoxChecked) continue;
+                if (!(bool) isBoxChecked) continue;
                 var amountOfPatches = 1;
 
                 using (var reader = XmlReader.Create(Path.Combine("mods", boxName, "info.xml")))
@@ -329,15 +329,12 @@ namespace LoLUpdaterXP
                 }
             }
 
-
             var filePart = fileLocation.Split('/');
             var fileName = filePart[filePart.Length - 1];
 
             var locationText = "";
-            Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-            {
-                locationText = LocationTextbox.Text;
-            }));
+            Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                new ThreadStart(() => { locationText = LocationTextbox.Text; }));
 
             while (String.IsNullOrEmpty(locationText))
             {
@@ -365,10 +362,8 @@ namespace LoLUpdaterXP
                 File.Copy(Path.Combine(locationText, fileLocation),
                     Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-                {
-                    StatusLabel.Content = "Exporting patch " + modName;
-                }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                    new ThreadStart(() => { StatusLabel.Content = "Exporting patch " + modName; }));
 
 
                 var export = new ProcessStartInfo
@@ -384,10 +379,8 @@ namespace LoLUpdaterXP
                     exportProc.WaitForExit();
                 }
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
-                {
-                    StatusLabel.Content = "Disassembling patch (" + modName + ")";
-                }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input,
+                    new ThreadStart(() => { StatusLabel.Content = "Disassembling patch (" + modName + ")"; }));
 
                 var abcFiles = Directory.GetFiles(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*.abc");
 
@@ -436,10 +429,10 @@ namespace LoLUpdaterXP
             var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
             foreach (var s in from s in foundDirectories
-                              let m = Directory.GetFiles(s)
-                              let x = Path.Combine(s, Class + ".class.asasm")
-                              where m.Contains(x)
-                              select s)
+                let m = Directory.GetFiles(s)
+                let x = Path.Combine(s, Class + ".class.asasm")
+                where m.Contains(x)
+                select s)
             {
                 finalDirectory = s;
             }
@@ -607,6 +600,14 @@ namespace LoLUpdaterXP
             Kill("LoLClient");
             Kill("LoLLauncher");
             Kill("League of Legends");
+            if (Visual.IsChecked == true)
+            {
+                Process.Start("SystemPropertiesPerformance.exe");
+            }
+            if (WinUpdate.IsChecked == true)
+            {
+                HandleWindowsUpdate();
+            }
             if (!Directory.Exists("Backup"))
             {
                 HandleBackup();
@@ -636,7 +637,7 @@ namespace LoLUpdaterXP
             HandleCfg("DefaultParticleMultithreading=1");
             HandleCgInstall();
             HandleAdobeAndTbb();
-            Process.Start(new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" });
+            Process.Start(new ProcessStartInfo {Arguments = "sagerun:1", FileName = "cleanmgr.exe"});
             HandlePmbUninstall();
             HandleMouseHz();
             if (Inking.IsChecked == true)
@@ -882,7 +883,7 @@ namespace LoLUpdaterXP
             var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
-            Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/silent" });
+            Process.Start(new ProcessStartInfo {FileName = pmbUninstall, Arguments = "/silent"});
         }
 
 
@@ -1053,7 +1054,23 @@ namespace LoLUpdaterXP
         }
 
 
-      
+        private static void HandleWindowsUpdate()
+        {
+            var uSession = new UpdateSession();
+            var uSearcher = uSession.CreateUpdateSearcher();
+            var uResult = uSearcher.Search("IsInstalled=0 and BrowseOnly=0 and Type='Software'");
+            var downloader = uSession.CreateUpdateDownloader();
+            downloader.Updates = uResult.Updates;
+            downloader.Download();
+            var updatesToInstall = new UpdateCollection();
+            foreach (var update in uResult.Updates.Cast<IUpdate>().Where(update => update.IsDownloaded))
+            {
+                updatesToInstall.Add(update);
+            }
+            var installer = uSession.CreateUpdateInstaller();
+            installer.Updates = updatesToInstall;
+            installer.Install();
+        }
 
 
         private void Cg_Checked(object sender, RoutedEventArgs e)
@@ -1090,7 +1107,7 @@ namespace LoLUpdaterXP
 
             var cg = new Process
             {
-                StartInfo = new ProcessStartInfo { FileName = "Cg_3_1_April2012_Setup.exe", Arguments = "/silent" }
+                StartInfo = new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact"}
             };
             cg.Start();
             cg.WaitForExit();
@@ -1127,6 +1144,29 @@ namespace LoLUpdaterXP
             WindowState = WindowState.Minimized;
         }
 
+        private void WinUpdate_Checked(object sender, RoutedEventArgs e)
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            if (identity == null) return;
+            var pricipal = new WindowsPrincipal(identity);
+            if (pricipal.IsInRole(WindowsBuiltInRole.Administrator)) return;
+            if (
+                MessageBox.Show(
+                    "The Windows Update features requires the application to be run as administrator, would you like to restart it with admin privileges",
+                    "LoLUpdater",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    Verb = "runas",
+                    FileName = Assembly.GetExecutingAssembly().Location
+                });
+            }
+            else
+            {
+                WinUpdate.IsChecked = false;
+            }
+        }
     }
 
     public class WorstHack
