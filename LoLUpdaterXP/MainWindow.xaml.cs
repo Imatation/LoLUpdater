@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -485,7 +486,7 @@ namespace LoLUpdaterXP
             Kill("League of Legends");
             if (Directory.Exists("Game"))
             {
-                _location = Path.Combine("lol.exe", "Air");
+                _location = Path.Combine(Assembly.GetExecutingAssembly().GetName().CodeBase, "lol.exe", "Air");
             }
             else if (Directory.Exists("RADS"))
             {
@@ -495,7 +496,7 @@ namespace LoLUpdaterXP
                 {
                     var version = Path.Combine("RADS", "projects", "lol_air_client", "releases", firstOrDefault.ToString());
                     if (firstOrDefault.ToString() == IntendedVersion)
-                        _location = Path.Combine(version, "deploy");
+                        _location = Path.Combine(Assembly.GetExecutingAssembly().GetName().CodeBase, version, "deploy");
 
                     else if (firstOrDefault.ToString() != IntendedVersion)
                     {

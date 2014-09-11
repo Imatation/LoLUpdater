@@ -498,11 +498,11 @@ namespace LoLUpdater
                 {
                     var version = Path.Combine("RADS", "projects", "lol_air_client", "releases", firstOrDefault.ToString());
                     if (firstOrDefault.ToString() == IntendedVersion)
-                        _location = Path.Combine(version, "deploy");
+                        _location = Path.Combine(Assembly.GetExecutingAssembly().GetName().CodeBase, version, "deploy");
 
                     else if (firstOrDefault.ToString() != IntendedVersion)
                     {
-                        _location = Path.Combine(version, "deploy");
+                        _location = Path.Combine(Assembly.GetExecutingAssembly().GetName().CodeBase, version, "deploy");
                         if (MessageBox.Show(
                             "This version of LESs is intended for " + IntendedVersion +
                             ". Your current version of League of Legends is " + version +
