@@ -31,7 +31,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\..\..\Riot Games\League of Legends\</OutputPath>
+    <OutputPath>C:\Riot Games\League of Legends\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>none</ErrorReport>
@@ -141,7 +141,7 @@
     <Resource Include="LoLUpdater.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
