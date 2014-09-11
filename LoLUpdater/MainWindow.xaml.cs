@@ -515,8 +515,6 @@ namespace LoLUpdater
                             return;
                     }
                 }
-                Directory.CreateDirectory("LESsBackup");
-                Directory.CreateDirectory(Path.Combine("LESsBackup", IntendedVersion));
             }
             _worker.RunWorkerAsync();
             if (Visual.IsChecked == true)
@@ -588,6 +586,7 @@ namespace LoLUpdater
         {
             if (Directory.Exists("Backup")) return;
             Directory.CreateDirectory("Backup");
+            Directory.CreateDirectory(Path.Combine("Backup", IntendedVersion));
             if (Directory.Exists("RADS"))
             {
                 if (File.Exists(Path.Combine("Config", "game.cfg")))
