@@ -7,7 +7,7 @@
     x:Class="LoLUpdaterXP.MainWindow"
     Loaded="MainWindow_Loaded"
     Title="LoLUpdater" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen"
-    Foreground="White" SizeToContent="WidthAndHeight" Height="184" d:DesignWidth="1058">
+    Foreground="White" SizeToContent="WidthAndHeight" Height="145" d:DesignWidth="1058">
     <Window.Resources>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -304,25 +304,12 @@
             <CheckBox Foreground="White" x:Name="PerPixelPointLighting" Content="No PerPixelPointLightning"
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the particles." />
         </ListBox>
-        <Button x:Name="PatchButton" Content="Install LES" HorizontalAlignment="Right" Margin="0,0,4,10"
-                VerticalAlignment="Bottom" Height="30" Width="100" IsEnabled="False" Click="PatchButton_Click"
-                Style="{DynamicResource ButtonStyle}" />
-        <Button x:Name="RemoveButton" Content="Remove LES" HorizontalAlignment="Right" Margin="0,0,109,10"
-                VerticalAlignment="Bottom" Height="30" Width="100" IsEnabled="False" Click="RemoveButton_Click"
-                Style="{DynamicResource ButtonStyle}" />
-        <Label x:Name="StatusLabel" Content="Waiting..." HorizontalAlignment="Left" Margin="517,0,0,8"
-               VerticalAlignment="Bottom" Foreground="Gray" Height="30" />
-        <TextBox Text="Directory for lol.launcher (or lol.exe) for LES" x:Name="LocationTextbox" Padding="3,0,0,0"
-                 VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Height="30" Margin="0,146,601,0"
-                 TextWrapping="NoWrap" VerticalAlignment="Top" FontSize="14" IsReadOnly="True" />
-        <ListBox x:Name="ModsListBox" HorizontalAlignment="Left" Margin="596,39,0,45" VerticalAlignment="Stretch"
+        <ListBox x:Name="ModsListBox" HorizontalAlignment="Left" Margin="596,39,0,6" VerticalAlignment="Stretch"
                  Width="230" SelectionChanged="ModsListBox_SelectionChanged" Background="#2D2D30" />
         <TextBox Foreground="White" x:Name="ModDescriptionBox" HorizontalAlignment="Left" Height="100" Margin="831,39,0,0"
                  TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Width="223" Background="#2D2D30" />
-        <Button x:Name="FindButton" Content="Locate!" HorizontalAlignment="Right" Margin="0,146,546,0"
-                VerticalAlignment="Top" Width="50" Height="30" Style="{DynamicResource ButtonStyle}" />
         <TextBlock HorizontalAlignment="Left" Margin="78,23,0,0" TextWrapping="Wrap" Text="Pvp.Net Client"
                    VerticalAlignment="Top" RenderTransformOrigin="0.107,0.731" />
         <TextBlock HorizontalAlignment="Left" Margin="178,23,0,0" TextWrapping="Wrap" Text="Game Client"

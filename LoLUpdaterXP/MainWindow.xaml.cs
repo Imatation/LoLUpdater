@@ -18,6 +18,7 @@ namespace LoLUpdaterXP
 {
     public partial class MainWindow
     {
+        private static string _location;
         private static readonly string GameCfg = Path.Combine("Game", "DATA", "CFG", "defaults");
 
         private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
@@ -44,7 +45,6 @@ namespace LoLUpdaterXP
         {
             InitializeComponent();
             _reassembleLocations = new List<WorstHack>();
-            FindButton.AddHandler(MouseDownEvent, new RoutedEventHandler(FindButton_MouseDown), true);
             if (Directory.Exists("temp"))
             {
                 DeletePathWithLongFileNames(Path.GetFullPath("temp"));
@@ -70,7 +70,7 @@ namespace LoLUpdaterXP
 
                 foreach (var mod in modList)
                 {
-                    var check = new CheckBox {IsChecked = true, Content = mod.Replace("mods\\", "")};
+                    var check = new CheckBox { IsChecked = true, Content = mod.Replace("mods\\", "") };
                     if (File.Exists(Path.Combine(mod, "disabled")))
                         check.IsChecked = false;
                     ModsListBox.Items.Add(check);
@@ -85,12 +85,12 @@ namespace LoLUpdaterXP
 
         private void ModsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var box = (CheckBox) ModsListBox.SelectedItem;
+            var box = (CheckBox)ModsListBox.SelectedItem;
 
             if (box == null)
                 return;
 
-            var selectedMod = (string) box.Content;
+            var selectedMod = (string)box.Content;
             using (var reader = XmlReader.Create(Path.Combine("mods", selectedMod, "info.xml")))
             {
                 while (reader.Read())
@@ -107,102 +107,7 @@ namespace LoLUpdaterXP
             }
         }
 
-        private void FindButton_MouseDown(object sender, RoutedEventArgs e)
-        {
-            PatchButton.IsEnabled = false;
-            var findLeagueDialog = new OpenFileDialog
-            {
-                InitialDirectory =
-                    !Directory.Exists(Path.Combine("C:\\", "Riot Games", "League of Legends"))
-                        ? Path.Combine("C:\\", "Program Files (x86)", "GarenaLoL", "GameData", "Apps", "LoL")
-                        : Path.Combine("C:\\", "Riot Games", "League of Legends"),
-                DefaultExt = ".exe",
-                Filter = "League of Legends Launcher|lol.launcher*.exe|Garena Launcher|lol.exe"
-            };
-            var result = findLeagueDialog.ShowDialog();
-            if (result != true) return;
-            var filename = findLeagueDialog.FileName.Replace("lol.launcher.exe", "")
-                .Replace("lol.launcher.admin.exe", "");
-            if (filename.Contains("lol.exe"))
-            {
-                PatchButton.IsEnabled = true;
-                RemoveButton.IsEnabled = false;
 
-                filename = filename.Replace("lol.exe", "");
-
-                LocationTextbox.Text = Path.Combine(filename, "Air");
-            }
-            else
-            {
-                var radLocation = Path.Combine(filename, "RADS", "projects", "lol_air_client", "releases");
-                var versionDirectories = Directory.GetDirectories(radLocation);
-                var finalDirectory = "";
-                var version = "";
-                uint versionCompare = 0;
-                foreach (var x in versionDirectories)
-                {
-                    var compare1 = x.Substring(x.LastIndexOfAny(new[] {'\\', '/'}) + 1);
-
-                    var versionParts = compare1.Split(new[] {'.'});
-
-                    if (!compare1.Contains(".") || versionParts.Length != 4)
-                    {
-                        continue;
-                    }
-
-                    uint compareVersion;
-                    try
-                    {
-                        compareVersion = Convert.ToUInt32(versionParts[0]) << 24 |
-                                         Convert.ToUInt32(versionParts[1]) << 16 |
-                                         Convert.ToUInt32(versionParts[2]) << 8 | Convert.ToUInt32(versionParts[3]);
-                    }
-                    catch (FormatException)
-                    {
-                        continue;
-                    }
-
-                    if (compareVersion <= versionCompare) continue;
-                    versionCompare = compareVersion;
-                    version = x.Replace(radLocation + "\\", "");
-                    finalDirectory = x;
-                }
-
-                if (version != IntendedVersion)
-                {
-                    var versionMismatchResult =
-                        MessageBox.Show(
-                            "This version of LESs is intended for " + IntendedVersion +
-                            ". Your current version of League of Legends is " + version +
-                            ". Continue? This could harm your installation.", "Invalid Version", MessageBoxButton.YesNo);
-                    if (versionMismatchResult == MessageBoxResult.No)
-                        return;
-                }
-
-                PatchButton.IsEnabled = true;
-
-                RemoveButton.IsEnabled = true;
-
-                LocationTextbox.Text = Path.Combine(finalDirectory, "deploy");
-            }
-
-            Directory.CreateDirectory("LESsBackup");
-            Directory.CreateDirectory(Path.Combine("LESsBackup", IntendedVersion));
-        }
-
-        private void PatchButton_Click(object sender, RoutedEventArgs e)
-        {
-            _worker.RunWorkerAsync();
-        }
-
-        private void RemoveButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!File.Exists(Path.Combine(LocationTextbox.Text.Substring(0, LocationTextbox.Text.Length - 7), "S_OK")))
-                return;
-            File.Delete(Path.Combine(LocationTextbox.Text.Substring(0, LocationTextbox.Text.Length - 7), "S_OK"));
-            MessageBox.Show("LESs will be removed next time League of Legends launches!");
-            StatusLabel.Content = "Removed LESs";
-        }
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -219,15 +124,15 @@ namespace LoLUpdaterXP
 
             foreach (var x in modCollection)
             {
-                var box = (CheckBox) x;
+                var box = (CheckBox)x;
                 bool? isBoxChecked = null;
                 var boxName = "";
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    if (box.IsChecked != null && (bool) box.IsChecked)
+                    if (box.IsChecked != null && (bool)box.IsChecked)
                     {
                         isBoxChecked = true;
-                        boxName = (string) box.Content;
+                        boxName = (string)box.Content;
                     }
                     else
                     {
@@ -240,7 +145,7 @@ namespace LoLUpdaterXP
                 {
                 }
 
-                if (!(bool) isBoxChecked) continue;
+                if (!(bool)isBoxChecked) continue;
                 var amountOfPatches = 1;
 
                 using (var reader = XmlReader.Create(Path.Combine("mods", boxName, "info.xml")))
@@ -286,8 +191,6 @@ namespace LoLUpdaterXP
             MessageBox.Show(_wasPatched
                 ? "LESs has been successfully patched into League of Legends!"
                 : "LESs encountered errors during patching. However, some patches may still be applied.");
-            PatchButton.IsEnabled = true;
-            StatusLabel.Content = "Done patching!";
         }
 
         private void Patcher(string modName, int amountOfPatches)
@@ -327,7 +230,7 @@ namespace LoLUpdaterXP
 
             var locationText = "";
             Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                new ThreadStart(() => { locationText = LocationTextbox.Text; }));
+                new ThreadStart(() => { locationText = _location; }));
 
             while (String.IsNullOrEmpty(locationText))
             {
@@ -355,8 +258,7 @@ namespace LoLUpdaterXP
                 File.Copy(Path.Combine(locationText, fileLocation),
                     Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
 
-                Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                    new ThreadStart(() => { StatusLabel.Content = "Exporting patch " + modName; }));
+                Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() => { }));
 
 
                 var export = new ProcessStartInfo
@@ -371,9 +273,6 @@ namespace LoLUpdaterXP
                 {
                     exportProc.WaitForExit();
                 }
-
-                Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                    new ThreadStart(() => { StatusLabel.Content = "Disassembling patch (" + modName + ")"; }));
 
                 var abcFiles = Directory.GetFiles(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*.abc");
 
@@ -422,10 +321,10 @@ namespace LoLUpdaterXP
             var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
             foreach (var s in from s in foundDirectories
-                let m = Directory.GetFiles(s)
-                let x = Path.Combine(s, Class + ".class.asasm")
-                where m.Contains(x)
-                select s)
+                              let m = Directory.GetFiles(s)
+                              let x = Path.Combine(s, Class + ".class.asasm")
+                              where m.Contains(x)
+                              select s)
             {
                 finalDirectory = s;
             }
@@ -515,11 +414,8 @@ namespace LoLUpdaterXP
                 _reassembleLocations.Add(h);
         }
 
-        private void Repackage(WorstHack data)
+        private static void Repackage(WorstHack data)
         {
-            Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                new ThreadStart(() => { StatusLabel.Content = "Patching mods to client..."; }));
-
             var abcNumber =
                 data.ReAssembleLocation.Substring(data.ReAssembleLocation.IndexOf('-'))
                     .Replace("-", "")
@@ -559,10 +455,8 @@ namespace LoLUpdaterXP
             }
         }
 
-        private void CopyToClient(WorstHack data)
+        private static void CopyToClient(WorstHack data)
         {
-            Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                new ThreadStart(() => { StatusLabel.Content = "Patched " + data.FileName + "!"; }));
 
             File.Copy(Path.Combine("temp", data.FileLocation.Replace(".dat", ""), data.FileName),
                 Path.Combine(data.LocationText, data.FileLocation), true);
@@ -593,6 +487,34 @@ namespace LoLUpdaterXP
             Kill("LoLClient");
             Kill("LoLLauncher");
             Kill("League of Legends");
+            if (Directory.Exists("Game"))
+            {
+                _location = Path.Combine("lol.exe", "Air");
+            }
+            else if (Directory.Exists("RADS"))
+            {
+                var firstOrDefault = new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases"))
+                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault();
+                if (firstOrDefault != null)
+                {
+                    var version = firstOrDefault.ToString();
+                    if (version == IntendedVersion)
+                        _location = Path.Combine(version, "deploy");
+
+                    else if (version != IntendedVersion)
+                    {
+                        _location = Path.Combine(version, "deploy");
+                        if (MessageBox.Show(
+                                "This version of LESs is intended for " + IntendedVersion +
+                                ". Your current version of League of Legends is " + version +
+                                ". Continue? This could harm your installation.", "LoLUpdater", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                            return;
+                    }
+                }
+                Directory.CreateDirectory("LESsBackup");
+                Directory.CreateDirectory(Path.Combine("LESsBackup", IntendedVersion));
+            }
+            _worker.RunWorkerAsync();
             if (!Directory.Exists("Backup"))
             {
                 HandleBackup();
@@ -620,9 +542,8 @@ namespace LoLUpdaterXP
         private void HandlePatch()
         {
             HandleCfg("DefaultParticleMultithreading=1");
-            HandleCgInstall();
-            HandleAdobeAndTbb();
-            Process.Start(new ProcessStartInfo {Arguments = "sagerun:1", FileName = "cleanmgr.exe"});
+            HandleFiles();
+            Process.Start(new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" });
             HandlePmbUninstall();
             HandleMouseHz();
             if (Inking.IsChecked == true)
@@ -710,74 +631,10 @@ namespace LoLUpdaterXP
                 Path.Combine(to, file), true);
         }
 
-        private void HandleAdobeAndTbb()
+        private void HandleFiles()
         {
             var flashPath = Path.Combine(AirPath, "Resources");
 
-            if (Directory.Exists("RADS"))
-            {
-                if (Tbb.IsChecked == true)
-                {
-                    AdvancedCopy("tbb.dll", string.Empty, "solutions", "lol_game_client_sln", "deploy");
-                }
-
-                if (AdobeAir.IsChecked == true)
-                {
-                    AdvancedCopy(
-                        "Adobe AIR.dll",
-                        AirPath,
-                        "projects",
-                        "lol_air_client",
-                        Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
-                }
-                if (Flash.IsChecked == true)
-                {
-                    AdvancedCopy(
-                        "NPSWF32.dll",
-                        flashPath,
-                        "projects",
-                        "lol_air_client",
-                        Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
-                }
-            }
-            if (!Directory.Exists("Game")) return;
-            if (Tbb.IsChecked == true)
-            {
-                Copy("tbb.dll",
-                    string.Empty,
-                    Path.Combine("Game", "tbb.dll"));
-            }
-            if (AdobeAir.IsChecked == true)
-            {
-                Copy(
-                    "Adobe AIR.dll",
-                    AirPath,
-                    Path.Combine("Air", "Adobe Air", "Versions", "1.0"));
-            }
-            if (Flash.IsChecked == true)
-            {
-                Copy(
-                    "NPSWF32.dll",
-                    flashPath,
-                    Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources"));
-            }
-        }
-
-
-        private static void AdvancedCopy(string file, string from, string folder, string folder1, string to)
-        {
-            File.Copy(
-                Path.Combine(
-                    from, file),
-                Path.Combine("RADS", folder, folder1, "releases") + @"\" +
-                new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
-                Path.Combine(to, file), true);
-        }
-
-
-        private void HandleCgInstall()
-        {
             if (Directory.Exists("RADS"))
             {
                 if (Cg.IsChecked == true)
@@ -836,44 +693,100 @@ namespace LoLUpdaterXP
                         "CgD3D9.dll", _cgBinPath,
                         "projects", "lol_patcher", "deploy");
                 }
+                if (Tbb.IsChecked == true)
+                {
+                    AdvancedCopy("tbb.dll", string.Empty, "solutions", "lol_game_client_sln", "deploy");
+                }
+
+                if (AdobeAir.IsChecked == true)
+                {
+                    AdvancedCopy(
+                        "Adobe AIR.dll",
+                        AirPath,
+                        "projects",
+                        "lol_air_client",
+                        Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
+                }
+                if (Flash.IsChecked == true)
+                {
+                    AdvancedCopy(
+                        "NPSWF32.dll",
+                        flashPath,
+                        "projects",
+                        "lol_air_client",
+                        Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
+                }
             }
-            else if (Directory.Exists("Game"))
+            if (!Directory.Exists("Game")) return;
+            if (Cg.IsChecked == true)
             {
-                if (Cg.IsChecked == true)
-                {
-                    Copy("Cg.dll",
-                        _cgBinPath,
-                        "Game");
-                }
+                Copy("Cg.dll",
+                    _cgBinPath,
+                    "Game");
+            }
 
-                if (CgGl.IsChecked == true)
-                {
-                    Copy("CgGL.dll",
-                        _cgBinPath,
-                        "Game");
-                }
+            if (CgGl.IsChecked == true)
+            {
+                Copy("CgGL.dll",
+                    _cgBinPath,
+                    "Game");
+            }
 
-                if (CgD3D9.IsChecked == true)
-                {
-                    Copy("CgD3D9.dll",
-                        _cgBinPath,
-                        "Game");
-                }
+            if (CgD3D9.IsChecked == true)
+            {
+                Copy("CgD3D9.dll",
+                    _cgBinPath,
+                    "Game");
+            }
+            if (Tbb.IsChecked == true)
+            {
+                Copy("tbb.dll",
+                    string.Empty,
+                    Path.Combine("Game", "tbb.dll"));
+            }
+            if (AdobeAir.IsChecked == true)
+            {
+                Copy(
+                    "Adobe AIR.dll",
+                    AirPath,
+                    Path.Combine("Air", "Adobe Air", "Versions", "1.0"));
+            }
+            if (Flash.IsChecked == true)
+            {
+                Copy(
+                    "NPSWF32.dll",
+                    flashPath,
+                    Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources"));
             }
         }
 
+
+        private static void AdvancedCopy(string file, string from, string folder, string folder1, string to)
+        {
+            File.Copy(
+                Path.Combine(
+                    from, file),
+                Path.Combine("RADS", folder, folder1, "releases") + @"\" +
+                new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
+                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
+                Path.Combine(to, file), true);
+        }
 
         private static void HandlePmbUninstall()
         {
             var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
-            Process.Start(new ProcessStartInfo {FileName = pmbUninstall, Arguments = "/silent"});
+            Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/silent" });
         }
 
 
         private static void HandleUninstall()
         {
+            if (!File.Exists(Path.Combine(_location.Substring(0, _location.Length - 7), "S_OK")))
+                return;
+            File.Delete(Path.Combine(_location.Substring(0, _location.Length - 7), "S_OK"));
+            MessageBox.Show("LESs will be removed next time League of Legends launches!");
             if (Directory.Exists("RADS"))
             {
                 if (File.Exists(Path.Combine("Backup", "game.cfg")))
@@ -1074,7 +987,7 @@ namespace LoLUpdaterXP
             var cg = new Process
             {
                 StartInfo =
-                    new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact"}
+                    new ProcessStartInfo { FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact" }
             };
             cg.Start();
             cg.WaitForExit();
