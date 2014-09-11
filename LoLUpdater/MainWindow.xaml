@@ -245,7 +245,7 @@
                Source="Resources/minimize.png" VerticalAlignment="Top" Width="34" MouseEnter="Image_MouseEnter_1"
                MouseLeave="Image_MouseLeave_1" MouseDown="Xminimize_MouseDown" RenderTransformOrigin="-0.868,0.577" />
         <Button Name="Ok" Background="#2D2D30" Content="Go" HorizontalAlignment="Left" Margin="3,121,0,0"
-                VerticalAlignment="Top" Width="716" Click="OK_Click" Style="{DynamicResource ButtonStyle}" />
+                VerticalAlignment="Top" Width="1179" Click="OK_Click" Style="{DynamicResource ButtonStyle}" />
         <TextBlock HorizontalAlignment="Left" Margin="10,2,0,0" TextWrapping="Wrap" Text="LoLUpdater"
                    VerticalAlignment="Top" Foreground="Gray" />
         <GroupBox Header="Main" HorizontalAlignment="Left" Margin="1,23,0,0" VerticalAlignment="Top" Height="88"
@@ -315,9 +315,9 @@
             <CheckBox Foreground="White" Name="PerPixelPointLighting" Content="No PerPixelPointLightning"
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the particles." />
         </ListBox>
-        <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,10" VerticalAlignment="Stretch"
+        <ListBox Name="ModsListBox" HorizontalAlignment="Left" Margin="724,39,0,33" VerticalAlignment="Stretch"
                  Width="230" SelectionChanged="ModsListBox_SelectionChanged" Background="#2D2D30" />
-        <TextBox Foreground="White" Name="ModDescriptionBox" HorizontalAlignment="Left" Height="100" Margin="959,39,0,0"
+        <TextBox Foreground="White" Name="ModDescriptionBox" HorizontalAlignment="Left" Height="77" Margin="959,39,0,0"
                  TextWrapping="Wrap" VerticalAlignment="Top" IsReadOnly="True"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"
                  Width="223" Background="#2D2D30" />
