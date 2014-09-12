@@ -313,7 +313,7 @@ namespace LoLUpdater
 
                 var tempS = s;
                 tempS = tempS.Substring(tempS.IndexOf("com", StringComparison.Ordinal));
-                tempS = tempS.Replace("\\", ".");
+                tempS = tempS.Replace(C.ToString(CultureInfo.InvariantCulture), ".");
                 if (tempS == searchFor)
                 {
                     foundDirectories.Add(s);
@@ -411,7 +411,7 @@ namespace LoLUpdater
                 FileName = fileName,
                 ReAssembleLocation =
                     finalDirectory.Substring(0, finalDirectory.IndexOf("com", StringComparison.Ordinal))
-                        .Replace("temp\\", ""),
+                        .Replace(string.Format("temp{0}", C), ""),
                 FileLocation = fileLocation
             };
 
@@ -424,7 +424,7 @@ namespace LoLUpdater
             var abcNumber =
                 data.ReAssembleLocation.Substring(data.ReAssembleLocation.IndexOf('-'))
                     .Replace("-", "")
-                    .Replace("\\", "");
+                    .Replace(C.ToString(CultureInfo.InvariantCulture), "");
 
             var reAsm = new ProcessStartInfo
             {
@@ -470,7 +470,9 @@ namespace LoLUpdater
 
         private static void DeletePathWithLongFileNames(string path)
         {
+            // Todo: fix this, from here
             var tmpPath = @"\\?\" + path;
+            // to here
             var fso = new Scripting.FileSystemObject();
             fso.DeleteFolder(tmpPath, true);
         }
