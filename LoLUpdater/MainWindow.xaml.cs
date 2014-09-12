@@ -50,7 +50,7 @@ namespace LoLUpdater
         {
             InitializeComponent();
 
-            var winxpVersion = new Version(6, 1);
+            var winxpVersion = new Version(5, 1);
             if (Environment.OSVersion.Version <= winxpVersion)
             {
                 XPTest1.Visibility = Visibility.Hidden;
