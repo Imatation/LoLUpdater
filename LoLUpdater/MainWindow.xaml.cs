@@ -23,6 +23,7 @@ namespace LoLUpdater
     public partial class MainWindow
     {
         private static readonly string GameCfg = Path.Combine("Game", "DATA", "CFG", "defaults");
+        private const char C = '\u005c';
 
         private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
             EnvironmentVariableTarget.User);
@@ -53,8 +54,8 @@ namespace LoLUpdater
             var winxpVersion = new Version(5, 1);
             if (Environment.OSVersion.Version <= winxpVersion)
             {
-                XPTest1.Visibility = Visibility.Hidden;
-                XPTest.Visibility = Visibility.Hidden;
+                XpTest1.Visibility = Visibility.Hidden;
+                XpTest.Visibility = Visibility.Hidden;
             }
 
             _reassembleLocations = new List<WorstHack>();
@@ -70,7 +71,7 @@ namespace LoLUpdater
             if (!Directory.Exists("mods"))
             {
                 MessageBox.Show("Missing mods directory. Ensure that all files were extracted properly.",
-                    "Missing files");
+                    "LoLUpdater");
             }
 
             var modList = Directory.GetDirectories("mods");
@@ -93,7 +94,7 @@ namespace LoLUpdater
             System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
             var ex = e.Exception;
-            MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine);
+            MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine, "LoLUpdater");
             _wasPatched = false;
         }
 
@@ -199,9 +200,11 @@ namespace LoLUpdater
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MessageBox.Show(_wasPatched
-                ? "LESs has been successfully patched into League of Legends!"
-                : "LESs encountered errors during patching. However, some patches may still be applied.");
+            MessageBox.Show(
+                _wasPatched
+                    ? "LESs has been successfully patched into League of Legends!"
+                    : "LESs encountered errors during patching. However, some patches may still be applied.",
+                "LoLUpdater");
         }
 
         private void Patcher(string modName, int amountOfPatches)
@@ -294,7 +297,7 @@ namespace LoLUpdater
 
             if (tryFindClass.IndexOf(':') == 0)
             {
-                throw new Exception("Invalid mod " + modName);
+                MessageBox.Show(string.Format("Invalid mod {0}", modName), "LoLUpdater");
             }
 
             var directories =
@@ -319,7 +322,7 @@ namespace LoLUpdater
 
             if (foundDirectories.Count == 0)
             {
-                throw new Exception("No class matching " + searchFor + " for mod " + modName);
+                MessageBox.Show(string.Format("No class matching {0} for mod {1}", searchFor, modName), "LoLUpdater");
             }
 
             var finalDirectory = "";
@@ -354,7 +357,7 @@ namespace LoLUpdater
 
             if (traitStartPosition == 0)
             {
-                throw new Exception("Trait start location was not found! Corrupt mod?");
+                MessageBox.Show("Trait start location was not found! Corrupt mod?", "LoLUpdater");
             }
 
             if (!isNewTrait)
@@ -375,8 +378,7 @@ namespace LoLUpdater
 
                 if (traitEndLocation < traitStartPosition)
                 {
-                    throw new Exception("Trait end location was smaller than trait start location! " + traitEndLocation +
-                                        ", " + traitStartPosition);
+                    MessageBox.Show(string.Format("Trait end location was smaller than trait start location! {0}, {1}", traitEndLocation, traitStartPosition), "LoLUpdater");
                 }
 
                 var startTrait = new string[traitStartPosition];
@@ -539,10 +541,10 @@ namespace LoLUpdater
                 {
                     var versionMismatchResult =
                         MessageBox.Show(
-                            "This version of LESs is intended for " + IntendedVersion +
-                            ". Your current version of League of Legends is " + _first +
-                            ". Continue? This could harm your installation.", "Invalid Version", MessageBoxButton.YesNo);
-                    if (versionMismatchResult == MessageBoxResult.No)
+                            string.Format(
+                                "This version of LESs is intended for {0}. Your current version of League of Legends is {1}. Continue? This could harm your installation.",
+                                IntendedVersion, _first), "LoLUpdater", MessageBoxButton.YesNo);
+                    if (versionMismatchResult != MessageBoxResult.Yes)
                         return;
                 }
             }
@@ -635,14 +637,14 @@ namespace LoLUpdater
             if (!File.Exists(Path.Combine(_location.Substring(0, _location.Length - 7), "S_OK")))
                 return;
             File.Delete(Path.Combine(_location.Substring(0, _location.Length - 7), "S_OK"));
-            MessageBox.Show("LESs will be removed next time League of Legends launches!");
+            MessageBox.Show("LESs will be removed next time League of Legends launches!", "LoLUpdater");
         }
 
         private static void Backup(string folder, string folder1, string file, string extension)
         {
-            File.Copy(Path.Combine(Path.Combine("RADS", folder, folder1, "releases") + @"\" +
+            File.Copy(Path.Combine(Path.Combine("RADS", folder, folder1, "releases") + C +
                                    new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                                       .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\",
+                                       .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + C,
                 Path.Combine("deploy", extension, file)), Path.Combine("Backup", file),
                 true);
         }
@@ -789,9 +791,9 @@ namespace LoLUpdater
             File.Copy(
                 Path.Combine(
                     from, file),
-                Path.Combine("RADS", folder, folder1, "releases") + @"\" +
+                Path.Combine("RADS", folder, folder1, "releases") + C +
                 new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
+                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + C +
                 Path.Combine(to, file), true);
         }
 
@@ -806,7 +808,6 @@ namespace LoLUpdater
 
         private static void HandleUninstall()
         {
-            MessageBox.Show("LESs will be removed next time League of Legends launches!", "LoLUpdater");
             if (Directory.Exists("RADS"))
             {
                 if (File.Exists(Path.Combine("Backup", "game.cfg")))
@@ -861,9 +862,9 @@ namespace LoLUpdater
         private static void Uninstall(string file, string extension, string folder, string folder1)
         {
             File.Copy(Path.Combine("Backup", file),
-                Path.Combine("RADS", folder, folder1, "releases") + @"\" +
+                Path.Combine("RADS", folder, folder1, "releases") + C +
                 new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + @"\" +
+                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + C +
                 Path.Combine(extension, file), true);
         }
 
@@ -929,7 +930,7 @@ namespace LoLUpdater
 
                 if (fi.Attributes == FileAttributes.ReadOnly)
                 {
-                    MessageBox.Show(@"Your game.cfg Located in Config\ is read only, please remove this and try again",
+                    MessageBox.Show("Your game.cfg Located in Config is read only, please remove this and try again",
                         "LoLUpdater");
                     return;
                 }
@@ -950,24 +951,22 @@ namespace LoLUpdater
 
         private static void Cfg(string setting, string file)
         {
-            if (!File.Exists(Path.Combine(GameCfg, file)))
+            if (File.Exists(Path.Combine(GameCfg, file))) return;
+            var fi = new FileInfo(Path.Combine(GameCfg, file));
+            if (fi.Attributes == FileAttributes.ReadOnly)
             {
-                var fi = new FileInfo(Path.Combine(GameCfg, file));
-                if (FileAttributes.ReadOnly == fi.Attributes)
-                {
-                    MessageBox.Show(String.Format(
-                        @"Your {0} Located in Game\DATA\CFG\defaults is read only, please remove this and try again",
-                        file),
-                        "LoLUpdater");
-                    return;
-                }
-                if (
-                    !File.ReadAllText(Path.Combine(GameCfg, file))
-                        .Contains(setting))
-                {
-                    File.AppendAllText(Path.Combine(GameCfg, file),
-                        Environment.NewLine + setting);
-                }
+                MessageBox.Show(String.Format(
+                    "Your {0} Located in Game{1}DATA{1}CFG{1}defaults is read only, please remove this and try again",
+                    file, C),
+                    "LoLUpdater");
+                return;
+            }
+            if (
+                !File.ReadAllText(Path.Combine(GameCfg, file))
+                    .Contains(setting))
+            {
+                File.AppendAllText(Path.Combine(GameCfg, file),
+                    Environment.NewLine + setting);
             }
         }
 
@@ -1005,9 +1004,7 @@ namespace LoLUpdater
                     new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion);
                 var latestVersion = new Version("3.1.0013");
                 if (
-                    currentVersion < latestVersion &&
-                    MessageBox.Show("You already have Nvdia CG installed. Do you want to update it?", "LoLUpdater",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    currentVersion < latestVersion)
                 {
                     InstallCg();
                 }
@@ -1071,7 +1068,7 @@ namespace LoLUpdater
             if (pricipal.IsInRole(WindowsBuiltInRole.Administrator)) return;
             if (
                 MessageBox.Show(
-                    "The Windows Update features requires the application to be run as administrator, would you like to restart it with admin privileges",
+                    "The Windows Update features requires the application to be run as administrator, would you like to restart LoLUpdater with admin privileges",
                     "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {

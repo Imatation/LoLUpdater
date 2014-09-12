@@ -292,7 +292,7 @@
                       ToolTip="Installs one of the DLLs from the Nvidia CG toolkit, yes you need it even if you are on ATI/Intel. This modifies the shader." />
         </ListBox>
 
-        <ListBox Name="XPTest1" HorizontalAlignment="Left" Height="77" Margin="420,39,0,0" VerticalAlignment="Top" Width="126"
+        <ListBox Name="XpTest1" HorizontalAlignment="Left" Height="77" Margin="420,39,0,0" VerticalAlignment="Top" Width="126"
                  Background="#2D2D30">
             <CheckBox Foreground="White" Name="WinUpdate" Content="Windows Update" Checked="WinUpdate_Checked"
                       Style="{DynamicResource CheckboxStyle}"
@@ -323,7 +323,7 @@
                    VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="257,22,0,0" TextWrapping="Wrap" Text="Launcher"
                    VerticalAlignment="Top" />
-        <TextBlock Name="XPTest" HorizontalAlignment="Left" Margin="420,22,0,0" TextWrapping="Wrap" Text="Windows Utilities"
+        <TextBlock Name="XpTest" HorizontalAlignment="Left" Margin="420,22,0,0" TextWrapping="Wrap" Text="Windows Utilities"
                    VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="547,22,0,0" TextWrapping="Wrap" Text="Config Tweaks"
                    VerticalAlignment="Top" RenderTransformOrigin="0.287,0.439" />
