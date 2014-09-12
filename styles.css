@@ -63,11 +63,9 @@ paper-checkbox, paper-radio-button {
 }
 
 #options {
-  -moz-column-count: 4;
   -webkit-column-count: 4;
 }
 
 .option-box {
-  -moz-column-break-inside: avoid;
   -webkit-column-break-inside: avoid;
 }
