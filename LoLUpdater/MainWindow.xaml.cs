@@ -64,10 +64,6 @@ namespace LoLUpdater
                 DeletePathWithLongFileNames(Path.GetFullPath("temp"));
             }
 
-            if (Directory.Exists(Path.Combine(Path.GetPathRoot(Environment.SystemDirectory), "wm")))
-                MessageBox.Show(
-                    "You may have malware on your system due to getting this application from an unknown source. Please delete C:/wm/ and the file inside it and then download this application from http://da.viddiaz.com/LESs");
-
             _worker.DoWork += worker_DoWork;
             _worker.RunWorkerCompleted += worker_RunWorkerCompleted;
             AppDomain.CurrentDomain.FirstChanceException += CurrentDomain_FirstChanceException;
