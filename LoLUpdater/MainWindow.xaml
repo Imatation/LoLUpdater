@@ -310,8 +310,8 @@
 
         <ListBox HorizontalAlignment="Left" Height="82" VerticalAlignment="Top" Width="172" Margin="567,39,0,0"
                  Background="#2D2D30">
-            <CheckBox Foreground="White" Name="Inking" Content="No Inking" Style="{DynamicResource CheckboxStyle}"
-                      ToolTip="Turns off the new 'graphics'" />
+            <CheckBox Foreground="White" Name="Inking" Content="No Inking"
+                      ToolTip="Turns off the new 'graphics'" Style="{DynamicResource CheckboxStyle}" />
             <CheckBox Foreground="White" Name="AdvancedReflection" Content="No Advanced Reflection"
                       Style="{DynamicResource CheckboxStyle}" ToolTip="Turns off the reflections." />
             <CheckBox Foreground="White" Name="PerPixelPointLighting" Content="No PerPixelPointLightning"
