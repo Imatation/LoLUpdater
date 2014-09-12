@@ -82,7 +82,7 @@ namespace LoLUpdater
                 {
                     IsChecked = true,
                     Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255)),
-                    Content = mod.Replace("mods\\", "")
+                    Content = mod.Replace(string.Format("mods{0}", C), "")
                 };
                 if (File.Exists(Path.Combine(mod, "disabled")))
                     check.IsChecked = false;
