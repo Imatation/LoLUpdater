@@ -41,7 +41,7 @@ namespace LoLUpdater
         public MainWindow()
         {
             InitializeComponent();
-            var winxpVersion = new Version(5, 1);
+            var winxpVersion = new Version(5, 1, 2600);
             if (Environment.OSVersion.Version <= winxpVersion)
             {
                 XpTest1.Visibility = Visibility.Hidden;
@@ -50,6 +50,7 @@ namespace LoLUpdater
             _reassembleLocations = new List<WorstHack>();
             if (Directory.Exists("temp"))
             {
+                // Todo: Might delete this, awaiting response from a D# tool-maker, he answers quickly always.
                 DeletePathWithLongFileNames(Path.GetFullPath("temp"));
             }
             _worker.DoWork += worker_DoWork;
@@ -74,8 +75,7 @@ namespace LoLUpdater
                 ModsListBox.Items.Add(check);
             }
         }
-        private void CurrentDomain_FirstChanceException(object sender,
-            System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
             var ex = e.Exception;
             MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace + Environment.NewLine, "LoLUpdater");
@@ -104,7 +104,7 @@ namespace LoLUpdater
         }
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            ItemCollection modCollection = null;
+            ItemCollection modCollection;
             Dispatcher.BeginInvoke(DispatcherPriority.Input,
                 new ThreadStart(() => { modCollection = ModsListBox.Items; }));
             // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
@@ -116,7 +116,7 @@ namespace LoLUpdater
             {
                 var box = (CheckBox) x;
                 bool? isBoxChecked = null;
-                var boxName = "";
+                var boxName;
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
                     if (box.IsChecked != null && (bool) box.IsChecked)
@@ -139,14 +139,11 @@ namespace LoLUpdater
                 {
                     while (reader.Read())
                     {
-                        if (!reader.IsStartElement()) continue;
-                        switch (reader.Name)
-                        {
-                            case "files":
+                        if (!reader.IsStartElement()) && reader.Name == "files" continue;
                                 reader.Read();
                                 amountOfPatches = Convert.ToInt32(reader.Value);
-                                break;
-                        }
+                                reader.Close();
+                        
                     }
                 }
                 for (var i = 0; i < amountOfPatches; i++)
@@ -165,6 +162,7 @@ namespace LoLUpdater
                 File.Copy(Path.Combine("temp", s.FileLocation.Replace(".dat", ""), s.FileName),
                     Path.Combine(s.LocationText, s.FileLocation), true);
             }
+            // Todo: Might delete this, awaiting response from a D# tool-maker, he answers quickly always.
             DeletePathWithLongFileNames(Path.GetFullPath("temp"));
         }
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -205,6 +203,8 @@ namespace LoLUpdater
                     fileLocation = s.Substring(1);
                 }
             }
+            
+            // Todo: is the same as the C variable?
             var filePart = fileLocation.Split('/');
             var fileName = filePart[filePart.Length - 1];
             while (String.IsNullOrEmpty(_location))
@@ -213,45 +213,47 @@ namespace LoLUpdater
             if (!Directory.Exists(Path.Combine("temp", fileLocation.Replace(".dat", ""))))
             {
                 Directory.CreateDirectory(Path.Combine("temp", fileLocation.Replace(".dat", "")));
-                var n = "";
                 foreach (var s in filePart.Take(filePart.Length - 1))
                 {
-                    n = Path.Combine(n, s);
-                    if (!Directory.Exists(Path.Combine("Backup", n)))
+                    if (!Directory.Exists(Path.Combine("Backup", s)))
                     {
-                        Directory.CreateDirectory(Path.Combine("Backup", n));
+                        Directory.CreateDirectory(Path.Combine("Backup", s));
                     }
                 }
                 if (!File.Exists(Path.Combine("Backup", fileLocation)))
                 {
                     File.Copy(Path.Combine(_location, fileLocation),
-                        Path.Combine(_location, "Backup", fileLocation));
+                        Path.Combine("Backup", fileLocation));
                 }
                 File.Copy(Path.Combine(_location, fileLocation),
                     Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName));
-                var export = new ProcessStartInfo
+                var exportProc = Process.Start(new ProcessStartInfo
                 {
                     FileName = "abcexport.exe",
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     Arguments = Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName)
-                };
-                var exportProc = Process.Start(export);
+                };);
                 if (exportProc != null)
                 {
                     exportProc.WaitForExit();
                 }
                 var abcFiles = Directory.GetFiles(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*.abc");
-                foreach (var disasmProc in abcFiles.Select(s => new ProcessStartInfo
-                {
-                    FileName = "rabcdasm.exe",
-                    Arguments = s,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }).Select(Process.Start).Where(disasmProc => disasmProc != null))
-                {
-                    disasmProc.WaitForExit();
-                }
+                // Todo: fix varible names here
+            foreach (var s in ABCFiles) 
+                { 
+                    ProcessStartInfo Disassemble = new ProcessStartInfo(); 
+                    Disassemble.FileName = "rabcdasm.exe"; 
+                    Disassemble.Arguments = s; 
+                    Disassemble.UseShellExecute = false; 
+                    Disassemble.CreateNoWindow = true; 
+                    var DisasmProc = Process.Start(Disassemble); 
+                    if (DisasmProc != null) 
+                    { 
+                        DisasmProc.WaitForExit(); 
+                    } 
+                } 
+
             }
             if (tryFindClass.IndexOf(':') == 0)
             {
@@ -266,10 +268,9 @@ namespace LoLUpdater
             {
                 if (!s.Contains("com"))
                     continue;
-                var tempS = s;
-                tempS = tempS.Substring(tempS.IndexOf("com", StringComparison.Ordinal));
-                tempS = tempS.Replace(C.ToString(CultureInfo.InvariantCulture), ".");
-                if (tempS == searchFor)
+                s.Substring(s.IndexOf("com", StringComparison.Ordinal));
+                s.Replace(C.ToString(CultureInfo.InvariantCulture), ".");
+                if (s == searchFor)
                 {
                     foundDirectories.Add(s);
                 }
@@ -278,7 +279,6 @@ namespace LoLUpdater
             {
                 MessageBox.Show(string.Format("No class matching {0} for mod {1}", searchFor, modName), "LoLUpdater");
             }
-            var finalDirectory = "";
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
             foreach (var s in from s in foundDirectories
                 let m = Directory.GetFiles(s)
@@ -286,9 +286,7 @@ namespace LoLUpdater
                 where m.Contains(x)
                 select s)
             {
-                finalDirectory = s;
-            }
-            var classModifier = File.ReadAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"));
+  var classModifier = File.ReadAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"));
             if (isNewTrait)
             {
                 if (classModifier.Any(l => l == modDetails[3]))
@@ -350,32 +348,29 @@ namespace LoLUpdater
             }
             var h = new WorstHack
             {
-                FileName = fileName,
                 ReAssembleLocation =
-                    finalDirectory.Substring(0, finalDirectory.IndexOf("com", StringComparison.Ordinal))
+                    s.Substring(0, s.IndexOf("com", StringComparison.Ordinal))
                         .Replace(string.Format("temp{0}", C), ""),
                 FileLocation = fileLocation
             };
             if (!_reassembleLocations.Contains(h))
                 _reassembleLocations.Add(h);
+            }
+           
         }
         private static void Repackage(WorstHack data)
         {
             var abcNumber =
                 data.ReAssembleLocation.Substring(data.ReAssembleLocation.IndexOf('-'))
                     .Replace("-", "")
-                    .Replace(C.ToString(CultureInfo.InvariantCulture), "");
-            var reAsm = new ProcessStartInfo
-            {
-                FileName = "rabcasm.exe",
+                    .Replace(C.ToString(CultureInfo.InvariantCulture), "")
+            var reAsmProc = Process.Start(FileName = "rabcasm.exe",
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 Arguments =
                     Path.Combine("temp",
-                        data.ReAssembleLocation + data.FileName.Replace(".dat", "") + "-" + abcNumber + ".main.asasm")
-            };
-            var reAsmProc = Process.Start(reAsm);
+                        data.ReAssembleLocation + data.fileName.Replace(".dat", "") + "-" + abcNumber + ".main.asasm"));
             while (reAsmProc != null && !reAsmProc.StandardError.EndOfStream)
             {
                 reAsmProc.StandardError.ReadLine();
@@ -384,18 +379,14 @@ namespace LoLUpdater
             {
                 reAsmProc.WaitForExit();
             }
-            var doPatch = new ProcessStartInfo
-            {
-                FileName = "abcreplace.exe",
+            var finalPatchProc = Process.Start(FileName = "abcreplace.exe",
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 Arguments =
                     Path.Combine("temp", data.FileLocation.Replace(".dat", ""), data.FileName) + " " + abcNumber + " " +
                     Path.Combine("temp",
-                        data.ReAssembleLocation + data.FileName.Replace(".dat", "") + "-" + abcNumber + ".main.abc")
-            };
-            var finalPatchProc = Process.Start(doPatch);
+                        data.ReAssembleLocation + data.FileName.Replace(".dat", "") + "-" + abcNumber + ".main.abc"));
             while (finalPatchProc != null && !finalPatchProc.StandardError.EndOfStream)
             {
                 finalPatchProc.StandardError.ReadLine();
@@ -405,6 +396,7 @@ namespace LoLUpdater
                 finalPatchProc.WaitForExit();
             }
         }
+        // Todo: Might delete this, awaiting response from a D# tool-maker, he answers quickly always.
         private static void DeletePathWithLongFileNames(string path)
         {
             // Todo: fix this, from here
