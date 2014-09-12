@@ -74,6 +74,7 @@ namespace LoLUpdater
                     check.IsChecked = false;
                 ModsListBox.Items.Add(check);
             }
+            Precheck();
         }
         private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
@@ -445,9 +446,12 @@ namespace LoLUpdater
         }
         private static void Kill(string process)
         {
-            if (Process.GetProcessesByName(process).Length <= 0) return;
-            var proc = Process.GetProcessesByName(process);
-            proc[0].Kill();
+foreach (Process proc in Process.GetProcessesByName(process))
+            {
+                proc.Kill();
+                proc.WaitForExit();
+            }
+
             proc[0].WaitForExit();
         }
         private void HandlePatch()
@@ -520,13 +524,13 @@ namespace LoLUpdater
                 {
                     Copy("game.cfg", "Config", "Backup");
                 }
-                Backup("solutions", "lol_game_client_sln", "Cg.dll", string.Empty);
-                Backup("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty);
-                Backup("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty);
-                Backup("solutions", "lol_game_client_sln", "tbb.dll", string.Empty);
-                Backup("projects", "lol_air_client", "Adobe AIR.dll", Path.Combine("Adobe Air", "Versions", "1.0"));
+                Backup("solutions", "lol_game_client_sln", "Cg.dll", "deploy");
+                Backup("solutions", "lol_game_client_sln", "CgD3D9.dll", "deploy");
+                Backup("solutions", "lol_game_client_sln", "CgGL.dll", "deploy");
+                Backup("solutions", "lol_game_client_sln", "tbb.dll", "deploy");
+                Backup("projects", "lol_air_client", "Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
                 Backup("projects", "lol_air_client", "NPSWF32.dll",
-                    Path.Combine("Adobe Air", "Versions", "1.0", "Resources"));
+                    Path.Combine("deploy","Adobe Air", "Versions", "1.0", "Resources"));
             }
             else if (Directory.Exists("Game"))
             {
@@ -556,12 +560,12 @@ namespace LoLUpdater
             File.Delete(Path.Combine(_location.Substring(0, _location.Length - 7), "S_OK"));
             MessageBox.Show("LESs will be removed next time League of Legends launches!", "LoLUpdater");
         }
-        private static void Backup(string folder, string folder1, string file, string extension)
+        private static void Backup(string folder, string folder1, string file, string to)
         {
             File.Copy(Path.Combine(Path.Combine("RADS", folder, folder1, "releases") + C +
                                    new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
                                        .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + C,
-                Path.Combine("deploy", extension, file)), Path.Combine("Backup", file),
+                Path.Combine(to, file)), Path.Combine("Backup", file),
                 true);
         }
         private static void Copy(string file, string from, string to)
@@ -703,6 +707,7 @@ namespace LoLUpdater
         }
         private static void HandlePmbUninstall()
         {
+            // Todo: Maybe tweaks this.
             var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
@@ -716,17 +721,17 @@ namespace LoLUpdater
                 {
                     File.Copy(Path.Combine("Backup", "game.cfg"), Path.Combine("Config", "game.cfg"), true);
                 }
-                Uninstall("Cg.dll", "deploy", "solutions", "lol_game_client_sln");
-                Uninstall("CgGL.dll", "deploy", "solutions", "lol_game_client_sln");
-                Uninstall("CgD3D9.dll", "deploy", "solutions", "lol_game_client_sln");
-                Uninstall("Cg.dll", "deploy", "projects", "lol_launcher");
-                Uninstall("CgGL.dll", "deploy", "projects", "lol_launcher");
-                Uninstall("CgD3D9.dll", "deploy", "projects", "lol_launcher");
-                Uninstall("tbb.dll", "deploy", "solutions", "lol_game_client_sln");
-                Uninstall("Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"),
-                    "projects", "lol_air_client");
-                Uninstall("NPSWF32.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"),
-                    "projects", "lol_air_client");
+                AdvancedCopy("Cg.dll", "Backup", "solutions", "lol_game_client_sln", "Deploy");
+                AdvancedCopy("CgGL.dll", "Backup", "solutions", "lol_game_client_sln", "Deploy");
+                AdvancedCopy("CgD3D9.dll", "Backup", "solutions", "lol_game_client_sln", "Deploy");
+                AdvancedCopy("Cg.dll", "Backup", "projects", "lol_launcher", "Deploy");
+                AdvancedCopy("CgGL.dll", "Backup", "projects", "lol_launcher", "Deploy");
+                AdvancedCopy("CgD3D9.dll", "Backup", "projects", "lol_launcher", "Deploy");
+                AdvancedCopy("tbb.dll", "Backup", "solutions", "lol_game_client_sln", "Deploy");
+                AdvancedCopy("Adobe AIR.dll", "Backup", "projects" "lol_air_client",
+                    "projects", "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
+                AdvancedCop(y"Adobe AIR.dll", "Backup", "projects" "lol_air_client",
+                    "projects", "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
             }
             else if (Directory.Exists("Game"))
             {
@@ -755,14 +760,6 @@ namespace LoLUpdater
             }
             Directory.Delete("Backup", true);
             Reboot("Removing");
-        }
-        private static void Uninstall(string file, string extension, string folder, string folder1)
-        {
-            File.Copy(Path.Combine("Backup", file),
-                Path.Combine("RADS", folder, folder1, "releases") + C +
-                new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + C +
-                Path.Combine(extension, file), true);
         }
         private static void AdobeAlert()
         {
@@ -798,12 +795,9 @@ namespace LoLUpdater
         private static void HandleMouseHz()
         {
             var win8Version = new Version(6, 2, 9200, 0);
-            if (Environment.OSVersion.Version < win8Version)
-                return;
-            var mousehz = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", Reg, "Microsoft",
-                "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
-            if (mousehz != null)
-                mousehz.SetValue("NoDTToDITMouseBatch",
+            if (Environment.OSVersion.Version => win8Version)
+                Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", Reg, "Microsoft",
+                "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers")).SetValue("NoDTToDITMouseBatch",
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
                     RegistryValueKind.String);
             Process.Start(new ProcessStartInfo
@@ -815,12 +809,26 @@ namespace LoLUpdater
         }
         private static void HandleCfg(string setting)
         {
+               if (File.Exists(Path.Combine("Config", "game.cfg")))
+            {
+               Cfg(setting, "game.cfg", "Config"); 
+            }
+            else if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
+            {
+                Cfg(setting, "game.cfg", GameCfg);
+                Cfg(setting, "GamePermanent.cfg", GameCfg);
+                Cfg(setting, "GamePermanent_zh_MY.cfg", GameCfg);
+                Cfg(setting, "GamePermanent_en_SG.cfg", GameCfg);
+            }
+        }
+        private static void Precheck()
+        {
             if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
                 var fi = new FileInfo(Path.Combine("Config", "game.cfg"));
                 if (fi.Attributes == FileAttributes.ReadOnly)
                 {
-                    MessageBox.Show("Your game.cfg Located in Config is read only, please remove this and try again",
+                    MessageBox.Show(string.Format("Your game.cfg Located in Config{0} is read only, please remove this and try again", C),
                         "LoLUpdater");
                     return;
                 }
@@ -829,18 +837,7 @@ namespace LoLUpdater
                     File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + setting);
                 }
             }
-            else if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
-            {
-                Cfg(setting, "game.cfg");
-                Cfg(setting, "GamePermanent.cfg");
-                Cfg(setting, "GamePermanent_zh_MY.cfg");
-                Cfg(setting, "GamePermanent_en_SG.cfg");
-            }
-        }
-        private static void Cfg(string setting, string file)
-        {
-            if (File.Exists(Path.Combine(GameCfg, file))) return;
-            var fi = new FileInfo(Path.Combine(GameCfg, file));
+                    var fi = new FileInfo(Path.Combine(GameCfg, file));
             if (fi.Attributes == FileAttributes.ReadOnly)
             {
                 MessageBox.Show(String.Format(
@@ -849,11 +846,15 @@ namespace LoLUpdater
                     "LoLUpdater");
                 return;
             }
+        }
+        
+        private static void Cfg(string setting, string file, game)
+        {
             if (
-                !File.ReadAllText(Path.Combine(GameCfg, file))
+                !File.ReadAllText(Path.Combine(game, file))
                     .Contains(setting))
             {
-                File.AppendAllText(Path.Combine(GameCfg, file),
+                File.AppendAllText(Path.Combine(game, file),
                     Environment.NewLine + setting);
             }
         }
@@ -876,7 +877,7 @@ namespace LoLUpdater
         }
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
-            // Todo: Read about what side is done first
+            // Todo: Read about what side is done first, one of them might be reduntant
             if (_cgBinPath == null || !File.Exists(Path.Combine(_cgBinPath, "cg.dll")))
             {
                 InstallCg();
@@ -938,8 +939,7 @@ namespace LoLUpdater
         {
             var identity = WindowsIdentity.GetCurrent();
             if (identity == null) return;
-            var pricipal = new WindowsPrincipal(identity);
-            if (pricipal.IsInRole(WindowsBuiltInRole.Administrator)) return;
+            if (new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator)) return;
             if (
                 MessageBox.Show(
                     "The Windows Update features requires the application to be run as administrator, would you like to restart LoLUpdater with admin privileges",
