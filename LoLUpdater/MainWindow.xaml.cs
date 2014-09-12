@@ -254,15 +254,15 @@ namespace LoLUpdater
                 foreach (var s in filePart.Take(filePart.Length - 1))
                 {
                     n = Path.Combine(n, s);
-                    if (!Directory.Exists(Path.Combine("Backup", IntendedVersion, n)))
+                    if (!Directory.Exists(Path.Combine("Backup", n)))
                     {
-                        Directory.CreateDirectory(Path.Combine("Backup", IntendedVersion, n));
+                        Directory.CreateDirectory(Path.Combine("Backup", n));
                     }
                 }
-                if (!File.Exists(Path.Combine("Backup", IntendedVersion, fileLocation)))
+                if (!File.Exists(Path.Combine("Backup", fileLocation)))
                 {
                     File.Copy(Path.Combine(_location, fileLocation),
-                        Path.Combine(_location, "Backup", IntendedVersion, fileLocation));
+                        Path.Combine(_location, "Backup", fileLocation));
                 }
 
                 File.Copy(Path.Combine(_location, fileLocation),
@@ -593,12 +593,8 @@ namespace LoLUpdater
 
         private static void HandleBackup()
         {
-            if (Directory.Exists(Path.Combine(_location, "Backup", IntendedVersion))) return;
-            Directory.CreateDirectory(Path.Combine("Backup", IntendedVersion));
-
             if (Directory.Exists("Backup")) return;
             Directory.CreateDirectory("Backup");
-            Directory.CreateDirectory(Path.Combine("Backup", IntendedVersion));
             if (Directory.Exists("RADS"))
             {
                 if (File.Exists(Path.Combine("Config", "game.cfg")))
