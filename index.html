@@ -1,0 +1,102 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <title>LoLUpdater</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <script src="bower_components/platform/platform.js"></script>
+
+  <link rel="import" href="bower_components/core-icons/core-icons.html">
+  <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
+  <link rel="import" href="bower_components/font-roboto/roboto.html">
+  <link rel="import" href="bower_components/paper-button/paper-button.html">
+  <link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">
+  <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="bower_components/paper-fab/paper-fab.html">
+  <link rel="import" href="bower_components/paper-radio-button/paper-radio-button">
+  <link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body unresolved>
+  <core-toolbar>
+    <span flex>LoLUpdater</span>
+    <paper-fab icon="bug-report" class="mini"></paper-button>
+  </core-toolbar>
+  <section>
+
+    <div class="frame">
+      <paper-radio-group selected="small">
+        <paper-radio-button name="install" label="Install"></paper-radio-button>
+        <paper-radio-button name="remove" label="Remove"></paper-radio-button>
+      </paper-radio-group>
+      <div id="options">
+        <div class="option-box">
+          <h2>PVP.net Client</h2>
+          <paper-checkbox label="Adobe Air"></paper-checkbox>
+          <paper-checkbox label="Adobe Flash"></paper-checkbox>
+        </div>
+        <div class="option-box">
+          <h2>Game Client</h2>
+          <paper-checkbox label="Cg"></paper-checkbox>
+          <paper-checkbox label="CgD3D9"></paper-checkbox>
+          <paper-checkbox label="CgGL"></paper-checkbox>
+          <paper-checkbox label="TBB"></paper-checkbox>
+        </div>
+        <div class="option-box">
+          <h2>Launcher</h2>
+          <paper-checkbox label="Cg"></paper-checkbox>
+          <paper-checkbox label="CgD3D9"></paper-checkbox>
+          <paper-checkbox label="CgGL"></paper-checkbox>
+        </div>
+        <div class="option-box">
+          <h2>Patcher</h2>
+          <paper-checkbox label="Cg"></paper-checkbox>
+          <paper-checkbox label="CgD3D9"></paper-checkbox>
+          <paper-checkbox label="CgGL"></paper-checkbox>
+        </div>
+        <div class="option-box">
+          <h2>Windows Utilities</h2>
+          <paper-checkbox label="Windows Update"></paper-checkbox>
+          <paper-checkbox label="Visual Options"></paper-checkbox>
+          <paper-checkbox label="MouseHz 125 -> 500"></paper-checkbox>
+          <paper-checkbox label="Disk Cleanup"></paper-checkbox>
+        </div>
+        <div class="option-box">
+          <h2>Config Tweaks</h2>
+          <paper-checkbox label="No Inking"></paper-checkbox>
+          <paper-checkbox label="No Advanced Reflection"></paper-checkbox>
+          <paper-checkbox label="No Per Pixel Point Lightning"></paper-checkbox>
+        </div>
+        <div class="option-box">
+          <h2>LeS Tweaks</h2>
+          <paper-checkbox label="appearOffline"></paper-checkbox>
+          <paper-checkbox label="autoAcceptQueue"></paper-checkbox>
+          <paper-checkbox label="clientMatchHistory"></paper-checkbox>
+          <paper-checkbox label="doombotDifficulties"></paper-checkbox>
+          <paper-checkbox label="easyQueueDodge"></paper-checkbox>
+          <paper-checkbox label="joinMultipleQueues"></paper-checkbox>
+          <paper-checkbox label="keepMyPage"></paper-checkbox>
+          <paper-checkbox label="seeTeamcolor"></paper-checkbox>
+          <paper-checkbox label="selectRandomSkin"></paper-checkbox>
+          <paper-checkbox label="skinnyBots"></paper-checkbox>
+          <paper-checkbox label="stopCloseGame"></paper-checkbox>
+          <paper-checkbox label="storeRefresh"></paper-checkbox>
+        </div>
+      </div>
+
+      <section>
+        <paper-button raisedButton class="colored" label="Go">
+        </paper-button>
+      </section>
+
+      <script src="main.js"></script>
+</body>
+
+</html>
