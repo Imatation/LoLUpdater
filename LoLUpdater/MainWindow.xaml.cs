@@ -496,6 +496,7 @@ namespace LoLUpdater
             {
                 HandleCfg("PerPixelPointLighting=0");
             }
+            // Todo: if something goes horribly wrong the "Go" button becomes stuck forever.
             _worker.RunWorkerAsync();
             Reboot("Installing");
         }
@@ -772,6 +773,7 @@ namespace LoLUpdater
                 {
                     var currentVersion =
                         new Version(FileVersionInfo.GetVersionInfo(Path.Combine(AirPath, "Adobe AIR.dll")).FileVersion);
+                        // Todo: Update this to the latest version
                     var latestVersion = new Version("14.0.0.178");
                     if (currentVersion >= latestVersion) return;
                     if (
@@ -874,6 +876,7 @@ namespace LoLUpdater
         }
         private void Cg_Checked(object sender, RoutedEventArgs e)
         {
+            // Todo: Read about what side is done first
             if (_cgBinPath == null || !File.Exists(Path.Combine(_cgBinPath, "cg.dll")))
             {
                 InstallCg();
