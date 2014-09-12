@@ -309,3 +309,8 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+
+### Custom ###
+LoLUpdater.exe
+LoLUpdaterXP.exe
+LoLUpdater.zip
