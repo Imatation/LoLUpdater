@@ -49,6 +49,14 @@ namespace LoLUpdater
         public MainWindow()
         {
             InitializeComponent();
+
+            var winxpVersion = new Version(6, 1);
+            if (Environment.OSVersion.Version <= winxpVersion)
+            {
+                XPTest1.Visibility = Visibility.Hidden;
+                XPTest.Visibility = Visibility.Hidden;
+            }
+
             _reassembleLocations = new List<WorstHack>();
 
             if (Directory.Exists("temp"))
@@ -899,7 +907,7 @@ namespace LoLUpdater
         private static void HandleMouseHz()
         {
             var win8Version = new Version(6, 2, 9200, 0);
-            if (Environment.OSVersion.Platform != PlatformID.Win32NT || Environment.OSVersion.Version < win8Version)
+            if (Environment.OSVersion.Version < win8Version)
                 return;
 
 
