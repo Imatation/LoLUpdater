@@ -21,6 +21,7 @@ namespace LoLUpdater
 {
     public partial class MainWindow
     {
+        private bool _les;
         private static readonly string GameCfg = Path.Combine("Game", "DATA", "CFG", "defaults");
         private const char C = '\u005c';
         private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
@@ -41,6 +42,15 @@ namespace LoLUpdater
         public MainWindow()
         {
             InitializeComponent();
+            var identity = WindowsIdentity.GetCurrent();
+            if (identity != null)
+            {
+                if (new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator))
+                {
+                    Title.Text = "LoLUpdater (Administrator)";
+                }
+            }
+            
             var winxpVersion = new Version(5, 1, 2600);
             if (Environment.OSVersion.Version <= winxpVersion)
             {
@@ -72,9 +82,12 @@ namespace LoLUpdater
                 };
                 if (File.Exists(Path.Combine(mod, "disabled")))
                     check.IsChecked = false;
-                ModsListBox.Items.Add(check);
+                LeSsBox.Items.Add(check);
             }
-            Precheck();
+            Precheck("GamePermanent_en_SG.cfg");
+            Precheck("GamePermanent.cfg");
+            Precheck("game.cfg");
+            Precheck("GamePermanent_en_SG.cfg");
         }
         private void CurrentDomain_FirstChanceException(object sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
         {
@@ -84,10 +97,10 @@ namespace LoLUpdater
         }
         private void ModsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var box = (CheckBox) ModsListBox.SelectedItem;
+            var box = (CheckBox)LeSsBox.SelectedItem;
             if (box == null)
                 return;
-            var selectedMod = (string) box.Content;
+            var selectedMod = (string)box.Content;
             using (var reader = XmlReader.Create(Path.Combine("mods", selectedMod, "info.xml")))
             {
                 while (reader.Read())
@@ -97,7 +110,7 @@ namespace LoLUpdater
                     {
                         case "description":
                             reader.Read();
-                            ModDescriptionBox.Text = reader.Value;
+                            LesDescrBox.Text = reader.Value;
                             break;
                     }
                 }
@@ -105,9 +118,9 @@ namespace LoLUpdater
         }
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            ItemCollection modCollection;
+            ItemCollection modCollection = null;
             Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                new ThreadStart(() => { modCollection = ModsListBox.Items; }));
+                new ThreadStart(() => { modCollection = LeSsBox.Items; }));
             // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
             while (modCollection == null)
             {
@@ -115,15 +128,15 @@ namespace LoLUpdater
             Directory.CreateDirectory("temp");
             foreach (var x in modCollection)
             {
-                var box = (CheckBox) x;
+                var box = (CheckBox)x;
                 bool? isBoxChecked = null;
-                var boxName;
+                string boxName = null;
                 Dispatcher.BeginInvoke(DispatcherPriority.Input, new ThreadStart(() =>
                 {
-                    if (box.IsChecked != null && (bool) box.IsChecked)
+                    if (box.IsChecked != null && (bool)box.IsChecked)
                     {
                         isBoxChecked = true;
-                        boxName = (string) box.Content;
+                        boxName = (string)box.Content;
                     }
                     else
                     {
@@ -134,17 +147,21 @@ namespace LoLUpdater
                 while (isBoxChecked == null || String.IsNullOrEmpty(boxName))
                 {
                 }
-                if (!(bool) isBoxChecked) continue;
+                if (!(bool)isBoxChecked) continue;
                 var amountOfPatches = 1;
                 using (var reader = XmlReader.Create(Path.Combine("mods", boxName, "info.xml")))
                 {
                     while (reader.Read())
                     {
-                        if (!reader.IsStartElement()) && reader.Name == "files" continue;
-                                reader.Read();
-                                amountOfPatches = Convert.ToInt32(reader.Value);
-                                reader.Close();
-                        
+                        if (!reader.IsStartElement() && reader.Name == "files") continue;
+
+                        {
+                            reader.Read();
+                            amountOfPatches = Convert.ToInt32(reader.Value);
+                            reader.Close();
+                        }
+
+
                     }
                 }
                 for (var i = 0; i < amountOfPatches; i++)
@@ -204,7 +221,7 @@ namespace LoLUpdater
                     fileLocation = s.Substring(1);
                 }
             }
-            
+
             // Todo: is the same as the C variable?
             var filePart = fileLocation.Split('/');
             var fileName = filePart[filePart.Length - 1];
@@ -234,26 +251,28 @@ namespace LoLUpdater
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     Arguments = Path.Combine("temp", fileLocation.Replace(".dat", ""), fileName)
-                };);
+                });
                 if (exportProc != null)
                 {
                     exportProc.WaitForExit();
                 }
                 var abcFiles = Directory.GetFiles(Path.Combine("temp", fileLocation.Replace(".dat", "")), "*.abc");
                 // Todo: fix varible names here
-            foreach (var s in ABCFiles) 
-                { 
-                    ProcessStartInfo Disassemble = new ProcessStartInfo(); 
-                    Disassemble.FileName = "rabcdasm.exe"; 
-                    Disassemble.Arguments = s; 
-                    Disassemble.UseShellExecute = false; 
-                    Disassemble.CreateNoWindow = true; 
-                    var DisasmProc = Process.Start(Disassemble); 
-                    if (DisasmProc != null) 
-                    { 
-                        DisasmProc.WaitForExit(); 
-                    } 
-                } 
+                foreach (var s in abcFiles)
+                {
+                    var disassemble = new ProcessStartInfo
+                    {
+                        FileName = "rabcdasm.exe",
+                        Arguments = s,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+                    var disasmProc = Process.Start(disassemble);
+                    if (disasmProc != null)
+                    {
+                        disasmProc.WaitForExit();
+                    }
+                }
 
             }
             if (tryFindClass.IndexOf(':') == 0)
@@ -265,13 +284,14 @@ namespace LoLUpdater
                     SearchOption.AllDirectories).ToList();
             var searchFor = tryFindClass.Substring(0, tryFindClass.IndexOf(':'));
             var foundDirectories = new List<string>();
-            foreach (var s in directories)
+            foreach (string s in directories)
             {
                 if (!s.Contains("com"))
                     continue;
-                s.Substring(s.IndexOf("com", StringComparison.Ordinal));
-                s.Replace(C.ToString(CultureInfo.InvariantCulture), ".");
-                if (s == searchFor)
+                string tempS = s;
+                tempS = tempS.Substring(tempS.IndexOf("com", StringComparison.Ordinal));
+                tempS = tempS.Replace("\\", ".");
+                if (tempS == searchFor)
                 {
                     foundDirectories.Add(s);
                 }
@@ -282,96 +302,102 @@ namespace LoLUpdater
             }
             var Class = tryFindClass.Substring(tryFindClass.IndexOf(':')).Replace(":", "");
             foreach (var s in from s in foundDirectories
-                let m = Directory.GetFiles(s)
-                let x = Path.Combine(s, Class + ".class.asasm")
-                where m.Contains(x)
-                select s)
+                              let m = Directory.GetFiles(s)
+                              let x = Path.Combine(s, Class + ".class.asasm")
+                              where m.Contains(x)
+                              select s)
             {
-  var classModifier = File.ReadAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"));
-            if (isNewTrait)
-            {
-                if (classModifier.Any(l => l == modDetails[3]))
+                var classModifier = File.ReadAllLines(Path.Combine(s, Class + ".class.asasm"));
+                if (isNewTrait)
                 {
-                    return;
+                    if (classModifier.Any(l => l == modDetails[3]))
+                    {
+                        return;
+                    }
                 }
-            }
-            var traitStartPosition = 0;
-            var traitEndLocation = 0;
-            for (var i = 0; i < classModifier.Length; i++)
-            {
-                if (classModifier[i] != traitToModify) continue;
-                traitStartPosition = i;
-                break;
-            }
-            if (traitStartPosition == 0)
-            {
-                MessageBox.Show("Trait start location was not found! Corrupt mod?", "LoLUpdater");
-            }
-            if (!isNewTrait)
-            {
-                for (var i = traitStartPosition; i < classModifier.Length; i++)
+                var traitStartPosition = 0;
+                var traitEndLocation = 0;
+                for (var i = 0; i < classModifier.Length; i++)
                 {
-                    if (classModifier[i].Trim() != "end ; method") continue;
-                    if (classModifier[i + 1].Trim() == "end ; trait")
-                    {
-                        traitEndLocation = i + 2;
-                    }
-                    else
-                    {
-                        traitEndLocation = i + 1;
-                    }
+                    if (classModifier[i] != traitToModify) continue;
+                    traitStartPosition = i;
                     break;
                 }
-                if (traitEndLocation < traitStartPosition)
+                if (traitStartPosition == 0)
                 {
-                    MessageBox.Show(string.Format("Trait end location was smaller than trait start location! {0}, {1}", traitEndLocation, traitStartPosition), "LoLUpdater");
+                    MessageBox.Show("Trait start location was not found! Corrupt mod?", "LoLUpdater");
                 }
-                var startTrait = new string[traitStartPosition];
-                Array.Copy(classModifier, startTrait, traitStartPosition);
-                var afterTrait = new string[classModifier.Length - traitEndLocation];
-                Array.Copy(classModifier, traitEndLocation, afterTrait, 0, classModifier.Length - traitEndLocation);
-                var finalClass = new string[startTrait.Length + (modDetails.Length - 3) + afterTrait.Length];
-                Array.Copy(startTrait, finalClass, traitStartPosition);
-                Array.Copy(modDetails, 3, finalClass, traitStartPosition, (modDetails.Length - 3));
-                Array.Copy(afterTrait, 0, finalClass, traitStartPosition + (modDetails.Length - 3), afterTrait.Length);
-                File.Delete(Path.Combine(finalDirectory, Class + ".class.asasm"));
-                File.WriteAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"), finalClass);
+                if (!isNewTrait)
+                {
+                    for (var i = traitStartPosition; i < classModifier.Length; i++)
+                    {
+                        if (classModifier[i].Trim() != "end ; method") continue;
+                        if (classModifier[i + 1].Trim() == "end ; trait")
+                        {
+                            traitEndLocation = i + 2;
+                        }
+                        else
+                        {
+                            traitEndLocation = i + 1;
+                        }
+                        break;
+                    }
+                    if (traitEndLocation < traitStartPosition)
+                    {
+                        MessageBox.Show(string.Format("Trait end location was smaller than trait start location! {0}, {1}", traitEndLocation, traitStartPosition), "LoLUpdater");
+                    }
+                    var startTrait = new string[traitStartPosition];
+                    Array.Copy(classModifier, startTrait, traitStartPosition);
+                    var afterTrait = new string[classModifier.Length - traitEndLocation];
+                    Array.Copy(classModifier, traitEndLocation, afterTrait, 0, classModifier.Length - traitEndLocation);
+                    var finalClass = new string[startTrait.Length + (modDetails.Length - 3) + afterTrait.Length];
+                    Array.Copy(startTrait, finalClass, traitStartPosition);
+                    Array.Copy(modDetails, 3, finalClass, traitStartPosition, (modDetails.Length - 3));
+                    Array.Copy(afterTrait, 0, finalClass, traitStartPosition + (modDetails.Length - 3), afterTrait.Length);
+                    File.Delete(Path.Combine(s, Class + ".class.asasm"));
+                    File.WriteAllLines(Path.Combine(s, Class + ".class.asasm"), finalClass);
+                }
+                else
+                {
+                    var finalClass = new string[classModifier.Length + (modDetails.Length - 3)];
+                    Array.Copy(classModifier, 0, finalClass, 0, traitStartPosition);
+                    Array.Copy(modDetails, 3, finalClass, traitStartPosition, modDetails.Length - 3);
+                    Array.Copy(classModifier, traitStartPosition, finalClass, traitStartPosition + modDetails.Length - 3,
+                        classModifier.Length - traitStartPosition);
+                    File.Delete(Path.Combine(s, Class + ".class.asasm"));
+                    File.WriteAllLines(Path.Combine(s, Class + ".class.asasm"), finalClass);
+                }
+                var h = new WorstHack
+                {
+                    ReAssembleLocation =
+                        s.Substring(0, s.IndexOf("com", StringComparison.Ordinal))
+                            .Replace(string.Format("temp{0}", C), ""),
+                    FileLocation = fileLocation
+                };
+                if (!_reassembleLocations.Contains(h))
+                    _reassembleLocations.Add(h);
             }
-            else
-            {
-                var finalClass = new string[classModifier.Length + (modDetails.Length - 3)];
-                Array.Copy(classModifier, 0, finalClass, 0, traitStartPosition);
-                Array.Copy(modDetails, 3, finalClass, traitStartPosition, modDetails.Length - 3);
-                Array.Copy(classModifier, traitStartPosition, finalClass, traitStartPosition + modDetails.Length - 3,
-                    classModifier.Length - traitStartPosition);
-                File.Delete(Path.Combine(finalDirectory, Class + ".class.asasm"));
-                File.WriteAllLines(Path.Combine(finalDirectory, Class + ".class.asasm"), finalClass);
-            }
-            var h = new WorstHack
-            {
-                ReAssembleLocation =
-                    s.Substring(0, s.IndexOf("com", StringComparison.Ordinal))
-                        .Replace(string.Format("temp{0}", C), ""),
-                FileLocation = fileLocation
-            };
-            if (!_reassembleLocations.Contains(h))
-                _reassembleLocations.Add(h);
-            }
-           
+
         }
+
         private static void Repackage(WorstHack data)
         {
             var abcNumber =
                 data.ReAssembleLocation.Substring(data.ReAssembleLocation.IndexOf('-'))
                     .Replace("-", "")
-                    .Replace(C.ToString(CultureInfo.InvariantCulture), "")
-            var reAsmProc = Process.Start(FileName = "rabcasm.exe",
+                    .Replace(C.ToString(CultureInfo.InvariantCulture), "");
+            var reAsmProc = Process.Start(new ProcessStartInfo
+            {
+                FileName = "rabcasm.exe",
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 Arguments =
                     Path.Combine("temp",
-                        data.ReAssembleLocation + data.fileName.Replace(".dat", "") + "-" + abcNumber + ".main.asasm"));
+                        data.ReAssembleLocation + data.FileName.Replace(".dat", "") + "-" + abcNumber + ".main.asasm")
+            });
+
+
             while (reAsmProc != null && !reAsmProc.StandardError.EndOfStream)
             {
                 reAsmProc.StandardError.ReadLine();
@@ -380,14 +406,20 @@ namespace LoLUpdater
             {
                 reAsmProc.WaitForExit();
             }
-            var finalPatchProc = Process.Start(FileName = "abcreplace.exe",
+            var finalPatchProc = Process.Start(new ProcessStartInfo
+            {
+                FileName = "abcreplace.exe",
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 Arguments =
                     Path.Combine("temp", data.FileLocation.Replace(".dat", ""), data.FileName) + " " + abcNumber + " " +
                     Path.Combine("temp",
-                        data.ReAssembleLocation + data.FileName.Replace(".dat", "") + "-" + abcNumber + ".main.abc"));
+                        data.ReAssembleLocation + data.FileName.Replace(".dat", "") + "-" + abcNumber + ".main.abc")
+            }
+
+
+    );
             while (finalPatchProc != null && !finalPatchProc.StandardError.EndOfStream)
             {
                 finalPatchProc.StandardError.ReadLine();
@@ -427,7 +459,28 @@ namespace LoLUpdater
             }
             if (WinUpdate.IsChecked == true)
             {
-                HandleWindowsUpdate();
+                var identity = WindowsIdentity.GetCurrent();
+                if (identity != null)
+                {
+                    if (!new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator))
+                    {
+                                    if (
+                MessageBox.Show("Some feature(s) will be skipped due to admin rights being requred, would you like to restart with admin privileges?", "LoLUpdater",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                                    {
+                                        Process.Start(new ProcessStartInfo
+                                        {
+                                            Verb = "runas",
+                                            FileName = Assembly.GetExecutingAssembly().Location
+                                        });
+                                        Environment.Exit(0);
+                                    }
+
+
+                    }
+                    HandleWindowsUpdate();
+                }
+
             }
             if (!Directory.Exists("Backup"))
             {
@@ -446,48 +499,43 @@ namespace LoLUpdater
         }
         private static void Kill(string process)
         {
-foreach (Process proc in Process.GetProcessesByName(process))
+            foreach (var proc in Process.GetProcessesByName(process))
             {
                 proc.Kill();
                 proc.WaitForExit();
             }
-
-            proc[0].WaitForExit();
         }
         private void HandlePatch()
         {
-            var firstOrDefault =
-                new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories()
-                    .OrderByDescending(d => d.CreationTime)
-                    .FirstOrDefault();
-            if (firstOrDefault != null)
-            {
-                _first = firstOrDefault.ToString();
-                if (_first != IntendedVersion)
-                {
-                    var versionMismatchResult =
-                        MessageBox.Show(
-                            string.Format(
-                                "This version of LESs is intended for {0}. Your current version of League of Legends is {1}. Continue? This could harm your installation.",
-                                IntendedVersion, _first), "LoLUpdater", MessageBoxButton.YesNo);
-                    if (versionMismatchResult != MessageBoxResult.Yes)
-                        return;
-                }
-            }
-            if (Directory.Exists("Game"))
-            {
-                _location = Path.Combine(Assembly.GetExecutingAssembly().GetName().CodeBase, "Air");
-            }
-            else if (Directory.Exists("RADS"))
-            {
-                _location = Path.Combine(Assembly.GetExecutingAssembly().GetName().CodeBase, "RADS", "lol_air_client",
-                    "releases", _first, "deploy");
-            }
             HandleCfg("DefaultParticleMultithreading=1");
             HandleFiles();
-            Process.Start(new ProcessStartInfo {Arguments = "sagerun:1", FileName = "cleanmgr.exe"});
+            if(Clean.IsChecked == true)
+            { Process.Start(new ProcessStartInfo { Arguments = "sagerun:1", FileName = "cleanmgr.exe" }); }
             HandlePmbUninstall();
-            HandleMouseHz();
+            if(Mousehz.IsChecked == true)
+            {
+                var identity = WindowsIdentity.GetCurrent();
+                if (identity != null)
+                {
+                    if (!new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator))
+                    {
+                        if (
+    MessageBox.Show("Some feature(s) will be skipped due to admin rights being requred, would you like to restart with admin privileges?", "LoLUpdater",
+        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            Process.Start(new ProcessStartInfo
+                            {
+                                Verb = "runas",
+                                FileName = Assembly.GetExecutingAssembly().Location
+                            });
+                            Environment.Exit(0);
+                        }
+
+
+                    }
+                    HandleMouseHz();
+                }
+            }
             if (Inking.IsChecked == true)
             {
                 HandleCfg("Inking=0");
@@ -500,8 +548,37 @@ foreach (Process proc in Process.GetProcessesByName(process))
             {
                 HandleCfg("PerPixelPointLighting=0");
             }
-            // Todo: if something goes horribly wrong the "Go" button becomes stuck forever.
-            _worker.RunWorkerAsync();
+            if (_les)
+            {
+                var firstOrDefault =
+                    new DirectoryInfo(Path.Combine("RADS", "projects", "lol_air_client", "releases")).GetDirectories()
+                    .OrderByDescending(d => d.CreationTime)
+                    .FirstOrDefault();
+                if (firstOrDefault != null)
+                {
+                    _first = firstOrDefault.ToString();
+                    if (_first != IntendedVersion)
+                    {
+                        var versionMismatchResult =
+                            MessageBox.Show(
+                                string.Format(
+                                    "This version of LESs is intended for {0}. Your current version of League of Legends is {1}. Continue? This could harm your installation.",
+                                    IntendedVersion, _first), "LoLUpdater", MessageBoxButton.YesNo);
+                        if (versionMismatchResult != MessageBoxResult.Yes)
+                            return;
+                    }
+                }
+                if (Directory.Exists("Game"))
+                {
+                    _location = Path.Combine(Assembly.GetExecutingAssembly().GetName().CodeBase, "Air");
+                }
+                else if (Directory.Exists("RADS"))
+                {
+                    _location = Path.Combine(Assembly.GetExecutingAssembly().GetName().CodeBase, "RADS", "projects",
+                        "lol_air_client", _first, "deploy");
+                }
+                _worker.RunWorkerAsync();
+            }
             Reboot("Installing");
         }
         private static void Reboot(string message)
@@ -530,7 +607,7 @@ foreach (Process proc in Process.GetProcessesByName(process))
                 Backup("solutions", "lol_game_client_sln", "tbb.dll", "deploy");
                 Backup("projects", "lol_air_client", "Adobe AIR.dll", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
                 Backup("projects", "lol_air_client", "NPSWF32.dll",
-                    Path.Combine("deploy","Adobe Air", "Versions", "1.0", "Resources"));
+                    Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
             }
             else if (Directory.Exists("Game"))
             {
@@ -555,10 +632,6 @@ foreach (Process proc in Process.GetProcessesByName(process))
                 Copy("Adobe AIR.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"), "Backup");
                 Copy("NPSWF32.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"), "Backup");
             }
-            if (!File.Exists(Path.Combine(_location.Substring(0, _location.Length - 7), "S_OK")))
-                return;
-            File.Delete(Path.Combine(_location.Substring(0, _location.Length - 7), "S_OK"));
-            MessageBox.Show("LESs will be removed next time League of Legends launches!", "LoLUpdater");
         }
         private static void Backup(string folder, string folder1, string file, string to)
         {
@@ -711,7 +784,7 @@ foreach (Process proc in Process.GetProcessesByName(process))
             var pmbUninstall = Path.Combine(Arch,
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (!File.Exists(pmbUninstall)) return;
-            Process.Start(new ProcessStartInfo {FileName = pmbUninstall, Arguments = "/silent"});
+            Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/silent" });
         }
         private static void HandleUninstall()
         {
@@ -728,10 +801,8 @@ foreach (Process proc in Process.GetProcessesByName(process))
                 AdvancedCopy("CgGL.dll", "Backup", "projects", "lol_launcher", "Deploy");
                 AdvancedCopy("CgD3D9.dll", "Backup", "projects", "lol_launcher", "Deploy");
                 AdvancedCopy("tbb.dll", "Backup", "solutions", "lol_game_client_sln", "Deploy");
-                AdvancedCopy("Adobe AIR.dll", "Backup", "projects" "lol_air_client",
-                    "projects", "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
-                AdvancedCop(y"Adobe AIR.dll", "Backup", "projects" "lol_air_client",
-                    "projects", "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
+                AdvancedCopy("Adobe AIR.dll", "Backup", "projects", "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
+                AdvancedCopy("Adobe AIR.dll", "Backup", "projects", "lol_air_client", Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
             }
             else if (Directory.Exists("Game"))
             {
@@ -760,6 +831,10 @@ foreach (Process proc in Process.GetProcessesByName(process))
             }
             Directory.Delete("Backup", true);
             Reboot("Removing");
+            if (!File.Exists(Path.Combine(_location.Substring(0, _location.Length - 7), "S_OK")))
+                return;
+            File.Delete(Path.Combine(_location.Substring(0, _location.Length - 7), "S_OK"));
+            MessageBox.Show("LESs will be removed next time League of Legends launches!", "LoLUpdater");
         }
         private static void AdobeAlert()
         {
@@ -770,8 +845,8 @@ foreach (Process proc in Process.GetProcessesByName(process))
                 {
                     var currentVersion =
                         new Version(FileVersionInfo.GetVersionInfo(Path.Combine(AirPath, "Adobe AIR.dll")).FileVersion);
-                        // Todo: Update this to the latest version
-                    var latestVersion = new Version("14.0.0.178");
+                    // Todo: Update this to the latest version
+                    var latestVersion = new Version("15.0.0.249");
                     if (currentVersion >= latestVersion) return;
                     if (
                         MessageBox.Show(
@@ -789,17 +864,21 @@ foreach (Process proc in Process.GetProcessesByName(process))
                 "We are unable to include any Adobe products, HOWEVER, you are fully capable of installing it yourself. Click yes to download and run the installer then apply the patch.",
                 "LoLUpdater", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                Process.Start("http://airdownload.adobe.com/air/win/download/14.0/AdobeAIRInstaller.exe");
+                Process.Start("http://airdownload.adobe.com/air/win/download/15.0/AdobeAIRInstaller.exe");
             }
         }
         private static void HandleMouseHz()
         {
             var win8Version = new Version(6, 2, 9200, 0);
-            if (Environment.OSVersion.Version => win8Version)
-                Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", Reg, "Microsoft",
-                "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers")).SetValue("NoDTToDITMouseBatch",
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
-                    RegistryValueKind.String);
+            if (Environment.OSVersion.Version >= win8Version)
+            {
+                var registryKey = Registry.LocalMachine.CreateSubKey(Path.Combine("SOFTWARE", Reg, "Microsoft",
+                    "Windows NT", "CurrentVersion", "AppCompatFlags", "Layers"));
+                if (registryKey != null)
+                    registryKey.SetValue("NoDTToDITMouseBatch",
+                        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"),
+                        RegistryValueKind.String);
+            }
             Process.Start(new ProcessStartInfo
             {
                 FileName = "cmd.exe",
@@ -809,9 +888,9 @@ foreach (Process proc in Process.GetProcessesByName(process))
         }
         private static void HandleCfg(string setting)
         {
-               if (File.Exists(Path.Combine("Config", "game.cfg")))
+            if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
-               Cfg(setting, "game.cfg", "Config"); 
+                Cfg(setting, "game.cfg", "Config");
             }
             else if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
             {
@@ -821,34 +900,30 @@ foreach (Process proc in Process.GetProcessesByName(process))
                 Cfg(setting, "GamePermanent_en_SG.cfg", GameCfg);
             }
         }
-        private static void Precheck()
+        private static void Precheck(string file)
         {
+            FileInfo fi;
             if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
-                var fi = new FileInfo(Path.Combine("Config", "game.cfg"));
+                fi = new FileInfo(Path.Combine("Config", "game.cfg"));
                 if (fi.Attributes == FileAttributes.ReadOnly)
                 {
                     MessageBox.Show(string.Format("Your game.cfg Located in Config{0} is read only, please remove this and try again", C),
                         "LoLUpdater");
                     return;
                 }
-                if (!File.ReadAllText(Path.Combine("Config", "game.cfg")).Contains(setting))
-                {
-                    File.AppendAllText(Path.Combine("Config", "game.cfg"), Environment.NewLine + setting);
-                }
             }
-                    var fi = new FileInfo(Path.Combine(GameCfg, file));
+            fi = new FileInfo(Path.Combine(GameCfg, file));
             if (fi.Attributes == FileAttributes.ReadOnly)
             {
-                MessageBox.Show(String.Format(
+                MessageBox.Show(string.Format(
                     "Your {0} Located in Game{1}DATA{1}CFG{1}defaults is read only, please remove this and try again",
                     file, C),
                     "LoLUpdater");
-                return;
             }
         }
-        
-        private static void Cfg(string setting, string file, game)
+
+        private static void Cfg(string setting, string file, string game)
         {
             if (
                 !File.ReadAllText(Path.Combine(game, file))
@@ -906,7 +981,7 @@ foreach (Process proc in Process.GetProcessesByName(process))
             var cg = new Process
             {
                 StartInfo =
-                    new ProcessStartInfo {FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact"}
+                    new ProcessStartInfo { FileName = "Cg-3.1_April2012_Setup.exe", Arguments = "/silent /TYPE=compact" }
             };
             cg.Start();
             cg.WaitForExit();
@@ -937,12 +1012,19 @@ foreach (Process proc in Process.GetProcessesByName(process))
         }
         private void WinUpdate_Checked(object sender, RoutedEventArgs e)
         {
+            Admin("Windows Update");
+        }
+
+        private static void Admin(string feature)
+        {
             var identity = WindowsIdentity.GetCurrent();
             if (identity == null) return;
             if (new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator)) return;
             if (
                 MessageBox.Show(
-                    "The Windows Update features requires the application to be run as administrator, would you like to restart LoLUpdater with admin privileges",
+                    string.Format(
+                        "The {0} feature requires the application to be run as administrator, would you like to restart LoLUpdater with admin privileges",
+                        feature),
                     "LoLUpdater",
                     MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
@@ -951,11 +1033,23 @@ foreach (Process proc in Process.GetProcessesByName(process))
                     Verb = "runas",
                     FileName = Assembly.GetExecutingAssembly().Location
                 });
+                Environment.Exit(0);
             }
-            else
-            {
-                WinUpdate.IsChecked = false;
-            }
+        }
+
+        private void Les_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _les = true;
+        }
+
+        private void Les_OnUnChecked(object sender, RoutedEventArgs e)
+        {
+            _les = false;
+        }
+
+        private void Mousehz_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Admin("(Windows 8 and up) MouseHz tweak");
         }
     }
     public class WorstHack

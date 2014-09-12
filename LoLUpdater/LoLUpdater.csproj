@@ -19,7 +19,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -30,19 +30,24 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\Riot Games\League of Legends\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>none</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <DebugSymbols>false</DebugSymbols>
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
     <ApplicationIcon>LoLUpdater.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore">
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -120,7 +125,6 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="Resources\logo.png" />
     <Resource Include="Resources\minimize.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
