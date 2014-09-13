@@ -310,6 +310,9 @@ node_modules
 # Users Environment Variables
 .lock-wscript
 
+### bower ###
+bower_components
+
 ### Custom ###
 LoLUpdater.exe
 LoLUpdaterXP.exe
