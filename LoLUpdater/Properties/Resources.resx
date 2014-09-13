@@ -118,16 +118,44 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Adobe_AIR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Adobe AIR.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="closemouseenter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\closemouseenter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Cg_3_1_April2012_Setup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Cg-3.1_April2012_Setup.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="minimize" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\minimize.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="NPSWF32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NPSWF32.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="minimizemouseneter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\minimizemouseneter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="tbb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tbb.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Terms" xml:space="preserve">
+    <value>"THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+IF YOU SHARE THE LICENSED MATERIAL (INCLUDING IN MODIFIED FORM), YOU MUST:
+RETAIN THE FOLLOWING IF IT IS SUPPLIED BY THE LICENSOR WITH THE LICENSED MATERIAL:
+IDENTIFICATION OF THE CREATOR(S) OF THE LICENSED MATERIAL AND ANY OTHERS DESIGNATED TO RECEIVE ATTRIBUTION, IN ANY REASONABLE MANNER REQUESTED BY THE LICENSOR (INCLUDING BY PSEUDONYM IF DESIGNATED);
+A COPYRIGHT NOTICE;
+A NOTICE THAT REFERS TO THIS PUBLIC LICENSE;
+A NOTICE THAT REFERS TO THE DISCLAIMER OF WARRANTIES;
+A URI OR HYPERLINK TO THE LICENSED MATERIAL TO THE EXTENT REASONABLY PRACTICABLE;
+INDICATE IF YOU MODIFIED THE LICENSED MATERIAL AND RETAIN AN INDICATION OF ANY PREVIOUS MODIFICATIONS; AND
+INDICATE THE LICENSED MATERIAL IS LICENSED UNDER THIS PUBLIC LICENSE, AND INCLUDE THE TEXT OF, OR THE URI OR HYPERLINK TO, THIS PUBLIC LICENSE.
+YOU MAY SATISFY THE CONDITIONS IN SECTION 3(A)(1) IN ANY REASONABLE MANNER BASED ON THE MEDIUM, MEANS, AND CONTEXT IN WHICH YOU SHARE THE LICENSED MATERIAL. FOR EXAMPLE, IT MAY BE REASONABLE TO SATISFY THE CONDITIONS BY PROVIDING A URI OR HYPERLINK TO A RESOURCE THAT INCLUDES THE REQUIRED INFORMATION.
+IF REQUESTED BY THE LICENSOR, YOU MUST REMOVE ANY OF THE INFORMATION REQUIRED BY SECTION 3(A)(1)(A) TO THE EXTENT REASONABLY PRACTICABLE.
+IF YOU SHARE ADAPTED MATERIAL YOU PRODUCE, THE ADAPTER'S LICENSE YOU APPLY MUST NOT PREVENT RECIPIENTS OF THE ADAPTED MATERIAL FROM COMPLYING WITH THIS PUBLIC LICENSE."
+Do you accept these Terms? (YES/NO)</value>
+  </data>
+  <data name="Program_Main_Done_" xml:space="preserve">
+    <value>Done!</value>
+  </data>
+  <data name="Program_Main_Patching_" xml:space="preserve">
+    <value>Patching!</value>
   </data>
 </root>
