@@ -13,6 +13,7 @@
 
   <link rel="import" href="bower_components/core-icons/core-icons.html">
   <link rel="import" href="bower_components/core-toolbar/core-toolbar.html">
+  <link rel="import" href="bower_components/core-tooltip/core-tooltip.html">
   <link rel="import" href="bower_components/paper-button/paper-button.html">
   <link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">
   <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
@@ -97,7 +98,9 @@
       </div>
     </div>
   </main>
-  <paper-fab icon="bug-report" class="bug mini"></paper-fab>
+  <core-tooltip label="Report Bug" position="left" class="bug">
+    <paper-fab icon="bug-report" class="mini"></paper-fab>
+  </core-tooltip>
 
 </body>
 
