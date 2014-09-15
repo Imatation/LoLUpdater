@@ -39,14 +39,14 @@ namespace LoLUpdater
                         {
                             Copy("game.cfg", "Config", "Backup");
                         }
-                        Copybak("solutions", "lol_game_client_sln", "Cg.dll", "deploy");
-                        Copybak("solutions", "lol_game_client_sln", "CgD3D9.dll", "deploy");
-                        Copybak("solutions", "lol_game_client_sln", "CgGL.dll", "deploy");
-                        Copybak("solutions", "lol_game_client_sln", "tbb.dll", "deploy");
+                        Copybak("solutions", "lol_game_client_sln", "Cg.dll", string.Empty);
+                        Copybak("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty);
+                        Copybak("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty);
+                        Copybak("solutions", "lol_game_client_sln", "tbb.dll", string.Empty);
                         Copybak("projects", "lol_air_client", "Adobe AIR.dll",
-                            Path.Combine("deploy", "Adobe Air", "Versions", "1.0"));
+                            Path.Combine("Adobe Air", "Versions", "1.0"));
                         Copybak("projects", "lol_air_client", "NPSWF32.dll",
-                            Path.Combine("deploy", "Adobe Air", "Versions", "1.0", "Resources"));
+                            Path.Combine("Adobe Air", "Versions", "1.0", "Resources"));
                     }
                     else if (Directory.Exists("Game"))
                     {
@@ -167,7 +167,7 @@ namespace LoLUpdater
             File.Copy(Path.Combine(Path.Combine("RADS", folder, folder1, "releases") + "\\" +
                                    new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
                                        .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + "\\",
-                Path.Combine(to, file)), Path.Combine("Backup", file),
+                Path.Combine(Path.Combine("deploy", to, file)), Path.Combine("Backup", file),
                 true);
         }
         private static void Copy(string file, string from, string to)
