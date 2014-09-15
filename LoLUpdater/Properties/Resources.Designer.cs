@@ -100,7 +100,7 @@ namespace LoLUpdater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Done!.
+        ///   Looks up a localized string similar to Patch completed without errors, you can now close this window..
         /// </summary>
         internal static string Program_Main_Done_ {
             get {
@@ -114,16 +114,6 @@ namespace LoLUpdater.Properties {
         internal static string Program_Main_Patching___ {
             get {
                 return ResourceManager.GetString("Program_Main_Patching___", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There is an unusual folder in {0} that doesnt conform to x.x.x.x, please remove it before patching.
-        /// </summary>
-        internal static string Program_Version_There_is_an_unusual_folder_in__0__that_doesnt_conform_to_x_x_x_x__please_remove_it_before_patching {
-            get {
-                return ResourceManager.GetString("Program_Version_There_is_an_unusual_folder_in__0__that_doesnt_conform_to_x_x_x_x_" +
-                        "_please_remove_it_before_patching", resourceCulture);
             }
         }
         
