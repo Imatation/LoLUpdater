@@ -95,32 +95,23 @@ namespace LoLUpdater
             if (Directory.Exists("RADS"))
             {
             AdvancedCopy(
-                "Cg.dll", _cgBinPath,
-                "solutions", "lol_game_client_sln");
+                "Cg.dll", "solutions", "lol_game_client_sln");
             AdvancedCopy(
-                "Cg.dll", _cgBinPath,
-                "projects", "lol_launcher");
+                "Cg.dll", "projects", "lol_launcher");
             AdvancedCopy(
-                "Cg.dll", _cgBinPath,
-                "projects", "lol_patcher");
+                "Cg.dll", "projects", "lol_patcher");
             AdvancedCopy(
-                "Cg.dll", _cgBinPath,
-                "solutions", "lol_game_client_sln");
+                "Cg.dll", "solutions", "lol_game_client_sln");
             AdvancedCopy(
-                "CgGL.dll", _cgBinPath,
-                "projects", "lol_launcher");
+                "CgGL.dll", "projects", "lol_launcher");
             AdvancedCopy(
-                "CgGL.dll", _cgBinPath,
-                "projects", "lol_patcher");
+                "CgGL.dll", "projects", "lol_patcher");
             AdvancedCopy(
-                "CgD3D9.dll", _cgBinPath,
-                "solutions", "lol_game_client_sln");
+                "CgD3D9.dll", "solutions", "lol_game_client_sln");
             AdvancedCopy(
-                "CgD3D9.dll", _cgBinPath,
-                "projects", "lol_launcher");
+                "CgD3D9.dll", "projects", "lol_launcher");
             AdvancedCopy(
-                "CgD3D9.dll", _cgBinPath,
-                "projects", "lol_patcher");
+                "CgD3D9.dll", "projects", "lol_patcher");
             LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbb);
             LocalCopy("projects", "lol_air_client",
                 Path.Combine("Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
@@ -175,11 +166,11 @@ namespace LoLUpdater
             File.Copy(Path.Combine(from, file),
                 Path.Combine(to, file), true);
         }
-        private static void AdvancedCopy(string file, string from, string folder, string folder1, string to)
+        private static void AdvancedCopy(string file, string folder, string folder1, string to)
         {
             File.Copy(
                 Path.Combine(
-                    from, file),
+                    _cgBinPath, file),
                 Path.Combine("RADS", folder, folder1, "releases") + "\\" +
                 new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
                     .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + "\\" +
