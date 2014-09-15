@@ -155,7 +155,7 @@ Do you accept these Terms? (Y/N)</value>
   <data name="Program_Main_Done_" xml:space="preserve">
     <value>Done!</value>
   </data>
-  <data name="Program_Main_Patching_" xml:space="preserve">
-    <value>Patching!</value>
+  <data name="Program_Main_Patching___" xml:space="preserve">
+    <value>Patching...</value>
   </data>
 </root>

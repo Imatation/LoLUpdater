@@ -14,10 +14,9 @@ namespace LoLUpdater
         private static void Main()
         {
             Console.WriteLine(Resources.Terms);
-            var terms = Console.ReadLine();
-            if (!string.Equals(terms, "y", StringComparison.InvariantCultureIgnoreCase)) return;
+            if (!string.Equals(Console.ReadLine(), "y", StringComparison.InvariantCultureIgnoreCase)) return;
             Console.Clear();
-            Console.WriteLine(Resources.Program_Main_Patching_);
+            Console.WriteLine(Resources.Program_Main_Patching___);
             Console.WriteLine("");
             Kill("LoLClient");
             Kill("LoLLauncher");
