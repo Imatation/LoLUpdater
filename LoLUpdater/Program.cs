@@ -236,15 +236,13 @@ namespace LoLUpdater
         private static string Version(string folder, string folder1)
         {
             var x = Path.GetFileName(Directory.GetDirectories(Path.Combine("RADS", folder, folder1, "releases")).Max());
-            if (string.IsNullOrEmpty(x))
-            {
-                Console.WriteLine(
-                    Resources
-                        .Program_Version_Your__0__is_missing_the_version_folder__please_repair_your_installation_,
-                    Path.Combine("RADS", folder, folder1, "releases"));
-                Console.ReadLine();
-                Environment.Exit(0);
-            }
+            if (!string.IsNullOrEmpty(x)) return x;
+            Console.WriteLine(
+                Resources
+                    .Program_Version_Your__0__is_missing_the_version_folder__please_repair_your_installation_,
+                Path.Combine("RADS", folder, folder1, "releases"));
+            Console.ReadLine();
+            Environment.Exit(0);
             return x;
         }
     }
