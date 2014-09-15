@@ -11,6 +11,10 @@ namespace LoLUpdater
         private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
             EnvironmentVariableTarget.User);
 
+        private static readonly string Air = Version("projects", "lol_air_client");
+        private static readonly string Sln = Version("solutions", "lol_game_client_sln");
+        private static readonly string Launch = Version("projects", "lol_launcher");
+        private static readonly string Patch = Version("projects", "lol_patcher");
         private static void Main()
         {
             Console.WriteLine(Resources.Terms);
@@ -53,14 +57,14 @@ namespace LoLUpdater
                     {
                         Copy("game.cfg", "Config", "Backup");
                     }
-                    Copybak("solutions", "lol_game_client_sln", "Cg.dll", string.Empty);
-                    Copybak("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty);
-                    Copybak("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty);
-                    Copybak("solutions", "lol_game_client_sln", "tbb.dll", string.Empty);
+                    Copybak("solutions", "lol_game_client_sln", "Cg.dll", string.Empty, Sln);
+                    Copybak("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty, Sln);
+                    Copybak("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty, Sln);
+                    Copybak("solutions", "lol_game_client_sln", "tbb.dll", string.Empty, Sln);
                     Copybak("projects", "lol_air_client", "Adobe AIR.dll",
-                        Path.Combine("Adobe Air", "Versions", "1.0"));
+                        Path.Combine("Adobe Air", "Versions", "1.0"), Air);
                     Copybak("projects", "lol_air_client", "NPSWF32.dll",
-                        Path.Combine("Adobe Air", "Versions", "1.0", "Resources"));
+                        Path.Combine("Adobe Air", "Versions", "1.0", "Resources"), Air);
                 }
                 else if (Directory.Exists("Game"))
                 {
@@ -110,29 +114,29 @@ namespace LoLUpdater
             if (Directory.Exists("RADS"))
             {
                 AdvancedCopy(
-                    "Cg.dll", "solutions", "lol_game_client_sln");
+                    "Cg.dll", "solutions", "lol_game_client_sln", Sln);
                 AdvancedCopy(
-                    "Cg.dll", "projects", "lol_launcher");
+                    "Cg.dll", "projects", "lol_launcher", Launch);
                 AdvancedCopy(
-                    "Cg.dll", "projects", "lol_patcher");
+                    "Cg.dll", "projects", "lol_patcher", Patch);
                 AdvancedCopy(
-                    "Cg.dll", "solutions", "lol_game_client_sln");
+                    "Cg.dll", "solutions", "lol_game_client_sln", Sln);
                 AdvancedCopy(
-                    "CgGL.dll", "projects", "lol_launcher");
+                    "CgGL.dll", "projects", "lol_launcher", Launch);
                 AdvancedCopy(
-                    "CgGL.dll", "projects", "lol_patcher");
+                    "CgGL.dll", "projects", "lol_patcher", Patch);
                 AdvancedCopy(
-                    "CgD3D9.dll", "solutions", "lol_game_client_sln");
+                    "CgD3D9.dll", "solutions", "lol_game_client_sln", Sln);
                 AdvancedCopy(
-                    "CgD3D9.dll", "projects", "lol_launcher");
+                    "CgD3D9.dll", "projects", "lol_launcher", Launch);
                 AdvancedCopy(
-                    "CgD3D9.dll", "projects", "lol_patcher");
-                LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbb);
+                    "CgD3D9.dll", "projects", "lol_patcher", Patch);
+                LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbb, Sln);
                 LocalCopy("projects", "lol_air_client",
                     Path.Combine("Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
-                    Resources.NPSWF32);
+                    Resources.NPSWF32, Air);
                 LocalCopy("projects", "lol_air_client",
-                    Path.Combine("Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR);
+                    Path.Combine("Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR, Air);
                 Process.Start("lol.launcher.exe");
             }
             if (Directory.Exists("Game"))
@@ -152,6 +156,9 @@ namespace LoLUpdater
             }
             Console.WriteLine(Resources.Program_Main_Done_);
             Console.ReadLine();
+
+
+
         }
 
         private static void Kill(string process)
@@ -163,37 +170,28 @@ namespace LoLUpdater
             }
         }
 
-        private static void Copybak(string folder, string folder1, string file, string to)
+        private static void Copybak(string folder, string folder1, string file, string to,string version)
         {
-            var firstOrDefault = new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault();
-            if (firstOrDefault != null)
                 File.Copy(
-                    Path.Combine("RADS", folder, folder1, "releases", firstOrDefault.ToString(), "deploy", to, file)
+                    Path.Combine("RADS", folder, folder1, "releases", version, "deploy", to, file)
                     , Path.Combine("Backup", file),
                     true);
         }
 
-        private static void LocalCopy(string folder, string folder1, string file, byte[] file1)
+        private static void LocalCopy(string folder, string folder1, string file, byte[] file1,string version)
         {
-            var firstOrDefault = new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault();
-            if (firstOrDefault != null)
                 File.WriteAllBytes(
-                    Path.Combine("RADS", folder, folder1, "releases", firstOrDefault.ToString(), "deploy", file), file1);
+                    Path.Combine("RADS", folder, folder1, "releases", version, "deploy", file), file1);
         }
 
-        private static void AdvancedCopy(string file, string folder, string folder1)
+        private static void AdvancedCopy(string file, string folder, string folder1,string version)
         {
-            var firstOrDefault = new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault();
-            if (firstOrDefault != null)
                 File.Copy(
                     Path.Combine(
                         _cgBinPath, file),
-                    Path.Combine("RADS", folder, folder1, "releases", firstOrDefault.ToString(), "deploy", file), true);
+                    Path.Combine("RADS", folder, folder1, "releases", version, "deploy", file), true);
         }
-
+      
         private static void Copy(string file, string from, string to)
         {
             File.Copy(Path.Combine(from, file),
@@ -227,6 +225,10 @@ namespace LoLUpdater
                 File.AppendAllText(Path.Combine(path, file),
                     Environment.NewLine + Resources.Program_Cfg_);
             }
+        }
+        private static string Version(string folder, string folder1)
+        {
+            return Path.GetFileName(Directory.GetDirectories(Path.Combine("RADS", folder, folder1, "releases")).Max());
         }
     }
 }
