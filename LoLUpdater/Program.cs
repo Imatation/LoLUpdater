@@ -28,57 +28,59 @@ namespace LoLUpdater
             var pmbUninstall = Path.Combine(Arch,
 "Pando Networks", "Media Booster", "uninst.exe");
             if (File.Exists(pmbUninstall))
-            { Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/silent" }); }
-            
+            { Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/verysilent" }); }
             HandleCfg("DefaultMultiThreading=1");
-                    if (Directory.Exists("Backup")) return;
-                    Directory.CreateDirectory("Backup");
-                    if (Directory.Exists("RADS"))
+                    if (!Directory.Exists("Backup"))
                     {
-                        if (File.Exists(Path.Combine("Config", "game.cfg")))
+                        Directory.CreateDirectory("Backup");
+                        if (Directory.Exists("RADS"))
                         {
-                            Copy("game.cfg", "Config", "Backup");
-                        }
-                        Copybak("solutions", "lol_game_client_sln", "Cg.dll", string.Empty);
-                        Copybak("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty);
-                        Copybak("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty);
-                        Copybak("solutions", "lol_game_client_sln", "tbb.dll", string.Empty);
-                        Copybak("projects", "lol_air_client", "Adobe AIR.dll",
-                            Path.Combine("Adobe Air", "Versions", "1.0"));
-                        Copybak("projects", "lol_air_client", "NPSWF32.dll",
-                            Path.Combine("Adobe Air", "Versions", "1.0", "Resources"));
-                    }
-                    else if (Directory.Exists("Game"))
-                    {
-                        if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
-                        {
-                            Copy("game.cfg", GameCfg, "Backup");
-                            Copy("GamePermanent.cfg", GameCfg, "Backup");
-                            if (
-                                File.Exists(Path.Combine(GameCfg,
-                                    "GamePermanent_zh_MY.cfg")))
+                            if (File.Exists(Path.Combine("Config", "game.cfg")))
                             {
-                                Copy("GamePermanent_zh_MY.cfg", GameCfg,
-                                    "Backup");
+                                Copy("game.cfg", "Config", "Backup");
+                            }
+                            Copybak("solutions", "lol_game_client_sln", "Cg.dll", string.Empty);
+                            Copybak("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty);
+                            Copybak("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty);
+                            Copybak("solutions", "lol_game_client_sln", "tbb.dll", string.Empty);
+                            Copybak("projects", "lol_air_client", "Adobe AIR.dll",
+                                Path.Combine("Adobe Air", "Versions", "1.0"));
+                            Copybak("projects", "lol_air_client", "NPSWF32.dll",
+                                Path.Combine("Adobe Air", "Versions", "1.0", "Resources"));
+                        }
+                        else if (Directory.Exists("Game"))
+                        {
+                            if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
+                            {
                                 Copy("game.cfg", GameCfg, "Backup");
+                                Copy("GamePermanent.cfg", GameCfg, "Backup");
+                                if (
+                                    File.Exists(Path.Combine(GameCfg,
+                                        "GamePermanent_zh_MY.cfg")))
+                                {
+                                    Copy("GamePermanent_zh_MY.cfg", GameCfg,
+                                        "Backup");
+                                    Copy("game.cfg", GameCfg, "Backup");
+                                }
+                                if (
+                                    File.Exists(Path.Combine(GameCfg,
+                                        "GamePermanent_en_SG.cfg")))
+                                {
+                                    Copy("GamePermanent_en_SG.cfg", GameCfg,
+                                        "Backup");
+                                }
                             }
-                            if (
-                                File.Exists(Path.Combine(GameCfg,
-                                    "GamePermanent_en_SG.cfg")))
-                            {
-                                Copy("GamePermanent_en_SG.cfg", GameCfg,
-                                    "Backup");
-                            }
+                            Copy("Cg.dll", "Game", "Backup");
+                            Copy("CgGL.dll", "Game", "Backup");
+                            Copy("CgD3D9.dll", "Game", "Backup");
+                            Copy("tbb.dll", "Game", "Backup");
+                            Copy("Adobe AIR.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"), "Backup");
+                            Copy("NPSWF32.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"),
+                                "Backup");
                         }
-                        Copy("Cg.dll", "Game", "Backup");
-                        Copy("CgGL.dll", "Game", "Backup");
-                        Copy("CgD3D9.dll", "Game", "Backup");
-                        Copy("tbb.dll", "Game", "Backup");
-                        Copy("Adobe AIR.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"), "Backup");
-                        Copy("NPSWF32.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"),
-                            "Backup");
-                }
-            if (_cgBinPath == null)
+                    }
+                    
+            if (string.IsNullOrEmpty(_cgBinPath))
             {
                 InstallCg();
             }
@@ -138,13 +140,8 @@ namespace LoLUpdater
             Console.WriteLine(Resources.Program_Main_Done_);
             Console.ReadLine();
         }
-        private static void LocalCopy(string path, string path1, string file, byte[] file1)
-        {
-            File.WriteAllBytes(Path.Combine("RADS", path, path1, "releases") + "\\" +
-                               new DirectoryInfo(Path.Combine("RADS", path, path1, "releases"))
-                                   .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + "\\" +
-                               Path.Combine("deploy", file), file1);
-        }
+
+
         private static void Kill(string process)
         {
             foreach (var proc in Process.GetProcessesByName(process))
@@ -155,26 +152,37 @@ namespace LoLUpdater
         }
         private static void Copybak(string folder, string folder1, string file, string to)
         {
-            File.Copy(Path.Combine("RADS", folder, folder1, "releases" + "\\" +
-                                   new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                                       .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + "\\deploy", to, file)
-                , Path.Combine("Backup", file),
-                true);
+            var firstOrDefault = new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
+                .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault();
+            if (firstOrDefault != null)
+                File.Copy(Path.Combine("RADS", folder, folder1, "releases", firstOrDefault.ToString() , "deploy", to, file)
+                    , Path.Combine("Backup", file),
+                    true);
+        }
+
+        private static void LocalCopy(string folder, string folder1, string file, byte[] file1)
+        {
+            var firstOrDefault = new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
+                .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault();
+            if (firstOrDefault != null)
+                File.WriteAllBytes(Path.Combine("RADS", folder, folder1, "releases", firstOrDefault.ToString(), "deploy", file), file1);
+        }
+
+
+        private static void AdvancedCopy(string file, string folder, string folder1)
+        {
+            var firstOrDefault = new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
+                .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault();
+            if (firstOrDefault != null)
+                File.Copy(
+                    Path.Combine(
+                        _cgBinPath, file),
+                    Path.Combine("RADS", folder, folder1, "releases", firstOrDefault.ToString(), "deploy", file), true);
         }
         private static void Copy(string file, string from, string to)
         {
             File.Copy(Path.Combine(from, file),
                 Path.Combine(to, file), true);
-        }
-        private static void AdvancedCopy(string file, string folder, string folder1)
-        {
-            File.Copy(
-                Path.Combine(
-                    _cgBinPath, file),
-                Path.Combine("RADS", folder, folder1, "releases") + "\\" +
-                new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                    .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + "\\" +
-                Path.Combine("deploy", file), true);
         }
         private static void InstallCg()
         {
