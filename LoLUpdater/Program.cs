@@ -15,7 +15,7 @@ namespace LoLUpdater
         {
             Console.WriteLine(Resources.Terms);
             var terms = Console.ReadLine();
-            if (terms != ("Y") && terms != ("y")) return;
+            if (terms != null && terms.Equals("y", StringComparison.InvariantCultureIgnoreCase))
             Console.Clear();
             Console.WriteLine(Resources.Program_Main_Patching_);
             Console.WriteLine("");
