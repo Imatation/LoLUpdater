@@ -15,6 +15,7 @@ namespace LoLUpdater
         private static readonly string Sln = Version("solutions", "lol_game_client_sln");
         private static readonly string Launch = Version("projects", "lol_launcher");
         private static readonly string Patch = Version("projects", "lol_patcher");
+
         private static void Main()
         {
             Console.WriteLine(Resources.Terms);
@@ -33,7 +34,7 @@ namespace LoLUpdater
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (File.Exists(pmbUninstall))
             {
-                Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/verysilent" });
+                Process.Start(new ProcessStartInfo {FileName = pmbUninstall, Arguments = "/verysilent"});
             }
             if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
@@ -156,9 +157,6 @@ namespace LoLUpdater
             }
             Console.WriteLine(Resources.Program_Main_Done_);
             Console.ReadLine();
-
-
-
         }
 
         private static void Kill(string process)
@@ -170,32 +168,68 @@ namespace LoLUpdater
             }
         }
 
-        private static void Copybak(string folder, string folder1, string file, string to,string version)
+        private static void Copybak(string folder, string folder1, string file, string to, string version)
         {
+            try
+            {
                 File.Copy(
                     Path.Combine("RADS", folder, folder1, "releases", version, "deploy", to, file)
                     , Path.Combine("Backup", file),
                     true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
         }
 
-        private static void LocalCopy(string folder, string folder1, string file, byte[] file1,string version)
+        private static void LocalCopy(string folder, string folder1, string file, byte[] file1, string version)
         {
+            try
+            {
                 File.WriteAllBytes(
                     Path.Combine("RADS", folder, folder1, "releases", version, "deploy", file), file1);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
         }
 
-        private static void AdvancedCopy(string file, string folder, string folder1,string version)
+        private static void AdvancedCopy(string file, string folder, string folder1, string version)
         {
+            try
+            {
                 File.Copy(
                     Path.Combine(
                         _cgBinPath, file),
                     Path.Combine("RADS", folder, folder1, "releases", version, "deploy", file), true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
         }
-      
+
         private static void Copy(string file, string from, string to)
         {
-            File.Copy(Path.Combine(from, file),
-                Path.Combine(to, file), true);
+            try
+            {
+                File.Copy(Path.Combine(from, file),
+                    Path.Combine(to, file), true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
         }
 
         private static void InstallCg()
@@ -226,9 +260,29 @@ namespace LoLUpdater
                     Environment.NewLine + Resources.Program_Cfg_);
             }
         }
+
         private static string Version(string folder, string folder1)
         {
-            return Path.GetFileName(Directory.GetDirectories(Path.Combine("RADS", folder, folder1, "releases")).Max());
+            var x = Path.GetFileName(Directory.GetDirectories(Path.Combine("RADS", folder, folder1, "releases")).Max());
+            try
+            {
+                if (string.IsNullOrEmpty(x))
+                {
+                    Console.WriteLine(
+                        Resources
+                            .Program_Version_Your__0__is_missing_the_version_folder__please_repair_your_installation_,
+                        Path.Combine("RADS", folder, folder1, "releases"));
+                    Console.ReadLine();
+                    Environment.Exit(0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
+            return x;
         }
     }
 }

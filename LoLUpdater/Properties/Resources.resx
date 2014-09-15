@@ -161,4 +161,10 @@ Do you accept these Terms? (Y/N)</value>
   <data name="Program_Cfg_" xml:space="preserve">
     <value>DefaultMultiThreading=1</value>
   </data>
+  <data name="Program_Version_Your__0__is_missing_the_version_folder__please_repair_your_installation_" xml:space="preserve">
+    <value>Your {0} is missing the version folder, please repair your installation.</value>
+  </data>
+  <data name="Program_Version_There_is_an_unusual_folder_in__0__that_doesnt_conform_to_x_x_x_x__please_remove_it_before_patching" xml:space="preserve">
+    <value>There is an unusual folder in {0} that doesnt conform to x.x.x.x, please remove it before patching</value>
+  </data>
 </root>

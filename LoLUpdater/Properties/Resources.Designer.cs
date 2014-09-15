@@ -118,6 +118,26 @@ namespace LoLUpdater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is an unusual folder in {0} that doesnt conform to x.x.x.x, please remove it before patching.
+        /// </summary>
+        internal static string Program_Version_There_is_an_unusual_folder_in__0__that_doesnt_conform_to_x_x_x_x__please_remove_it_before_patching {
+            get {
+                return ResourceManager.GetString("Program_Version_There_is_an_unusual_folder_in__0__that_doesnt_conform_to_x_x_x_x_" +
+                        "_please_remove_it_before_patching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your {0} is missing the version folder, please repair your installation..
+        /// </summary>
+        internal static string Program_Version_Your__0__is_missing_the_version_folder__please_repair_your_installation_ {
+            get {
+                return ResourceManager.GetString("Program_Version_Your__0__is_missing_the_version_folder__please_repair_your_instal" +
+                        "lation_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] tbb {
