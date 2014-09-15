@@ -52,21 +52,21 @@ namespace LoLUpdater
                     {
                         if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
                         {
-                            Copy("game.cfg", (GameCfg, "Backup");
-                            Copy("GamePermanent.cfg", (GameCfg, "Backup");
+                            Copy("game.cfg", GameCfg, "Backup");
+                            Copy("GamePermanent.cfg", GameCfg, "Backup");
                             if (
-                                File.Exists(Path.Combine((GameCfg,
+                                File.Exists(Path.Combine(GameCfg,
                                     "GamePermanent_zh_MY.cfg")))
                             {
-                                Copy("GamePermanent_zh_MY.cfg", (GameCfg,
+                                Copy("GamePermanent_zh_MY.cfg", GameCfg,
                                     "Backup");
-                                Copy("game.cfg", (GameCfg, "Backup");
+                                Copy("game.cfg", GameCfg, "Backup");
                             }
                             if (
-                                File.Exists(Path.Combine((GameCfg,
+                                File.Exists(Path.Combine(GameCfg,
                                     "GamePermanent_en_SG.cfg")))
                             {
-                                Copy("GamePermanent_en_SG.cfg", (GameCfg,
+                                Copy("GamePermanent_en_SG.cfg", GameCfg,
                                     "Backup");
                             }
                         }
@@ -155,10 +155,10 @@ namespace LoLUpdater
         }
         private static void Copybak(string folder, string folder1, string file, string to)
         {
-            File.Copy(Path.Combine(Path.Combine("RADS", folder, folder1, "releases") + "\\" +
+            File.Copy(Path.Combine("RADS", folder, folder1, "releases" + "\\" +
                                    new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
-                                       .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + "\\",
-                Path.Combine(Path.Combine("deploy", to, file)), Path.Combine("Backup", file),
+                                       .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + "\\deploy", to, file)
+                , Path.Combine("Backup", file),
                 true);
         }
         private static void Copy(string file, string from, string to)
@@ -166,7 +166,7 @@ namespace LoLUpdater
             File.Copy(Path.Combine(from, file),
                 Path.Combine(to, file), true);
         }
-        private static void AdvancedCopy(string file, string folder, string folder1, string to)
+        private static void AdvancedCopy(string file, string folder, string folder1)
         {
             File.Copy(
                 Path.Combine(
