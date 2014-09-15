@@ -91,6 +91,15 @@ namespace LoLUpdater.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DefaultMultiThreading=1.
+        /// </summary>
+        internal static string Program_Cfg_ {
+            get {
+                return ResourceManager.GetString("Program_Cfg_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Done!.
         /// </summary>
         internal static string Program_Main_Done_ {

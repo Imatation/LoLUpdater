@@ -33,15 +33,15 @@ namespace LoLUpdater
             }
             if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
-                Cfg("DefaultMultiThreading=1", "game.cfg", "Config");
+                Cfg("game.cfg", "Config");
             }
             else if (File.Exists(Path.Combine(Path.Combine("Game", "DATA", "CFG", "defaults"), "game.cfg")))
             {
-                Cfg("DefaultMultiThreading=1", "game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"));
-                Cfg("DefaultMultiThreading=1", "GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"));
-                Cfg("DefaultMultiThreading=1", "GamePermanent_zh_MY.cfg",
+                Cfg("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"));
+                Cfg("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"));
+                Cfg("GamePermanent_zh_MY.cfg",
                     Path.Combine("Game", "DATA", "CFG", "defaults"));
-                Cfg("DefaultMultiThreading=1", "GamePermanent_en_SG.cfg",
+                Cfg("GamePermanent_en_SG.cfg",
                     Path.Combine("Game", "DATA", "CFG", "defaults"));
             }
             if (!Directory.Exists("Backup"))
@@ -218,14 +218,14 @@ namespace LoLUpdater
             _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
         }
 
-        private static void Cfg(string setting, string file, string game)
+        private static void Cfg(string file, string path)
         {
             if (
-                !File.ReadAllText(Path.Combine(game, file))
-                    .Contains(setting))
+                !File.ReadAllText(Path.Combine(path, file))
+                    .Contains(Resources.Program_Cfg_))
             {
-                File.AppendAllText(Path.Combine(game, file),
-                    Environment.NewLine + setting);
+                File.AppendAllText(Path.Combine(path, file),
+                    Environment.NewLine + Resources.Program_Cfg_);
             }
         }
     }

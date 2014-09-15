@@ -158,4 +158,7 @@ Do you accept these Terms? (Y/N)</value>
   <data name="Program_Main_Patching___" xml:space="preserve">
     <value>Patching...</value>
   </data>
+  <data name="Program_Cfg_" xml:space="preserve">
+    <value>DefaultMultiThreading=1</value>
+  </data>
 </root>
