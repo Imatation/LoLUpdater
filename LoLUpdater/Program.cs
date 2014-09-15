@@ -15,7 +15,7 @@ namespace LoLUpdater
         {
             Console.WriteLine(Resources.Terms);
             var terms = Console.ReadLine();
-            if (terms != null && terms.Equals("y", StringComparison.InvariantCultureIgnoreCase))
+            if (!string.Equals(terms, "y", StringComparison.InvariantCultureIgnoreCase)) return;
             Console.Clear();
             Console.WriteLine(Resources.Program_Main_Patching_);
             Console.WriteLine("");
@@ -30,7 +30,7 @@ namespace LoLUpdater
                 "Pando Networks", "Media Booster", "uninst.exe");
             if (File.Exists(pmbUninstall))
             {
-                Process.Start(new ProcessStartInfo {FileName = pmbUninstall, Arguments = "/verysilent"});
+                Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/verysilent" });
             }
             if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
