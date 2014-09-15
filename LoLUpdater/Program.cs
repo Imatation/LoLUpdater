@@ -7,6 +7,7 @@ namespace LoLUpdater
 {
     internal class Program
     {
+        private const string Tweak = "DefaultMultiThreading=1";
         private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
         private static readonly string GameCfg = Path.Combine("Game", "DATA", "CFG", "defaults");
         private static readonly string Arch = Environment.Is64BitProcess
@@ -29,7 +30,17 @@ namespace LoLUpdater
 "Pando Networks", "Media Booster", "uninst.exe");
             if (File.Exists(pmbUninstall))
             { Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/verysilent" }); }
-            HandleCfg("DefaultMultiThreading=1");
+            if (File.Exists(Path.Combine("Config", "game.cfg")))
+            {
+                Cfg(Tweak, "game.cfg", "Config");
+            }
+            else if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
+            {
+                Cfg(Tweak, "game.cfg", GameCfg);
+                Cfg(Tweak, "GamePermanent.cfg", GameCfg);
+                Cfg(Tweak, "GamePermanent_zh_MY.cfg", GameCfg);
+                Cfg(Tweak, "GamePermanent_en_SG.cfg", GameCfg);
+            }
                     if (!Directory.Exists("Backup"))
                     {
                         Directory.CreateDirectory("Backup");
@@ -196,20 +207,6 @@ namespace LoLUpdater
             cg.WaitForExit();
             File.Delete("Cg-3.1_April2012_Setup.exe");
             _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
-        }
-        private static void HandleCfg(string setting)
-        {
-            if (File.Exists(Path.Combine("Config", "game.cfg")))
-            {
-                Cfg(setting, "game.cfg", "Config");
-            }
-            else if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
-            {
-                Cfg(setting, "game.cfg", GameCfg);
-                Cfg(setting, "GamePermanent.cfg", GameCfg);
-                Cfg(setting, "GamePermanent_zh_MY.cfg", GameCfg);
-                Cfg(setting, "GamePermanent_en_SG.cfg", GameCfg);
-            }
         }
         private static void Cfg(string setting, string file, string game)
         {
