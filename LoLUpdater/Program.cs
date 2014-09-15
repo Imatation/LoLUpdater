@@ -31,8 +31,6 @@ namespace LoLUpdater
             { Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/silent" }); }
             
             HandleCfg("DefaultMultiThreading=1");
-                if (!Directory.Exists("Backup"))
-                {
                     if (Directory.Exists("Backup")) return;
                     Directory.CreateDirectory("Backup");
                     if (Directory.Exists("RADS"))
@@ -52,23 +50,23 @@ namespace LoLUpdater
                     }
                     else if (Directory.Exists("Game"))
                     {
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                        if (File.Exists(Path.Combine(GameCfg, "game.cfg")))
                         {
-                            Copy("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
-                            Copy("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
+                            Copy("game.cfg", (GameCfg, "Backup");
+                            Copy("GamePermanent.cfg", (GameCfg, "Backup");
                             if (
-                                File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults",
+                                File.Exists(Path.Combine((GameCfg,
                                     "GamePermanent_zh_MY.cfg")))
                             {
-                                Copy("GamePermanent_zh_MY.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"),
+                                Copy("GamePermanent_zh_MY.cfg", (GameCfg,
                                     "Backup");
-                                Copy("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
+                                Copy("game.cfg", (GameCfg, "Backup");
                             }
                             if (
-                                File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults",
+                                File.Exists(Path.Combine((GameCfg,
                                     "GamePermanent_en_SG.cfg")))
                             {
-                                Copy("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"),
+                                Copy("GamePermanent_en_SG.cfg", (GameCfg,
                                     "Backup");
                             }
                         }
@@ -79,7 +77,6 @@ namespace LoLUpdater
                         Copy("Adobe AIR.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"), "Backup");
                         Copy("NPSWF32.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"),
                             "Backup");
-                    }
                 }
             if (_cgBinPath == null)
             {
@@ -99,31 +96,31 @@ namespace LoLUpdater
             {
             AdvancedCopy(
                 "Cg.dll", _cgBinPath,
-                "solutions", "lol_game_client_sln", "deploy");
+                "solutions", "lol_game_client_sln");
             AdvancedCopy(
                 "Cg.dll", _cgBinPath,
-                "projects", "lol_launcher", "deploy");
+                "projects", "lol_launcher");
             AdvancedCopy(
                 "Cg.dll", _cgBinPath,
-                "projects", "lol_patcher", "deploy");
+                "projects", "lol_patcher");
             AdvancedCopy(
                 "Cg.dll", _cgBinPath,
-                "solutions", "lol_game_client_sln", "deploy");
+                "solutions", "lol_game_client_sln");
             AdvancedCopy(
                 "CgGL.dll", _cgBinPath,
-                "projects", "lol_launcher", "deploy");
+                "projects", "lol_launcher");
             AdvancedCopy(
                 "CgGL.dll", _cgBinPath,
-                "projects", "lol_patcher", "deploy");
+                "projects", "lol_patcher");
             AdvancedCopy(
                 "CgD3D9.dll", _cgBinPath,
-                "solutions", "lol_game_client_sln", "deploy");
+                "solutions", "lol_game_client_sln");
             AdvancedCopy(
                 "CgD3D9.dll", _cgBinPath,
-                "projects", "lol_launcher", "deploy");
+                "projects", "lol_launcher");
             AdvancedCopy(
                 "CgD3D9.dll", _cgBinPath,
-                "projects", "lol_patcher", "deploy");
+                "projects", "lol_patcher");
             LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbb);
             LocalCopy("projects", "lol_air_client",
                 Path.Combine("Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
@@ -186,7 +183,7 @@ namespace LoLUpdater
                 Path.Combine("RADS", folder, folder1, "releases") + "\\" +
                 new DirectoryInfo(Path.Combine("RADS", folder, folder1, "releases"))
                     .GetDirectories().OrderByDescending(d => d.CreationTime).FirstOrDefault() + "\\" +
-                Path.Combine(to, file), true);
+                Path.Combine("deploy", file), true);
         }
         private static void InstallCg()
         {
