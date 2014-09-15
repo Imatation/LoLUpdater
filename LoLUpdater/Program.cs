@@ -161,10 +161,19 @@ namespace LoLUpdater
 
         private static void Kill(string process)
         {
-            foreach (var proc in Process.GetProcessesByName(process))
+            try
             {
-                proc.Kill();
-                proc.WaitForExit();
+                foreach (var proc in Process.GetProcessesByName(process))
+                {
+                    proc.Kill();
+                    proc.WaitForExit();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.ReadLine();
+                Environment.Exit(0);
             }
         }
 
@@ -234,30 +243,45 @@ namespace LoLUpdater
 
         private static void InstallCg()
         {
-            File.WriteAllBytes("Cg-3.1_April2012_Setup.exe", Resources.Cg_3_1_April2012_Setup);
-            var cg = new Process
+            try
             {
-                StartInfo =
-                    new ProcessStartInfo
-                    {
-                        FileName = "Cg-3.1_April2012_Setup.exe",
-                        Arguments = "/verysilent /TYPE=compact"
-                    }
-            };
-            cg.Start();
-            cg.WaitForExit();
-            File.Delete("Cg-3.1_April2012_Setup.exe");
-            _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+                var cg = new Process
+                {
+                    StartInfo =
+                        new ProcessStartInfo
+                        {
+                            FileName = "Cg-3.1_April2012_Setup.exe",
+                            Arguments = "/verysilent /TYPE=compact"
+                        }
+                };
+                cg.Start();
+                cg.WaitForExit();
+                File.Delete("Cg-3.1_April2012_Setup.exe");
+                _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.ReadLine();
+                Environment.Exit(0);
+            }
+            File.WriteAllBytes("Cg-3.1_April2012_Setup.exe", Resources.Cg_3_1_April2012_Setup);
         }
 
         private static void Cfg(string file, string path)
         {
-            if (
-                !File.ReadAllText(Path.Combine(path, file))
-                    .Contains(Resources.Program_Cfg_))
+            if (File.ReadAllText(Path.Combine(path, file))
+                .Contains(Resources.Program_Cfg_)) return;
+            try
             {
                 File.AppendAllText(Path.Combine(path, file),
                     Environment.NewLine + Resources.Program_Cfg_);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.ReadLine();
+                Environment.Exit(0);
             }
         }
 
