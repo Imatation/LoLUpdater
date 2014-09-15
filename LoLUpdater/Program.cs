@@ -8,13 +8,11 @@ namespace LoLUpdater
 {
     internal class Program
     {
-        private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
-            EnvironmentVariableTarget.User);
-
         private static readonly string Air = Version("projects", "lol_air_client");
         private static readonly string Sln = Version("solutions", "lol_game_client_sln");
         private static readonly string Launch = Version("projects", "lol_launcher");
         private static readonly string Patch = Version("projects", "lol_patcher");
+        private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
 
         private static void Main()
         {
@@ -42,7 +40,7 @@ namespace LoLUpdater
                 {
                     Cfg("game.cfg", "Config");
                 }
-                else if (File.Exists(Path.Combine(Path.Combine("Game", "DATA", "CFG", "defaults"), "game.cfg")))
+                else if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
                 {
                     Cfg("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"));
                     Cfg("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"));
@@ -71,7 +69,7 @@ namespace LoLUpdater
                     }
                     else if (Directory.Exists("Game"))
                     {
-                        if (File.Exists(Path.Combine(Path.Combine("Game", "DATA", "CFG", "defaults"), "game.cfg")))
+                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
                         {
                             Copy("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
                             Copy("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
@@ -230,7 +228,7 @@ namespace LoLUpdater
             if (File.ReadAllText(Path.Combine(path, file))
                 .Contains(Resources.Program_Cfg_)) return;
             File.AppendAllText(Path.Combine(path, file),
-                Environment.NewLine + Resources.Program_Cfg_);
+                string.Format("{0}{1}",Environment.NewLine, Resources.Program_Cfg_));
         }
 
         private static string Version(string folder, string folder1)
