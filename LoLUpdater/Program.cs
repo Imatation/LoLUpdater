@@ -207,6 +207,7 @@ namespace LoLUpdater
 
         private static void InstallCg()
         {
+            File.WriteAllBytes("Cg-3.1_April2012_Setup.exe", Resources.Cg_3_1_April2012_Setup);
             var cg = new Process
             {
                 StartInfo =
@@ -220,7 +221,6 @@ namespace LoLUpdater
             cg.WaitForExit();
             File.Delete("Cg-3.1_April2012_Setup.exe");
             _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
-            File.WriteAllBytes("Cg-3.1_April2012_Setup.exe", Resources.Cg_3_1_April2012_Setup);
         }
 
         private static void Cfg(string file, string path)
