@@ -8,6 +8,15 @@
   "private": true,
   "dependencies": {
     "polymer": "Polymer/polymer#master",
-    "paper-elements": "Polymer/paper-elements#master"
+    "paper-button": "Polymer/paper-button#master",
+    "paper-checkbox": "Polymer/paper-checkbox#master",
+    "core-icons": "Polymer/core-icons#master",
+    "core-toolbar": "Polymer/core-toolbar#master",
+    "core-tooltip": "Polymer/core-tooltip#master",
+    "paper-dialog": "Polymer/paper-dialog#master",
+    "paper-icon-button": "Polymer/paper-icon-button#master",
+    "paper-fab": "Polymer/paper-fab#master",
+    "paper-radio-button": "Polymer/paper-radio-button#master",
+    "paper-radio-group": "Polymer/paper-radio-group#master"
   }
 }
