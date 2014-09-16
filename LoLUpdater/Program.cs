@@ -12,7 +12,9 @@ namespace LoLUpdater
         private static readonly string Sln = Version("solutions", "lol_game_client_sln");
         private static readonly string Launch = Version("projects", "lol_launcher");
         private static readonly string Patch = Version("projects", "lol_patcher");
-        private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+
+        private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
+            EnvironmentVariableTarget.User);
 
         private static void Main()
         {
@@ -102,16 +104,10 @@ namespace LoLUpdater
                 {
                     InstallCg();
                 }
-                else
-                {
-                    var currentCgVersion =
-                        new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion);
-                    if (
-                        currentCgVersion < new Version("3.1.0013"))
+                else if (new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion) < new Version("3.1.0013"))
                     {
                         InstallCg();
                     }
-                }
                 if (Directory.Exists("RADS"))
                 {
                     AdvancedCopy(
@@ -229,7 +225,7 @@ namespace LoLUpdater
             if (File.ReadAllText(Path.Combine(path, file))
                 .Contains(Resources.Program_Cfg_)) return;
             File.AppendAllText(Path.Combine(path, file),
-                string.Format("{0}{1}",Environment.NewLine, Resources.Program_Cfg_));
+                string.Format("{0}{1}", Environment.NewLine, Resources.Program_Cfg_));
         }
 
         private static string Version(string folder, string folder1)

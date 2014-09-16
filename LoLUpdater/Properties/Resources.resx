@@ -153,7 +153,7 @@ IF YOU SHARE ADAPTED MATERIAL YOU PRODUCE, THE ADAPTER'S LICENSE YOU APPLY MUST 
 Do you accept these Terms? (Y/N)</value>
   </data>
   <data name="Program_Main_Done_" xml:space="preserve">
-    <value>Patch completed without errors, you can now close this window.</value>
+    <value>Done!</value>
   </data>
   <data name="Program_Main_Patching___" xml:space="preserve">
     <value>Patching...</value>
