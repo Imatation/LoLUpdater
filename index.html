@@ -20,6 +20,8 @@
   <link rel="import" href="bower_components/paper-fab/paper-fab.html">
   <link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
   <link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
+  <link rel="import" href="bower_components/paper-dialog/paper-dialog.html">
+  <link rel="import" href="bower_components/paper-dialog/paper-dialog-transition.html">
 
   <script type="text/javascript">
     WebFontConfig = {
@@ -45,60 +47,37 @@
 <body unresolved>
   <core-toolbar>
     <span>LoLUpdater</span>
-    <paper-button id="OkButton" raisedButton label="Go"></paper-button>
+    <paper-icon-button icon="close" class="exit"></paper-icon-button>
   </core-toolbar>
   <main>
-
-    <paper-radio-group selected="small">
+    <paper-radio-group selected="install">
       <paper-radio-button name="install" label="Install"></paper-radio-button>
       <paper-radio-button name="remove" label="Remove"></paper-radio-button>
     </paper-radio-group>
-
-    <div id="options">
-      <div class="row">
-        <div class="option-box">
-          <h2>PVP.net Client</h2>
-          <paper-checkbox label="Adobe Air"></paper-checkbox>
-          <paper-checkbox label="Adobe Flash"></paper-checkbox>
-        </div>
-        <div class="option-box">
-          <h2>Game Client</h2>
-          <paper-checkbox label="Cg"></paper-checkbox>
-          <paper-checkbox label="CgD3D9"></paper-checkbox>
-          <paper-checkbox label="CgGL"></paper-checkbox>
-          <paper-checkbox label="TBB"></paper-checkbox>
-        </div>
-        <div class="option-box">
-          <h2>Launcher</h2>
-          <paper-checkbox label="Cg"></paper-checkbox>
-          <paper-checkbox label="CgD3D9"></paper-checkbox>
-          <paper-checkbox label="CgGL"></paper-checkbox>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="option-box">
-        <h2>Patcher</h2>
-        <paper-checkbox label="Cg"></paper-checkbox>
-        <paper-checkbox label="CgD3D9"></paper-checkbox>
-        <paper-checkbox label="CgGL"></paper-checkbox>
-      </div>
-      <div class="option-box">
-        <h2>Windows Utilities</h2>
-        <paper-checkbox label="Windows Update"></paper-checkbox>
-        <paper-checkbox label="Visual Options"></paper-checkbox>
-        <paper-checkbox label="MouseHz 125 -> 500"></paper-checkbox>
-        <paper-checkbox label="Disk Cleanup"></paper-checkbox>
-      </div>
-      <div class="option-box">
-        <h2>Config Tweaks</h2>
-        <paper-checkbox label="No Inking"></paper-checkbox>
-        <paper-checkbox label="No Advanced Reflection"></paper-checkbox>
-        <paper-checkbox label="No Per Pixel Point Lightning"></paper-checkbox>
-      </div>
-    </div>
+    <paper-button id="go" raisedButton label="Update"></paper-button>
   </main>
-  <core-tooltip label="Report Bug" position="left" class="bug">
+
+  <paper-dialog heading="License" transition="paper-dialog-transition-center" opened autoCloseDisabled backdrop layered>
+    <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
+
+    <p>Id qui scripta laboramus dissentiet, verterem partiendo vim at. Stet dissentiet ut mei. Iriure facilis eloquentiam pro eu, nec an esse inciderint. In meliore abhorreant sea. Eros nostro ocurreret at nec. Cu per regione persecuti.</p>
+
+    <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
+
+    <paper-button label="Decline" class="exit" affirmative></paper-button>
+    <paper-button label="Accept" affirmative autofocus></paper-button>
+
+  </paper-dialog>
+
+  <paper-dialog heading="Working..." class="working" transition="paper-dialog-transition-center" autoCloseDisabled backdrop layered>
+    <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
+
+    <p>Id qui scripta laboramus dissentiet, verterem partiendo vim at. Stet dissentiet ut mei. Iriure facilis eloquentiam pro eu, nec an esse inciderint. In meliore abhorreant sea. Eros nostro ocurreret at nec. Cu per regione persecuti.</p>
+
+    <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
+  </paper-dialog>
+
+  <core-tooltip label="Report Bug" position="left" class="bug" large>
     <paper-fab icon="bug-report" class="mini"></paper-fab>
   </core-tooltip>
 
