@@ -140,7 +140,7 @@ namespace LoLUpdater
                         Path.Combine("Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR, Air);
                     Process.Start("lol.launcher.exe");
                 }
-                else if (!Directory.Exists("Game")) return;
+                if (!Directory.Exists("Game")) return;
                 Copy("Cg.dll",
                     _cgBinPath,
                     "Game");
@@ -165,6 +165,7 @@ namespace LoLUpdater
             {
                 Console.WriteLine(Resources.Program_Main_Done_);
                 Console.ReadLine();
+                Environment.Exit(0);
             }
         }
 
