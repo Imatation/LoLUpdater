@@ -5,6 +5,9 @@
   "window": {
     "title": "LoLUpdater",
     "icon": "LoLUpdater.ico",
+    "toolbar": true,
+    "frame": false,
+    "position": "center",
     "width": 820,
     "height": 520,
     "min_width": 400,
