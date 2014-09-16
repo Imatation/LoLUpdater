@@ -28,7 +28,7 @@ namespace LoLUpdater_Updater
                     }
                     Console.WriteLine("Comparing versions...");
                     if (new Version(FileVersionInfo.GetVersionInfo("LoLUpdater.exe").FileVersion) <
-                        new Version(File.ReadAllLines("LoLUpdater.txt").ToString()))
+                        new Version(string.Format("{0}", File.ReadAllText("LoLUpdater.txt"))))
                     {
                         Console.WriteLine("Update found, downloading...");
                         using (WebClient webClient = new WebClient())
