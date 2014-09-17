@@ -1,33 +1,32 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 /** Before making any changes in the implementation, please emulate algorithmic changes
-    with SPIN tool using <TBB directory>/tools/spin_models/ReaderWriterMutex.pml.
-    There could be some code looking as "can be restructured" but its structure does matter! */
+	with SPIN tool using <TBB directory>/tools/spin_models/ReaderWriterMutex.pml.
+	There could be some code looking as "can be restructured" but its structure does matter! */
 
 #include "tbb/queuing_rw_mutex.h"
 #include "tbb/tbb_machine.h"
 #include "tbb/tbb_stddef.h"
 #include "tbb/tbb_machine.h"
 #include "itt_notify.h"
-
 
 namespace tbb
 {
@@ -93,7 +92,7 @@ namespace tbb
 
 	//! A view of a T* with additional functionality for twiddling low-order bits.
 	template <typename T>
-	class tricky_atomic_pointer: no_copy
+	class tricky_atomic_pointer : no_copy
 	{
 	public:
 		typedef typename atomic_selector<sizeof(T*)>::word word;
@@ -115,8 +114,8 @@ namespace tbb
 		{
 			return reinterpret_cast<T*>(
 				atomic_traits<sizeof(T*), M>::compare_and_swap(location, reinterpret_cast<word>(value),
-				                                               reinterpret_cast<word>(comparand))
-			);
+				reinterpret_cast<word>(comparand))
+				);
 		}
 
 		T* & ref;
@@ -131,7 +130,7 @@ namespace tbb
 
 		T* operator&(word operand2) const
 		{
-			return reinterpret_cast<T*>(reinterpret_cast<word>(ref) & operand2);
+			return reinterpret_cast<T*>(reinterpret_cast<word>(ref)& operand2);
 		}
 
 		T* operator|(word operand2) const
@@ -151,7 +150,7 @@ namespace tbb
 	static const tricky_pointer::word FLAG = 0x1;
 
 	inline
-	uintptr_t get_flag(queuing_rw_mutex::scoped_lock* ptr)
+		uintptr_t get_flag(queuing_rw_mutex::scoped_lock* ptr)
 	{
 		return uintptr_t(ptr) & FLAG;
 	}
@@ -178,15 +177,14 @@ namespace tbb
 
 		if (write)
 		{ // Acquiring for write
-
 			if (pred)
 			{
 				ITT_NOTIFY(sync_prepare, my_mutex);
 				pred = tricky_pointer(pred) & ~FLAG;
 				__TBB_ASSERT(!(uintptr_t(pred) & FLAG), "use of corrupted pointer!");
 #if TBB_USE_ASSERT
-            __TBB_control_consistency_helper(); // on "m.q_tail"
-            __TBB_ASSERT( !__TBB_load_relaxed(pred->my_next), "the predecessor has another successor!");
+				__TBB_control_consistency_helper(); // on "m.q_tail"
+				__TBB_ASSERT(!__TBB_load_relaxed(pred->my_next), "the predecessor has another successor!");
 #endif
 				__TBB_store_with_release(pred->my_next, this);
 				spin_wait_until_eq(my_going, 1);
@@ -195,7 +193,7 @@ namespace tbb
 		else
 		{ // Acquiring for read
 #if DO_ITT_NOTIFY
-        bool sync_prepare_done = false;
+			bool sync_prepare_done = false;
 #endif
 			if (pred)
 			{
@@ -211,38 +209,38 @@ namespace tbb
 				{
 					// Load pred->my_state now, because once pred->my_next becomes
 					// non-NULL, we must assume that *pred might be destroyed.
-					pred_state = pred->my_state.compare_and_swap < tbb::acquire > (STATE_READER_UNBLOCKNEXT , STATE_READER);
+					pred_state = pred->my_state.compare_and_swap < tbb::acquire >(STATE_READER_UNBLOCKNEXT, STATE_READER);
 				}
 				__TBB_store_relaxed(my_prev, pred);
 				__TBB_ASSERT(!(uintptr_t(pred) & FLAG), "use of corrupted pointer!");
 #if TBB_USE_ASSERT
-            __TBB_control_consistency_helper(); // on "m.q_tail"
-            __TBB_ASSERT( !__TBB_load_relaxed(pred->my_next), "the predecessor has another successor!");
+				__TBB_control_consistency_helper(); // on "m.q_tail"
+				__TBB_ASSERT(!__TBB_load_relaxed(pred->my_next), "the predecessor has another successor!");
 #endif
 				__TBB_store_with_release(pred->my_next, this);
 				if (pred_state != STATE_ACTIVEREADER)
 				{
 #if DO_ITT_NOTIFY
-                sync_prepare_done = true;
-                ITT_NOTIFY(sync_prepare, my_mutex);
+					sync_prepare_done = true;
+					ITT_NOTIFY(sync_prepare, my_mutex);
 #endif
 					spin_wait_until_eq(my_going, 1);
 				}
 			}
 
 			// The protected state must have been acquired here before it can be further released to any other reader(s):
-			unsigned short old_state = my_state.compare_and_swap < tbb::acquire > (STATE_ACTIVEREADER , STATE_READER);
+			unsigned short old_state = my_state.compare_and_swap < tbb::acquire >(STATE_ACTIVEREADER, STATE_READER);
 			if (old_state != STATE_READER)
 			{
 #if DO_ITT_NOTIFY
-            if( !sync_prepare_done )
-                ITT_NOTIFY(sync_prepare, my_mutex);
+				if (!sync_prepare_done)
+					ITT_NOTIFY(sync_prepare, my_mutex);
 #endif
 				// Failed to become active reader -> need to unblock the next waiting reader first
 				__TBB_ASSERT(my_state == STATE_READER_UNBLOCKNEXT, "unexpected state");
 				spin_wait_while_eq(my_next, (scoped_lock*)NULL);
 				/* my_state should be changed before unblocking the next otherwise it might finish
-               and another thread can get our old state and left blocked */
+			   and another thread can get our old state and left blocked */
 				my_state = STATE_ACTIVEREADER;
 				__TBB_store_with_release(my_next->my_going, 1);
 			}
@@ -293,7 +291,6 @@ namespace tbb
 
 		if (my_state == STATE_WRITER)
 		{ // Acquired for write
-
 			// The logic below is the same as "writerUnlock", but elides
 			// "return" from the middle of the routine.
 			// In the statement below, acquire semantics of reading my_next is required
@@ -301,7 +298,7 @@ namespace tbb
 			scoped_lock* n = __TBB_load_with_acquire(my_next);
 			if (!n)
 			{
-				if (this == my_mutex->q_tail.compare_and_swap < tbb::release > (NULL , this))
+				if (this == my_mutex->q_tail.compare_and_swap < tbb::release >(NULL, this))
 				{
 					// this was the only item in the queue, and the queue is now empty.
 					goto done;
@@ -329,7 +326,6 @@ namespace tbb
 		}
 		else
 		{ // Acquired for read
-
 			queuing_rw_mutex::scoped_lock* tmp = NULL;
 		retry:
 			// Addition to the original paper: Mark my_prev as in use
@@ -360,7 +356,7 @@ namespace tbb
 
 				__TBB_store_with_release(pred->my_next, reinterpret_cast<scoped_lock *>(NULL));
 
-				if (!__TBB_load_relaxed(my_next) && this != my_mutex->q_tail.compare_and_swap < tbb::release > (pred , this))
+				if (!__TBB_load_relaxed(my_next) && this != my_mutex->q_tail.compare_and_swap < tbb::release >(pred, this))
 				{
 					spin_wait_while_eq(my_next, (void*)NULL);
 				}
@@ -384,7 +380,7 @@ namespace tbb
 				scoped_lock* n = __TBB_load_with_acquire(my_next);
 				if (!n)
 				{
-					if (this != my_mutex->q_tail.compare_and_swap < tbb::release > (NULL , this))
+					if (this != my_mutex->q_tail.compare_and_swap < tbb::release >(NULL, this))
 					{
 						spin_wait_while_eq(my_next, (scoped_lock*)NULL);
 						n = __TBB_load_relaxed(my_next);
@@ -413,12 +409,12 @@ namespace tbb
 
 		ITT_NOTIFY(sync_releasing, my_mutex);
 
-		if (! __TBB_load_with_acquire(my_next))
+		if (!__TBB_load_with_acquire(my_next))
 		{
 			my_state = STATE_READER;
 			if (this == my_mutex->q_tail)
 			{
-				unsigned short old_state = my_state.compare_and_swap < tbb::release > (STATE_ACTIVEREADER , STATE_READER);
+				unsigned short old_state = my_state.compare_and_swap < tbb::release >(STATE_ACTIVEREADER, STATE_READER);
 				if (old_state == STATE_READER)
 				{
 					// Downgrade completed
@@ -433,7 +429,7 @@ namespace tbb
 		if (n->my_state & STATE_COMBINED_WAITINGREADER)
 			__TBB_store_with_release(n->my_going, 1);
 		else if (n->my_state == STATE_UPGRADE_WAITING)
-		// the next waiting for upgrade means this writer was upgraded before.
+			// the next waiting for upgrade means this writer was upgraded before.
 			n->my_state = STATE_UPGRADE_LOSER;
 		my_state = STATE_ACTIVEREADER;
 		return true;
@@ -451,7 +447,7 @@ namespace tbb
 	requested:
 		__TBB_ASSERT(!(uintptr_t(__TBB_load_relaxed(my_next)) & FLAG), "use of corrupted pointer!");
 		acquire_internal_lock();
-		if (this != my_mutex->q_tail.compare_and_swap < tbb::release > (tricky_pointer(me) | FLAG , this))
+		if (this != my_mutex->q_tail.compare_and_swap < tbb::release >(tricky_pointer(me) | FLAG, this))
 		{
 			spin_wait_while_eq(my_next, (void*)NULL);
 			queuing_rw_mutex::scoped_lock* n;
@@ -490,7 +486,7 @@ namespace tbb
 			/* We are in the tail; whoever comes next is blocked by q_tail&FLAG */
 			release_internal_lock();
 		} // if( this != my_mutex->q_tail... )
-		my_state.compare_and_swap < tbb::acquire > (STATE_UPGRADE_WAITING , STATE_UPGRADE_REQUESTED);
+		my_state.compare_and_swap < tbb::acquire >(STATE_UPGRADE_WAITING, STATE_UPGRADE_REQUESTED);
 
 	waiting:
 		__TBB_ASSERT(!(intptr_t(__TBB_load_relaxed(my_next)) & FLAG), "use of corrupted pointer!");
@@ -498,13 +494,13 @@ namespace tbb
 		__TBB_ASSERT(me == this, NULL);
 		ITT_NOTIFY(sync_prepare, my_mutex);
 		/* if no one was blocked by the "corrupted" q_tail, turn it back */
-		my_mutex->q_tail.compare_and_swap < tbb::release > (this , tricky_pointer(me) | FLAG);
+		my_mutex->q_tail.compare_and_swap < tbb::release >(this, tricky_pointer(me) | FLAG);
 		queuing_rw_mutex::scoped_lock* pred;
 		pred = tricky_pointer::fetch_and_add<tbb::acquire>(&my_prev, FLAG);
 		if (pred)
 		{
 			bool success = pred->try_acquire_internal_lock();
-			pred->my_state.compare_and_swap < tbb::release > (STATE_UPGRADE_WAITING , STATE_UPGRADE_REQUESTED);
+			pred->my_state.compare_and_swap < tbb::release >(STATE_UPGRADE_WAITING, STATE_UPGRADE_REQUESTED);
 			if (!success)
 			{
 				tmp = tricky_pointer::compare_and_swap<tbb::release>(&my_prev, pred, tricky_pointer(pred) | FLAG);

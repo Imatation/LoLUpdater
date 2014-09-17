@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #include "rml_tbb.h"
 #include "../server/thread_monitor.h"
@@ -38,15 +38,15 @@ namespace tbb
 
 			class private_server;
 
-			class private_worker: no_copy
+			class private_worker : no_copy
 			{
 				//! State in finite-state machine that controls the worker.
 				/** State diagram:
-        init --> starting --> normal
-          |         |           |
-          |         V           |
-          \------> quit <------/
-      */
+		init --> starting --> normal
+		|         |           |
+		|         V           |
+		\------> quit <------/
+		*/
 				enum state_t
 				{
 					//! *this is initialized
@@ -72,7 +72,7 @@ namespace tbb
 
 				//! Monitor for sleeping when there is no work to do.
 				/** The invariant that holds for sleeping workers is:
-        "my_slack<=0 && my_state==st_normal && I am on server's list of asleep threads" */
+		"my_slack<=0 && my_state==st_normal && I am on server's list of asleep threads" */
 				thread_monitor my_thread_monitor;
 
 				//! Handle of the OS thread associated with this worker
@@ -83,7 +83,7 @@ namespace tbb
 
 				friend class private_server;
 
-				//! Actions executed by the associated thread 
+				//! Actions executed by the associated thread
 				void run();
 
 				//! Wake up associated thread (or launch a thread if there is none)
@@ -108,13 +108,12 @@ namespace tbb
 
 			static const size_t cache_line_size = tbb::internal::NFS_MaxLineSize;
 
-
 #if _MSC_VER && !defined(__INTEL_COMPILER)
 			// Suppress overzealous compiler warnings about uninstantiable class
 #pragma warning(push)
 #pragma warning(disable:4510 4610)
 #endif
-			class padded_private_worker: public private_worker
+			class padded_private_worker : public private_worker
 			{
 				char pad[cache_line_size - sizeof(private_worker) % cache_line_size];
 			public:
@@ -128,7 +127,7 @@ namespace tbb
 #pragma warning(pop)
 #endif
 
-			class private_server: public tbb_server, no_copy
+			class private_server : public tbb_server, no_copy
 			{
 				tbb_client& my_client;
 				//! Maximum number of threads to be created.
@@ -140,9 +139,9 @@ namespace tbb
 
 				//! Number of jobs that could use their associated thread minus number of active threads.
 				/** If negative, indicates oversubscription.
-        If positive, indicates that more threads should run. 
-        Can be lowered asynchronously, but must be raised only while holding my_asleep_list_mutex,
-        because raising it impacts the invariant for sleeping threads. */
+		If positive, indicates that more threads should run.
+		Can be lowered asynchronously, but must be raised only while holding my_asleep_list_mutex,
+		because raising it impacts the invariant for sleeping threads. */
 				atomic<int> my_slack;
 
 				//! Counter used to determine when to delete this.
@@ -158,12 +157,12 @@ namespace tbb
 				asleep_list_mutex_type my_asleep_list_mutex;
 
 #if TBB_USE_ASSERT
-    atomic<int> my_net_slack_requests;
+				atomic<int> my_net_slack_requests;
 #endif /* TBB_USE_ASSERT */
 
 				//! Wake up to two sleeping workers, if there are any sleeping.
 				/** The call is used to propagate a chain reaction where each thread wakes up two threads,
-        which in turn each wake up two threads, etc. */
+		which in turn each wake up two threads, etc. */
 				void propagate_chain_reaction()
 				{
 					// First test of a double-check idiom.  Second test is inside wake_some(0).
@@ -216,7 +215,7 @@ namespace tbb
 				/*override*/
 				void independent_thread_number_changed(int)
 				{
-					__TBB_ASSERT(false,NULL);
+					__TBB_ASSERT(false, NULL);
 				}
 
 				/*override*/
@@ -251,15 +250,15 @@ namespace tbb
 #endif
 #if __MINGW32__ && __GNUC__==4 &&__GNUC_MINOR__>=2 && !__MINGW64__
 			// ensure that stack is properly aligned for TBB threads
-__attribute__((force_align_arg_pointer))
+			__attribute__((force_align_arg_pointer))
 #endif
-			__RML_DECL_THREAD_ROUTINE private_worker::thread_routine(void* arg)
+				__RML_DECL_THREAD_ROUTINE private_worker::thread_routine(void* arg)
 			{
 				private_worker* self = static_cast<private_worker*>(arg);
 				AVOID_64K_ALIASING(self->my_index);
 #if _XBOX
-    int HWThreadIndex = __TBB_XBOX360_GetHardwareThreadIndex(i);
-    XSetThreadProcessor(GetCurrentThread(), HWThreadIndex);
+				int HWThreadIndex = __TBB_XBOX360_GetHardwareThreadIndex(i);
+				XSetThreadProcessor(GetCurrentThread(), HWThreadIndex);
 #endif
 				self->run();
 				return 0;
@@ -284,8 +283,7 @@ __attribute__((force_align_arg_pointer))
 				{
 					s = my_state;
 					__TBB_ASSERT(s != st_quit, NULL);
-				}
-				while (my_state.compare_and_swap(st_quit, s) != s);
+				} while (my_state.compare_and_swap(st_quit, s) != s);
 				if (s == st_normal || s == st_starting)
 				{
 					// May have invalidated invariant for sleeping, so wake up the thread.
@@ -310,7 +308,7 @@ __attribute__((force_align_arg_pointer))
 				my_server.propagate_chain_reaction();
 
 				// Transiting to st_normal here would require setting my_handle,
-				// which would create race with the launching thread and 
+				// which would create race with the launching thread and
 				// complications in handle management on Windows.
 
 				::rml::job& j = *my_client.create_one_job();
@@ -350,14 +348,14 @@ __attribute__((force_align_arg_pointer))
 				{
 					// after this point, remove_server_ref() must be done by created thread
 #if USE_WINTHREAD
-        my_handle = thread_monitor::launch( thread_routine, this, my_server.my_stack_size, &this->my_index );
+					my_handle = thread_monitor::launch(thread_routine, this, my_server.my_stack_size, &this->my_index);
 #elif USE_PTHREAD
-        {
-        affinity_helper fpa;
-        fpa.protect_affinity_mask();
-        my_handle = thread_monitor::launch( thread_routine, this, my_server.my_stack_size );
-					// Implicit destruction of fpa resets original affinity mask.
-        }
+					{
+						affinity_helper fpa;
+						fpa.protect_affinity_mask();
+						my_handle = thread_monitor::launch(thread_routine, this, my_server.my_stack_size);
+						// Implicit destruction of fpa resets original affinity mask.
+					}
 #endif /* USE_PTHREAD */
 					state_t s = my_state.compare_and_swap(st_normal, st_starting);
 					if (st_starting != s)
@@ -385,7 +383,7 @@ __attribute__((force_align_arg_pointer))
 				my_ref_count = my_n_thread + 1;
 				my_slack = 0;
 #if TBB_USE_ASSERT
-    my_net_slack_requests = 0;
+				my_net_slack_requests = 0;
 #endif /* TBB_USE_ASSERT */
 				my_asleep_list_root = NULL;
 				my_thread_array = tbb::cache_aligned_allocator<padded_private_worker>().allocate(my_n_thread);
@@ -451,8 +449,7 @@ __attribute__((force_align_arg_pointer))
 							{
 								old = my_slack;
 								if (old <= 0) goto done;
-							}
-							while (my_slack.compare_and_swap(old - 1, old) != old);
+							} while (my_slack.compare_and_swap(old - 1, old) != old);
 						}
 						// Pop sleeping worker to combine with claimed unit of slack
 						my_asleep_list_root = (*w++ = my_asleep_list_root)->my_next;
@@ -471,7 +468,7 @@ __attribute__((force_align_arg_pointer))
 			void private_server::adjust_job_count_estimate(int delta)
 			{
 #if TBB_USE_ASSERT
-    my_net_slack_requests+=delta;
+				my_net_slack_requests += delta;
 #endif /* TBB_USE_ASSERT */
 				if (delta < 0)
 				{

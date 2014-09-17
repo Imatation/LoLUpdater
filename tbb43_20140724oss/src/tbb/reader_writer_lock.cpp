@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #include "tbb/reader_writer_lock.h"
 #include "tbb/tbb_machine.h"
@@ -25,7 +25,7 @@
 
 #if defined(_MSC_VER) && defined(_Wp64)
 // Workaround for overzealous compiler warnings in /Wp64 mode
-    #pragma warning (disable: 4244)
+#pragma warning (disable: 4244)
 #endif
 
 namespace tbb
@@ -37,11 +37,10 @@ namespace tbb
 		const uintptr_t RFLAG = 0x4; // reader interested but not active
 		const uintptr_t RC_INCR = 0x8; // to adjust reader count
 
-
 		// Perform an atomic bitwise-OR on the operand, and return its previous value.
 		inline uintptr_t fetch_and_or(atomic<uintptr_t>& operand, uintptr_t value)
 		{
-			for (tbb::internal::atomic_backoff b;;b.pause())
+			for (tbb::internal::atomic_backoff b;; b.pause())
 			{
 				uintptr_t old = operand;
 				uintptr_t result = operand.compare_and_swap(old | value, old);
@@ -52,7 +51,7 @@ namespace tbb
 		// Perform an atomic bitwise-AND on the operand, and return its previous value.
 		inline uintptr_t fetch_and_and(atomic<uintptr_t>& operand, uintptr_t value)
 		{
-			for (tbb::internal::atomic_backoff b;;b.pause())
+			for (tbb::internal::atomic_backoff b;; b.pause())
 			{
 				uintptr_t old = operand;
 				uintptr_t result = operand.compare_and_swap(old & value, old);
@@ -78,7 +77,6 @@ namespace tbb
 			while (!(location & value)) backoff.pause();
 		}
 
-
 		void reader_writer_lock::internal_construct()
 		{
 			reader_head = NULL;
@@ -87,7 +85,7 @@ namespace tbb
 			rdr_count_and_flags = 0;
 			my_current_writer = tbb_thread::id();
 #if TBB_USE_THREADING_TOOLS
-    ITT_SYNC_CREATE(this, _T("tbb::reader_writer_lock"), _T(""));
+			ITT_SYNC_CREATE(this, _T("tbb::reader_writer_lock"), _T(""));
 #endif /* TBB_USE_THREADING_TOOLS */
 		}
 
@@ -113,7 +111,7 @@ namespace tbb
 			else
 			{
 				scoped_lock* a_writer_lock = new scoped_lock();
-				(void) start_write(a_writer_lock);
+				(void)start_write(a_writer_lock);
 			}
 		}
 
@@ -361,7 +359,7 @@ namespace tbb
 			}
 			else
 			{ // this thread holds no locks
-				(void) mutex->start_write(this);
+				(void)mutex->start_write(this);
 			}
 		}
 

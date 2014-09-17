@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #include <typeinfo>
 #include "tbb/tbb_exception.h"
@@ -33,14 +33,14 @@ const char* g_Orig_Wakeup_Msg = "Missed wakeup or machine is overloaded?";
 const char* g_Wakeup_Msg = g_Orig_Wakeup_Msg;
 
 tbb::atomic<intptr_t> g_CurExecuted,
-                      g_ExecutedAtLastCatch,
-                      g_ExecutedAtFirstCatch,
-                      g_ExceptionsThrown,
-                      g_MasterExecutedThrow, // number of times master entered exception code
-                      g_NonMasterExecutedThrow, // number of times nonmaster entered exception code
-                      g_PipelinesStarted;
+g_ExecutedAtLastCatch,
+g_ExecutedAtFirstCatch,
+g_ExceptionsThrown,
+g_MasterExecutedThrow, // number of times master entered exception code
+g_NonMasterExecutedThrow, // number of times nonmaster entered exception code
+g_PipelinesStarted;
 volatile bool g_ExceptionCaught = false,
-	g_UnknownException = false;
+g_UnknownException = false;
 
 #if USE_TASK_SCHEDULER_OBSERVER
 tbb::atomic<intptr_t> g_ActualMaxThreads;
@@ -48,11 +48,11 @@ tbb::atomic<intptr_t> g_ActualCurrentThreads;
 #endif
 
 volatile bool g_ThrowException = true,
-	// g_Flog is true for nested construct tests with catches (exceptions are not allowed to
-	// propagate to the tbb construct itself.)
-	g_Flog = false,
-	g_MasterExecuted = false,
-	g_NonMasterExecuted = false;
+// g_Flog is true for nested construct tests with catches (exceptions are not allowed to
+// propagate to the tbb construct itself.)
+g_Flog = false,
+g_MasterExecuted = false,
+g_NonMasterExecuted = false;
 
 bool g_ExceptionInMaster = false;
 bool g_SolitaryException = false;
@@ -66,25 +66,25 @@ tbb::atomic<intptr_t> g_NumExceptionsCaught;
 #if USE_TASK_SCHEDULER_OBSERVER
 class eh_test_observer : public tbb::task_scheduler_observer {
 public:
-/*override*/
-    void on_scheduler_entry(bool is_worker) {
-        if(is_worker) {  // we've already counted the master
-            size_t p = ++g_ActualCurrentThreads;
-            size_t q = g_ActualMaxThreads;
-            while(q < p) {
-                q = g_ActualMaxThreads.compare_and_swap(p,q);
-            }
-        }
-        else {
-// size_t q = g_ActualMaxThreads;
-        }
-    }
-/*override*/
-    void on_scheduler_exit(bool is_worker) {
-        if(is_worker) {
-            --g_ActualCurrentThreads;
-        }
-    }
+	/*override*/
+	void on_scheduler_entry(bool is_worker) {
+		if (is_worker) {  // we've already counted the master
+			size_t p = ++g_ActualCurrentThreads;
+			size_t q = g_ActualMaxThreads;
+			while (q < p) {
+				q = g_ActualMaxThreads.compare_and_swap(p, q);
+			}
+		}
+		else {
+			// size_t q = g_ActualMaxThreads;
+		}
+	}
+	/*override*/
+	void on_scheduler_exit(bool is_worker) {
+		if (is_worker) {
+			--g_ActualCurrentThreads;
+		}
+	}
 };
 #endif
 //-----------------------------------------------------------
@@ -103,77 +103,77 @@ inline void ResetEhGlobals(bool throwException = true, bool flog = false)
 	g_MasterExecuted = false;
 	g_NonMasterExecuted = false;
 #if USE_TASK_SCHEDULER_OBSERVER
-    g_ActualMaxThreads = 1;  // count master
-    g_ActualCurrentThreads = 1;  // count master
+	g_ActualMaxThreads = 1;  // count master
+	g_ActualCurrentThreads = 1;  // count master
 #endif
 	g_ExceptionsThrown = g_NumExceptionsCaught = g_PipelinesStarted = 0;
 }
 
 #if TBB_USE_EXCEPTIONS
 class test_exception : public std::exception {
-    const char* my_description;
+	const char* my_description;
 public:
-    test_exception ( const char* description ) : my_description(description) {}
+	test_exception(const char* description) : my_description(description) {}
 
-    const char* what() const throw() { return my_description; }
+	const char* what() const throw() { return my_description; }
 };
 
 class solitary_test_exception : public test_exception {
 public:
-    solitary_test_exception ( const char* description ) : test_exception(description) {}
+	solitary_test_exception(const char* description) : test_exception(description) {}
 };
 
 #if TBB_USE_CAPTURED_EXCEPTION
-    typedef tbb::captured_exception PropagatedException;
-    #define EXCEPTION_NAME(e) e.name()
+typedef tbb::captured_exception PropagatedException;
+#define EXCEPTION_NAME(e) e.name()
 #else
-    typedef test_exception PropagatedException;
-    #define EXCEPTION_NAME(e) typeid(e).name()
+typedef test_exception PropagatedException;
+#define EXCEPTION_NAME(e) typeid(e).name()
 #endif
 
 #define EXCEPTION_DESCR "Test exception"
 
 #if HARNESS_EH_SIMPLE_MODE
 
-static void ThrowTestException () { 
-    ++g_ExceptionsThrown;
-    throw test_exception(EXCEPTION_DESCR);
+static void ThrowTestException() {
+	++g_ExceptionsThrown;
+	throw test_exception(EXCEPTION_DESCR);
 }
 
 #else /* !HARNESS_EH_SIMPLE_MODE */
 
-static void ThrowTestException ( intptr_t threshold ) {
-    bool inMaster = (Harness::CurrentTid() == g_Master);
-    if ( !g_ThrowException ||   // if we're not supposed to throw
-            (!g_Flog &&         // if we're not catching throw in bodies and 
-             (g_ExceptionInMaster ^ inMaster)) ) { // we're the master and not expected to throw
-// or are the master and the master is not the one to throw (??)
-        return; 
-    }
-    while ( Existed() < threshold )
-        __TBB_Yield();
-    if ( !g_SolitaryException ) {
-        ++g_ExceptionsThrown;
-        if(inMaster) ++g_MasterExecutedThrow; else ++g_NonMasterExecutedThrow;
-        throw test_exception(EXCEPTION_DESCR);
-    }
-// g_SolitaryException == true
-    if(g_NestedPipelines) {
-// only throw exception if we have started at least two inner pipelines
-// else return
-        if(g_PipelinesStarted >= 3) {
-            if ( g_ExceptionsThrown.compare_and_swap(1, 0) == 0 )  {
-                if(inMaster) ++g_MasterExecutedThrow; else ++g_NonMasterExecutedThrow;
-                throw solitary_test_exception(EXCEPTION_DESCR);
-            }
-        }
-    }
-    else {
-        if ( g_ExceptionsThrown.compare_and_swap(1, 0) == 0 )  {
-            if(inMaster) ++g_MasterExecutedThrow; else ++g_NonMasterExecutedThrow;
-            throw solitary_test_exception(EXCEPTION_DESCR);
-        }
-    }
+static void ThrowTestException(intptr_t threshold) {
+	bool inMaster = (Harness::CurrentTid() == g_Master);
+	if (!g_ThrowException ||   // if we're not supposed to throw
+		(!g_Flog &&         // if we're not catching throw in bodies and
+		(g_ExceptionInMaster ^ inMaster))) { // we're the master and not expected to throw
+		// or are the master and the master is not the one to throw (??)
+		return;
+	}
+	while (Existed() < threshold)
+		__TBB_Yield();
+	if (!g_SolitaryException) {
+		++g_ExceptionsThrown;
+		if (inMaster) ++g_MasterExecutedThrow; else ++g_NonMasterExecutedThrow;
+		throw test_exception(EXCEPTION_DESCR);
+	}
+	// g_SolitaryException == true
+	if (g_NestedPipelines) {
+		// only throw exception if we have started at least two inner pipelines
+		// else return
+		if (g_PipelinesStarted >= 3) {
+			if (g_ExceptionsThrown.compare_and_swap(1, 0) == 0)  {
+				if (inMaster) ++g_MasterExecutedThrow; else ++g_NonMasterExecutedThrow;
+				throw solitary_test_exception(EXCEPTION_DESCR);
+			}
+		}
+	}
+	else {
+		if (g_ExceptionsThrown.compare_and_swap(1, 0) == 0)  {
+			if (inMaster) ++g_MasterExecutedThrow; else ++g_NonMasterExecutedThrow;
+			throw solitary_test_exception(EXCEPTION_DESCR);
+		}
+	}
 }
 #endif /* !HARNESS_EH_SIMPLE_MODE */
 
@@ -181,12 +181,12 @@ static void ThrowTestException ( intptr_t threshold ) {
     { \
         ++g_CurExecuted; \
         if(g_Master == Harness::CurrentTid()) g_MasterExecuted = true; \
-        else g_NonMasterExecuted = true; \
+		        else g_NonMasterExecuted = true; \
         if( tbb::task::self().is_cancelled() ) ++g_TGCCancelled; \
     }
 
 #define CATCH()     \
-    } catch ( PropagatedException& e ) { \
+	    } catch ( PropagatedException& e ) { \
         g_ExecutedAtFirstCatch.compare_and_swap(g_CurExecuted,0); \
         g_ExecutedAtLastCatch = g_CurExecuted; \
         ASSERT( e.what(), "Empty what() string" );  \
@@ -194,7 +194,7 @@ static void ThrowTestException ( intptr_t threshold ) {
         ASSERT (__TBB_EXCEPTION_TYPE_INFO_BROKEN || strcmp(e.what(), EXCEPTION_DESCR) == 0, "Unexpected original exception info"); \
         g_ExceptionCaught = l_ExceptionCaughtAtCurrentLevel = true; \
         ++g_NumExceptionsCaught; \
-    } catch ( tbb::tbb_exception& e ) { \
+	    } catch ( tbb::tbb_exception& e ) { \
         REPORT("Unexpected %s\n", e.name()); \
         ASSERT (g_UnknownException && !g_UnknownException, "Unexpected tbb::tbb_exception" ); \
     } catch ( std::exception& e ) { \
@@ -229,11 +229,10 @@ inline void ThrowTestException(intptr_t)
 
 #define TRY()   \
     bool l_ExceptionCaughtAtCurrentLevel = false, unknownException = false;
-__TBB_TRY {
-
-// "l_ExceptionCaughtAtCurrentLevel || unknownException" is used only to "touch" otherwise unused local variables
+__TBB_TRY{
+	// "l_ExceptionCaughtAtCurrentLevel || unknownException" is used only to "touch" otherwise unused local variables
 #define CATCH_AND_FAIL() } __TBB_CATCH(...) {
-	ASSERT (false, "Cancelling tasks must not cause any exceptions");
+	ASSERT(false, "Cancelling tasks must not cause any exceptions");
 	(void)(l_ExceptionCaughtAtCurrentLevel && unknownException);
 }
 
@@ -248,9 +247,9 @@ retry:
 	while (++n < c_Timeout && (int)Harness::ConcurrencyTracker::PeakParallelism() < expected_peak)
 		__TBB_Yield();
 #if USE_TASK_SCHEDULER_OBSERVER
-    ASSERT_WARNING( g_NumThreads == g_ActualMaxThreads, "Library did not provide sufficient threads");
+	ASSERT_WARNING(g_NumThreads == g_ActualMaxThreads, "Library did not provide sufficient threads");
 #endif
-	ASSERT_WARNING(n < c_Timeout,g_Wakeup_Msg);
+	ASSERT_WARNING(n < c_Timeout, g_Wakeup_Msg);
 	// Workaround in case a missed wakeup takes place
 	if (n == c_Timeout)
 	{
@@ -312,10 +311,9 @@ public:
 		do
 		{
 			__TBB_Yield();
-		}
-		while (!s_Ready && ++n < limit);
+		} while (!s_Ready && ++n < limit);
 		// should yield once, then continue if Cancellator is ready.
-		ASSERT( s_Ready || n == limit, NULL );
+		ASSERT(s_Ready || n == limit, NULL);
 		return s_Ready;
 	}
 };
@@ -332,7 +330,7 @@ void RunCancellationTest(intptr_t threshold = 1)
 	__TBB_Yield();
 	r.spawn(*new(r.allocate_child()) LauncherTaskT(ctx));
 	TRY();
-		r.wait_for_all();
-		CATCH_AND_FAIL();
+	r.wait_for_all();
+	CATCH_AND_FAIL();
 	r.destroy(r);
 }

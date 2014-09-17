@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,21 +48,21 @@ namespace tbb
 #endif
 
 		//! Handler for interoperation with cilkrts library.
-static __cilk_tbb_retcode (*watch_stack_handler)(struct __cilk_tbb_unwatch_thunk* u,
-                                                 struct __cilk_tbb_stack_op_thunk o);
+		static __cilk_tbb_retcode(*watch_stack_handler)(struct __cilk_tbb_unwatch_thunk* u,
+		struct __cilk_tbb_stack_op_thunk o);
 
 		//! Table describing how to link the handlers.
-static const dynamic_link_descriptor CilkLinkTable[] = {
-    { "__cilkrts_watch_stack", (pointer_to_handler*)(void*)(&watch_stack_handler) }
-};
+		static const dynamic_link_descriptor CilkLinkTable[] = {
+				{ "__cilkrts_watch_stack", (pointer_to_handler*)(void*)(&watch_stack_handler) }
+		};
 
-static atomic<do_once_state> cilkrts_load_state;
+		static atomic<do_once_state> cilkrts_load_state;
 
-bool initialize_cilk_interop() {
-		// Pinning can fail. This is a normal situation, and means that the current
-		// thread does not use cilkrts and consequently does not need interop.
-    return dynamic_link( CILKLIB_NAME, CilkLinkTable, 1,  /*handle=*/0, DYNAMIC_LINK_GLOBAL );
-}
+		bool initialize_cilk_interop() {
+			// Pinning can fail. This is a normal situation, and means that the current
+			// thread does not use cilkrts and consequently does not need interop.
+			return dynamic_link(CILKLIB_NAME, CilkLinkTable, 1,  /*handle=*/0, DYNAMIC_LINK_GLOBAL);
+		}
 #endif /* __TBB_SURVIVE_THREAD_SWITCH */
 
 		namespace rml
@@ -73,7 +73,7 @@ bool initialize_cilk_interop() {
 		void governor::acquire_resources()
 		{
 #if USE_PTHREAD
-    int status = theTLS.create(auto_terminate);
+			int status = theTLS.create(auto_terminate);
 #else
 			int status = theTLS.create();
 #endif
@@ -86,8 +86,8 @@ bool initialize_cilk_interop() {
 		{
 			theRMLServerFactory.close();
 #if TBB_USE_ASSERT
-    if( __TBB_InitOnce::initialization_done() && theTLS.get() ) 
-        runtime_warning( "TBB is unloaded while tbb::task_scheduler_init object is alive?" );
+			if (__TBB_InitOnce::initialization_done() && theTLS.get())
+				runtime_warning("TBB is unloaded while tbb::task_scheduler_init object is alive?");
 #endif
 			int status = theTLS.destroy();
 			if (status)
@@ -121,19 +121,19 @@ bool initialize_cilk_interop() {
 			__TBB_ASSERT(!theTLS.get(), NULL);
 			theTLS.set(s);
 #if __TBB_SURVIVE_THREAD_SWITCH
-    if( watch_stack_handler ) {
-        __cilk_tbb_stack_op_thunk o;
-        o.routine = &stack_op_handler;
-        o.data = s;
-        if( (*watch_stack_handler)(&s->my_cilk_unwatch_thunk, o) ) {
-			// Failed to register with cilkrts, make sure we are clean
-            s->my_cilk_unwatch_thunk.routine = NULL;
-        }
+			if (watch_stack_handler) {
+				__cilk_tbb_stack_op_thunk o;
+				o.routine = &stack_op_handler;
+				o.data = s;
+				if ((*watch_stack_handler)(&s->my_cilk_unwatch_thunk, o)) {
+					// Failed to register with cilkrts, make sure we are clean
+					s->my_cilk_unwatch_thunk.routine = NULL;
+				}
 #if TBB_USE_ASSERT
-        else
-            s->my_cilk_state = generic_scheduler::cs_running;
+				else
+					s->my_cilk_state = generic_scheduler::cs_running;
 #endif /* TBB_USE_ASSERT */
-    }
+			}
 #endif /* __TBB_SURVIVE_THREAD_SWITCH */
 		}
 
@@ -143,9 +143,9 @@ bool initialize_cilk_interop() {
 			__TBB_ASSERT(theTLS.get() == s, "attempt to unregister a wrong scheduler instance");
 			theTLS.set(NULL);
 #if __TBB_SURVIVE_THREAD_SWITCH
-    __cilk_tbb_unwatch_thunk &ut = s->my_cilk_unwatch_thunk;
-    if ( ut.routine )
-       (*ut.routine)(ut.data);
+			__cilk_tbb_unwatch_thunk &ut = s->my_cilk_unwatch_thunk;
+			if (ut.routine)
+				(*ut.routine)(ut.data);
 #endif /* __TBB_SURVIVE_THREAD_SWITCH */
 		}
 
@@ -168,7 +168,7 @@ bool initialize_cilk_interop() {
 				return s;
 			}
 #if __TBB_SURVIVE_THREAD_SWITCH
-    atomic_do_once( &initialize_cilk_interop, cilkrts_load_state );
+			atomic_do_once(&initialize_cilk_interop, cilkrts_load_state);
 #endif /* __TBB_SURVIVE_THREAD_SWITCH */
 			if ((int)num_threads == task_scheduler_init::automatic)
 				num_threads = default_num_threads();
@@ -194,15 +194,15 @@ bool initialize_cilk_interop() {
 			else
 			{
 #if TBB_USE_ASSERT
-        if (BlockingTSI) {
-            __TBB_ASSERT( BlockingTSI == tsi_ptr, "For blocking termination last terminate_scheduler must be blocking." );
-            IsBlockingTerminationInProgress = true;
-        }
+				if (BlockingTSI) {
+					__TBB_ASSERT(BlockingTSI == tsi_ptr, "For blocking termination last terminate_scheduler must be blocking.");
+					IsBlockingTerminationInProgress = true;
+				}
 #endif
 				s->cleanup_master();
 				BlockingTSI = NULL;
 #if TBB_USE_ASSERT
-        IsBlockingTerminationInProgress = false;
+				IsBlockingTerminationInProgress = false;
 #endif
 			}
 		}
@@ -236,8 +236,8 @@ bool initialize_cilk_interop() {
 				theRMLServerFactory.call_with_server_info(PrintRMLVersionInfo, (void*)"");
 			}
 #if __TBB_SURVIVE_THREAD_SWITCH
-    if( watch_stack_handler )
-        PrintExtraVersionInfo( "CILK", CILKLIB_NAME );
+			if (watch_stack_handler)
+				PrintExtraVersionInfo("CILK", CILKLIB_NAME);
 #endif /* __TBB_SURVIVE_THREAD_SWITCH */
 		}
 
@@ -248,52 +248,52 @@ bool initialize_cilk_interop() {
 		}
 
 #if __TBB_SURVIVE_THREAD_SWITCH
-__cilk_tbb_retcode governor::stack_op_handler( __cilk_tbb_stack_op op, void* data ) {
-    __TBB_ASSERT(data,NULL);
-    generic_scheduler* s = static_cast<generic_scheduler*>(data);
+		__cilk_tbb_retcode governor::stack_op_handler(__cilk_tbb_stack_op op, void* data) {
+			__TBB_ASSERT(data, NULL);
+			generic_scheduler* s = static_cast<generic_scheduler*>(data);
 #if TBB_USE_ASSERT
-    void* current = theTLS.get();
+			void* current = theTLS.get();
 #if _WIN32||_WIN64
-    uintptr_t thread_id = GetCurrentThreadId();
+			uintptr_t thread_id = GetCurrentThreadId();
 #else
-    uintptr_t thread_id = uintptr_t(pthread_self());
+			uintptr_t thread_id = uintptr_t(pthread_self());
 #endif
 
 #endif /* TBB_USE_ASSERT */
-    switch( op ) {
-        default:
-            __TBB_ASSERT( 0, "invalid op" );
-        case CILK_TBB_STACK_ADOPT: {
-            __TBB_ASSERT( !current && s->my_cilk_state==generic_scheduler::cs_limbo || 
-                          current==s && s->my_cilk_state==generic_scheduler::cs_running, "invalid adoption" );
+			switch (op) {
+			default:
+				__TBB_ASSERT(0, "invalid op");
+			case CILK_TBB_STACK_ADOPT: {
+				__TBB_ASSERT(!current && s->my_cilk_state == generic_scheduler::cs_limbo ||
+					current == s && s->my_cilk_state == generic_scheduler::cs_running, "invalid adoption");
 #if TBB_USE_ASSERT
-            if( current==s ) 
-                runtime_warning( "redundant adoption of %p by thread %p\n", s, (void*)thread_id );
-            s->my_cilk_state = generic_scheduler::cs_running;
+				if (current == s)
+					runtime_warning("redundant adoption of %p by thread %p\n", s, (void*)thread_id);
+				s->my_cilk_state = generic_scheduler::cs_running;
 #endif /* TBB_USE_ASSERT */
-            theTLS.set(s);
-            break;
-        }
-        case CILK_TBB_STACK_ORPHAN: {
-            __TBB_ASSERT( current==s && s->my_cilk_state==generic_scheduler::cs_running, "invalid orphaning" ); 
+				theTLS.set(s);
+				break;
+			}
+			case CILK_TBB_STACK_ORPHAN: {
+				__TBB_ASSERT(current == s && s->my_cilk_state == generic_scheduler::cs_running, "invalid orphaning");
 #if TBB_USE_ASSERT
-            s->my_cilk_state = generic_scheduler::cs_limbo;
+				s->my_cilk_state = generic_scheduler::cs_limbo;
 #endif /* TBB_USE_ASSERT */
-            theTLS.set(NULL);
-            break;
-        }
-        case CILK_TBB_STACK_RELEASE: {
-            __TBB_ASSERT( !current && s->my_cilk_state==generic_scheduler::cs_limbo || 
-                          current==s && s->my_cilk_state==generic_scheduler::cs_running, "invalid release" );
+				theTLS.set(NULL);
+				break;
+			}
+			case CILK_TBB_STACK_RELEASE: {
+				__TBB_ASSERT(!current && s->my_cilk_state == generic_scheduler::cs_limbo ||
+					current == s && s->my_cilk_state == generic_scheduler::cs_running, "invalid release");
 #if TBB_USE_ASSERT
-            s->my_cilk_state = generic_scheduler::cs_freed;
+				s->my_cilk_state = generic_scheduler::cs_freed;
 #endif /* TBB_USE_ASSERT */
-            s->my_cilk_unwatch_thunk.routine = NULL;
-            auto_terminate( s );
-        } 
-    }
-    return 0;
-}
+				s->my_cilk_unwatch_thunk.routine = NULL;
+				auto_terminate(s);
+			}
+			}
+			return 0;
+		}
 #endif /* __TBB_SURVIVE_THREAD_SWITCH */
 	} // namespace internal
 
@@ -312,7 +312,7 @@ __cilk_tbb_retcode governor::stack_op_handler( __cilk_tbb_stack_op op, void* dat
 	void task_scheduler_init::initialize(int number_of_threads, stack_size_type thread_stack_size)
 	{
 #if __TBB_TASK_GROUP_CONTEXT && TBB_USE_EXCEPTIONS
-    uintptr_t new_mode = thread_stack_size & propagation_mode_mask;
+		uintptr_t new_mode = thread_stack_size & propagation_mode_mask;
 #endif
 		thread_stack_size &= ~(stack_size_type)propagation_mode_mask;
 		if (number_of_threads != deferred)
@@ -325,24 +325,24 @@ __cilk_tbb_retcode governor::stack_op_handler( __cilk_tbb_stack_op op, void* dat
 			}
 			__TBB_ASSERT(!my_scheduler, "task_scheduler_init already initialized");
 			__TBB_ASSERT(number_of_threads == -1 || number_of_threads >= 1,
-			             "number_of_threads for task_scheduler_init must be -1 or positive");
+				"number_of_threads for task_scheduler_init must be -1 or positive");
 			if (blocking_terminate)
 				governor::setBlockingTerminate(this);
 			internal::generic_scheduler* s = governor::init_scheduler(number_of_threads, thread_stack_size, /*auto_init=*/false);
 #if __TBB_TASK_GROUP_CONTEXT && TBB_USE_EXCEPTIONS
-        if ( s->master_outermost_level() ) {
-            uintptr_t &vt = s->default_context()->my_version_and_traits;
-            uintptr_t prev_mode = vt & task_group_context::exact_exception ? propagation_mode_exact : 0;
-            vt = new_mode & propagation_mode_exact ? vt | task_group_context::exact_exception
-                    : new_mode & propagation_mode_captured ? vt & ~task_group_context::exact_exception : vt;
-			// Use least significant bit of the scheduler pointer to store previous mode.
-			// This is necessary when components compiled with different compilers and/or
-			// TBB versions initialize the 
-            my_scheduler = static_cast<scheduler*>((generic_scheduler*)((uintptr_t)s | prev_mode));
-        }
-        else
+			if (s->master_outermost_level()) {
+				uintptr_t &vt = s->default_context()->my_version_and_traits;
+				uintptr_t prev_mode = vt & task_group_context::exact_exception ? propagation_mode_exact : 0;
+				vt = new_mode & propagation_mode_exact ? vt | task_group_context::exact_exception
+					: new_mode & propagation_mode_captured ? vt & ~task_group_context::exact_exception : vt;
+				// Use least significant bit of the scheduler pointer to store previous mode.
+				// This is necessary when components compiled with different compilers and/or
+				// TBB versions initialize the
+				my_scheduler = static_cast<scheduler*>((generic_scheduler*)((uintptr_t)s | prev_mode));
+			}
+			else
 #endif /* __TBB_TASK_GROUP_CONTEXT && TBB_USE_EXCEPTIONS */
-			my_scheduler = s;
+				my_scheduler = s;
 		}
 		else
 		{
@@ -353,18 +353,18 @@ __cilk_tbb_retcode governor::stack_op_handler( __cilk_tbb_stack_op op, void* dat
 	void task_scheduler_init::terminate()
 	{
 #if __TBB_TASK_GROUP_CONTEXT && TBB_USE_EXCEPTIONS
-    uintptr_t prev_mode = (uintptr_t)my_scheduler & propagation_mode_exact;
-    my_scheduler = (scheduler*)((uintptr_t)my_scheduler & ~(uintptr_t)propagation_mode_exact);
+		uintptr_t prev_mode = (uintptr_t)my_scheduler & propagation_mode_exact;
+		my_scheduler = (scheduler*)((uintptr_t)my_scheduler & ~(uintptr_t)propagation_mode_exact);
 #endif /* __TBB_TASK_GROUP_CONTEXT && TBB_USE_EXCEPTIONS */
 		generic_scheduler* s = static_cast<generic_scheduler*>(my_scheduler);
 		my_scheduler = NULL;
 		__TBB_ASSERT(s, "task_scheduler_init::terminate without corresponding task_scheduler_init::initialize()");
 #if __TBB_TASK_GROUP_CONTEXT && TBB_USE_EXCEPTIONS
-    if ( s->master_outermost_level() ) {
-        uintptr_t &vt = s->default_context()->my_version_and_traits;
-        vt = prev_mode & propagation_mode_exact ? vt | task_group_context::exact_exception
-                                        : vt & ~task_group_context::exact_exception;
-    }
+		if (s->master_outermost_level()) {
+			uintptr_t &vt = s->default_context()->my_version_and_traits;
+			vt = prev_mode & propagation_mode_exact ? vt | task_group_context::exact_exception
+				: vt & ~task_group_context::exact_exception;
+		}
 #endif /* __TBB_TASK_GROUP_CONTEXT && TBB_USE_EXCEPTIONS */
 		governor::terminate_scheduler(s, this);
 	}

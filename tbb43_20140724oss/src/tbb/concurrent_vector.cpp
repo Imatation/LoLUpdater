@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #if (_MSC_VER)
 //MSVC 10 "deprecated" application of some std:: algorithms to raw pointers as not safe.
@@ -39,14 +39,13 @@
 #include <cstring>
 #include <memory> //for uninitialized_fill_n
 
-
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
 #pragma warning (pop)
 #endif
 
 #if defined(_MSC_VER) && defined(_Wp64)
 // Workaround for overzealous compiler warnings in /Wp64 mode
-    #pragma warning (disable: 4267)
+#pragma warning (disable: 4267)
 #endif
 
 using namespace std;
@@ -83,14 +82,14 @@ namespace tbb
 				if (!v.my_first_block)
 				{
 					/* There was a suggestion to set first segment according to incompact_predicate:
-            while( k && !helper::incompact_predicate(segment_size( k ) * element_size) )
-                --k; // while previous vector size is compact, decrement
-            // reasons to not do it:
-            // * constructor(n) is not ready to accept fragmented segments
-            // * backward compatibility due to that constructor
-            // * current version gives additional guarantee and faster init.
-            // * two calls to reserve() will give the same effect.
-            */
+			while( k && !helper::incompact_predicate(segment_size( k ) * element_size) )
+			--k; // while previous vector size is compact, decrement
+			// reasons to not do it:
+			// * constructor(n) is not ready to accept fragmented segments
+			// * backward compatibility due to that constructor
+			// * current version gives additional guarantee and faster init.
+			// * two calls to reserve() will give the same effect.
+			*/
 					v.my_first_block.compare_and_swap(k + 1, 0); // store number of segments
 				}
 			}
@@ -107,7 +106,7 @@ namespace tbb
 			inline static void publish_segment(segment_t& s, argument_type rhs)
 			{
 				// see also itt_store_pointer_with_release_v3()
-				ITT_NOTIFY( sync_releasing, &s );
+				ITT_NOTIFY(sync_releasing, &s);
 				s.store<release>(rhs);
 			}
 
@@ -122,7 +121,7 @@ namespace tbb
 
 			static void extend_segment_table(concurrent_vector_base_v3& v, size_type start);
 
-			struct segment_not_used_predicate: no_assign
+			struct segment_not_used_predicate : no_assign
 			{
 				segment_t& s;
 
@@ -308,7 +307,7 @@ namespace tbb
 		}
 
 		concurrent_vector_base_v3::size_type concurrent_vector_base_v3::helper::enable_segment(concurrent_vector_base_v3& v, concurrent_vector_base_v3::size_type k, concurrent_vector_base_v3::size_type element_size,
-		                                                                                       bool mark_as_not_used_on_failure)
+			bool mark_as_not_used_on_failure)
 		{
 			struct segment_scope_guard : no_copy
 			{
@@ -348,7 +347,7 @@ namespace tbb
 			if (!k)
 			{
 				assign_first_segment_if_necessary(v, default_initial_segments - 1);
-				size_of_enabled_segment = 2 ;
+				size_of_enabled_segment = 2;
 				size_to_allocate = segment_size(v.my_first_block);
 			}
 			else
@@ -374,8 +373,8 @@ namespace tbb
 					throw_exception(eid_bad_last_alloc); // throw custom exception
 				}
 				publish_segment(s[k],
-				                static_cast<void*>(array0.pointer<char>() + segment_base(k) * element_size)
-				);
+					static_cast<void*>(array0.pointer<char>() + segment_base(k) * element_size)
+					);
 			}
 			else
 			{
@@ -403,7 +402,7 @@ namespace tbb
 					else
 						for (; k_start < first_block && k_start <= k_end; ++k_start)
 							publish_segment(table[k_start], static_cast<void*>(
-								                (segment0.pointer<char>()) + segment_base(k_start) * element_size));
+							(segment0.pointer<char>()) + segment_base(k_start) * element_size));
 				}
 				for (; k_start <= k_end; ++k_start) // not in first block
 					if (table[k_start].load<acquire>() == segment_not_used())
@@ -430,11 +429,11 @@ namespace tbb
 			{
 #if TBB_USE_ASSERT
 				//to please assert in segment_t destructor
-        std::fill_n(my_storage,size_t(pointers_per_short_table),segment_t());
+				std::fill_n(my_storage, size_t(pointers_per_short_table), segment_t());
 #endif /* TBB_USE_ASSERT */
 #if TBB_USE_DEBUG
-        for( segment_index_t i = 0; i < pointers_per_long_table; i++)
-            __TBB_ASSERT( my_segment[i].load<relaxed>() != segment_allocated(), "Segment should have been freed. Please recompile with new TBB before using exceptions.");
+				for (segment_index_t i = 0; i < pointers_per_long_table; i++)
+					__TBB_ASSERT(my_segment[i].load<relaxed>() != segment_allocated(), "Segment should have been freed. Please recompile with new TBB before using exceptions.");
 #endif
 				my_segment = my_storage;
 				NFS_Free(s);
@@ -601,8 +600,8 @@ namespace tbb
 					throw_exception(eid_bad_last_alloc);
 			}
 #if TBB_USE_DEBUG
-    size_type capacity = internal_capacity();
-    __TBB_ASSERT( capacity >= new_size, NULL);
+			size_type capacity = internal_capacity();
+			__TBB_ASSERT(capacity >= new_size, NULL);
 #endif
 			return e;
 		}
@@ -629,7 +628,7 @@ namespace tbb
 		}
 
 		void concurrent_vector_base_v3::internal_resize(size_type n, size_type element_size, size_type max_size, const void* src,
-		                                                internal_array_op1 destroy, internal_array_op2 init)
+			internal_array_op1 destroy, internal_array_op2 init)
 		{
 			size_type j = my_early_size;
 			if (n > j)
@@ -691,16 +690,16 @@ namespace tbb
 				{
 					__TBB_ASSERT(segment_table[i].load<relaxed>() == segment_allocated(), NULL);
 					void* s = static_cast<void*>(
-						static_cast<char*>(seg) + segment_base(i) * element_size);
+						static_cast<char*>(seg)+segment_base(i) * element_size);
 					//TODO: refactor to use std::min
 					if (j + my_segment_size >= my_size) my_segment_size = my_size - j;
 					__TBB_TRY{// exception can occur here
 						copy(s, segment_table[i].load<relaxed>().pointer<void>(), my_segment_size);
 					}
-					__TBB_CATCH(...)
+						__TBB_CATCH(...)
 					{ // destroy all the already copied items
 						helper for_each(&old.table[0], old.first_block, element_size,
-						                0, 0, segment_base(i) + my_segment_size);
+							0, 0, segment_base(i) + my_segment_size);
 						for_each.apply(helper::destroy_body(destroy));
 						__TBB_RETHROW();
 					}
@@ -711,7 +710,7 @@ namespace tbb
 				for (segment_index_t i = 0; i < k; i++)
 				{
 					segment_table[i].store<relaxed>(static_cast<void*>(
-						static_cast<char*>(seg) + segment_base(i) * element_size));
+						static_cast<char*>(seg)+segment_base(i) * element_size));
 				}
 				old.first_block = first_block;
 				my_first_block = k; // now, first_block != my_first_block

@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_concurrent_vector_H
 #define __TBB_concurrent_vector_H
@@ -31,28 +31,27 @@
 #include <new>
 #include <cstring> // for memset()
 
-
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
 // Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
-    #pragma warning (push)
-    #pragma warning (disable: 4530)
+#pragma warning (push)
+#pragma warning (disable: 4530)
 #endif
 
 #include <algorithm>
 #include <iterator>
 
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
-    #pragma warning (pop)
+#pragma warning (pop)
 #endif
 
 #if _MSC_VER==1500 && !__INTEL_COMPILER
 // VS2008/VC9 seems to have an issue; limits pull in math.h
-    #pragma warning( push )
-    #pragma warning( disable: 4985 )
+#pragma warning( push )
+#pragma warning( disable: 4985 )
 #endif
 #include <limits> /* std::numeric_limits */
 #if _MSC_VER==1500 && !__INTEL_COMPILER
-    #pragma warning( pop )
+#pragma warning( pop )
 #endif
 
 #if __TBB_INITIALIZER_LISTS_PRESENT
@@ -63,7 +62,7 @@
 // Workaround for overzealous compiler warnings in /Wp64 mode
 #pragma warning (push)
 #if defined(_Wp64)
-    #pragma warning (disable: 4267)
+#pragma warning (disable: 4267)
 #endif
 #pragma warning (disable: 4127) //warning C4127: conditional expression is constant
 
@@ -131,7 +130,7 @@ namespace tbb
 				//TODO: More elegant way to grant access to selected functions _only_?
 				friend class segment_t;
 
-				explicit segment_value_t(void* an_array):array(an_array)
+				explicit segment_value_t(void* an_array) :array(an_array)
 				{
 				}
 
@@ -154,7 +153,7 @@ namespace tbb
 				template <typename argument_type>
 				friend bool operator!=(segment_value_t const& lhs, argument_type arg)
 				{
-					return ! (lhs == arg);
+					return !(lhs == arg);
 				}
 
 				template <typename T>
@@ -208,21 +207,21 @@ namespace tbb
 				template <memory_semantics M>
 				void store(segment_allocation_failed)
 				{
-					__TBB_ASSERT(load<relaxed>() != segment_allocated(),"transition from \"allocated\" to \"allocation failed\" state looks non-logical");
+					__TBB_ASSERT(load<relaxed>() != segment_allocated(), "transition from \"allocated\" to \"allocation failed\" state looks non-logical");
 					array.store<M>(internal::vector_allocation_error_flag);
 				}
 
 				template <memory_semantics M>
 				void store(void* allocated_segment_pointer) __TBB_NOEXCEPT(true) {
 					__TBB_ASSERT(segment_value_t(allocated_segment_pointer) == segment_allocated(),
-						"other overloads of store should be used for marking segment as not_used or allocation_failed" );
+						"other overloads of store should be used for marking segment as not_used or allocation_failed");
 					array.store<M>(allocated_segment_pointer);
 				}
 
 #if TBB_USE_ASSERT
-            ~segment_t() {
-                __TBB_ASSERT(load<relaxed>() != segment_allocated(), "should have been freed by clear" );
-            }
+				~segment_t() {
+					__TBB_ASSERT(load<relaxed>() != segment_allocated(), "should have been freed by clear");
+				}
 #endif /* TBB_USE_ASSERT */
 			};
 
@@ -231,7 +230,7 @@ namespace tbb
 			// Data fields
 
 			//! allocator function pointer
-			void* (* vector_allocator_ptr)(concurrent_vector_base_v3&, size_t);
+			void* (*vector_allocator_ptr)(concurrent_vector_base_v3&, size_t);
 
 			//! count of segments in the first block
 			atomic<size_type> my_first_block;
@@ -270,7 +269,7 @@ namespace tbb
 			//e.g. size of segment with index of 3 is 2^3=8;
 			static segment_index_t segment_index_of(size_type index)
 			{
-				return segment_index_t(__TBB_Log2( index|1 ));
+				return segment_index_t(__TBB_Log2(index | 1));
 			}
 
 			static segment_index_t segment_base(segment_index_t k)
@@ -290,14 +289,13 @@ namespace tbb
 				return segment_index_t(1) << k; // fake value for k==0
 			}
 
-
 			static bool is_first_element_in_segment(size_type element_index)
 			{
 				//check if element_index is a power of 2 that is at least 2.
 				//The idea is to detect if the iterator crosses a segment boundary,
 				//and 2 is the minimal index for which it's true
 				__TBB_ASSERT(element_index, "there should be no need to call "
-					"is_first_element_in_segment for 0th element" );
+					"is_first_element_in_segment for 0th element");
 				return is_power_of_two_factor(element_index, 2);
 			}
 
@@ -323,13 +321,13 @@ namespace tbb
 			void* __TBB_EXPORTED_METHOD internal_compact(size_type element_size, void* table, internal_array_op1 destroy, internal_array_op2 copy);
 			void __TBB_EXPORTED_METHOD internal_copy(const concurrent_vector_base_v3& src, size_type element_size, internal_array_op2 copy);
 			void __TBB_EXPORTED_METHOD internal_assign(const concurrent_vector_base_v3& src, size_type element_size,
-			                                           internal_array_op1 destroy, internal_array_op2 assign, internal_array_op2 copy);
+				internal_array_op1 destroy, internal_array_op2 assign, internal_array_op2 copy);
 			//! Obsolete
 			void __TBB_EXPORTED_METHOD internal_throw_exception(size_type) const;
 			void __TBB_EXPORTED_METHOD internal_swap(concurrent_vector_base_v3& v);
 
 			void __TBB_EXPORTED_METHOD internal_resize(size_type n, size_type element_size, size_type max_size, const void* src,
-			                                           internal_array_op1 destroy, internal_array_op2 init);
+				internal_array_op1 destroy, internal_array_op2 init);
 			size_type __TBB_EXPORTED_METHOD internal_grow_to_at_least_with_result(size_type new_size, size_type element_size, internal_array_op2 init, const void* src);
 
 			//! Deprecated entry point for backwards compatibility to TBB 2.1.
@@ -351,7 +349,7 @@ namespace tbb
 
 		//! Meets requirements of a forward iterator for STL and a Value for a blocked_range.*/
 		/** Value is either the T or const T type of the container.
-        @ingroup containers */
+		@ingroup containers */
 		template <typename Container, typename Value>
 		class vector_iterator
 		{
@@ -381,8 +379,8 @@ namespace tbb
 			friend class internal::vector_iterator;
 
 #if !defined(_MSC_VER) || defined(__INTEL_COMPILER)
-        template<typename T, class A>
-        friend class tbb::concurrent_vector;
+			template<typename T, class A>
+			friend class tbb::concurrent_vector;
 #else
 		public: // workaround for MSVC
 #endif
@@ -438,7 +436,7 @@ namespace tbb
 				{
 					item = my_item = &my_vector->internal_subscript(my_index);
 				}
-				__TBB_ASSERT( item==&my_vector->internal_subscript(my_index), "corrupt cache" );
+				__TBB_ASSERT(item == &my_vector->internal_subscript(my_index), "corrupt cache");
 				return *item;
 			}
 
@@ -476,7 +474,7 @@ namespace tbb
 			//! Pre decrement
 			vector_iterator& operator--()
 			{
-				__TBB_ASSERT( my_index>0, "operator--() applied to iterator already at beginning of concurrent_vector" );
+				__TBB_ASSERT(my_index > 0, "operator--() applied to iterator already at beginning of concurrent_vector");
 				size_t element_index = my_index--;
 				if (my_item)
 				{
@@ -572,7 +570,7 @@ namespace tbb
 		{
 		public:
 			typedef typename A::template
-			rebind<T>::other allocator_type;
+				rebind<T>::other allocator_type;
 			allocator_type my_allocator;
 
 			allocator_base(const allocator_type& a = allocator_type()) : my_allocator(a)
@@ -584,73 +582,73 @@ namespace tbb
 
 	//! Concurrent vector container
 	/** concurrent_vector is a container having the following main properties:
-    - It provides random indexed access to its elements. The index of the first element is 0.
-    - It ensures safe concurrent growing its size (different threads can safely append new elements).
-    - Adding new elements does not invalidate existing iterators and does not change indices of existing items.
+	- It provides random indexed access to its elements. The index of the first element is 0.
+	- It ensures safe concurrent growing its size (different threads can safely append new elements).
+	- Adding new elements does not invalidate existing iterators and does not change indices of existing items.
 
-@par Compatibility
-    The class meets all Container Requirements and Reversible Container Requirements from
-    C++ Standard (See ISO/IEC 14882:2003(E), clause 23.1). But it doesn't meet
-    Sequence Requirements due to absence of insert() and erase() methods.
+	@par Compatibility
+	The class meets all Container Requirements and Reversible Container Requirements from
+	C++ Standard (See ISO/IEC 14882:2003(E), clause 23.1). But it doesn't meet
+	Sequence Requirements due to absence of insert() and erase() methods.
 
-@par Exception Safety
-    Methods working with memory allocation and/or new elements construction can throw an
-    exception if allocator fails to allocate memory or element's default constructor throws one.
-    Concurrent vector's element of type T must conform to the following requirements:
-    - Throwing an exception is forbidden for destructor of T.
-    - Default constructor of T must not throw an exception OR its non-virtual destructor must safely work when its object memory is zero-initialized.
-    .
-    Otherwise, the program's behavior is undefined.
-@par
-    If an exception happens inside growth or assignment operation, an instance of the vector becomes invalid unless it is stated otherwise in the method documentation.
-    Invalid state means:
-    - There are no guarantees that all items were initialized by a constructor. The rest of items is zero-filled, including item where exception happens.
-    - An invalid vector instance cannot be repaired; it is unable to grow anymore.
-    - Size and capacity reported by the vector are incorrect, and calculated as if the failed operation were successful.
-    - Attempt to access not allocated elements using operator[] or iterators results in access violation or segmentation fault exception, and in case of using at() method a C++ exception is thrown.
-    .
-    If a concurrent grow operation successfully completes, all the elements it has added to the vector will remain valid and accessible even if one of subsequent grow operations fails.
+	@par Exception Safety
+	Methods working with memory allocation and/or new elements construction can throw an
+	exception if allocator fails to allocate memory or element's default constructor throws one.
+	Concurrent vector's element of type T must conform to the following requirements:
+	- Throwing an exception is forbidden for destructor of T.
+	- Default constructor of T must not throw an exception OR its non-virtual destructor must safely work when its object memory is zero-initialized.
+	.
+	Otherwise, the program's behavior is undefined.
+	@par
+	If an exception happens inside growth or assignment operation, an instance of the vector becomes invalid unless it is stated otherwise in the method documentation.
+	Invalid state means:
+	- There are no guarantees that all items were initialized by a constructor. The rest of items is zero-filled, including item where exception happens.
+	- An invalid vector instance cannot be repaired; it is unable to grow anymore.
+	- Size and capacity reported by the vector are incorrect, and calculated as if the failed operation were successful.
+	- Attempt to access not allocated elements using operator[] or iterators results in access violation or segmentation fault exception, and in case of using at() method a C++ exception is thrown.
+	.
+	If a concurrent grow operation successfully completes, all the elements it has added to the vector will remain valid and accessible even if one of subsequent grow operations fails.
 
-@par Fragmentation
-    Unlike an STL vector, a concurrent_vector does not move existing elements if it needs
-    to allocate more memory. The container is divided into a series of contiguous arrays of
-    elements. The first reservation, growth, or assignment operation determines the size of
-    the first array. Using small number of elements as initial size incurs fragmentation that
-    may increase element access time. Internal layout can be optimized by method compact() that
-    merges several smaller arrays into one solid.
+	@par Fragmentation
+	Unlike an STL vector, a concurrent_vector does not move existing elements if it needs
+	to allocate more memory. The container is divided into a series of contiguous arrays of
+	elements. The first reservation, growth, or assignment operation determines the size of
+	the first array. Using small number of elements as initial size incurs fragmentation that
+	may increase element access time. Internal layout can be optimized by method compact() that
+	merges several smaller arrays into one solid.
 
-@par Changes since TBB 2.1
-    - Fixed guarantees of concurrent_vector::size() and grow_to_at_least() methods to assure elements are allocated.
-    - Methods end()/rbegin()/back() are partly thread-safe since they use size() to get the end of vector
-    - Added resize() methods (not thread-safe)
-    - Added cbegin/cend/crbegin/crend methods
-    - Changed return type of methods grow* and push_back to iterator
+	@par Changes since TBB 2.1
+	- Fixed guarantees of concurrent_vector::size() and grow_to_at_least() methods to assure elements are allocated.
+	- Methods end()/rbegin()/back() are partly thread-safe since they use size() to get the end of vector
+	- Added resize() methods (not thread-safe)
+	- Added cbegin/cend/crbegin/crend methods
+	- Changed return type of methods grow* and push_back to iterator
 
-@par Changes since TBB 2.0
-    - Implemented exception-safety guarantees
-    - Added template argument for allocator
-    - Added allocator argument in constructors
-    - Faster index calculation
-    - First growth call specifies a number of segments to be merged in the first allocation.
-    - Fixed memory blow up for swarm of vector's instances of small size
-    - Added grow_by(size_type n, const_reference t) growth using copying constructor to init new items.
-    - Added STL-like constructors.
-    - Added operators ==, < and derivatives
-    - Added at() method, approved for using after an exception was thrown inside the vector
-    - Added get_allocator() method.
-    - Added assign() methods
-    - Added compact() method to defragment first segments
-    - Added swap() method
-    - range() defaults on grainsize = 1 supporting auto grainsize algorithms.
+	@par Changes since TBB 2.0
+	- Implemented exception-safety guarantees
+	- Added template argument for allocator
+	- Added allocator argument in constructors
+	- Faster index calculation
+	- First growth call specifies a number of segments to be merged in the first allocation.
+	- Fixed memory blow up for swarm of vector's instances of small size
+	- Added grow_by(size_type n, const_reference t) growth using copying constructor to init new items.
+	- Added STL-like constructors.
+	- Added operators ==, < and derivatives
+	- Added at() method, approved for using after an exception was thrown inside the vector
+	- Added get_allocator() method.
+	- Added assign() methods
+	- Added compact() method to defragment first segments
+	- Added swap() method
+	- range() defaults on grainsize = 1 supporting auto grainsize algorithms.
 
-    @ingroup containers */
+	@ingroup containers */
 	template <typename T, class A>
-	class concurrent_vector: protected internal::allocator_base<T, A>,
-	                         private internal::concurrent_vector_base
+	class concurrent_vector : protected internal::allocator_base<T, A>,
+		private internal::concurrent_vector_base
 	{
 	private:
 		template <typename I>
-		class generic_range_type: public blocked_range<I>
+		class generic_range_type : public blocked_range < I >
 		{
 		public:
 			typedef T value_type;
@@ -699,8 +697,8 @@ namespace tbb
 		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 #else
 		// Use non-standard std::reverse_iterator
-    typedef std::reverse_iterator<iterator,T,T&,T*> reverse_iterator;
-    typedef std::reverse_iterator<const_iterator,T,const T&,const T*> const_reverse_iterator;
+		typedef std::reverse_iterator<iterator, T, T&, T*> reverse_iterator;
+		typedef std::reverse_iterator<const_iterator, T, const T&, const T*> const_reverse_iterator;
 #endif /* defined(_MSC_VER) && (_MSC_VER<1300) */
 
 		//------------------------------------------------------------------------
@@ -739,7 +737,6 @@ namespace tbb
 			}
 		}
 #endif //# __TBB_INITIALIZER_LISTS_PRESENT
-
 
 		//! Copying constructor
 		concurrent_vector(const concurrent_vector& vector, const allocator_type& a = allocator_type())
@@ -897,7 +894,7 @@ namespace tbb
 		{
 			if (static_cast<void*>(this) != static_cast<const void*>(&vector))
 				internal_assign(vector.internal_vector_base(),
-				                sizeof(T), &destroy_array, &assign_array, &copy_array);
+				sizeof(T), &destroy_array, &assign_array, &copy_array);
 			return *this;
 		}
 
@@ -910,7 +907,6 @@ namespace tbb
 			return *this;
 		}
 #endif //#if __TBB_INITIALIZER_LISTS_PRESENT
-
 
 		//------------------------------------------------------------------------
 		// Concurrent operations
@@ -934,7 +930,7 @@ namespace tbb
 		iterator grow_by(I first, I last)
 		{
 			typename std::iterator_traits<I>::difference_type delta = std::distance(first, last);
-			__TBB_ASSERT( delta >= 0, NULL);
+			__TBB_ASSERT(delta >= 0, NULL);
 
 			return iterator(*this, delta ? internal_grow_by(delta, sizeof(T), &copy_range<I>, static_cast<const void*>(&first)) : my_early_size.load());
 		}
@@ -947,12 +943,11 @@ namespace tbb
 		}
 #endif //#if __TBB_INITIALIZER_LISTS_PRESENT
 
-
 		//! Append minimal sequence of elements such that size()>=n.
 		/** The new elements are default constructed.  Blocks until all elements in range [0..n) are allocated.
-        May return while other elements are being constructed by other threads.
-        Returns iterator that points to beginning of appended sequence.
-        If no elements were appended, returns iterator pointing to nth element. */
+		May return while other elements are being constructed by other threads.
+		Returns iterator that points to beginning of appended sequence.
+		If no elements were appended, returns iterator pointing to nth element. */
 		iterator grow_to_at_least(size_type n)
 		{
 			size_type m = 0;
@@ -965,7 +960,7 @@ namespace tbb
 		};
 
 		/** Analogous to grow_to_at_least( size_type n ) with exception that the new
-        elements are initialized by copying of t instead of default construction. */
+		elements are initialized by copying of t instead of default construction. */
 		iterator grow_to_at_least(size_type n, const_reference t)
 		{
 			size_type m = 0;
@@ -984,7 +979,7 @@ namespace tbb
 			size_type k;
 			T* ptr = static_cast<T*>(internal_push_back(sizeof(T), k));
 			element_construction_guard g(ptr);
-			new(ptr) T(item);
+			new(ptr)T(item);
 			g.dismiss();
 			return iterator(*this, k, ptr);
 		}
@@ -997,7 +992,7 @@ namespace tbb
 			size_type k;
 			T* ptr = static_cast<T*>(internal_push_back(sizeof(T), k));
 			element_construction_guard g(ptr);
-			new(ptr) T(std::move(item));
+			new(ptr)T(std::move(item));
 			g.dismiss();
 			return iterator(*this, k, ptr);
 		}
@@ -1010,7 +1005,7 @@ namespace tbb
 			size_type k;
 			T* ptr = static_cast<T*>(internal_push_back(sizeof(T), k));
 			element_construction_guard g(ptr);
-			new(ptr) T(std::forward<Args>(args)...);
+			new(ptr)T(std::forward<Args>(args)...);
 			g.dismiss();
 			return iterator(*this, k, ptr);
 		}
@@ -1020,7 +1015,7 @@ namespace tbb
 
 		//! Get reference to element at given index.
 		/** This method is thread-safe for concurrent reads, and also while growing the vector,
-        as long as the calling thread has checked that index < size(). */
+		as long as the calling thread has checked that index < size(). */
 		reference operator[](size_type index)
 		{
 			return internal_subscript(index);
@@ -1080,7 +1075,7 @@ namespace tbb
 
 		//! Allocate enough space to grow to size n without having to allocate more memory later.
 		/** Like most of the methods provided for STL compatibility, this method is *not* thread safe.
-        The capacity afterwards may be bigger than the requested reservation. */
+		The capacity afterwards may be bigger than the requested reservation. */
 		void reserve(size_type n)
 		{
 			if (n)
@@ -1187,28 +1182,28 @@ namespace tbb
 		//! the first item
 		reference front()
 		{
-			__TBB_ASSERT( size()>0, NULL);
+			__TBB_ASSERT(size() > 0, NULL);
 			return (my_segment[0].template load<relaxed>().template pointer<T>())[0];
 		}
 
 		//! the first item const
 		const_reference front() const
 		{
-			__TBB_ASSERT( size()>0, NULL);
+			__TBB_ASSERT(size() > 0, NULL);
 			return static_cast<const T*>(my_segment[0].array)[0];
 		}
 
 		//! the last item
 		reference back()
 		{
-			__TBB_ASSERT( size()>0, NULL);
+			__TBB_ASSERT(size() > 0, NULL);
 			return internal_subscript(size() - 1);
 		}
 
 		//! the last item const
 		const_reference back() const
 		{
-			__TBB_ASSERT( size()>0, NULL);
+			__TBB_ASSERT(size() > 0, NULL);
 			return internal_subscript(size() - 1);
 		}
 
@@ -1241,7 +1236,6 @@ namespace tbb
 			internal_assign_iterators(init_list.begin(), init_list.end());
 		}
 #endif //# __TBB_INITIALIZER_LISTS_PRESENT
-
 
 		//! swap two instances
 		void swap(concurrent_vector& vector)
@@ -1402,7 +1396,7 @@ namespace tbb
 			template <class I>
 			void iterate(I& src)
 			{
-				for (; i < n; ++i , ++src) new(&array[i]) T(*src);
+				for (; i < n; ++i, ++src) new(&array[i]) T(*src);
 			}
 
 			~internal_loop_guide()
@@ -1449,7 +1443,7 @@ namespace tbb
 		__TBB_TRY
 		{
 			if (internal_compact(sizeof(T), &old, &destroy_array, &copy_array))
-				internal_free_segments(old.table, pointers_per_long_table, old.first_block); // free joined and unnecessary segments
+			internal_free_segments(old.table, pointers_per_long_table, old.first_block); // free joined and unnecessary segments
 		} __TBB_CATCH(...)
 		{
 			if (old.first_block) // free segment allocated for compacting. Only for support of exceptions in ctor of user T[ype]
@@ -1460,7 +1454,6 @@ namespace tbb
 #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
 #pragma warning (pop)
 #endif // warning 4701 is back
-
 
 	template <typename T, class A>
 	void concurrent_vector<T, A>::internal_free_segments(segment_t table[], segment_index_t k, segment_index_t first_block)
@@ -1477,7 +1470,7 @@ namespace tbb
 		segment_value_t segment_value = table[0].load<relaxed>();
 		if (segment_value == segment_allocated())
 		{
-			__TBB_ASSERT( first_block > 0, NULL );
+			__TBB_ASSERT(first_block > 0, NULL);
 			while (k > 0) table[--k].store<relaxed>(segment_not_used());
 			this->my_allocator.deallocate((segment_value.pointer<T>()), segment_size(first_block));
 		}
@@ -1487,17 +1480,17 @@ namespace tbb
 	T& concurrent_vector<T, A>::internal_subscript(size_type index) const
 	{
 		//TODO: unify both versions of internal_subscript
-		__TBB_ASSERT( index < my_early_size, "index out of bounds" );
+		__TBB_ASSERT(index < my_early_size, "index out of bounds");
 		size_type j = index;
 		segment_index_t k = segment_base_index_of(j);
-		__TBB_ASSERT( my_segment.load<acquire>() != my_storage || k < pointers_per_short_table, "index is being allocated" );
+		__TBB_ASSERT(my_segment.load<acquire>() != my_storage || k < pointers_per_short_table, "index is being allocated");
 		//no need in load with acquire (load<acquire>) since thread works in own space or gets
 		//the information about added elements via some form of external synchronization
 		//TODO: why not make a load of my_segment relaxed as well ?
 		//TODO: add an assertion that my_segment[k] is properly aligned to please ITT
 		segment_value_t segment_value = my_segment[k].template load<relaxed>();
-		__TBB_ASSERT( segment_value != segment_allocation_failed(), "the instance is broken by bad allocation. Use at() instead" );
-		__TBB_ASSERT( segment_value != segment_not_used(), "index is being allocated" );
+		__TBB_ASSERT(segment_value != segment_allocation_failed(), "the instance is broken by bad allocation. Use at() instead");
+		__TBB_ASSERT(segment_value != segment_not_used(), "index is being allocated");
 		return ((segment_value.pointer<T>()))[j];
 	}
 
@@ -1618,7 +1611,6 @@ namespace tbb
 #pragma warning (pop)
 #endif // warning 4189 is back
 
-
 	// concurrent_vector's template functions
 	template <typename T, class A1, class A2>
 	inline bool operator==(const concurrent_vector<T, A1>& a, const concurrent_vector<T, A2>& b)
@@ -1628,7 +1620,7 @@ namespace tbb
 		if (a.size() != b.size()) return false;
 		typename concurrent_vector<T, A1>::const_iterator i(a.begin());
 		typename concurrent_vector<T, A2>::const_iterator j(b.begin());
-		for (; i != a.end(); ++i , ++j)
+		for (; i != a.end(); ++i, ++j)
 			if (!(*i == *j)) return false;
 		return true;
 	}
@@ -1673,6 +1665,5 @@ namespace tbb
 #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
 #pragma warning (pop)
 #endif // warning 4267,4127 are back
-
 
 #endif /* __TBB_concurrent_vector_H */

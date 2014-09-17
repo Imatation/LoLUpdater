@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_enumerable_thread_specific_H
 #define __TBB_enumerable_thread_specific_H
@@ -28,7 +28,6 @@
 #include "cache_aligned_allocator.h"
 #include "aligned_space.h"
 #include <string.h> // for memcpy
-
 
 #if _WIN32||_WIN64
 #include "machine/windows_api.h"
@@ -53,16 +52,16 @@ namespace tbb
 			using namespace tbb::internal;
 
 			template <ets_key_usage_type ETS_key_type>
-			class ets_base: tbb::internal::no_copy
+			class ets_base : tbb::internal::no_copy
 			{
 			protected:
 #if _WIN32||_WIN64
 				typedef DWORD key_type;
 #else
-            typedef pthread_t key_type;
+				typedef pthread_t key_type;
 #endif
 #if __TBB_PROTECTED_NESTED_CLASS_BROKEN
-        public:
+			public:
 #endif
 				struct slot;
 
@@ -109,12 +108,12 @@ namespace tbb
 
 					bool claim(key_type k)
 					{
-						__TBB_ASSERT(sizeof(tbb::atomic<key_type>)==sizeof(key_type), NULL);
+						__TBB_ASSERT(sizeof(tbb::atomic<key_type>) == sizeof(key_type), NULL);
 						return tbb::internal::punned_cast<tbb::atomic<key_type>*>(&key)->compare_and_swap(k, 0) == 0;
 					}
 				};
 #if __TBB_PROTECTED_NESTED_CLASS_BROKEN
-        protected:
+			protected:
 #endif
 
 				static key_type key_of_current_thread()
@@ -127,7 +126,7 @@ namespace tbb
 
 				//! Root of linked list of arrays of decreasing size.
 				/** NULL if and only if my_count==0.
-                Each array in the list is half the size of its predecessor. */
+				Each array in the list is half the size of its predecessor. */
 				atomic<array*> my_root;
 				atomic<size_t> my_count;
 				virtual void* create_local() = 0;
@@ -172,7 +171,7 @@ namespace tbb
 					size_t h = hash(k);
 					array* r = my_root;
 					size_t mask = r->mask();
-					for (size_t i = r->start(h);;i = (i + 1) & mask)
+					for (size_t i = r->start(h);; i = (i + 1) & mask)
 					{
 						slot& s = r->at(i);
 						if (s.empty() || s.match(k))
@@ -182,8 +181,8 @@ namespace tbb
 
 				void table_reserve_for_copy(const ets_base& other)
 				{
-					__TBB_ASSERT(!my_root,NULL);
-					__TBB_ASSERT(!my_count,NULL);
+					__TBB_ASSERT(!my_root, NULL);
+					__TBB_ASSERT(!my_count, NULL);
 					if (other.my_root)
 					{
 						array* a = allocate(other.my_root->lg_size);
@@ -216,14 +215,14 @@ namespace tbb
 			{
 				const key_type k = key_of_current_thread();
 
-				__TBB_ASSERT(k!=0,NULL);
+				__TBB_ASSERT(k != 0, NULL);
 				void* found;
 				size_t h = hash(k);
 				for (array* r = my_root; r; r = r->next)
 				{
 					call_itt_notify(acquired, r);
 					size_t mask = r->mask();
-					for (size_t i = r->start(h); ;i = (i + 1) & mask)
+					for (size_t i = r->start(h);; i = (i + 1) & mask)
 					{
 						slot& s = r->at(i);
 						if (s.empty()) break;
@@ -283,7 +282,7 @@ namespace tbb
 				array* ir = my_root;
 				call_itt_notify(acquired, ir);
 				size_t mask = ir->mask();
-				for (size_t i = ir->start(h);;i = (i + 1) & mask)
+				for (size_t i = ir->start(h);; i = (i + 1) & mask)
 				{
 					slot& s = ir->at(i);
 					if (s.empty())
@@ -299,16 +298,16 @@ namespace tbb
 
 			//! Specialization that exploits native TLS
 			template <>
-			class ets_base<ets_key_per_instance>: protected ets_base<ets_no_key>
+			class ets_base<ets_key_per_instance> : protected ets_base < ets_no_key >
 			{
 				typedef ets_base<ets_no_key> super;
 #if _WIN32||_WIN64
 #if __TBB_WIN8UI_SUPPORT
-            typedef DWORD tls_key_t;
-            void create_key() { my_key = FlsAlloc(NULL); }
-            void destroy_key() { FlsFree(my_key); }
-            void set_tls(void * value) { FlsSetValue(my_key, (LPVOID)value); }
-            void* get_tls() { return (void *)FlsGetValue(my_key); }
+				typedef DWORD tls_key_t;
+				void create_key() { my_key = FlsAlloc(NULL); }
+				void destroy_key() { FlsFree(my_key); }
+				void set_tls(void * value) { FlsSetValue(my_key, (LPVOID)value); }
+				void* get_tls() { return (void *)FlsGetValue(my_key); }
 #else
 				typedef DWORD tls_key_t;
 
@@ -333,11 +332,11 @@ namespace tbb
 				}
 #endif
 #else
-            typedef pthread_key_t tls_key_t;
-            void create_key() { pthread_key_create(&my_key, NULL); }
-            void destroy_key() { pthread_key_delete(my_key); }
-            void set_tls( void * value ) const { pthread_setspecific(my_key, value); }
-            void* get_tls() const { return pthread_getspecific(my_key); }
+				typedef pthread_key_t tls_key_t;
+				void create_key() { pthread_key_create(&my_key, NULL); }
+				void destroy_key() { pthread_key_delete(my_key); }
+				void set_tls(void * value) const { pthread_setspecific(my_key, value); }
+				void* get_tls() const { return pthread_getspecific(my_key); }
 #endif
 				tls_key_t my_key;
 				virtual void* create_local() = 0;
@@ -382,7 +381,7 @@ namespace tbb
 			class enumerable_thread_specific_iterator
 #if defined(_WIN64) && defined(_MSC_VER)
 				// Ensure that Microsoft's internal template function _Val_type works correctly.
-            : public std::iterator<std::random_access_iterator_tag,Value>
+				: public std::iterator < std::random_access_iterator_tag, Value >
 #endif /* defined(_WIN64) && defined(_MSC_VER) */
 			{
 				//! current position in the concurrent_vector
@@ -393,15 +392,15 @@ namespace tbb
 
 				template <typename C, typename T>
 				friend enumerable_thread_specific_iterator<C, T> operator+(ptrdiff_t offset,
-				                                                           const enumerable_thread_specific_iterator<C, T>& v);
+					const enumerable_thread_specific_iterator<C, T>& v);
 
 				template <typename C, typename T, typename U>
 				friend bool operator==(const enumerable_thread_specific_iterator<C, T>& i,
-				                       const enumerable_thread_specific_iterator<C, U>& j);
+					const enumerable_thread_specific_iterator<C, U>& j);
 
 				template <typename C, typename T, typename U>
 				friend bool operator<(const enumerable_thread_specific_iterator<C, T>& i,
-				                      const enumerable_thread_specific_iterator<C, U>& j);
+					const enumerable_thread_specific_iterator<C, U>& j);
 
 				template <typename C, typename T, typename U>
 				friend ptrdiff_t operator-(const enumerable_thread_specific_iterator<C, T>& i, const enumerable_thread_specific_iterator<C, U>& j);
@@ -458,7 +457,7 @@ namespace tbb
 					{
 						value = my_value = reinterpret_cast<Value *>(&(*my_container)[my_index].value);
 					}
-					__TBB_ASSERT( value==reinterpret_cast<Value *>(&(*my_container)[my_index].value), "corrupt cache" );
+					__TBB_ASSERT(value == reinterpret_cast<Value *>(&(*my_container)[my_index].value), "corrupt cache");
 					return *value;
 				}
 
@@ -514,56 +513,56 @@ namespace tbb
 
 			template <typename Container, typename T>
 			enumerable_thread_specific_iterator<Container, T> operator+(ptrdiff_t offset,
-			                                                            const enumerable_thread_specific_iterator<Container, T>& v)
+				const enumerable_thread_specific_iterator<Container, T>& v)
 			{
 				return enumerable_thread_specific_iterator<Container, T>(v.my_container, v.my_index + offset);
 			}
 
 			template <typename Container, typename T, typename U>
 			bool operator==(const enumerable_thread_specific_iterator<Container, T>& i,
-			                const enumerable_thread_specific_iterator<Container, U>& j)
+				const enumerable_thread_specific_iterator<Container, U>& j)
 			{
 				return i.my_index == j.my_index && i.my_container == j.my_container;
 			}
 
 			template <typename Container, typename T, typename U>
 			bool operator!=(const enumerable_thread_specific_iterator<Container, T>& i,
-			                const enumerable_thread_specific_iterator<Container, U>& j)
+				const enumerable_thread_specific_iterator<Container, U>& j)
 			{
 				return !(i == j);
 			}
 
 			template <typename Container, typename T, typename U>
 			bool operator<(const enumerable_thread_specific_iterator<Container, T>& i,
-			               const enumerable_thread_specific_iterator<Container, U>& j)
+				const enumerable_thread_specific_iterator<Container, U>& j)
 			{
 				return i.my_index < j.my_index;
 			}
 
 			template <typename Container, typename T, typename U>
 			bool operator>(const enumerable_thread_specific_iterator<Container, T>& i,
-			               const enumerable_thread_specific_iterator<Container, U>& j)
+				const enumerable_thread_specific_iterator<Container, U>& j)
 			{
 				return j < i;
 			}
 
 			template <typename Container, typename T, typename U>
 			bool operator>=(const enumerable_thread_specific_iterator<Container, T>& i,
-			                const enumerable_thread_specific_iterator<Container, U>& j)
+				const enumerable_thread_specific_iterator<Container, U>& j)
 			{
 				return !(i < j);
 			}
 
 			template <typename Container, typename T, typename U>
 			bool operator<=(const enumerable_thread_specific_iterator<Container, T>& i,
-			                const enumerable_thread_specific_iterator<Container, U>& j)
+				const enumerable_thread_specific_iterator<Container, U>& j)
 			{
 				return !(j < i);
 			}
 
 			template <typename Container, typename T, typename U>
 			ptrdiff_t operator-(const enumerable_thread_specific_iterator<Container, T>& i,
-			                    const enumerable_thread_specific_iterator<Container, U>& j)
+				const enumerable_thread_specific_iterator<Container, U>& j)
 			{
 				return i.my_index - j.my_index;
 			}
@@ -571,7 +570,7 @@ namespace tbb
 			template <typename SegmentedContainer, typename Value>
 			class segmented_iterator
 #if defined(_WIN64) && defined(_MSC_VER)
-        : public std::iterator<std::input_iterator_tag, Value>
+				: public std::iterator < std::input_iterator_tag, Value >
 #endif
 			{
 				template <typename C, typename T, typename U>
@@ -642,7 +641,7 @@ namespace tbb
 				{
 					__TBB_ASSERT(my_segcont != NULL, NULL);
 					// check that this iterator points to something inside the segmented container
-					for (outer_iter = new_outer_iter ;outer_iter != my_segcont->end(); ++outer_iter)
+					for (outer_iter = new_outer_iter; outer_iter != my_segcont->end(); ++outer_iter)
 					{
 						if (!outer_iter->empty())
 						{
@@ -715,7 +714,7 @@ namespace tbb
 
 			template <typename SegmentedContainer, typename T, typename U>
 			bool operator==(const segmented_iterator<SegmentedContainer, T>& i,
-			                const segmented_iterator<SegmentedContainer, U>& j)
+				const segmented_iterator<SegmentedContainer, U>& j)
 			{
 				if (i.my_segcont != j.my_segcont) return false;
 				if (i.my_segcont == NULL) return true;
@@ -727,13 +726,13 @@ namespace tbb
 			// !=
 			template <typename SegmentedContainer, typename T, typename U>
 			bool operator!=(const segmented_iterator<SegmentedContainer, T>& i,
-			                const segmented_iterator<SegmentedContainer, U>& j)
+				const segmented_iterator<SegmentedContainer, U>& j)
 			{
 				return !(i == j);
 			}
 
 			template <typename T>
-			struct destruct_only: tbb::internal::no_copy
+			struct destruct_only : tbb::internal::no_copy
 			{
 				tbb::aligned_space<T> value;
 
@@ -744,11 +743,11 @@ namespace tbb
 			};
 
 			template <typename T>
-			struct construct_by_default: tbb::internal::no_assign
+			struct construct_by_default : tbb::internal::no_assign
 			{
 				void construct(void* where)
 				{
-					new(where) T();
+					new(where)T();
 				} // C++ note: the () in T() ensure zero initialization.
 				construct_by_default(int)
 				{
@@ -756,13 +755,13 @@ namespace tbb
 			};
 
 			template <typename T>
-			struct construct_by_exemplar: tbb::internal::no_assign
+			struct construct_by_exemplar : tbb::internal::no_assign
 			{
 				const T exemplar;
 
 				void construct(void* where)
 				{
-					new(where) T(exemplar);
+					new(where)T(exemplar);
 				}
 
 				construct_by_exemplar(const T& t) : exemplar(t)
@@ -771,13 +770,13 @@ namespace tbb
 			};
 
 			template <typename T, typename Finit>
-			struct construct_by_finit: tbb::internal::no_assign
+			struct construct_by_finit : tbb::internal::no_assign
 			{
 				Finit f;
 
 				void construct(void* where)
 				{
-					new(where) T(f());
+					new(where)T(f());
 				}
 
 				construct_by_finit(const Finit& f_) : f(f_)
@@ -805,7 +804,7 @@ namespace tbb
 			};
 
 			template <typename T, typename Constructor>
-			class callback_leaf: public callback_base<T>, Constructor
+			class callback_leaf : public callback_base<T>, Constructor
 			{
 				template <typename X>
 				callback_leaf(const X& x) : Constructor(x)
@@ -818,7 +817,7 @@ namespace tbb
 				callback_base<T>* clone()
 				{
 					void* where = my_allocator_type().allocate(1);
-					return new(where) callback_leaf(*this);
+					return new(where)callback_leaf(*this);
 				}
 
 				/*override*/
@@ -839,16 +838,16 @@ namespace tbb
 				static callback_base<T>* make(const X& x)
 				{
 					void* where = my_allocator_type().allocate(1);
-					return new(where) callback_leaf(x);
+					return new(where)callback_leaf(x);
 				}
 			};
 
 			//! Template for adding padding in order to avoid false sharing
 			/** ModularSize should be sizeof(U) modulo the cache line size.
-            All maintenance of the space will be done explicitly on push_back,
-            and all thread local copies must be destroyed before the concurrent
-            vector is deleted.
-        */
+			All maintenance of the space will be done explicitly on push_back,
+			and all thread local copies must be destroyed before the concurrent
+			vector is deleted.
+			*/
 			template <typename U, size_t ModularSize>
 			struct ets_element
 			{
@@ -868,28 +867,28 @@ namespace tbb
 
 		//! The enumerable_thread_specific container
 		/** enumerable_thread_specific has the following properties:
-        - thread-local copies are lazily created, with default, exemplar or function initialization.
-        - thread-local copies do not move (during lifetime, and excepting clear()) so the address of a copy is invariant.
-        - the contained objects need not have operator=() defined if combine is not used.
-        - enumerable_thread_specific containers may be copy-constructed or assigned.
-        - thread-local copies can be managed by hash-table, or can be accessed via TLS storage for speed.
-        - outside of parallel contexts, the contents of all thread-local copies are accessible by iterator or using combine or combine_each methods
+		- thread-local copies are lazily created, with default, exemplar or function initialization.
+		- thread-local copies do not move (during lifetime, and excepting clear()) so the address of a copy is invariant.
+		- the contained objects need not have operator=() defined if combine is not used.
+		- enumerable_thread_specific containers may be copy-constructed or assigned.
+		- thread-local copies can be managed by hash-table, or can be accessed via TLS storage for speed.
+		- outside of parallel contexts, the contents of all thread-local copies are accessible by iterator or using combine or combine_each methods
 
-    @par Segmented iterator
-        When the thread-local objects are containers with input_iterators defined, a segmented iterator may
-        be used to iterate over all the elements of all thread-local copies.
+		@par Segmented iterator
+		When the thread-local objects are containers with input_iterators defined, a segmented iterator may
+		be used to iterate over all the elements of all thread-local copies.
 
-    @par combine and combine_each
-        - Both methods are defined for enumerable_thread_specific.
-        - combine() requires the the type T have operator=() defined.
-        - neither method modifies the contents of the object (though there is no guarantee that the applied methods do not modify the object.)
-        - Both are evaluated in serial context (the methods are assumed to be non-benign.)
+		@par combine and combine_each
+		- Both methods are defined for enumerable_thread_specific.
+		- combine() requires the the type T have operator=() defined.
+		- neither method modifies the contents of the object (though there is no guarantee that the applied methods do not modify the object.)
+		- Both are evaluated in serial context (the methods are assumed to be non-benign.)
 
-    @ingroup containers */
+		@ingroup containers */
 		template <typename T,
-		          typename Allocator=cache_aligned_allocator<T>,
-		          ets_key_usage_type ETS_key_type = ets_no_key>
-		class enumerable_thread_specific: internal::ets_base<ETS_key_type>
+			typename Allocator = cache_aligned_allocator<T>,
+			ets_key_usage_type ETS_key_type = ets_no_key>
+		class enumerable_thread_specific : internal::ets_base < ETS_key_type >
 		{
 			template <typename U, typename A, ets_key_usage_type C>
 			friend class enumerable_thread_specific;
@@ -898,7 +897,7 @@ namespace tbb
 
 			//! A generic range, used to create range objects from the iterators
 			template <typename I>
-			class generic_range_type: public blocked_range<I>
+			class generic_range_type : public blocked_range < I >
 			{
 			public:
 				typedef T value_type;
@@ -1102,7 +1101,7 @@ namespace tbb
 
 			template <typename U, typename A2, ets_key_usage_type C2>
 			enumerable_thread_specific&
-			internal_assign(const enumerable_thread_specific<U, A2, C2>& other)
+				internal_assign(const enumerable_thread_specific<U, A2, C2>& other)
 			{
 				if (static_cast<void *>(this) != static_cast<const void *>(&other))
 				{
@@ -1164,7 +1163,7 @@ namespace tbb
 			my_construct_callback = other.my_construct_callback->clone();
 
 			typedef internal::ets_base<ets_no_key> base;
-			__TBB_ASSERT(my_locals.size()==0,NULL);
+			__TBB_ASSERT(my_locals.size() == 0, NULL);
 			this->table_reserve_for_copy(other);
 			for (base::array* r = other.my_root; r; r = r->next)
 			{
@@ -1177,7 +1176,7 @@ namespace tbb
 						if (s2.empty())
 						{
 							void* lref = &*my_locals.grow_by(1);
-							s2.ptr = new(lref) T(*(U*)s1.ptr);
+							s2.ptr = new(lref)T(*(U*)s1.ptr);
 							s2.key = s1.key;
 						}
 						else

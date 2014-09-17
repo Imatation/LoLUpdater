@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef _TBB_tbb_misc_H
 #define _TBB_tbb_misc_H
@@ -24,7 +24,6 @@
 #include "tbb/tbb_stddef.h"
 #include "tbb/tbb_machine.h"
 #include "tbb/atomic.h" // For atomic_xxx definitions
-
 
 #if __linux__ || __FreeBSD__
 #include <sys/param.h>  // __FreeBSD_version
@@ -49,7 +48,7 @@ namespace tbb
 		// In Win8UI mode, TBB uses a thread creation API that does not allow to specify the stack size.
 		// Still, the thread stack size value, either explicit or default, is used by the scheduler.
 		// So here we set the default value to match the platform's default of 1MB.
-const size_t ThreadStackSize = 1*MByte;
+		const size_t ThreadStackSize = 1 * MByte;
 #else
 		const size_t ThreadStackSize = (sizeof(uintptr_t) <= 4 ? 2 : 4) * MByte;
 #endif
@@ -61,12 +60,11 @@ const size_t ThreadStackSize = 1*MByte;
 
 #else
 
-inline int AvailableHwConcurrency() {
-    int n = __TBB_HardwareConcurrency();
-    return n > 0 ? n : 1; // Fail safety strap
-}
+		inline int AvailableHwConcurrency() {
+			int n = __TBB_HardwareConcurrency();
+			return n > 0 ? n : 1; // Fail safety strap
+		}
 #endif /* __TBB_HardwareConcurrency */
-
 
 #if _WIN32||_WIN64
 
@@ -105,8 +103,8 @@ inline int AvailableHwConcurrency() {
 
 		//! Utility template function returning lesser of the two values.
 		/** Provided here to avoid including not strict safe <algorithm>.\n
-    In case operands cause signed/unsigned or size mismatch warnings it is caller's
-    responsibility to do the appropriate cast before calling the function. **/
+	In case operands cause signed/unsigned or size mismatch warnings it is caller's
+	responsibility to do the appropriate cast before calling the function. **/
 		template <typename T1, typename T2>
 		T1 min(const T1& val1, const T2& val2)
 		{
@@ -115,8 +113,8 @@ inline int AvailableHwConcurrency() {
 
 		//! Utility template function returning greater of the two values.
 		/** Provided here to avoid including not strict safe <algorithm>.\n
-    In case operands cause signed/unsigned or size mismatch warnings it is caller's
-    responsibility to do the appropriate cast before calling the function. **/
+	In case operands cause signed/unsigned or size mismatch warnings it is caller's
+	responsibility to do the appropriate cast before calling the function. **/
 		template <typename T1, typename T2>
 		T1 max(const T1& val1, const T2& val2)
 		{
@@ -142,8 +140,8 @@ inline int AvailableHwConcurrency() {
 		{
 		private:
 #if __TBB_OLD_PRIMES_RNG
-    unsigned x, a;
-    static const unsigned c = 1;
+			unsigned x, a;
+			static const unsigned c = 1;
 #else
 			unsigned x, c;
 			static const unsigned a = 0x9e3779b1; // a big prime number
@@ -195,8 +193,8 @@ inline int AvailableHwConcurrency() {
 			void init(uint32_t seed, int_to_type<4>)
 			{
 #if __TBB_OLD_PRIMES_RNG
-        x = seed;
-        a = GetPrime( seed );
+				x = seed;
+				a = GetPrime(seed);
 #else
 				// threads use different seeds for unique sequences
 				c = (seed | 1) * 0xba5703f5; // c must be odd, shuffle by a prime number
@@ -235,12 +233,12 @@ inline int AvailableHwConcurrency() {
 
 		//! One-time initialization function
 		/** /param initializer Pointer to function without arguments
-           The variant that returns bool is used for cases when initialization can fail
-           and it is OK to continue execution, but the state should be reset so that
-           the initialization attempt was repeated the next time.
-    /param state Shared state associated with initializer that specifies its
-            initialization state. Must be initially set to #uninitialized value
-            (e.g. by means of default static zero initialization). **/
+		   The variant that returns bool is used for cases when initialization can fail
+		   and it is OK to continue execution, but the state should be reset so that
+		   the initialization attempt was repeated the next time.
+		   /param state Shared state associated with initializer that specifies its
+		   initialization state. Must be initially set to #uninitialized value
+		   (e.g. by means of default static zero initialization). **/
 		template <typename F>
 		void atomic_do_once(const F& initializer, atomic<do_once_state>& state)
 		{
@@ -277,22 +275,22 @@ inline int AvailableHwConcurrency() {
 			state = f() ? do_once_executed : do_once_uninitialized;
 		}
 
-#if __TBB_USE_OS_AFFINITY_SYSCALL  
+#if __TBB_USE_OS_AFFINITY_SYSCALL
 #if __linux__
-    typedef cpu_set_t basic_mask_t;
+		typedef cpu_set_t basic_mask_t;
 #elif __FreeBSD_version >= 701000
-    typedef cpuset_t basic_mask_t;
+		typedef cpuset_t basic_mask_t;
 #else
-    #error affinity_helper is not implemented in this OS
+#error affinity_helper is not implemented in this OS
 #endif
-    class affinity_helper : no_copy {
-        basic_mask_t* threadMask;
-        int is_changed;
-    public:
-        affinity_helper() : threadMask(NULL), is_changed(0) {}
-        ~affinity_helper();
-        void protect_affinity_mask();
-    };
+		class affinity_helper : no_copy {
+			basic_mask_t* threadMask;
+			int is_changed;
+		public:
+			affinity_helper() : threadMask(NULL), is_changed(0) {}
+			~affinity_helper();
+			void protect_affinity_mask();
+		};
 #else
 		class affinity_helper : no_copy
 		{

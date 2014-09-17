@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_profiling_H
 #define __TBB_profiling_H
@@ -26,7 +26,7 @@ namespace tbb
 	namespace internal
 	{
 		//
-		// This is not under __TBB_ITT_STRUCTURE_API because these values are used directly in flow_graph.h.  
+		// This is not under __TBB_ITT_STRUCTURE_API because these values are used directly in flow_graph.h.
 		//
 
 		// include list of index names
@@ -35,7 +35,6 @@ namespace tbb
 		enum string_index
 		{
 #include "internal/_tbb_strings.h"
-
 
 			NUM_STRINGS
 		};
@@ -64,33 +63,32 @@ namespace tbb
 #include "tbb_stddef.h"
 
 namespace tbb {
-    namespace internal {
-
+	namespace internal {
 #if _WIN32||_WIN64
-        void __TBB_EXPORTED_FUNC itt_set_sync_name_v3( void *obj, const wchar_t* name );
-        inline size_t multibyte_to_widechar( wchar_t* wcs, const char* mbs, size_t bufsize) {
+		void __TBB_EXPORTED_FUNC itt_set_sync_name_v3(void *obj, const wchar_t* name);
+		inline size_t multibyte_to_widechar(wchar_t* wcs, const char* mbs, size_t bufsize) {
 #if _MSC_VER>=1400
-            size_t len;
-            mbstowcs_s( &len, wcs, bufsize, mbs, _TRUNCATE );
-            return len;   // mbstowcs_s counts null terminator
+			size_t len;
+			mbstowcs_s(&len, wcs, bufsize, mbs, _TRUNCATE);
+			return len;   // mbstowcs_s counts null terminator
 #else
-            size_t len = mbstowcs( wcs, mbs, bufsize );
-            if(wcs && len!=size_t(-1) )
-                wcs[len<bufsize-1? len: bufsize-1] = wchar_t('\0');
-            return len+1; // mbstowcs does not count null terminator
+			size_t len = mbstowcs(wcs, mbs, bufsize);
+			if (wcs && len != size_t(-1))
+				wcs[len < bufsize - 1 ? len : bufsize - 1] = wchar_t('\0');
+			return len + 1; // mbstowcs does not count null terminator
 #endif
-        }
+		}
 #else
-        void __TBB_EXPORTED_FUNC itt_set_sync_name_v3( void *obj, const char* name );
+		void __TBB_EXPORTED_FUNC itt_set_sync_name_v3(void *obj, const char* name);
 #endif
-    } // namespace internal
+	} // namespace internal
 } // namespace tbb
 
 //! Macro __TBB_DEFINE_PROFILING_SET_NAME(T) defines "set_name" methods for sync objects of type T
 /** Should be used in the "tbb" namespace only.
-    Don't place semicolon after it to avoid compiler warnings. **/
+	Don't place semicolon after it to avoid compiler warnings. **/
 #if _WIN32||_WIN64
-    #define __TBB_DEFINE_PROFILING_SET_NAME(sync_object_type)                       \
+#define __TBB_DEFINE_PROFILING_SET_NAME(sync_object_type)                       \
         namespace profiling {                                                       \
             inline void set_name( sync_object_type& obj, const wchar_t* name ) {    \
                 tbb::internal::itt_set_sync_name_v3( &obj, name );                  \
@@ -104,7 +102,7 @@ namespace tbb {
             }                                                                       \
         }
 #else /* !WIN */
-    #define __TBB_DEFINE_PROFILING_SET_NAME(sync_object_type)                       \
+#define __TBB_DEFINE_PROFILING_SET_NAME(sync_object_type)                       \
         namespace profiling {                                                       \
             inline void set_name( sync_object_type& obj, const char* name ) {       \
                 tbb::internal::itt_set_sync_name_v3( &obj, name );                  \
@@ -117,11 +115,11 @@ namespace tbb {
 #if _WIN32||_WIN64
 #define __TBB_DEFINE_PROFILING_SET_NAME(sync_object_type)               \
         namespace profiling {
-	inline void set_name( sync_object_type&, const wchar_t* ) {}
-inline void set_name( sync_object_type&, const char* ) {}
+inline void set_name(sync_object_type&, const wchar_t*) {}
+inline void set_name(sync_object_type&, const char*) {}
 }
 #else /* !WIN */
-    #define __TBB_DEFINE_PROFILING_SET_NAME(sync_object_type)               \
+#define __TBB_DEFINE_PROFILING_SET_NAME(sync_object_type)               \
         namespace profiling {                                               \
             inline void set_name( sync_object_type&, const char* ) {}       \
         }
@@ -138,7 +136,7 @@ namespace tbb
 	{
 		enum notify_type
 		{
-			prepare=0,
+			prepare = 0,
 			cancel,
 			acquired,
 			releasing
@@ -150,20 +148,19 @@ namespace tbb
 		void __TBB_EXPORTED_FUNC itt_store_pointer_with_release_v3(void* dst, void* src);
 		void* __TBB_EXPORTED_FUNC itt_load_pointer_with_acquire_v3(const void* src);
 		void* __TBB_EXPORTED_FUNC itt_load_pointer_v3(const void* src);
-#if __TBB_ITT_STRUCTURE_API   
-        enum itt_domain_enum { ITT_DOMAIN_FLOW=0 };
+#if __TBB_ITT_STRUCTURE_API
+		enum itt_domain_enum { ITT_DOMAIN_FLOW = 0 };
 
-        void __TBB_EXPORTED_FUNC itt_make_task_group_v7( itt_domain_enum domain, void *group, unsigned long long group_extra, 
-                                                         void *parent, unsigned long long parent_extra, string_index name_index ); 
-        void __TBB_EXPORTED_FUNC itt_metadata_str_add_v7( itt_domain_enum domain, void *addr, unsigned long long addr_extra, 
-                                                          string_index key, const char *value ); 
-        void __TBB_EXPORTED_FUNC itt_relation_add_v7( itt_domain_enum domain, void *addr0, unsigned long long addr0_extra, 
-                                                      itt_relation relation, void *addr1, unsigned long long addr1_extra );
-        void __TBB_EXPORTED_FUNC itt_task_begin_v7( itt_domain_enum domain, void *task, unsigned long long task_extra, 
-                                                    void *parent, unsigned long long parent_extra, string_index name_index );
-        void __TBB_EXPORTED_FUNC itt_task_end_v7( itt_domain_enum domain );
+		void __TBB_EXPORTED_FUNC itt_make_task_group_v7(itt_domain_enum domain, void *group, unsigned long long group_extra,
+			void *parent, unsigned long long parent_extra, string_index name_index);
+		void __TBB_EXPORTED_FUNC itt_metadata_str_add_v7(itt_domain_enum domain, void *addr, unsigned long long addr_extra,
+			string_index key, const char *value);
+		void __TBB_EXPORTED_FUNC itt_relation_add_v7(itt_domain_enum domain, void *addr0, unsigned long long addr0_extra,
+			itt_relation relation, void *addr1, unsigned long long addr1_extra);
+		void __TBB_EXPORTED_FUNC itt_task_begin_v7(itt_domain_enum domain, void *task, unsigned long long task_extra,
+			void *parent, unsigned long long parent_extra, string_index name_index);
+		void __TBB_EXPORTED_FUNC itt_task_end_v7(itt_domain_enum domain);
 #endif // __TBB_ITT_STRUCTURE_API
-
 
 		// two template arguments are to workaround /Wp64 warning with tbb::atomic specialized for unsigned type
 		template <typename T, typename U>
@@ -171,12 +168,11 @@ namespace tbb
 		{
 #if TBB_USE_THREADING_TOOLS
 			// This assertion should be replaced with static_assert
-            __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
-            itt_store_pointer_with_release_v3(&dst, (void *)uintptr_t(src));
+			__TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
+			itt_store_pointer_with_release_v3(&dst, (void *)uintptr_t(src));
 #else
 			dst = src;
 #endif // TBB_USE_THREADING_TOOLS
-
 		}
 
 		template <typename T>
@@ -184,21 +180,20 @@ namespace tbb
 		{
 #if TBB_USE_THREADING_TOOLS
 			// This assertion should be replaced with static_assert
-            __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
+			__TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
 #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
 			// Workaround for overzealous compiler warnings
-            #pragma warning (push)
-            #pragma warning (disable: 4311)
+#pragma warning (push)
+#pragma warning (disable: 4311)
 #endif
-            T result = (T)itt_load_pointer_with_acquire_v3(&src);
+			T result = (T)itt_load_pointer_with_acquire_v3(&src);
 #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
-            #pragma warning (pop)
+#pragma warning (pop)
 #endif
-            return result;
+			return result;
 #else
 			return src;
 #endif // TBB_USE_THREADING_TOOLS
-
 		}
 
 		template <typename T>
@@ -206,12 +201,11 @@ namespace tbb
 		{
 #if TBB_USE_THREADING_TOOLS
 			// This assertion should be replaced with static_assert
-            __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
-            itt_store_pointer_with_release_v3(&dst, (void *)src);
+			__TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
+			itt_store_pointer_with_release_v3(&dst, (void *)src);
 #else
 			__TBB_store_with_release(dst, src);
 #endif // TBB_USE_THREADING_TOOLS
-
 		}
 
 		template <typename T>
@@ -219,12 +213,11 @@ namespace tbb
 		{
 #if TBB_USE_THREADING_TOOLS
 			// This assertion should be replaced with static_assert
-            __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized");
-            return (T)itt_load_pointer_with_acquire_v3(&src);
+			__TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized");
+			return (T)itt_load_pointer_with_acquire_v3(&src);
 #else
 			return __TBB_load_with_acquire(src);
 #endif // TBB_USE_THREADING_TOOLS
-
 		}
 
 		template <typename T>
@@ -232,8 +225,8 @@ namespace tbb
 		{
 #if TBB_USE_THREADING_TOOLS
 			//TODO: This assertion should be replaced with static_assert
-            __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized");
-            itt_store_pointer_with_release_v3(&dst, (void *)src);
+			__TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized");
+			itt_store_pointer_with_release_v3(&dst, (void *)src);
 #else
 			dst = src;
 #endif
@@ -245,17 +238,17 @@ namespace tbb
 		{
 #if TBB_USE_THREADING_TOOLS
 			//TODO: This assertion should be replaced with static_assert
-            __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
-            return (T)itt_load_pointer_v3(&src);
+			__TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
+			return (T)itt_load_pointer_v3(&src);
 #else
 			return src;
 #endif
 		}
 
 #if TBB_USE_THREADING_TOOLS
-        inline void call_itt_notify(notify_type t, void *ptr) {
-            call_itt_notify_v5((int)t, ptr);
-        }
+		inline void call_itt_notify(notify_type t, void *ptr) {
+			call_itt_notify_v5((int)t, ptr);
+		}
 
 #else
 		inline void call_itt_notify(notify_type /*t*/, void* /*ptr*/)
@@ -264,33 +257,31 @@ namespace tbb
 
 #endif // TBB_USE_THREADING_TOOLS
 
+#if __TBB_ITT_STRUCTURE_API
+		inline void itt_make_task_group(itt_domain_enum domain, void *group, unsigned long long group_extra,
+			void *parent, unsigned long long parent_extra, string_index name_index) {
+			itt_make_task_group_v7(domain, group, group_extra, parent, parent_extra, name_index);
+		}
 
-#if __TBB_ITT_STRUCTURE_API   
-        inline void itt_make_task_group( itt_domain_enum domain, void *group, unsigned long long group_extra, 
-                                         void *parent, unsigned long long parent_extra, string_index name_index ) {
-            itt_make_task_group_v7( domain, group, group_extra, parent, parent_extra, name_index ); 
-        }
+		inline void itt_metadata_str_add(itt_domain_enum domain, void *addr, unsigned long long addr_extra,
+			string_index key, const char *value) {
+			itt_metadata_str_add_v7(domain, addr, addr_extra, key, value);
+		}
 
-        inline void itt_metadata_str_add( itt_domain_enum domain, void *addr, unsigned long long addr_extra, 
-                                          string_index key, const char *value ) {
-            itt_metadata_str_add_v7( domain, addr, addr_extra, key, value ); 
-        }
+		inline void itt_relation_add(itt_domain_enum domain, void *addr0, unsigned long long addr0_extra,
+			itt_relation relation, void *addr1, unsigned long long addr1_extra) {
+			itt_relation_add_v7(domain, addr0, addr0_extra, relation, addr1, addr1_extra);
+		}
 
-        inline void itt_relation_add( itt_domain_enum domain, void *addr0, unsigned long long addr0_extra, 
-                                      itt_relation relation, void *addr1, unsigned long long addr1_extra ) {
-            itt_relation_add_v7( domain, addr0, addr0_extra, relation, addr1, addr1_extra );
-        }
+		inline void itt_task_begin(itt_domain_enum domain, void *task, unsigned long long task_extra,
+			void *parent, unsigned long long parent_extra, string_index name_index) {
+			itt_task_begin_v7(domain, task, task_extra, parent, parent_extra, name_index);
+		}
 
-        inline void itt_task_begin( itt_domain_enum domain, void *task, unsigned long long task_extra, 
-                                                        void *parent, unsigned long long parent_extra, string_index name_index ) {
-            itt_task_begin_v7( domain, task, task_extra, parent, parent_extra, name_index );
-        }
-
-        inline void itt_task_end( itt_domain_enum domain ) {
-            itt_task_end_v7( domain );
-        }
+		inline void itt_task_end(itt_domain_enum domain) {
+			itt_task_end_v7(domain);
+		}
 #endif // __TBB_ITT_STRUCTURE_API
-
 	} // namespace internal
 } // namespace tbb
 

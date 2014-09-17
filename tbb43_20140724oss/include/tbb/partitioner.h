@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_partitioner_H
 #define __TBB_partitioner_H
@@ -50,7 +50,6 @@
 
 #endif // __TBB_DEFINE_MIC
 
-
 #include "task.h"
 #include "aligned_space.h"
 #include "atomic.h"
@@ -80,7 +79,7 @@ namespace tbb
 		size_t __TBB_EXPORTED_FUNC get_initial_auto_partitioner_divisor();
 
 		//! Defines entry point for affinity partitioner into tbb run-time library.
-		class affinity_partitioner_base_v3: no_copy
+		class affinity_partitioner_base_v3 : no_copy
 		{
 			friend class tbb::affinity_partitioner;
 			friend class tbb::interface7::internal::affinity_partition_type;
@@ -159,7 +158,7 @@ namespace tbb
 			class start_reduce;
 
 			//! Join task node that contains shared flag for stealing feedback
-			class flag_task: public task
+			class flag_task : public task
 			{
 			public:
 				tbb::atomic<bool> my_child_stolen;
@@ -179,11 +178,10 @@ namespace tbb
 					tbb::atomic<bool>& flag = static_cast<flag_task*>(t.parent())->my_child_stolen;
 #if TBB_USE_THREADING_TOOLS
 					// Threading tools respect lock prefix but report false-positive data-race via plain store
-        flag.fetch_and_store<release>(true);
+					flag.fetch_and_store<release>(true);
 #else
 					flag = true;
 #endif //TBB_USE_THREADING_TOOLS
-
 				}
 
 				static bool is_peer_stolen(task& t)
@@ -359,8 +357,7 @@ namespace tbb
 							{ // split until is divisible
 								typename Partition::split_type split_obj = self().template get_split<Range>();
 								start.offer_work(split_obj);
-							}
-							while (range.is_divisible() && self().is_divisible());
+							} while (range.is_divisible() && self().is_divisible());
 						}
 					}
 					if (!range.is_divisible() || !self().max_depth())
@@ -384,15 +381,14 @@ namespace tbb
 							}
 							start.run_body(range_pool.back());
 							range_pool.pop_back();
-						}
-						while (!range_pool.empty() && !start.is_cancelled());
+						} while (!range_pool.empty() && !start.is_cancelled());
 					}
 				}
 			};
 
 			//! Provides default methods for auto (adaptive) partition objects.
 			template <typename Partition>
-			struct adaptive_partition_type_base : partition_type_base<Partition>
+			struct adaptive_partition_type_base : partition_type_base < Partition >
 			{
 				size_t my_divisor;
 				depth_t my_max_depth;
@@ -407,12 +403,12 @@ namespace tbb
 				{
 					my_max_depth = src.my_max_depth;
 #if TBB_USE_ASSERT
-        size_t old_divisor = src.my_divisor;
+					size_t old_divisor = src.my_divisor;
 #endif
 
 #if __TBB_INITIAL_TASK_IMBALANCE
-        if( src.my_divisor <= 1 ) my_divisor = 0;
-        else my_divisor = src.my_divisor = (src.my_divisor + 1u) / 2u;
+					if (src.my_divisor <= 1) my_divisor = 0;
+					else my_divisor = src.my_divisor = (src.my_divisor + 1u) / 2u;
 #else
 					my_divisor = src.my_divisor / 2u;
 					src.my_divisor = src.my_divisor - my_divisor; // TODO: check the effect separately
@@ -422,7 +418,7 @@ namespace tbb
 					// A task which has only one index must produce the right split without reserved index in order to avoid
 					// it to be overwritten in note_affinity() of the created (right) task.
 					// I.e. a task created deeper than the affinity array can remember must not save its affinity (LIFO order)
-					__TBB_ASSERT( (old_divisor <= 1 && my_divisor == 0) ||
+					__TBB_ASSERT((old_divisor <= 1 && my_divisor == 0) ||
 						(old_divisor > 1 && my_divisor != 0), NULL);
 				}
 
@@ -477,7 +473,7 @@ namespace tbb
 			};
 
 			template <typename T>
-			struct enable_if<false, T>
+			struct enable_if < false, T >
 			{
 			};
 
@@ -493,7 +489,7 @@ namespace tbb
 			{
 			private:
 				typedef char yes[1];
-				typedef char no [2];
+				typedef char no[2];
 
 				template <typename range_type>
 				static yes& decide(typename enable_if<range_type::is_divisible_in_proportion>::type*);
@@ -506,7 +502,7 @@ namespace tbb
 			};
 
 			//! Provides default methods for affinity (adaptive) partition objects.
-			class affinity_partition_type : public adaptive_partition_type_base<affinity_partition_type>
+			class affinity_partition_type : public adaptive_partition_type_base < affinity_partition_type >
 			{
 				static const unsigned factor_power = 4;
 				static const unsigned factor = 1 << factor_power; // number of slots in affinity array per task
@@ -517,7 +513,7 @@ namespace tbb
 					pass
 				} my_delay;
 #ifdef __TBB_USE_MACHINE_TIME_STAMPS
-    machine_tsc_t my_dst_tsc;
+				machine_tsc_t my_dst_tsc;
 #endif
 				size_t my_begin;
 				tbb::internal::affinity_id* my_array;
@@ -526,27 +522,27 @@ namespace tbb
 
 				affinity_partition_type(tbb::internal::affinity_partitioner_base_v3& ap)
 					: adaptive_partition_type_base<affinity_partition_type>(),
-					  my_delay(start)
+					my_delay(start)
 #ifdef __TBB_USE_MACHINE_TIME_STAMPS
-        , my_dst_tsc(0)
+					, my_dst_tsc(0)
 #endif
 				{
-					__TBB_ASSERT( (factor&(factor-1))==0, "factor must be power of two" );
+					__TBB_ASSERT((factor&(factor - 1)) == 0, "factor must be power of two");
 					my_divisor *= factor;
 					ap.resize(factor);
 					my_array = ap.my_array;
 					my_begin = 0;
 					my_max_depth = factor_power + 1; // the first factor_power ranges will be spawned, and >=1 ranges should be left
-					__TBB_ASSERT( my_max_depth < __TBB_RANGE_POOL_CAPACITY, 0 );
+					__TBB_ASSERT(my_max_depth < __TBB_RANGE_POOL_CAPACITY, 0);
 				}
 
 				affinity_partition_type(affinity_partition_type& p, split)
 					: adaptive_partition_type_base<affinity_partition_type>(p, split()),
-					  my_delay(pass),
+					my_delay(pass),
 #ifdef __TBB_USE_MACHINE_TIME_STAMPS
-          my_dst_tsc(0),
+					my_dst_tsc(0),
 #endif
-					  my_array(p.my_array)
+					my_array(p.my_array)
 				{
 					// the sum of the divisors represents original value of p.my_divisor before split
 					__TBB_ASSERT(my_divisor + p.my_divisor <= factor, NULL);
@@ -555,11 +551,11 @@ namespace tbb
 
 				affinity_partition_type(affinity_partition_type& p, const proportional_split& split_obj)
 					: adaptive_partition_type_base<affinity_partition_type>(p, split_obj),
-					  my_delay(start),
+					my_delay(start),
 #ifdef __TBB_USE_MACHINE_TIME_STAMPS
-          my_dst_tsc(0),
+					my_dst_tsc(0),
 #endif
-					  my_array(p.my_array)
+					my_array(p.my_array)
 				{
 					size_t total_divisor = my_divisor + p.my_divisor;
 					__TBB_ASSERT(total_divisor % factor == 0, NULL);
@@ -614,17 +610,17 @@ namespace tbb
 #ifndef __TBB_USE_MACHINE_TIME_STAMPS
 						my_delay = pass;
 #else
-            my_dst_tsc = __TBB_machine_time_stamp() + __TBB_task_duration();
-            my_delay = run;
-        } else if( run == my_delay ) {
-            if( __TBB_machine_time_stamp() < my_dst_tsc ) {
-                __TBB_ASSERT(my_max_depth > 0, NULL);
-                return false;
-            }
-            my_delay = pass;
-            return true;
+						my_dst_tsc = __TBB_machine_time_stamp() + __TBB_task_duration();
+						my_delay = run;
+					}
+					else if (run == my_delay) {
+						if (__TBB_machine_time_stamp() < my_dst_tsc) {
+							__TBB_ASSERT(my_max_depth > 0, NULL);
+							return false;
+						}
+						my_delay = pass;
+						return true;
 #endif // __TBB_USE_MACHINE_TIME_STAMPS
-
 					}
 					return false;
 				}
@@ -646,7 +642,7 @@ namespace tbb
 					{
 						size_t size = my_divisor / factor;
 #if __TBB_NONUNIFORM_TASK_CREATION
-            size_t right = (size + 2) / 3;
+						size_t right = (size + 2) / 3;
 #else
 						size_t right = size / 2;
 #endif
@@ -662,11 +658,10 @@ namespace tbb
 #pragma warning( pop )
 #endif // warning 4127 is back
 
-
 				static const unsigned range_pool_size = __TBB_RANGE_POOL_CAPACITY;
 			};
 
-			class auto_partition_type: public adaptive_partition_type_base<auto_partition_type>
+			class auto_partition_type : public adaptive_partition_type_base < auto_partition_type >
 			{
 			public:
 				auto_partition_type(const auto_partitioner&)
@@ -705,7 +700,7 @@ namespace tbb
 				static const unsigned range_pool_size = __TBB_RANGE_POOL_CAPACITY;
 			};
 
-			class simple_partition_type: public partition_type_base<simple_partition_type>
+			class simple_partition_type : public partition_type_base < simple_partition_type >
 			{
 			public:
 				simple_partition_type(const simple_partitioner&)
@@ -730,7 +725,7 @@ namespace tbb
 			};
 
 			//! Backward-compatible partition for auto and affinity partition objects.
-			class old_auto_partition_type: public tbb::internal::partition_type_base
+			class old_auto_partition_type : public tbb::internal::partition_type_base
 			{
 				size_t num_chunks;
 				static const size_t VICTIM_CHUNKS = 4;
@@ -763,7 +758,7 @@ namespace tbb
 
 	//! A simple partitioner
 	/** Divides the range until the range is not divisible.
-    @ingroup algorithms */
+	@ingroup algorithms */
 	class simple_partitioner
 	{
 	public:
@@ -782,7 +777,7 @@ namespace tbb
 		friend class internal::start_scan;
 
 		// backward compatibility
-		class partition_type: public internal::partition_type_base
+		class partition_type : public internal::partition_type_base
 		{
 		public:
 			bool should_execute_range(const task&)
@@ -808,8 +803,8 @@ namespace tbb
 
 	//! An auto partitioner
 	/** The range is initial divided into several large chunks.
-    Chunks are further subdivided into smaller pieces if demand detected and they are divisible.
-    @ingroup algorithms */
+	Chunks are further subdivided into smaller pieces if demand detected and they are divisible.
+	@ingroup algorithms */
 	class auto_partitioner
 	{
 	public:
@@ -836,7 +831,7 @@ namespace tbb
 	};
 
 	//! An affinity partitioner
-	class affinity_partitioner: internal::affinity_partitioner_base_v3
+	class affinity_partitioner : internal::affinity_partitioner_base_v3
 	{
 	public:
 		affinity_partitioner()

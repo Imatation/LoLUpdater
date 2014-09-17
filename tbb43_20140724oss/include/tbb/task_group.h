@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_task_group_H
 #define __TBB_task_group_H
@@ -114,8 +114,8 @@ namespace tbb
 				__TBB_TRY
 				{
 					if (!my_context.is_group_execution_cancelled())
-						f();
-				} __TBB_CATCH( ... )
+					f();
+				} __TBB_CATCH(...)
 				{
 					my_context.register_pending_exception();
 				}
@@ -140,14 +140,14 @@ namespace tbb
 				if (my_root->ref_count() > 1)
 				{
 					bool stack_unwinding_in_progress = std::uncaught_exception();
-					// Always attempt to do proper cleanup to avoid inevitable memory corruption 
+					// Always attempt to do proper cleanup to avoid inevitable memory corruption
 					// in case of missing wait (for the sake of better testability & debuggability)
 					if (!is_canceling())
 						cancel();
 					__TBB_TRY
 					{
 						my_root->wait_for_all();
-					} __TBB_CATCH (...)
+					} __TBB_CATCH(...)
 					{
 						task::destroy(*my_root);
 						__TBB_RETHROW();
@@ -173,7 +173,7 @@ namespace tbb
 				__TBB_TRY
 				{
 					my_root->wait_for_all();
-				} __TBB_CATCH( ... )
+				} __TBB_CATCH(...)
 				{
 					my_context.reset();
 					__TBB_RETHROW();
@@ -206,10 +206,10 @@ namespace tbb
 		}
 
 #if __SUNPRO_CC
-    template<typename F>
-    void run( task_handle<F>& h ) {
-        internal_run< task_handle<F>, internal::task_handle_task<F> >( h );
-    }
+		template<typename F>
+		void run(task_handle<F>& h) {
+			internal_run< task_handle<F>, internal::task_handle_task<F> >(h);
+		}
 #else
 		using task_group_base::run;
 #endif
@@ -253,7 +253,7 @@ namespace tbb
 	}; // class structured_task_group
 
 	inline
-	bool is_current_task_group_canceling()
+		bool is_current_task_group_canceling()
 	{
 		return task::self().is_cancelled();
 	}

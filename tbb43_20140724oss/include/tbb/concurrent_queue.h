@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_concurrent_queue_H
 #define __TBB_concurrent_queue_H
@@ -29,10 +29,10 @@ namespace tbb
 	{
 		//! A high-performance thread-safe non-blocking concurrent queue.
 		/** Multiple threads may each push and pop concurrently.
-    Assignment construction is not allowed.
-    @ingroup containers */
+	Assignment construction is not allowed.
+	@ingroup containers */
 		template <typename T, typename A = cache_aligned_allocator<T>>
-		class concurrent_queue: public internal::concurrent_queue_base_v3<T>
+		class concurrent_queue : public internal::concurrent_queue_base_v3 < T >
 		{
 			template <typename Container, typename Value>
 			friend class internal::concurrent_queue_iterator;
@@ -60,13 +60,13 @@ namespace tbb
 
 			static void copy_construct_item(T* location, const void* src)
 			{
-				new(location) T(*static_cast<const T*>(src));
+				new(location)T(*static_cast<const T*>(src));
 			}
 
 #if __TBB_CPP11_RVALUE_REF_PRESENT
 			static void move_construct_item(T* location, const void* src)
 			{
-				new(location) T(std::move(*static_cast<T*>(const_cast<void*>(src))));
+				new(location)T(std::move(*static_cast<T*>(const_cast<void*>(src))));
 			}
 #endif /* __TBB_CPP11_RVALUE_REF_PRESENT */
 		public:
@@ -163,7 +163,7 @@ namespace tbb
 
 			//! Attempt to dequeue an item from head of queue.
 			/** Does not wait for item to become available.
-        Returns true if successful; false otherwise. */
+		Returns true if successful; false otherwise. */
 			bool try_pop(T& result)
 			{
 				return this->internal_try_pop(&result);
@@ -237,12 +237,12 @@ namespace tbb
 
 	//! A high-performance thread-safe blocking concurrent bounded queue.
 	/** This is the pre-PPL TBB concurrent queue which supports boundedness and blocking semantics.
-    Note that method names agree with the PPL-style concurrent queue.
-    Multiple threads may each push and pop concurrently.
-    Assignment construction is not allowed.
-    @ingroup containers */
+	Note that method names agree with the PPL-style concurrent queue.
+	Multiple threads may each push and pop concurrently.
+	Assignment construction is not allowed.
+	@ingroup containers */
 	template <typename T, class A = cache_aligned_allocator<T>>
-	class concurrent_bounded_queue: public internal::concurrent_queue_base_v8
+	class concurrent_bounded_queue : public internal::concurrent_queue_base_v8
 	{
 		template <typename Container, typename Value>
 		friend class internal::concurrent_queue_iterator;
@@ -255,7 +255,7 @@ namespace tbb
 		typedef typename concurrent_queue_base_v3::copy_specifics copy_specifics;
 
 		//! Class used to ensure exception-safety of method "pop"
-		class destroyer: internal::no_copy
+		class destroyer : internal::no_copy
 		{
 			T& my_value;
 		public:
@@ -271,7 +271,7 @@ namespace tbb
 
 		T& get_ref(page& p, size_t index)
 		{
-			__TBB_ASSERT( index<items_per_page, NULL );
+			__TBB_ASSERT(index < items_per_page, NULL);
 			return (&static_cast<padded_page*>(static_cast<void*>(&p))->last)[index];
 		}
 
@@ -288,9 +288,9 @@ namespace tbb
 			new(&get_ref(dst, index)) T(std::move(*static_cast<T*>(const_cast<void*>(src))));
 		}
 #else
-		/*override*/ virtual void move_item( page&, size_t, const void* ) {
-        __TBB_ASSERT( false, "Unreachable code" );
-    }
+		/*override*/ virtual void move_item(page&, size_t, const void*) {
+			__TBB_ASSERT(false, "Unreachable code");
+		}
 #endif
 
 		/*override*/
@@ -306,9 +306,9 @@ namespace tbb
 			new(&get_ref(dst, dindex)) T(std::move(get_ref(const_cast<page&>(src), sindex)));
 		}
 #else
-		/*override*/ virtual void move_page_item( page&, size_t, const page&, size_t ) {
-        __TBB_ASSERT( false, "Unreachable code" );
-    }
+		/*override*/ virtual void move_page_item(page&, size_t, const page&, size_t) {
+			__TBB_ASSERT(false, "Unreachable code");
+		}
 #endif
 
 		/*override*/
@@ -351,7 +351,7 @@ namespace tbb
 
 		//! Integral type for representing size of the queue.
 		/** Note that the size_type is a signed integral type.
-        This is because the size can be negative if there are pending pops without corresponding pushes. */
+		This is because the size can be negative if there are pending pops without corresponding pushes. */
 		typedef std::ptrdiff_t size_type;
 
 		//! Difference type for iterator
@@ -399,7 +399,7 @@ namespace tbb
 		//! [begin,end) constructor
 		template <typename InputIterator>
 		concurrent_bounded_queue(InputIterator begin, InputIterator end,
-		                         const allocator_type& a = allocator_type())
+			const allocator_type& a = allocator_type())
 			: concurrent_queue_base_v8(sizeof(T)), my_allocator(a)
 		{
 			for (; begin != end; ++begin)
@@ -448,7 +448,7 @@ namespace tbb
 
 		//! Enqueue an item at tail of queue if queue is not already full.
 		/** Does not wait for queue to become not full.
-        Returns true if item is pushed; false if queue was already full. */
+		Returns true if item is pushed; false if queue was already full. */
 		bool try_push(const T& source)
 		{
 			return internal_push_if_not_full(&source);
@@ -457,7 +457,7 @@ namespace tbb
 #if __TBB_CPP11_RVALUE_REF_PRESENT
 		//! Move an item at tail of queue if queue is not already full.
 		/** Does not wait for queue to become not full.
-        Returns true if item is pushed; false if queue was already full. */
+		Returns true if item is pushed; false if queue was already full. */
 		bool try_push(T&& source)
 		{
 			return internal_push_move_if_not_full(&source);
@@ -473,16 +473,16 @@ namespace tbb
 
 		//! Attempt to dequeue an item from head of queue.
 		/** Does not wait for item to become available.
-        Returns true if successful; false otherwise. */
+		Returns true if successful; false otherwise. */
 		bool try_pop(T& destination)
 		{
 			return internal_pop_if_present(&destination);
 		}
 
 		//! Return number of pushes minus number of pops.
-		/** Note that the result can be negative if there are pops waiting for the 
-        corresponding pushes.  The result can also exceed capacity() if there 
-        are push operations in flight. */
+		/** Note that the result can be negative if there are pops waiting for the
+		corresponding pushes.  The result can also exceed capacity() if there
+		are push operations in flight. */
 		size_type size() const
 		{
 			return internal_size();
@@ -502,7 +502,7 @@ namespace tbb
 
 		//! Set the capacity
 		/** Setting the capacity to 0 causes subsequent try_push operations to always fail,
-        and subsequent push operations to block forever. */
+		and subsequent push operations to block forever. */
 		void set_capacity(size_type new_capacity)
 		{
 			internal_set_capacity(new_capacity, sizeof(T));

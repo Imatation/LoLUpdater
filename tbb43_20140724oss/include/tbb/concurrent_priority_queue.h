@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_concurrent_priority_queue_H
 #define __TBB_concurrent_priority_queue_H
@@ -42,7 +42,7 @@ namespace tbb
 		using namespace tbb::internal;
 
 		//! Concurrent priority queue
-		template <typename T, typename Compare=std::less<T>, typename A=cache_aligned_allocator<T>>
+		template <typename T, typename Compare = std::less<T>, typename A = cache_aligned_allocator<T>>
 		class concurrent_priority_queue
 		{
 		public:
@@ -91,7 +91,7 @@ namespace tbb
 #if __TBB_INITIALIZER_LISTS_PRESENT
 			//! Constructor from std::initializer_list
 			concurrent_priority_queue(std::initializer_list<T> init_list, const allocator_type& a = allocator_type()) :
-				mark(0),data(init_list.begin(), init_list.end(), a)
+				mark(0), data(init_list.begin(), init_list.end(), a)
 			{
 				my_aggregator.initialize_handler(my_functor_t(this));
 				heapify();
@@ -99,11 +99,10 @@ namespace tbb
 			}
 #endif //# __TBB_INITIALIZER_LISTS_PRESENT
 
-
 			//! Copy constructor
 			/** This operation is unsafe if there are pending concurrent operations on the src queue. */
 			explicit concurrent_priority_queue(const concurrent_priority_queue& src) : mark(src.mark),
-			                                                                           my_size(src.my_size), data(src.data.begin(), src.data.end(), src.data.get_allocator())
+				my_size(src.my_size), data(src.data.begin(), src.data.end(), src.data.get_allocator())
 			{
 				my_aggregator.initialize_handler(my_functor_t(this));
 				heapify();
@@ -112,7 +111,7 @@ namespace tbb
 			//! Copy constructor with specific allocator
 			/** This operation is unsafe if there are pending concurrent operations on the src queue. */
 			concurrent_priority_queue(const concurrent_priority_queue& src, const allocator_type& a) : mark(src.mark),
-			                                                                                           my_size(src.my_size), data(src.data.begin(), src.data.end(), a)
+				my_size(src.my_size), data(src.data.begin(), src.data.end(), a)
 			{
 				my_aggregator.initialize_handler(my_functor_t(this));
 				heapify();
@@ -135,7 +134,7 @@ namespace tbb
 			//! Move constructor
 			/** This operation is unsafe if there are pending concurrent operations on the src queue. */
 			concurrent_priority_queue(concurrent_priority_queue&& src) : mark(src.mark),
-			                                                             my_size(src.my_size), data(std::move(src.data))
+				my_size(src.my_size), data(std::move(src.data))
 			{
 				my_aggregator.initialize_handler(my_functor_t(this));
 			}
@@ -143,26 +142,26 @@ namespace tbb
 			//! Move constructor with specific allocator
 			/** This operation is unsafe if there are pending concurrent operations on the src queue. */
 			concurrent_priority_queue(concurrent_priority_queue&& src, const allocator_type& a) : mark(src.mark),
-			                                                                                      my_size(src.my_size),
-#if __TBB_ALLOCATOR_TRAITS_PRESENT             
-			                                                                                      data(std::move(src.data), a)
+				my_size(src.my_size),
+#if __TBB_ALLOCATOR_TRAITS_PRESENT
+				data(std::move(src.data), a)
 #else
-			// Some early version of C++11 STL vector does not have a constructor of vector(vector&& , allocator).
-			// It seems that the reason is absence of support of allocator_traits (stateful allocators).
-        data(a)
+				// Some early version of C++11 STL vector does not have a constructor of vector(vector&& , allocator).
+				// It seems that the reason is absence of support of allocator_traits (stateful allocators).
+				data(a)
 #endif //__TBB_ALLOCATOR_TRAITS_PRESENT
 
 			{
 				my_aggregator.initialize_handler(my_functor_t(this));
-#if !__TBB_ALLOCATOR_TRAITS_PRESENT             
-        if (a != src.data.get_allocator()){
-            data.reserve(src.data.size());
-            data.assign(std::make_move_iterator(src.data.begin()), std::make_move_iterator(src.data.end()));
-        }else{
-            data = std::move(src.data);
-        }
+#if !__TBB_ALLOCATOR_TRAITS_PRESENT
+				if (a != src.data.get_allocator()){
+					data.reserve(src.data.size());
+					data.assign(std::make_move_iterator(src.data.begin()), std::make_move_iterator(src.data.end()));
+				}
+				else{
+					data = std::move(src.data);
+				}
 #endif //!__TBB_ALLOCATOR_TRAITS_PRESENT
-
 			}
 
 			//! Move assignment operator
@@ -173,10 +172,11 @@ namespace tbb
 				{
 					mark = src.mark;
 					my_size = src.my_size;
-#if !__TBB_ALLOCATOR_TRAITS_PRESENT             
-            if (data.get_allocator() != src.data.get_allocator()){
-                vector_t(std::make_move_iterator(src.data.begin()), std::make_move_iterator(src.data.end()), data.get_allocator()).swap(data);
-            }else
+#if !__TBB_ALLOCATOR_TRAITS_PRESENT
+					if (data.get_allocator() != src.data.get_allocator()){
+						vector_t(std::make_move_iterator(src.data.begin()), std::make_move_iterator(src.data.end()), data.get_allocator()).swap(data);
+					}
+					else
 #endif //!__TBB_ALLOCATOR_TRAITS_PRESENT
 
 					{
@@ -186,7 +186,6 @@ namespace tbb
 				return *this;
 			}
 #endif //__TBB_CPP11_RVALUE_REF_PRESENT
-
 
 			//! Assign the queue from [begin,end) range, not thread-safe
 			template <typename InputIterator>
@@ -213,10 +212,9 @@ namespace tbb
 			}
 #endif //# __TBB_INITIALIZER_LISTS_PRESENT
 
-
 			//! Returns true if empty, false otherwise
 			/** Returned value may not reflect results of pending operations.
-        This operation reads shared data and will trigger a race condition. */
+		This operation reads shared data and will trigger a race condition. */
 			bool empty() const
 			{
 				return size() == 0;
@@ -224,7 +222,7 @@ namespace tbb
 
 			//! Returns the current number of elements contained in the queue
 			/** Returned value may not reflect results of pending operations.
-        This operation reads shared data and will trigger a race condition. */
+		This operation reads shared data and will trigger a race condition. */
 			size_type size() const
 			{
 				return __TBB_load_with_acquire(my_size);
@@ -264,8 +262,8 @@ namespace tbb
 
 			//! Gets a reference to and removes highest priority element
 			/** If a highest priority element was found, sets elem and returns true,
-        otherwise returns false.
-        This operation can be safely used concurrently with other push, try_pop or emplace operations. */
+		otherwise returns false.
+		This operation can be safely used concurrently with other push, try_pop or emplace operations. */
 			bool try_pop(reference elem)
 			{
 				cpq_operation op_data(POP_OP);
@@ -276,8 +274,8 @@ namespace tbb
 
 			//! Clear the queue; not thread-safe
 			/** This operation is unsafe if there are pending concurrent operations on the queue.
-        Resets size, effectively emptying queue; does not free space.
-        May not clear elements added in pending operations. */
+		Resets size, effectively emptying queue; does not free space.
+		May not clear elements added in pending operations. */
 			void clear()
 			{
 				data.clear();
@@ -312,12 +310,12 @@ namespace tbb
 
 			enum operation_status
 			{
-				WAIT=0,
+				WAIT = 0,
 				SUCCEEDED,
 				FAILED
 			};
 
-			class cpq_operation : public aggregated_operation<cpq_operation>
+			class cpq_operation : public aggregated_operation < cpq_operation >
 			{
 			public:
 				operation_type type;
@@ -369,21 +367,21 @@ namespace tbb
 			//! Storage for the heap of elements in queue, plus unheapified elements
 			/** data has the following structure:
 
-         binary unheapified
-          heap   elements
-        ____|_______|____
-        |       |       |
-        v       v       v
-        [_|...|_|_|...|_| |...| ]
-         0       ^       ^       ^
-                 |       |       |__capacity
-                 |       |__my_size
-                 |__mark
+		 binary unheapified
+		 heap   elements
+		 ____|_______|____
+		 |       |       |
+		 v       v       v
+		 [_|...|_|_|...|_| |...| ]
+		 0       ^       ^       ^
+		 |       |       |__capacity
+		 |       |__my_size
+		 |__mark
 
-        Thus, data stores the binary heap starting at position 0 through
-        mark-1 (it may be empty).  Then there are 0 or more elements
-        that have not yet been inserted into the heap, in positions
-        mark through my_size-1. */
+		 Thus, data stores the binary heap starting at position 0 through
+		 mark-1 (it may be empty).  Then there are 0 or more elements
+		 that have not yet been inserted into the heap, in positions
+		 mark through my_size-1. */
 			typedef std::vector<value_type, allocator_type> vector_t;
 			vector_t data;
 
@@ -418,7 +416,7 @@ namespace tbb
 							__TBB_store_with_release(my_size, my_size - 1);
 							itt_store_word_with_release(tmp->status, uintptr_t(SUCCEEDED));
 							data.pop_back();
-							__TBB_ASSERT(mark<=data.size(), NULL);
+							__TBB_ASSERT(mark <= data.size(), NULL);
 						}
 						else
 						{ // no convenient item to pop; postpone
@@ -428,7 +426,7 @@ namespace tbb
 					}
 					else
 					{ // PUSH_OP or PUSH_RVALUE_OP
-						__TBB_ASSERT(tmp->type == PUSH_OP || tmp->type == PUSH_RVALUE_OP, "Unknown operation" );
+						__TBB_ASSERT(tmp->type == PUSH_OP || tmp->type == PUSH_RVALUE_OP, "Unknown operation");
 						__TBB_TRY
 						{
 							if (tmp->type == PUSH_OP)
@@ -460,7 +458,7 @@ namespace tbb
 					}
 					else
 					{
-						__TBB_ASSERT(mark<=data.size(), NULL);
+						__TBB_ASSERT(mark <= data.size(), NULL);
 						if (mark < data.size() &&
 							compare(data[0], data[data.size() - 1]))
 						{
@@ -502,8 +500,7 @@ namespace tbb
 						if (!compare(data[parent], to_place)) break;
 						data[cur_pos] = move(data[parent]);
 						cur_pos = parent;
-					}
-					while (cur_pos);
+					} while (cur_pos);
 					data[cur_pos] = move(to_place);
 				}
 			}

@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_concurrent_vector_H
 #define __TBB_concurrent_vector_H
@@ -96,9 +96,9 @@ namespace tbb
 				/** Declared volatile because in weak memory model, must have ld.acq/st.rel  */
 				void* volatile array;
 #if TBB_USE_ASSERT
-            ~segment_t() {
-                __TBB_ASSERT( !array, "should have been set to NULL by clear" );
-            }
+				~segment_t() {
+					__TBB_ASSERT(!array, "should have been set to NULL by clear");
+				}
 #endif /* TBB_USE_ASSERT */
 			};
 
@@ -122,22 +122,22 @@ namespace tbb
 
 			//! An operation on an n-element array starting at begin.
 			typedef void(__TBB_EXPORTED_FUNC
-			*
-			internal_array_op1
-			)
-			(
-			void *begin, size_type n
-			);
+				*
+				internal_array_op1
+				)
+				(
+				void *begin, size_type n
+				);
 
 			//! An operation on n-element destination array and n-element source array.
 			typedef void(__TBB_EXPORTED_FUNC
-			*
-			internal_array_op2
-			)
-			(
-			void *dst, 
-			const void *src, size_type n
-			);
+				*
+				internal_array_op2
+				)
+				(
+				void *dst,
+				const void *src, size_type n
+				);
 
 			void __TBB_EXPORTED_METHOD internal_grow_to_at_least(size_type new_size, size_type element_size, internal_array_op1 init);
 			void internal_grow(size_type start, size_type finish, size_type element_size, internal_array_op1 init);
@@ -146,7 +146,7 @@ namespace tbb
 			void __TBB_EXPORTED_METHOD internal_clear(internal_array_op1 destroy, bool reclaim_storage);
 			void __TBB_EXPORTED_METHOD internal_copy(const concurrent_vector_base& src, size_type element_size, internal_array_op2 copy);
 			void __TBB_EXPORTED_METHOD internal_assign(const concurrent_vector_base& src, size_type element_size,
-			                                           internal_array_op1 destroy, internal_array_op2 assign, internal_array_op2 copy);
+				internal_array_op1 destroy, internal_array_op2 assign, internal_array_op2 copy);
 		private:
 			//! Private functionality that does not cross DLL boundary.
 			class helper;
@@ -155,12 +155,12 @@ namespace tbb
 
 		//! Meets requirements of a forward iterator for STL and a Value for a blocked_range.*/
 		/** Value is either the T or const T type of the container.
-        @ingroup containers */
+		@ingroup containers */
 		template <typename Container, typename Value>
 		class vector_iterator
 #if defined(_WIN64) && defined(_MSC_VER)
 			// Ensure that Microsoft's internal template function _Val_type works correctly.
-        : public std::iterator<std::random_access_iterator_tag,Value>
+			: public std::iterator < std::random_access_iterator_tag, Value >
 #endif /* defined(_WIN64) && defined(_MSC_VER) */
 		{
 			//! concurrent_vector over which we are iterating.
@@ -186,8 +186,8 @@ namespace tbb
 			friend class internal::vector_iterator;
 
 #if !defined(_MSC_VER) || defined(__INTEL_COMPILER)
-        template<typename T>
-        friend class tbb::concurrent_vector;
+			template<typename T>
+			friend class tbb::concurrent_vector;
 #else
 		public: // workaround for MSVC
 #endif
@@ -272,7 +272,7 @@ namespace tbb
 					// min_segment_size is a power of 2.
 					if ((k & k - concurrent_vector<Container>::min_segment_size) == 0)
 					{
-						// k is a power of two that is at least k-min_segment_size  
+						// k is a power of two that is at least k-min_segment_size
 						my_item = NULL;
 					}
 					else
@@ -294,7 +294,7 @@ namespace tbb
 					// min_segment_size is a power of 2.
 					if ((k & k - concurrent_vector<Container>::min_segment_size) == 0)
 					{
-						// k is a power of two that is at least k-min_segment_size  
+						// k is a power of two that is at least k-min_segment_size
 						my_item = NULL;
 					}
 					else
@@ -377,13 +377,13 @@ namespace tbb
 	//! Concurrent vector
 	/** @ingroup containers */
 	template <typename T>
-	class concurrent_vector: private internal::concurrent_vector_base
+	class concurrent_vector : private internal::concurrent_vector_base
 	{
 	public:
 		using internal::concurrent_vector_base::size_type;
 	private:
 		template <typename I>
-		class generic_range_type: public blocked_range<I>
+		class generic_range_type : public blocked_range < I >
 		{
 		public:
 			typedef T value_type;
@@ -461,7 +461,7 @@ namespace tbb
 
 		//! Get reference to element at given index.
 		/** This method is thread-safe for concurrent reads, and also while growing the vector,
-        as long as the calling thread has checked that index&lt;size(). */
+		as long as the calling thread has checked that index&lt;size(). */
 		reference operator[](size_type index)
 		{
 			return internal_subscript(index);
@@ -485,11 +485,11 @@ namespace tbb
 		typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 #else
 		// Use non-standard std::reverse_iterator
-    typedef std::reverse_iterator<iterator,T,T&,T*> reverse_iterator;
-    typedef std::reverse_iterator<const_iterator,T,const T&,const T*> const_reverse_iterator;
+		typedef std::reverse_iterator<iterator, T, T&, T*> reverse_iterator;
+		typedef std::reverse_iterator<const_iterator, T, const T&, const T*> const_reverse_iterator;
 #endif /* defined(_MSC_VER) && (_MSC_VER<1300) */
 
-		// Forward sequence 
+		// Forward sequence
 		iterator begin()
 		{
 			return iterator(*this, 0);
@@ -572,7 +572,7 @@ namespace tbb
 
 		//! Allocate enough space to grow to size n without having to allocate more memory later.
 		/** Like most of the methods provided for STL compatibility, this method is *not* thread safe.
-        The capacity afterwards may be bigger than the requested reservation. */
+		The capacity afterwards may be bigger than the requested reservation. */
 		void reserve(size_type n)
 		{
 			if (n)

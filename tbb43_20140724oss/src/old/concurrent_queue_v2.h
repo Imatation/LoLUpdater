@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_concurrent_queue_H
 #define __TBB_concurrent_queue_H
@@ -39,8 +39,8 @@ namespace tbb
 
 		//! For internal use only.
 		/** Type-independent portion of concurrent_queue.
-    @ingroup containers */
-		class concurrent_queue_base: no_copy
+	@ingroup containers */
+		class concurrent_queue_base : no_copy
 		{
 			//! Internal representation
 			concurrent_queue_rep* my_rep;
@@ -139,16 +139,16 @@ namespace tbb
 
 		//! Meets requirements of a forward iterator for STL.
 		/** Value is either the T or const T type of the container.
-    @ingroup containers */
+	@ingroup containers */
 		template <typename Container, typename Value>
-		class concurrent_queue_iterator: public concurrent_queue_iterator_base
+		class concurrent_queue_iterator : public concurrent_queue_iterator_base
 		{
 #if !defined(_MSC_VER) || defined(__INTEL_COMPILER)
-    template<typename T>
-    friend class ::tbb::concurrent_queue;
+			template<typename T>
+			friend class ::tbb::concurrent_queue;
 #else
 		public: // workaround for MSVC
-#endif 
+#endif
 			//! Construct iterator pointing to head of queue.
 			concurrent_queue_iterator(const concurrent_queue_base& queue) :
 				concurrent_queue_iterator_base(queue)
@@ -160,8 +160,8 @@ namespace tbb
 			{
 			}
 
-			/** If Value==Container::value_type, then this routine is the copy constructor. 
-        If Value==const Container::value_type, then this routine is a conversion constructor. */
+			/** If Value==Container::value_type, then this routine is the copy constructor.
+		If Value==const Container::value_type, then this routine is a conversion constructor. */
 			concurrent_queue_iterator(const concurrent_queue_iterator<Container, typename Container::value_type>& other) :
 				concurrent_queue_iterator_base(other)
 			{
@@ -174,7 +174,7 @@ namespace tbb
 				return *this;
 			}
 
-			//! Reference to current item 
+			//! Reference to current item
 			Value& operator*() const
 			{
 				return *static_cast<Value*>(my_item);
@@ -217,15 +217,15 @@ namespace tbb
 
 	//! A high-performance thread-safe queue.
 	/** Multiple threads may each push and pop concurrently.
-    Assignment and copy construction are not allowed.
-    @ingroup containers */
+	Assignment and copy construction are not allowed.
+	@ingroup containers */
 	template <typename T>
-	class concurrent_queue: public internal::concurrent_queue_base
+	class concurrent_queue : public internal::concurrent_queue_base
 	{
 		template <typename Container, typename Value>
 		friend class internal::concurrent_queue_iterator;
 
-		//! Class used to ensure exception-safety of method "pop" 
+		//! Class used to ensure exception-safety of method "pop"
 		class destroyer
 		{
 			T& my_value;
@@ -272,7 +272,7 @@ namespace tbb
 
 		//! Integral type for representing size of the queue.
 		/** Note that the size_type is a signed integral type.
-        This is because the size can be negative if there are pending pops without corresponding pushes. */
+		This is because the size can be negative if there are pending pops without corresponding pushes. */
 		typedef std::ptrdiff_t size_type;
 
 		//! Difference type for iterator
@@ -302,7 +302,7 @@ namespace tbb
 
 		//! Enqueue an item at tail of queue if queue is not already full.
 		/** Does not wait for queue to become not full.
-        Returns true if item is pushed; false if queue was already full. */
+		Returns true if item is pushed; false if queue was already full. */
 		bool push_if_not_full(const T& source)
 		{
 			return internal_push_if_not_full(&source);
@@ -310,16 +310,16 @@ namespace tbb
 
 		//! Attempt to dequeue an item from head of queue.
 		/** Does not wait for item to become available.
-        Returns true if successful; false otherwise. */
+		Returns true if successful; false otherwise. */
 		bool pop_if_present(T& destination)
 		{
 			return internal_pop_if_present(&destination);
 		}
 
 		//! Return number of pushes minus number of pops.
-		/** Note that the result can be negative if there are pops waiting for the 
-        corresponding pushes.  The result can also exceed capacity() if there 
-        are push operations in flight. */
+		/** Note that the result can be negative if there are pops waiting for the
+		corresponding pushes.  The result can also exceed capacity() if there
+		are push operations in flight. */
 		size_type size() const
 		{
 			return internal_size();
@@ -339,7 +339,7 @@ namespace tbb
 
 		//! Set the capacity
 		/** Setting the capacity to 0 causes subsequent push_if_not_full operations to always fail,
-        and subsequent push operations to block forever. */
+		and subsequent push operations to block forever. */
 		void set_capacity(size_type new_capacity)
 		{
 			internal_set_capacity(new_capacity, sizeof(T));

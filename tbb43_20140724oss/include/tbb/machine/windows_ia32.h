@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #if !defined(__TBB_machine_H) || defined(__TBB_machine_windows_ia32_H)
 #error Do not #include this internal file directly; use public TBB headers instead.
@@ -30,15 +30,15 @@
 #define __TBB_ENDIANNESS __TBB_ENDIAN_LITTLE
 
 #if __INTEL_COMPILER && (__INTEL_COMPILER < 1100)
-    #define __TBB_compiler_fence()    __asm { __asm nop }
-    #define __TBB_full_memory_fence() __asm { __asm mfence }
+#define __TBB_compiler_fence()    __asm { __asm nop }
+#define __TBB_full_memory_fence() __asm { __asm mfence }
 #elif _MSC_VER >= 1300 || __INTEL_COMPILER
 #pragma intrinsic(_ReadWriteBarrier)
 #pragma intrinsic(_mm_mfence)
 #define __TBB_compiler_fence()    _ReadWriteBarrier()
 #define __TBB_full_memory_fence() _mm_mfence()
 #else
-    #error Unsupported compiler - need to define __TBB_{control,acquire,release}_consistency_helper to support it
+#error Unsupported compiler - need to define __TBB_{control,acquire,release}_consistency_helper to support it
 #endif
 
 #define __TBB_control_consistency_helper() __TBB_compiler_fence()
@@ -63,45 +63,44 @@ extern "C"
 //TODO: use _InterlockedXXX intrinsics as they available since VC 2005
 #define __TBB_MACHINE_DEFINE_ATOMICS(S,T,U,A,C) \
 static inline T __TBB_machine_cmpswp##S ( volatile void * ptr, U value, U comparand ) {
-	T result;
-	volatile T *p = (T *)ptr;
-	__asm
-	{
-		__asm mov edx, p
-		__asm mov C , value
-		__asm mov A , comparand
-		__asm lock cmpxchg [edx], C
-		__asm mov result, A
+T result;
+volatile T *p = (T *)ptr;
+__asm
+{
+	__asm mov edx, p
+	__asm mov C, value
+	__asm mov A, comparand
+	__asm lock cmpxchg[edx], C
+	__asm mov result, A
 }
 return result;
 }
 
-static inline T __TBB_machine_fetchadd##S ( volatile void * ptr, U addend ) {
+static inline T __TBB_machine_fetchadd##S(volatile void * ptr, U addend) {
 	T result;
 	volatile T *p = (T *)ptr;
 	__asm
 	{
 		__asm mov edx, p
 		__asm mov A, addend
-		__asm lock xadd [edx], A
+		__asm lock xadd[edx], A
 		__asm mov result, A
-}
-return result;
+	}
+	return result;
 }
 
-static inline T __TBB_machine_fetchstore##S ( volatile void * ptr, U value ) {
+static inline T __TBB_machine_fetchstore##S(volatile void * ptr, U value) {
 	T result;
 	volatile T *p = (T *)ptr;
 	__asm
 	{
 		__asm mov edx, p
 		__asm mov A, value
-		__asm lock xchg [edx], A
+		__asm lock xchg[edx], A
 		__asm mov result, A
+	}
+	return result;
 }
-return result;
-}
-
 
 __TBB_MACHINE_DEFINE_ATOMICS(1, __int8, __int8, al, cl)
 
@@ -114,21 +113,21 @@ __TBB_MACHINE_DEFINE_ATOMICS(4, ptrdiff_t, ptrdiff_t, eax, ecx)
 static inline void __TBB_machine_OR(volatile void* operand, __int32 addend)
 {
 	__asm
-		{
-			mov eax, addend
+	{
+		mov eax, addend
 			mov edx, [operand]
-			lock or [edx], eax
-		}
+			lock or[edx], eax
+	}
 }
 
 static inline void __TBB_machine_AND(volatile void* operand, __int32 addend)
 {
 	__asm
-		{
-			mov eax, addend
+	{
+		mov eax, addend
 			mov edx, [operand]
-			lock and [edx], eax
-		}
+			lock and[edx], eax
+	}
 }
 
 #define __TBB_AtomicOR(P,V) __TBB_machine_OR(P,V)
@@ -141,7 +140,6 @@ static inline void __TBB_machine_AND(volatile void* operand, __int32 addend)
 #define __TBB_USE_GENERIC_HALF_FENCED_LOAD_STORE            1
 #define __TBB_USE_GENERIC_RELAXED_LOAD_STORE                1
 #define __TBB_USE_GENERIC_SEQUENTIAL_CONSISTENCY_LOAD_STORE 1
-
 
 #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
 #pragma warning (pop)

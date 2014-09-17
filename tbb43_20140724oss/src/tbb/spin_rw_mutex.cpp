@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #include "tbb/spin_rw_mutex.h"
 #include "tbb/tbb_machine.h"
@@ -25,7 +25,7 @@
 
 #if defined(_MSC_VER) && defined(_Wp64)
 // Workaround for overzealous compiler warnings in /Wp64 mode
-    #pragma warning (disable: 4244)
+#pragma warning (disable: 4244)
 #endif
 
 namespace tbb
@@ -42,7 +42,7 @@ namespace tbb
 	bool spin_rw_mutex_v3::internal_acquire_writer()
 	{
 		ITT_NOTIFY(sync_prepare, this);
-		for (internal::atomic_backoff backoff;;backoff.pause())
+		for (internal::atomic_backoff backoff;; backoff.pause())
 		{
 			state_t s = const_cast<volatile state_t&>(state); // ensure reloading
 			if (!(s & BUSY))
@@ -71,12 +71,12 @@ namespace tbb
 	void spin_rw_mutex_v3::internal_acquire_reader()
 	{
 		ITT_NOTIFY(sync_prepare, this);
-		for (internal::atomic_backoff b;;b.pause())
+		for (internal::atomic_backoff b;; b.pause())
 		{
 			state_t s = const_cast<volatile state_t&>(state); // ensure reloading
 			if (!(s & (WRITER | WRITER_PENDING)))
 			{ // no writer or write requests
-				state_t t = (state_t)__TBB_FetchAndAddW(&state, (intptr_t) ONE_READER);
+				state_t t = (state_t)__TBB_FetchAndAddW(&state, (intptr_t)ONE_READER);
 				if (!(t & WRITER))
 					break; // successfully stored increased number of readers
 				// writer got there first, undo the increment
@@ -107,7 +107,7 @@ namespace tbb
 				while ((state & READERS) != ONE_READER) backoff.pause();
 				__TBB_ASSERT((state & (WRITER_PENDING | WRITER)) == (WRITER_PENDING | WRITER), "invalid state when upgrading to writer");
 				// both new readers and writers are blocked at this time
-				__TBB_FetchAndAddW(&state, - (intptr_t)(ONE_READER + WRITER_PENDING));
+				__TBB_FetchAndAddW(&state, -(intptr_t)(ONE_READER + WRITER_PENDING));
 				ITT_NOTIFY(sync_acquired, this);
 				return true; // successfully upgraded
 			}
@@ -141,8 +141,8 @@ namespace tbb
 		if (!(s & BUSY)) // no readers, no writers; mask is 1..1101
 			if (CAS(state, WRITER, s) == s)
 			{
-				ITT_NOTIFY(sync_acquired, this);
-				return true; // successfully stored writer flag
+			ITT_NOTIFY(sync_acquired, this);
+			return true; // successfully stored writer flag
 			}
 		return false;
 	}
@@ -154,7 +154,7 @@ namespace tbb
 		state_t s = state;
 		if (!(s & (WRITER | WRITER_PENDING)))
 		{ // no writers
-			state_t t = (state_t)__TBB_FetchAndAddW(&state, (intptr_t) ONE_READER);
+			state_t t = (state_t)__TBB_FetchAndAddW(&state, (intptr_t)ONE_READER);
 			if (!(t & WRITER))
 			{ // got the lock
 				ITT_NOTIFY(sync_acquired, this);

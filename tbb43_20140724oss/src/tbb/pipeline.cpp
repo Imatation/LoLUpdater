@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #include "tbb/pipeline.h"
 #include "tbb/spin_mutex.h"
@@ -24,8 +24,6 @@
 #include "itt_notify.h"
 #include "semaphore.h"
 #include "tls.h" // for parallel filters that do not use NULL as end_of_input
-
-
 
 namespace tbb
 {
@@ -158,13 +156,13 @@ namespace tbb
 
 			//! Put a token into the buffer.
 			/** If task information was placed into buffer, returns true;
-        otherwise returns false, informing the caller to create and spawn a task.
-        If input buffer owned by thread-bound filter and the item at
-        low_token was not valid, issue a V()
-        If the input_buffer is owned by a successor to a thread-bound filter,
-        the force_put parameter should be true to ensure the token is inserted
-        in the buffer.
-    */
+		otherwise returns false, informing the caller to create and spawn a task.
+		If input buffer owned by thread-bound filter and the item at
+		low_token was not valid, issue a V()
+		If the input_buffer is owned by a successor to a thread-bound filter,
+		the force_put parameter should be true to ensure the token is inserted
+		in the buffer.
+		*/
 			bool put_token(task_info& info_, bool force_put = false)
 			{
 				{
@@ -190,7 +188,7 @@ namespace tbb
 						// Need to wait until low_token catches up before dispatching.
 						if (token - low_token >= array_size)
 							grow(token - low_token + 1);
-						ITT_NOTIFY( sync_releasing, this );
+						ITT_NOTIFY(sync_releasing, this);
 						array[token & (array_size - 1)] = info_;
 						if (was_empty && is_bound)
 						{
@@ -220,7 +218,7 @@ namespace tbb
 					{
 						// Wake the next task
 						task_info& item = array[++low_token & (array_size - 1)];
-						ITT_NOTIFY( sync_acquired, this );
+						ITT_NOTIFY(sync_acquired, this);
 						wakee = item;
 						item.is_valid = false;
 					}
@@ -231,16 +229,16 @@ namespace tbb
 
 #if __TBB_TASK_GROUP_CONTEXT
 			//! The method destroys all data in filters to prevent memory leaks
-    void clear( filter* my_filter ) {
-        long t=low_token;
-        for( size_type i=0; i<array_size; ++i, ++t ){
-            task_info& temp = array[t&(array_size-1)];
-            if (temp.is_valid ) {
-                my_filter->finalize(temp.my_object);
-                temp.is_valid = false;
-            }
-        }
-    }
+			void clear(filter* my_filter) {
+				long t = low_token;
+				for (size_type i = 0; i < array_size; ++i, ++t){
+					task_info& temp = array[t&(array_size - 1)];
+					if (temp.is_valid) {
+						my_filter->finalize(temp.my_object);
+						temp.is_valid = false;
+					}
+				}
+			}
 #endif
 
 			//! return an item, invalidate the queued item, but only advance if advance
@@ -250,7 +248,7 @@ namespace tbb
 			{
 				spin_mutex::scoped_lock lock(array_mutex);
 				task_info& item = array[low_token & (array_size - 1)];
-				ITT_NOTIFY( sync_acquired, this );
+				ITT_NOTIFY(sync_acquired, this);
 				if (item.is_valid)
 				{
 					info = item;
@@ -304,7 +302,7 @@ namespace tbb
 			for (size_type i = 0; i < new_size; ++i)
 				new_array[i].is_valid = false;
 			long t = low_token;
-			for (size_type i = 0; i < old_size; ++i , ++t)
+			for (size_type i = 0; i < old_size; ++i, ++t)
 				new_array[t & (new_size - 1)] = old_array[t & (old_size - 1)];
 			array = new_array;
 			array_size = new_size;
@@ -312,7 +310,7 @@ namespace tbb
 				cache_aligned_allocator<task_info>().deallocate(old_array, old_size);
 		}
 
-		class stage_task: public task, public task_info
+		class stage_task : public task, public task_info
 		{
 		private:
 			friend class tbb::pipeline;
@@ -353,14 +351,14 @@ namespace tbb
 			/*override*/
 			task* execute();
 #if __TBB_TASK_GROUP_CONTEXT
-    ~stage_task()
-    {
-        if (my_filter && my_object && (my_filter->my_filter_mode & filter::version_mask) >= __TBB_PIPELINE_VERSION(4)) {
-            __TBB_ASSERT(is_cancelled(), "Trying to finalize the task that wasn't cancelled");
-            my_filter->finalize(my_object);
-            my_object = NULL;
-        }
-    }
+			~stage_task()
+			{
+				if (my_filter && my_object && (my_filter->my_filter_mode & filter::version_mask) >= __TBB_PIPELINE_VERSION(4)) {
+					__TBB_ASSERT(is_cancelled(), "Trying to finalize the task that wasn't cancelled");
+					my_filter->finalize(my_object);
+					my_object = NULL;
+				}
+			}
 #endif // __TBB_TASK_GROUP_CONTEXT
 
 			//! Creates and spawns stage_task from task_info
@@ -400,7 +398,7 @@ namespace tbb
 						}
 						else
 						{
-							ITT_NOTIFY( sync_releasing, &my_pipeline.input_tokens );
+							ITT_NOTIFY(sync_releasing, &my_pipeline.input_tokens);
 							if (--my_pipeline.input_tokens > 0)
 								spawn(*new(allocate_additional_child_of(*parent())) stage_task(my_pipeline));
 						}
@@ -420,7 +418,7 @@ namespace tbb
 						if (my_pipeline.has_thread_bound_filters)
 							my_pipeline.token_counter++;
 					}
-					ITT_NOTIFY( sync_releasing, &my_pipeline.input_tokens );
+					ITT_NOTIFY(sync_releasing, &my_pipeline.input_tokens);
 					if (--my_pipeline.input_tokens > 0)
 						spawn(*new(allocate_additional_child_of(*parent())) stage_task(my_pipeline));
 					my_object = (*my_filter)(my_object);
@@ -459,8 +457,7 @@ namespace tbb
 							do
 							{
 								my_filter = my_filter->next_filter_in_pipeline;
-							}
-							while (my_filter && my_filter->is_bound());
+							} while (my_filter && my_filter->is_bound());
 							// Check if there is an item ready to process
 							if (my_filter && my_filter->my_input_buffer->return_item(*this, !my_filter->is_serial()))
 								goto process_another_stage;
@@ -487,19 +484,19 @@ namespace tbb
 				{
 					return NULL; // No need to recycle for new input
 				}
-				ITT_NOTIFY( sync_acquired, &my_pipeline.input_tokens );
+				ITT_NOTIFY(sync_acquired, &my_pipeline.input_tokens);
 				// Recycle as an input stage task.
 				reset();
 			}
 		process_another_stage:
 			/* A semi-hackish way to reexecute the same task object immediately without spawning.
-       recycle_as_continuation marks the task for future execution,
-       and then 'this' pointer is returned to bypass spawning. */
+	   recycle_as_continuation marks the task for future execution,
+	   and then 'this' pointer is returned to bypass spawning. */
 			recycle_as_continuation();
 			return this;
 		}
 
-		class pipeline_root_task: public task
+		class pipeline_root_task : public task
 		{
 			pipeline& my_pipeline;
 			bool do_segment_scanning;
@@ -511,15 +508,15 @@ namespace tbb
 					if (!my_pipeline.filter_list->is_bound())
 						if (my_pipeline.input_tokens > 0)
 						{
-							recycle_as_continuation();
-							set_ref_count(1);
-							return new(allocate_child()) stage_task(my_pipeline);
+					recycle_as_continuation();
+					set_ref_count(1);
+					return new(allocate_child()) stage_task(my_pipeline);
 						}
 				if (do_segment_scanning)
 				{
 					filter* current_filter = my_pipeline.filter_list->next_segment;
 					/* first non-thread-bound filter that follows thread-bound one
-            and may have valid items to process */
+			and may have valid items to process */
 					filter* first_suitable_filter = current_filter;
 					while (current_filter)
 					{
@@ -550,7 +547,7 @@ namespace tbb
 						else
 						{
 							/* The preceding pipeline segment is empty.
-                    Fast-forward to the next post-TBF segment. */
+					Fast-forward to the next post-TBF segment. */
 							first_suitable_filter = first_suitable_filter->next_segment;
 							current_filter = first_suitable_filter;
 						}
@@ -569,7 +566,7 @@ namespace tbb
 			}
 
 		public:
-			pipeline_root_task(pipeline& pipeline): my_pipeline(pipeline), do_segment_scanning(false)
+			pipeline_root_task(pipeline& pipeline) : my_pipeline(pipeline), do_segment_scanning(false)
 			{
 				__TBB_ASSERT(my_pipeline.filter_list, NULL);
 				filter* first = my_pipeline.filter_list;
@@ -578,8 +575,8 @@ namespace tbb
 					// Scanning the pipeline for segments
 					filter* head_of_previous_segment = first;
 					for (filter* subfilter = first->next_filter_in_pipeline;
-					     subfilter != NULL;
-					     subfilter = subfilter->next_filter_in_pipeline)
+						subfilter != NULL;
+						subfilter = subfilter->next_filter_in_pipeline)
 					{
 						if (subfilter->prev_filter_in_pipeline->is_bound() && !subfilter->is_bound())
 						{
@@ -599,7 +596,7 @@ namespace tbb
 #endif
 
 		// The class destroys end_counter and clears all input buffers if pipeline was cancelled.
-		class pipeline_cleaner: internal::no_copy
+		class pipeline_cleaner : internal::no_copy
 		{
 			pipeline& my_pipeline;
 		public:
@@ -611,8 +608,8 @@ namespace tbb
 			~pipeline_cleaner()
 			{
 #if __TBB_TASK_GROUP_CONTEXT
-        if (my_pipeline.end_counter->is_cancelled()) // Pipeline was cancelled
-            my_pipeline.clear_filters();
+				if (my_pipeline.end_counter->is_cancelled()) // Pipeline was cancelled
+					my_pipeline.clear_filters();
 #endif
 				my_pipeline.end_counter = NULL;
 			}
@@ -625,13 +622,13 @@ namespace tbb
 	}
 
 #if __TBB_TASK_GROUP_CONTEXT
-void pipeline::clear_filters() {
-    for( filter* f = filter_list; f; f = f->next_filter_in_pipeline ) {
-        if ((f->my_filter_mode & filter::version_mask) >= __TBB_PIPELINE_VERSION(4))
-            if( internal::input_buffer* b = f->my_input_buffer )
-                b->clear(f);
-    }
-}
+	void pipeline::clear_filters() {
+		for (filter* f = filter_list; f; f = f->next_filter_in_pipeline) {
+			if ((f->my_filter_mode & filter::version_mask) >= __TBB_PIPELINE_VERSION(4))
+				if (internal::input_buffer* b = f->my_input_buffer)
+					b->clear(f);
+		}
+	}
 #endif
 
 	pipeline::pipeline() :
@@ -676,10 +673,10 @@ void pipeline::clear_filters() {
 	void pipeline::add_filter(filter& filter_)
 	{
 #if TBB_USE_ASSERT
-    if ( (filter_.my_filter_mode & filter::version_mask) >= __TBB_PIPELINE_VERSION(3) )
-        __TBB_ASSERT( filter_.prev_filter_in_pipeline==filter::not_in_pipeline(), "filter already part of pipeline?" );
-    __TBB_ASSERT( filter_.next_filter_in_pipeline==filter::not_in_pipeline(), "filter already part of pipeline?" );
-    __TBB_ASSERT( !end_counter, "invocation of add_filter on running pipeline" );
+		if ((filter_.my_filter_mode & filter::version_mask) >= __TBB_PIPELINE_VERSION(3))
+			__TBB_ASSERT(filter_.prev_filter_in_pipeline == filter::not_in_pipeline(), "filter already part of pipeline?");
+		__TBB_ASSERT(filter_.next_filter_in_pipeline == filter::not_in_pipeline(), "filter already part of pipeline?");
+		__TBB_ASSERT(!end_counter, "invocation of add_filter on running pipeline");
 #endif
 		if ((filter_.my_filter_mode & filter::version_mask) >= __TBB_PIPELINE_VERSION(3))
 		{
@@ -771,9 +768,9 @@ void pipeline::clear_filters() {
 
 	void pipeline::run(size_t max_number_of_live_tokens
 #if __TBB_TASK_GROUP_CONTEXT
-    , tbb::task_group_context& context
+		, tbb::task_group_context& context
 #endif
-	)
+		)
 	{
 		__TBB_ASSERT(max_number_of_live_tokens > 0, "pipeline::run must have at least one token");
 		__TBB_ASSERT(!end_counter, "pipeline already running?");
@@ -791,7 +788,7 @@ void pipeline::clear_filters() {
 				}
 			}
 #if __TBB_TASK_GROUP_CONTEXT
-        end_counter = new( task::allocate_root(context) ) internal::pipeline_root_task( *this );
+			end_counter = new(task::allocate_root(context)) internal::pipeline_root_task(*this);
 #else
 			end_counter = new(task::allocate_root()) internal::pipeline_root_task(*this);
 #endif
@@ -812,19 +809,18 @@ void pipeline::clear_filters() {
 	}
 
 #if __TBB_TASK_GROUP_CONTEXT
-void pipeline::run( size_t max_number_of_live_tokens ) {
-    if( filter_list ) {
-	// Construct task group context with the exception propagation mode expected
-	// by the pipeline caller.
-        uintptr_t ctx_traits = filter_list->my_filter_mode & filter::exact_exception_propagation ?
-                task_group_context::default_traits :
-                task_group_context::default_traits & ~task_group_context::exact_exception;
-        task_group_context context(task_group_context::bound, ctx_traits);
-        run(max_number_of_live_tokens, context);
-    }
-}
+	void pipeline::run(size_t max_number_of_live_tokens) {
+		if (filter_list) {
+			// Construct task group context with the exception propagation mode expected
+			// by the pipeline caller.
+			uintptr_t ctx_traits = filter_list->my_filter_mode & filter::exact_exception_propagation ?
+				task_group_context::default_traits :
+				task_group_context::default_traits & ~task_group_context::exact_exception;
+			task_group_context context(task_group_context::bound, ctx_traits);
+			run(max_number_of_live_tokens, context);
+		}
+	}
 #endif // __TBB_TASK_GROUP_CONTEXT
-
 
 	bool filter::has_more_work()
 	{
@@ -849,7 +845,7 @@ void pipeline::run( size_t max_number_of_live_tokens ) {
 	}
 
 	void
-	filter::set_end_of_input()
+		filter::set_end_of_input()
 	{
 		__TBB_ASSERT(my_input_buffer, NULL);
 		__TBB_ASSERT(object_may_be_null(), NULL);

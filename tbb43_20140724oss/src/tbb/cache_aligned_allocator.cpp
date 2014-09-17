@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #include "tbb/tbb_config.h"
 #include "tbb/cache_aligned_allocator.h"
@@ -42,10 +42,10 @@ using namespace std;
 #pragma weak scalable_aligned_free
 
 extern "C" {
-    void* scalable_malloc( size_t );
-    void  scalable_free( void* );
-    void* scalable_aligned_malloc( size_t, size_t );
-    void  scalable_aligned_free( void* );
+	void* scalable_malloc(size_t);
+	void  scalable_free(void*);
+	void* scalable_aligned_malloc(size_t, size_t);
+	void  scalable_aligned_free(void*);
 }
 
 #endif /* __TBB_WEAK_SYMBOLS_PRESENT */
@@ -61,10 +61,10 @@ namespace tbb
 		static void DummyFree(void* ptr);
 
 		//! Handler for memory allocation
-		static void* (* MallocHandler)(size_t size) = &DummyMalloc;
+		static void* (*MallocHandler)(size_t size) = &DummyMalloc;
 
 		//! Handler for memory deallocation
-		static void (* FreeHandler)(void* pointer) = &DummyFree;
+		static void(*FreeHandler)(void* pointer) = &DummyFree;
 
 		//! Dummy routine used for first indirect call via padded_allocate_handler.
 		static void* dummy_padded_allocate(size_t bytes, size_t alignment);
@@ -79,10 +79,10 @@ namespace tbb
 		static void padded_free(void* p);
 
 		//! Handler for padded memory allocation
-		static void* (* padded_allocate_handler)(size_t bytes, size_t alignment) = &dummy_padded_allocate;
+		static void* (*padded_allocate_handler)(size_t bytes, size_t alignment) = &dummy_padded_allocate;
 
 		//! Handler for padded memory deallocation
-		static void (* padded_free_handler)(void* p) = &dummy_padded_free;
+		static void(*padded_free_handler)(void* p) = &dummy_padded_free;
 
 		//! Table describing how to link the handlers.
 		static const dynamic_link_descriptor MallocLinkTable[] = {
@@ -91,7 +91,6 @@ namespace tbb
 			DLD(scalable_aligned_malloc, padded_allocate_handler),
 			DLD(scalable_aligned_free, padded_free_handler),
 		};
-
 
 #if TBB_USE_DEBUG
 #define DEBUG_SUFFIX "_debug"
@@ -115,8 +114,8 @@ namespace tbb
 
 		//! Initialize the allocation/free handler pointers.
 		/** Caller is responsible for ensuring this routine is called exactly once.
-    The routine attempts to dynamically link with the TBB memory allocator.
-    If that allocator is not found, it links to malloc and free. */
+	The routine attempts to dynamically link with the TBB memory allocator.
+	If that allocator is not found, it links to malloc and free. */
 		void initialize_handler_pointers()
 		{
 			__TBB_ASSERT(MallocHandler == &DummyMalloc, NULL);
@@ -270,7 +269,7 @@ namespace tbb
 			__TBB_ASSERT(MallocHandler != &DummyMalloc && FreeHandler != &DummyFree, NULL);
 			// Cast to void avoids type mismatch errors on some compilers (e.g. __IBMCPP__)
 			__TBB_ASSERT(!(((void*)MallocHandler == (void*)&malloc) ^ ((void*)FreeHandler == (void*)&free)),
-			             "Both shim pointers must refer to routines from the same package (either TBB or CRT)");
+				"Both shim pointers must refer to routines from the same package (either TBB or CRT)");
 			return (void*)MallocHandler == (void*)&malloc;
 		}
 	} // namespace internal

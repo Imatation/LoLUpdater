@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_parallel_scan_H
 #define __TBB_parallel_scan_H
@@ -51,10 +51,10 @@ namespace tbb
 	//! @cond INTERNAL
 	namespace internal
 	{
-		//! Performs final scan for a leaf 
+		//! Performs final scan for a leaf
 		/** @ingroup algorithms */
 		template <typename Range, typename Body>
-		class final_sum: public task
+		class final_sum : public task
 		{
 		public:
 			Body my_body;
@@ -94,7 +94,7 @@ namespace tbb
 		//! Split work to be done in the scan.
 		/** @ingroup algorithms */
 		template <typename Range, typename Body>
-		class sum_node: public task
+		class sum_node : public task
 		{
 			typedef final_sum<Range, Body> final_sum_type;
 		public:
@@ -147,7 +147,7 @@ namespace tbb
 					recycle_as_continuation();
 					sum_node& c = *this;
 					task* b = c.create_child(Range(my_range, split()), *my_left_sum, my_right, my_left_sum, my_stuff_last);
-					task* a = my_left_is_final ? NULL : c.create_child(my_range, *my_body, my_left, my_incoming,NULL);
+					task* a = my_left_is_final ? NULL : c.create_child(my_range, *my_body, my_left, my_incoming, NULL);
 					set_ref_count((a != NULL) + (b != NULL));
 					my_body = NULL;
 					if (a) spawn(*b);
@@ -170,7 +170,7 @@ namespace tbb
 		//! Combine partial results
 		/** @ingroup algorithms */
 		template <typename Range, typename Body>
-		class finish_scan: public task
+		class finish_scan : public task
 		{
 			typedef sum_node<Range, Body> sum_node_type;
 			typedef final_sum<Range, Body> final_sum_type;
@@ -183,12 +183,12 @@ namespace tbb
 			/*override*/
 			task* execute()
 			{
-				__TBB_ASSERT( my_result.ref_count()==(my_result.my_left!=NULL)+(my_result.my_right!=NULL), NULL );
+				__TBB_ASSERT(my_result.ref_count() == (my_result.my_left != NULL) + (my_result.my_right != NULL), NULL);
 				if (my_result.my_left)
 					my_result.my_left_is_final = false;
 				if (my_right_zombie && my_sum)
 					((*my_sum)->my_body).reverse_join(my_result.my_left_sum->my_body);
-				__TBB_ASSERT( !my_return_slot, NULL );
+				__TBB_ASSERT(!my_return_slot, NULL);
 				if (my_right_zombie || my_result.my_right)
 				{
 					my_return_slot = &my_result;
@@ -211,14 +211,14 @@ namespace tbb
 				my_right_zombie(NULL),
 				my_result(result_)
 			{
-				__TBB_ASSERT( !my_return_slot, NULL );
+				__TBB_ASSERT(!my_return_slot, NULL);
 			}
 		};
 
 		//! Initial task to split the work
 		/** @ingroup algorithms */
-		template <typename Range, typename Body, typename Partitioner=simple_partitioner>
-		class start_scan: public task
+		template <typename Range, typename Body, typename Partitioner = simple_partitioner>
+		class start_scan : public task
 		{
 			typedef sum_node<Range, Body> sum_node_type;
 			typedef final_sum<Range, Body> final_sum_type;
@@ -245,7 +245,7 @@ namespace tbb
 				my_range(parent_.my_range, split()),
 				my_partition(parent_.my_partition, split())
 			{
-				__TBB_ASSERT( !*my_return_slot, NULL );
+				__TBB_ASSERT(!*my_return_slot, NULL);
 			}
 
 			start_scan(sum_node_type*& return_slot_, const Range& range_, final_sum_type& body_, const Partitioner& partitioner_) :
@@ -258,7 +258,7 @@ namespace tbb
 				my_range(range_),
 				my_partition(partitioner_)
 			{
-				__TBB_ASSERT( !*my_return_slot, NULL );
+				__TBB_ASSERT(!*my_return_slot, NULL);
 			}
 
 			static void run(const Range& range_, Body& body_, const Partitioner& partitioner_)
@@ -271,9 +271,9 @@ namespace tbb
 					final_sum_type* temp_body = new(task::allocate_root()) final_sum_type(body_);
 					start_pass1_type& pass1 = *new(task::allocate_root()) start_pass1_type(
 						/*my_return_slot=*/root,
-						                   range_,
-						                   *temp_body,
-						                   partitioner_);
+						range_,
+						*temp_body,
+						partitioner_);
 					task::spawn_root_and_wait(pass1);
 					if (root)
 					{
@@ -316,7 +316,7 @@ namespace tbb
 					(my_body->my_body)(my_range, pre_scan_tag());
 				if (my_sum)
 					*my_sum = my_body;
-				__TBB_ASSERT( !*my_return_slot, NULL );
+				__TBB_ASSERT(!*my_return_slot, NULL);
 			}
 			else
 			{
@@ -329,7 +329,7 @@ namespace tbb
 				// Split off right child
 				start_scan& b = *new(c.allocate_child()) start_scan(/*my_return_slot=*/result->my_right, *this, result);
 				b.my_is_right_child = true;
-				// Left child is recycling of *this.  Must recycle this before spawning b, 
+				// Left child is recycling of *this.  Must recycle this before spawning b,
 				// otherwise b might complete and decrement c.ref_count() to zero, which
 				// would cause c.execute() to run prematurely.
 				recycle_as_child_of(c);
@@ -340,7 +340,7 @@ namespace tbb
 				my_is_right_child = false;
 				next_task = this;
 				my_parent_sum = result;
-				__TBB_ASSERT( !*my_return_slot, NULL );
+				__TBB_ASSERT(!*my_return_slot, NULL);
 			}
 			return next_task;
 		}
@@ -350,29 +350,28 @@ namespace tbb
 	// Requirements on Range concept are documented in blocked_range.h
 
 	/** \page parallel_scan_body_req Requirements on parallel_scan body
-    Class \c Body implementing the concept of parallel_scan body must define:
-    - \code Body::Body( Body&, split ); \endcode    Splitting constructor.
-                                                    Split \c b so that \c this and \c b can accumulate separately
-    - \code Body::~Body(); \endcode                 Destructor
-    - \code void Body::operator()( const Range& r, pre_scan_tag ); \endcode
-                                                    Preprocess iterations for range \c r
-    - \code void Body::operator()( const Range& r, final_scan_tag ); \endcode 
-                                                    Do final processing for iterations of range \c r
-    - \code void Body::reverse_join( Body& a ); \endcode
-                                                    Merge preprocessing state of \c a into \c this, where \c a was 
-                                                    created earlier from \c b by b's splitting constructor
-**/
+	Class \c Body implementing the concept of parallel_scan body must define:
+	- \code Body::Body( Body&, split ); \endcode    Splitting constructor.
+	Split \c b so that \c this and \c b can accumulate separately
+	- \code Body::~Body(); \endcode                 Destructor
+	- \code void Body::operator()( const Range& r, pre_scan_tag ); \endcode
+	Preprocess iterations for range \c r
+	- \code void Body::operator()( const Range& r, final_scan_tag ); \endcode
+	Do final processing for iterations of range \c r
+	- \code void Body::reverse_join( Body& a ); \endcode
+	Merge preprocessing state of \c a into \c this, where \c a was
+	created earlier from \c b by b's splitting constructor
+	**/
 
 	/** \name parallel_scan
-    See also requirements on \ref range_req "Range" and \ref parallel_scan_body_req "parallel_scan Body". **/
+	See also requirements on \ref range_req "Range" and \ref parallel_scan_body_req "parallel_scan Body". **/
 	//@{
-
 	//! Parallel prefix with default partitioner
 	/** @ingroup algorithms **/
 	template <typename Range, typename Body>
 	void parallel_scan(const Range& range, Body& body)
 	{
-		internal::start_scan<Range, Body,__TBB_DEFAULT_PARTITIONER>::run(range, body,__TBB_DEFAULT_PARTITIONER());
+		internal::start_scan<Range, Body, __TBB_DEFAULT_PARTITIONER>::run(range, body, __TBB_DEFAULT_PARTITIONER());
 	}
 
 	//! Parallel prefix with simple_partitioner

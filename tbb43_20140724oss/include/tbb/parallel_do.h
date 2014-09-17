@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_parallel_do_H
 #define __TBB_parallel_do_H
@@ -44,45 +44,45 @@ namespace tbb
 		};
 
 		template <typename T>
-		struct strip<T&>
+		struct strip < T& >
 		{
 			typedef T type;
 		};
 
 		template <typename T>
-		struct strip<const T&>
+		struct strip < const T& >
 		{
 			typedef T type;
 		};
 
 		template <typename T>
-		struct strip<volatile T&>
+		struct strip < volatile T& >
 		{
 			typedef T type;
 		};
 
 		template <typename T>
-		struct strip<const volatile T&>
+		struct strip < const volatile T& >
 		{
 			typedef T type;
 		};
 
-		// Most of the compilers remove cv-qualifiers from non-reference function argument types. 
+		// Most of the compilers remove cv-qualifiers from non-reference function argument types.
 		// But unfortunately there are those that don't.
 		template <typename T>
-		struct strip<const T>
+		struct strip < const T >
 		{
 			typedef T type;
 		};
 
 		template <typename T>
-		struct strip<volatile T>
+		struct strip < volatile T >
 		{
 			typedef T type;
 		};
 
 		template <typename T>
-		struct strip<const volatile T>
+		struct strip < const volatile T >
 		{
 			typedef T type;
 		};
@@ -92,7 +92,7 @@ namespace tbb
 	//! Class the user supplied algorithm body uses to add new tasks
 	/** \param Item Work item type **/
 	template <typename Item>
-	class parallel_do_feeder: internal::no_copy
+	class parallel_do_feeder : internal::no_copy
 	{
 		parallel_do_feeder()
 		{
@@ -118,7 +118,7 @@ namespace tbb
 	{
 		//! For internal use only.
 		/** Selects one of the two possible forms of function call member operator.
-        @ingroup algorithms **/
+		@ingroup algorithms **/
 		template <class Body, typename Item>
 		class parallel_do_operator_selector
 		{
@@ -146,9 +146,9 @@ namespace tbb
 
 		//! For internal use only.
 		/** Executes one iteration of a do.
-        @ingroup algorithms */
+		@ingroup algorithms */
 		template <typename Body, typename Item>
-		class do_iteration_task: public task
+		class do_iteration_task : public task
 		{
 			typedef parallel_do_feeder_impl<Body, Item> feeder_type;
 
@@ -172,7 +172,7 @@ namespace tbb
 		}; // class do_iteration_task
 
 		template <typename Iterator, typename Body, typename Item>
-		class do_iteration_task_iter: public task
+		class do_iteration_task_iter : public task
 		{
 			typedef parallel_do_feeder_impl<Body, Item> feeder_type;
 
@@ -201,9 +201,9 @@ namespace tbb
 
 		//! For internal use only.
 		/** Implements new task adding procedure.
-        @ingroup algorithms **/
+		@ingroup algorithms **/
 		template <class Body, typename Item>
-		class parallel_do_feeder_impl : public parallel_do_feeder<Item>
+		class parallel_do_feeder_impl : public parallel_do_feeder < Item >
 		{
 			/*override*/
 			void internal_add(const Item& item)
@@ -239,13 +239,12 @@ namespace tbb
 			}
 		}; // class parallel_do_feeder_impl
 
-
 		//! For internal use only
 		/** Unpacks a block of iterations.
-        @ingroup algorithms */
+		@ingroup algorithms */
 
 		template <typename Iterator, typename Body, typename Item>
-		class do_group_task_forward: public task
+		class do_group_task_forward : public task
 		{
 			static const size_t max_arg_size = 4;
 
@@ -264,7 +263,7 @@ namespace tbb
 			task* execute()
 			{
 				typedef do_iteration_task_iter<Iterator, Body, Item> iteration_type;
-				__TBB_ASSERT( my_size>0, NULL );
+				__TBB_ASSERT(my_size > 0, NULL);
 				task_list list;
 				task* t;
 				size_t k = 0;
@@ -286,7 +285,7 @@ namespace tbb
 		}; // class do_group_task_forward
 
 		template <typename Body, typename Item>
-		class do_group_task_input: public task
+		class do_group_task_input : public task
 		{
 			static const size_t max_arg_size = 4;
 
@@ -305,7 +304,7 @@ namespace tbb
 			task* execute()
 			{
 				typedef do_iteration_task_iter<Item*, Body, Item> iteration_type;
-				__TBB_ASSERT( my_size>0, NULL );
+				__TBB_ASSERT(my_size > 0, NULL);
 				task_list list;
 				task* t;
 				size_t k = 0;
@@ -333,9 +332,9 @@ namespace tbb
 
 		//! For internal use only.
 		/** Gets block of iterations and packages them into a do_group_task.
-        @ingroup algorithms */
+		@ingroup algorithms */
 		template <typename Iterator, typename Body, typename Item>
-		class do_task_iter: public task
+		class do_task_iter : public task
 		{
 			typedef parallel_do_feeder_impl<Body, Item> feeder_type;
 
@@ -351,15 +350,15 @@ namespace tbb
 			feeder_type& my_feeder;
 
 			/* Do not merge run(xxx) and run_xxx() methods. They are separated in order
-            to make sure that compilers will eliminate unused argument of type xxx
-            (that is will not put it on stack). The sole purpose of this argument 
-            is overload resolution.
-            
-            An alternative could be using template functions, but explicit specialization 
-            of member function templates is not supported for non specialized class 
-            templates. Besides template functions would always fall back to the least 
-            efficient variant (the one for input iterators) in case of iterators having 
-            custom tags derived from basic ones. */
+			to make sure that compilers will eliminate unused argument of type xxx
+			(that is will not put it on stack). The sole purpose of this argument
+			is overload resolution.
+
+			An alternative could be using template functions, but explicit specialization
+			of member function templates is not supported for non specialized class
+			templates. Besides template functions would always fall back to the least
+			efficient variant (the one for input iterators) in case of iterators having
+			custom tags derived from basic ones. */
 			/*override*/
 			task* execute()
 			{
@@ -368,7 +367,7 @@ namespace tbb
 			}
 
 			/** This is the most restricted variant that operates on input iterators or
-            iterators with unknown tags (tags not derived from the standard ones). **/
+			iterators with unknown tags (tags not derived from the standard ones). **/
 			inline task* run(void*)
 			{
 				return run_for_input_iterator();
@@ -473,19 +472,19 @@ namespace tbb
 
 		//! For internal use only.
 		/** Implements parallel iteration over a range.
-        @ingroup algorithms */
+		@ingroup algorithms */
 		template <typename Iterator, typename Body, typename Item>
 		void run_parallel_do(Iterator first, Iterator last, const Body& body
 #if __TBB_TASK_GROUP_CONTEXT
-		                     , task_group_context& context
+			, task_group_context& context
 #endif
-		)
+			)
 		{
 			typedef do_task_iter<Iterator, Body, Item> root_iteration_task;
 #if __TBB_TASK_GROUP_CONTEXT
 			parallel_do_feeder_impl<Body, Item> feeder(context);
 #else
-        parallel_do_feeder_impl<Body, Item> feeder;
+			parallel_do_feeder_impl<Body, Item> feeder;
 #endif
 			feeder.my_body = &body;
 
@@ -497,66 +496,65 @@ namespace tbb
 
 		//! For internal use only.
 		/** Detects types of Body's operator function arguments.
-        @ingroup algorithms **/
+		@ingroup algorithms **/
 		template <typename Iterator, typename Body, typename Item>
 		void select_parallel_do(Iterator first, Iterator last, const Body& body, void (Body::*)(Item) const
 #if __TBB_TASK_GROUP_CONTEXT
-		                        , task_group_context& context
-#endif // __TBB_TASK_GROUP_CONTEXT 
+			, task_group_context& context
+#endif // __TBB_TASK_GROUP_CONTEXT
 
-		)
+			)
 		{
 			run_parallel_do<Iterator, Body, typename strip<Item>::type>(first, last, body
 #if __TBB_TASK_GROUP_CONTEXT
-			                                                            , context
-#endif // __TBB_TASK_GROUP_CONTEXT 
+				, context
+#endif // __TBB_TASK_GROUP_CONTEXT
 
-			);
+				);
 		}
 
 		//! For internal use only.
 		/** Detects types of Body's operator function arguments.
-        @ingroup algorithms **/
+		@ingroup algorithms **/
 		template <typename Iterator, typename Body, typename Item, typename _Item>
 		void select_parallel_do(Iterator first, Iterator last, const Body& body, void (Body::*)(Item, parallel_do_feeder<_Item>&) const
 #if __TBB_TASK_GROUP_CONTEXT
-		                        , task_group_context& context
+			, task_group_context& context
 #endif // __TBB_TASK_GROUP_CONTEXT
 
-		)
+			)
 		{
 			run_parallel_do<Iterator, Body, typename strip<Item>::type>(first, last, body
 #if __TBB_TASK_GROUP_CONTEXT
-			                                                            , context
+				, context
 #endif // __TBB_TASK_GROUP_CONTEXT
 
-			);
+				);
 		}
 	} // namespace internal
 	//! @endcond
 
-
 	/** \page parallel_do_body_req Requirements on parallel_do body
-    Class \c Body implementing the concept of parallel_do body must define:
-    - \code 
-        B::operator()( 
-                cv_item_type item,
-                parallel_do_feeder<item_type>& feeder
-        ) const
-        
-        OR
+	Class \c Body implementing the concept of parallel_do body must define:
+	- \code
+	B::operator()(
+	cv_item_type item,
+	parallel_do_feeder<item_type>& feeder
+	) const
 
-        B::operator()( cv_item_type& item ) const
-      \endcode                                                      Process item. 
-                                                                    May be invoked concurrently  for the same \c this but different \c item.
-                                                        
-    - \code item_type( const item_type& ) \endcode 
-                                                                    Copy a work item.
-    - \code ~item_type() \endcode                            Destroy a work item
-**/
+	OR
+
+	B::operator()( cv_item_type& item ) const
+	\endcode                                                      Process item.
+	May be invoked concurrently  for the same \c this but different \c item.
+
+	- \code item_type( const item_type& ) \endcode
+	Copy a work item.
+	- \code ~item_type() \endcode                            Destroy a work item
+	**/
 
 	/** \name parallel_do
-    See also requirements on \ref parallel_do_body_req "parallel_do Body". **/
+	See also requirements on \ref parallel_do_body_req "parallel_do Body". **/
 	//@{
 	//! Parallel iteration over a range, with optional addition of more work.
 	/** @ingroup algorithms */
@@ -571,10 +569,10 @@ namespace tbb
 
 		internal::select_parallel_do(first, last, body, &Body::operator()
 #if __TBB_TASK_GROUP_CONTEXT
-		                             , context
+			, context
 #endif // __TBB_TASK_GROUP_CONTEXT
 
-		);
+			);
 	}
 
 	template <typename Range, typename Body>
@@ -614,8 +612,7 @@ namespace tbb
 
 #endif // __TBB_TASK_GROUP_CONTEXT
 
-
 	//@}
-} // namespace 
+} // namespace
 
 #endif /* __TBB_parallel_do_H */

@@ -1,22 +1,22 @@
 /*
-    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-    you can redistribute it and/or modify it under the terms of the GNU General Public License
-    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-    See  the GNU General Public License for more details.   You should have received a copy of
-    the  GNU General Public License along with Threading Building Blocks; if not, write to the
-    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+	you can redistribute it and/or modify it under the terms of the GNU General Public License
+	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See  the GNU General Public License for more details.   You should have received a copy of
+	the  GNU General Public License along with Threading Building Blocks; if not, write to the
+	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-    As a special exception,  you may use this file  as part of a free software library without
-    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-    functions from this file, or you compile this file and link it with other files to produce
-    an executable,  this file does not by itself cause the resulting executable to be covered
-    by the GNU General Public License. This exception does not however invalidate any other
-    reasons why the executable file might be covered by the GNU General Public License.
-*/
+	As a special exception,  you may use this file  as part of a free software library without
+	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+	functions from this file, or you compile this file and link it with other files to produce
+	an executable,  this file does not by itself cause the resulting executable to be covered
+	by the GNU General Public License. This exception does not however invalidate any other
+	reasons why the executable file might be covered by the GNU General Public License.
+	*/
 
 #ifndef __TBB_concurrent_hash_map_H
 #define __TBB_concurrent_hash_map_H
@@ -25,8 +25,8 @@
 
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
 // Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
-    #pragma warning (push)
-    #pragma warning (disable: 4530)
+#pragma warning (push)
+#pragma warning (disable: 4530)
 #endif
 
 #include <iterator>
@@ -34,9 +34,8 @@
 
 #include <cstring> // Need std::memset
 
-
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
-    #pragma warning (pop)
+#pragma warning (pop)
 #endif
 
 #include "cache_aligned_allocator.h"
@@ -83,7 +82,6 @@ namespace tbb
 		namespace internal
 		{
 			using namespace tbb::internal;
-
 
 			//! Type of a hash code.
 			typedef size_t hashcode_t;
@@ -150,31 +148,31 @@ namespace tbb
 				//! Zero segment
 				bucket my_embedded_segment[embedded_buckets];
 #if __TBB_STATISTICS
-        atomic<unsigned> my_info_resizes; // concurrent ones
-        mutable atomic<unsigned> my_info_restarts; // race collisions
-        atomic<unsigned> my_info_rehashes;  // invocations of rehash_bucket
+				atomic<unsigned> my_info_resizes; // concurrent ones
+				mutable atomic<unsigned> my_info_restarts; // race collisions
+				atomic<unsigned> my_info_rehashes;  // invocations of rehash_bucket
 #endif
 				//! Constructor
 				hash_map_base()
 				{
 					std::memset(this, 0, pointers_per_table * sizeof(segment_ptr_t) // 32*4=128   or 64*8=512
-					            + sizeof(my_size) + sizeof(my_mask) // 4+4 or 8+8
-					            + embedded_buckets * sizeof(bucket)); // n*8 or n*16
+						+ sizeof(my_size) + sizeof(my_mask) // 4+4 or 8+8
+						+ embedded_buckets * sizeof(bucket)); // n*8 or n*16
 					for (size_type i = 0; i < embedded_block; i++) // fill the table
 						my_table[i] = my_embedded_segment + segment_base(i);
 					my_mask = embedded_buckets - 1;
-					__TBB_ASSERT( embedded_block <= first_block, "The first block number must include embedded blocks");
+					__TBB_ASSERT(embedded_block <= first_block, "The first block number must include embedded blocks");
 #if __TBB_STATISTICS
-            my_info_resizes = 0; // concurrent ones
-            my_info_restarts = 0; // race collisions
-            my_info_rehashes = 0;  // invocations of rehash_bucket
+					my_info_resizes = 0; // concurrent ones
+					my_info_restarts = 0; // race collisions
+					my_info_rehashes = 0;  // invocations of rehash_bucket
 #endif
 				}
 
 				//! @return segment index of given index in the array
 				static segment_index_t segment_index_of(size_type index)
 				{
-					return segment_index_t(__TBB_Log2( index|1 ));
+					return segment_index_t(__TBB_Log2(index | 1));
 				}
 
 				//! @return the first array index of given segment
@@ -200,10 +198,10 @@ namespace tbb
 				{
 					if (is_initial) std::memset(ptr, 0, sz * sizeof(bucket));
 					else
-						for (size_type i = 0; i < sz; i++ , ptr++)
+						for (size_type i = 0; i < sz; i++, ptr++)
 						{
-							*reinterpret_cast<intptr_t*>(&ptr->mutex) = 0;
-							ptr->node_list = rehash_req;
+						*reinterpret_cast<intptr_t*>(&ptr->mutex) = 0;
+						ptr->node_list = rehash_req;
 						}
 				}
 
@@ -233,11 +231,11 @@ namespace tbb
 				//! Enable segment
 				void enable_segment(segment_index_t k, bool is_initial = false)
 				{
-					__TBB_ASSERT( k, "Zero segment must be embedded" );
+					__TBB_ASSERT(k, "Zero segment must be embedded");
 					enable_segment_failsafe watchdog(my_table, k);
 					cache_aligned_allocator<bucket> alloc;
 					size_type sz;
-					__TBB_ASSERT( !is_valid(my_table[k]), "Wrong concurrent assignment");
+					__TBB_ASSERT(!is_valid(my_table[k]), "Wrong concurrent assignment");
 					if (k >= first_block)
 					{
 						sz = segment_size(k);
@@ -248,7 +246,7 @@ namespace tbb
 					}
 					else
 					{ // the first block
-						__TBB_ASSERT( k == embedded_block, "Wrong segment index" );
+						__TBB_ASSERT(k == embedded_block, "Wrong segment index");
 						sz = segment_size(first_block);
 						segment_ptr_t ptr = alloc.allocate(sz - embedded_buckets);
 						init_buckets(ptr, sz - embedded_buckets, is_initial);
@@ -266,7 +264,7 @@ namespace tbb
 					segment_index_t s = segment_index_of(h);
 					h -= segment_base(s);
 					segment_ptr_t seg = my_table[s];
-					__TBB_ASSERT( is_valid(seg), "hashcode must be cut by valid mask for allocated segments" );
+					__TBB_ASSERT(is_valid(seg), "hashcode must be cut by valid mask for allocated segments");
 					return &seg[h];
 				}
 
@@ -277,8 +275,8 @@ namespace tbb
 					while (segment_ptr_t seg = my_table[++s])
 						if (seg[h].node_list == rehash_req)
 						{
-							seg[h].node_list = empty_rehashed;
-							mark_rehashed_levels(h + ((hashcode_t)1 << s)); // optimized segment_base(s)
+						seg[h].node_list = empty_rehashed;
+						mark_rehashed_levels(h + ((hashcode_t)1 << s)); // optimized segment_base(s)
 						}
 				}
 
@@ -287,7 +285,7 @@ namespace tbb
 				inline bool check_mask_race(const hashcode_t h, hashcode_t& m) const
 				{
 					hashcode_t m_now, m_old = m;
-					m_now = (hashcode_t) itt_load_word_with_acquire(my_mask);
+					m_now = (hashcode_t)itt_load_word_with_acquire(my_mask);
 					if (m_old != m_now)
 						return check_rehashing_collision(h, m_old, m = m_now);
 					return false;
@@ -304,12 +302,12 @@ namespace tbb
 						for (++m_old; !(h & m_old); m_old <<= 1) // at maximum few rounds depending on the first block size
 							;
 						m_old = (m_old << 1) - 1; // get full mask from a bit
-						__TBB_ASSERT((m_old&(m_old+1))==0 && m_old <= m, NULL);
+						__TBB_ASSERT((m_old&(m_old + 1)) == 0 && m_old <= m, NULL);
 						// check whether it is rehashing/ed
 						if (itt_load_word_with_acquire(get_bucket(h & m_old)->node_list) != rehash_req)
 						{
 #if __TBB_STATISTICS
-                    my_info_restarts++; // race collisions
+							my_info_restarts++; // race collisions
 #endif
 							return true;
 						}
@@ -325,8 +323,8 @@ namespace tbb
 					// check load factor
 					if (sz >= mask)
 					{ // TODO: add custom load_factor
-						segment_index_t new_seg = __TBB_Log2( mask+1 ); //optimized segment_index_of
-						__TBB_ASSERT( is_valid(my_table[new_seg-1]), "new allocations must not publish new mask until segment has allocated");
+						segment_index_t new_seg = __TBB_Log2(mask + 1); //optimized segment_index_of
+						__TBB_ASSERT(is_valid(my_table[new_seg - 1]), "new allocations must not publish new mask until segment has allocated");
 						static const segment_ptr_t is_allocating = (segment_ptr_t)2;
 						if (!itt_hide_load_word(my_table[new_seg])
 							&& as_atomic(my_table[new_seg]).compare_and_swap(is_allocating, NULL) == NULL)
@@ -362,10 +360,10 @@ namespace tbb
 
 			//! Meets requirements of a forward iterator for STL */
 			/** Value is either the T or const T type of the container.
-        @ingroup containers */
+		@ingroup containers */
 			template <typename Container, typename Value>
 			class hash_map_iterator
-				: public std::iterator<std::forward_iterator_tag, Value>
+				: public std::iterator < std::forward_iterator_tag, Value >
 			{
 				typedef Container map_type;
 				typedef typename Container::node node;
@@ -409,8 +407,8 @@ namespace tbb
 					my_index = k; // the end
 				}
 #if !defined(_MSC_VER) || defined(__INTEL_COMPILER)
-        template<typename Key, typename T, typename HashCompare, typename A>
-        friend class interface5::concurrent_hash_map;
+				template<typename Key, typename T, typename HashCompare, typename A>
+				friend class interface5::concurrent_hash_map;
 #else
 			public: // workaround
 #endif
@@ -444,7 +442,7 @@ namespace tbb
 
 				Value& operator*() const
 				{
-					__TBB_ASSERT( hash_map_base::is_valid(my_node), "iterator uninitialized or at end of container?" );
+					__TBB_ASSERT(hash_map_base::is_valid(my_node), "iterator uninitialized or at end of container?");
 					return my_node->item;
 				}
 
@@ -535,8 +533,8 @@ namespace tbb
 					my_grainsize(r.my_grainsize)
 				{
 					r.my_end = my_begin = r.my_midpoint;
-					__TBB_ASSERT( !empty(), "Splitting despite the range is not divisible" );
-					__TBB_ASSERT( !r.empty(), "Splitting despite the range is not divisible" );
+					__TBB_ASSERT(!empty(), "Splitting despite the range is not divisible");
+					__TBB_ASSERT(!r.empty(), "Splitting despite the range is not divisible");
 					set_midpoint();
 					r.set_midpoint();
 				}
@@ -557,7 +555,7 @@ namespace tbb
 					my_end(Iterator(map, map.my_mask + 1, 0, 0)),
 					my_grainsize(grainsize_)
 				{
-					__TBB_ASSERT( grainsize_>0, "grainsize must be positive" );
+					__TBB_ASSERT(grainsize_ > 0, "grainsize must be positive");
 					set_midpoint();
 				}
 
@@ -593,12 +591,12 @@ namespace tbb
 				{
 					my_midpoint = my_end;
 				}
-				__TBB_ASSERT( my_begin.my_index <= my_midpoint.my_index,
-					"my_begin is after my_midpoint" );
-				__TBB_ASSERT( my_midpoint.my_index <= my_end.my_index,
-					"my_midpoint is after my_end" );
-				__TBB_ASSERT( my_begin != my_midpoint || my_begin == my_end,
-					"[my_begin, my_midpoint) range should not be empty" );
+				__TBB_ASSERT(my_begin.my_index <= my_midpoint.my_index,
+					"my_begin is after my_midpoint");
+				__TBB_ASSERT(my_midpoint.my_index <= my_end.my_index,
+					"my_midpoint is after my_end");
+				__TBB_ASSERT(my_begin != my_midpoint || my_begin == my_end,
+					"[my_begin, my_midpoint) range should not be empty");
 			}
 		} // internal
 		//! @endcond
@@ -613,32 +611,32 @@ namespace tbb
 		/** concurrent_hash_map is associative container with concurrent access.
 
 @par Compatibility
-    The class meets all Container Requirements from C++ Standard (See ISO/IEC 14882:2003(E), clause 23.1).
+The class meets all Container Requirements from C++ Standard (See ISO/IEC 14882:2003(E), clause 23.1).
 
 @par Exception Safety
-    - Hash function is not permitted to throw an exception. User-defined types Key and T are forbidden from throwing an exception in destructors.
-    - If exception happens during insert() operations, it has no effect (unless exception raised by HashCompare::hash() function during grow_segment).
-    - If exception happens during operator=() operation, the container can have a part of source items, and methods size() and empty() can return wrong results.
+- Hash function is not permitted to throw an exception. User-defined types Key and T are forbidden from throwing an exception in destructors.
+- If exception happens during insert() operations, it has no effect (unless exception raised by HashCompare::hash() function during grow_segment).
+- If exception happens during operator=() operation, the container can have a part of source items, and methods size() and empty() can return wrong results.
 
 @par Changes since TBB 2.1
-    - Replaced internal algorithm and data structure. Patent is pending.
-    - Added buckets number argument for constructor
+- Replaced internal algorithm and data structure. Patent is pending.
+- Added buckets number argument for constructor
 
 @par Changes since TBB 2.0
-    - Fixed exception-safety
-    - Added template argument for allocator
-    - Added allocator argument in constructors
-    - Added constructor from a range of iterators
-    - Added several new overloaded insert() methods
-    - Added get_allocator()
-    - Added swap()
-    - Added count()
-    - Added overloaded erase(accessor &) and erase(const_accessor&)
-    - Added equal_range() [const]
-    - Added [const_]pointer, [const_]reference, and allocator_type types
-    - Added global functions: operator==(), operator!=(), and swap()
+- Fixed exception-safety
+- Added template argument for allocator
+- Added allocator argument in constructors
+- Added constructor from a range of iterators
+- Added several new overloaded insert() methods
+- Added get_allocator()
+- Added swap()
+- Added count()
+- Added overloaded erase(accessor &) and erase(const_accessor&)
+- Added equal_range() [const]
+- Added [const_]pointer, [const_]reference, and allocator_type types
+- Added global functions: operator==(), operator!=(), and swap()
 
-    @ingroup containers */
+@ingroup containers */
 		template <typename Key, typename T, typename HashCompare, typename Allocator>
 		class concurrent_hash_map : protected internal::hash_map_base
 		{
@@ -701,8 +699,8 @@ namespace tbb
 					return ptr;
 				}
 
-				// match placement-new form above to be called if exception thrown in constructor
-				void operator delete(void* ptr, node_allocator_type& a)
+					// match placement-new form above to be called if exception thrown in constructor
+					void operator delete(void* ptr, node_allocator_type& a)
 				{
 					a.deallocate(static_cast<node*>(ptr), 1);
 				}
@@ -716,17 +714,17 @@ namespace tbb
 
 			static node* allocate_node_copy_construct(node_allocator_type& allocator, const Key& key, const T* t)
 			{
-				return new(allocator) node(key, *t);
+				return new(allocator)node(key, *t);
 			}
 
 			static node* allocate_node_default_construct(node_allocator_type& allocator, const Key& key, const T*)
 			{
-				return new(allocator) node(key);
+				return new(allocator)node(key);
 			}
 
 			static node* do_not_allocate_node(node_allocator_type&, const Key&, const T*)
 			{
-				__TBB_ASSERT(false,"this dummy function should not be called");
+				__TBB_ASSERT(false, "this dummy function should not be called");
 				return NULL;
 			}
 
@@ -760,7 +758,7 @@ namespace tbb
 						if (my_b->node_list == internal::rehash_req) base->rehash_bucket(my_b, h); //recursive rehashing
 					}
 					else bucket::scoped_t::acquire(my_b->mutex, writer);
-					__TBB_ASSERT( my_b->node_list != internal::rehash_req, NULL);
+					__TBB_ASSERT(my_b->node_list != internal::rehash_req, NULL);
 				}
 
 				//! check whether bucket is locked for write
@@ -779,33 +777,33 @@ namespace tbb
 			// TODO refactor to hash_base
 			void rehash_bucket(bucket* b_new, const hashcode_t h)
 			{
-				__TBB_ASSERT( *(intptr_t*)(&b_new->mutex), "b_new must be locked (for write)");
-				__TBB_ASSERT( h > 1, "The lowermost buckets can't be rehashed" );
+				__TBB_ASSERT(*(intptr_t*)(&b_new->mutex), "b_new must be locked (for write)");
+				__TBB_ASSERT(h > 1, "The lowermost buckets can't be rehashed");
 				__TBB_store_with_release(b_new->node_list, internal::empty_rehashed); // mark rehashed
-				hashcode_t mask = (1u << __TBB_Log2( h )) - 1; // get parent mask from the topmost bit
+				hashcode_t mask = (1u << __TBB_Log2(h)) - 1; // get parent mask from the topmost bit
 #if __TBB_STATISTICS
-        my_info_rehashes++; // invocations of rehash_bucket
+				my_info_rehashes++; // invocations of rehash_bucket
 #endif
 
 				bucket_accessor b_old(this, h & mask);
 
 				mask = (mask << 1) | 1; // get full mask for new bucket
-				__TBB_ASSERT( (mask&(mask+1))==0 && (h & mask) == h, NULL );
+				__TBB_ASSERT((mask&(mask + 1)) == 0 && (h & mask) == h, NULL);
 			restart:
 				for (node_base **p = &b_old()->node_list, *n = __TBB_load_with_acquire(*p); is_valid(n); n = *p)
 				{
 					hashcode_t c = my_hash_compare.hash(static_cast<node*>(n)->item.first);
 #if TBB_USE_ASSERT
-            hashcode_t bmask = h & (mask>>1);
-            bmask = bmask==0? 1 : ( 1u<<(__TBB_Log2( bmask )+1 ) ) - 1; // minimal mask of parent bucket
-            __TBB_ASSERT( (c & bmask) == (h & bmask), "hash() function changed for key in table" );
+					hashcode_t bmask = h & (mask >> 1);
+					bmask = bmask == 0 ? 1 : (1u << (__TBB_Log2(bmask) + 1)) - 1; // minimal mask of parent bucket
+					__TBB_ASSERT((c & bmask) == (h & bmask), "hash() function changed for key in table");
 #endif
 					if ((c & mask) == h)
 					{
 						if (!b_old.is_writer())
 							if (!b_old.upgrade_to_writer())
 							{
-								goto restart; // node ptr can be invalid due to concurrent erase
+							goto restart; // node ptr can be invalid due to concurrent erase
 							}
 						*p = n->next; // exclude from b_old
 						add_to_bucket(b_new, n);
@@ -843,7 +841,7 @@ namespace tbb
 			//! Combines data access, locking, and garbage collection.
 			class const_accessor : private node::scoped_t /*which derived from no_copy*/
 			{
-				friend class concurrent_hash_map<Key, T, HashCompare, Allocator>;
+				friend class concurrent_hash_map < Key, T, HashCompare, Allocator > ;
 				friend class accessor;
 			public:
 				//! Type of value
@@ -868,7 +866,7 @@ namespace tbb
 				//! Return reference to associated value in hash table.
 				const_reference operator*() const
 				{
-					__TBB_ASSERT( my_node, "attempt to dereference empty accessor" );
+					__TBB_ASSERT(my_node, "attempt to dereference empty accessor");
 					return my_node->item;
 				}
 
@@ -900,7 +898,7 @@ namespace tbb
 			};
 
 			//! Allows write access to elements and combines data access, locking, and garbage collection.
-			class accessor: public const_accessor
+			class accessor : public const_accessor
 			{
 			public:
 				//! Type of value
@@ -909,7 +907,7 @@ namespace tbb
 				//! Return reference to associated value in hash table.
 				reference operator*() const
 				{
-					__TBB_ASSERT( this->my_node, "attempt to dereference empty accessor" );
+					__TBB_ASSERT(this->my_node, "attempt to dereference empty accessor");
 					return this->my_node->item;
 				}
 
@@ -948,7 +946,7 @@ namespace tbb
 				swap(table);
 			}
 
-			//! Move constructor 
+			//! Move constructor
 			concurrent_hash_map(concurrent_hash_map&& table, const allocator_type& a)
 				: internal::hash_map_base(), my_allocator(a)
 			{
@@ -964,7 +962,6 @@ namespace tbb
 				}
 			}
 #endif //__TBB_CPP11_RVALUE_REF_PRESENT
-
 
 			//! Construction with copying iteration range and given allocator instance
 			template <typename I>
@@ -985,7 +982,6 @@ namespace tbb
 			}
 
 #endif //__TBB_INITIALIZER_LISTS_PRESENT
-
 
 			//! Assignment
 			concurrent_hash_map& operator=(const concurrent_hash_map& table)
@@ -1022,7 +1018,6 @@ namespace tbb
 			}
 #endif //__TBB_CPP11_RVALUE_REF_PRESENT
 
-
 #if __TBB_INITIALIZER_LISTS_PRESENT
 			//! Assignment
 			concurrent_hash_map& operator=(std::initializer_list<value_type> il)
@@ -1034,11 +1029,9 @@ namespace tbb
 			}
 #endif //__TBB_INITIALIZER_LISTS_PRESENT
 
-
-
 			//! Rehashes and optionally resizes the whole table.
 			/** Useful to optimize performance before or after concurrent operations.
-        Also enables using of find() and count() concurrent methods in serial context. */
+		Also enables using of find() and count() concurrent methods in serial context. */
 			void rehash(size_type n = 0);
 
 			//! Clear table
@@ -1210,7 +1203,6 @@ namespace tbb
 			}
 #endif //__TBB_INITIALIZER_LISTS_PRESENT
 
-
 			//! Erase item.
 			/** Return true if item was erased by particularly this call. */
 			bool erase(const Key& key);
@@ -1231,7 +1223,7 @@ namespace tbb
 
 		protected:
 			//! Insert or find item and optionally acquire a lock on the item.
-			bool lookup(bool op_insert, const Key& key, const T* t, const_accessor* result, bool write, node* (* allocate_node)(node_allocator_type&, const Key&, const T*));
+			bool lookup(bool op_insert, const Key& key, const T* t, const_accessor* result, bool write, node* (*allocate_node)(node_allocator_type&, const Key&, const T*));
 
 			//! delete item by accessor
 			bool exclude(const_accessor& item_accessor);
@@ -1248,14 +1240,14 @@ namespace tbb
 
 			//! Fast find when no concurrent erasure is used. For internal use inside TBB only!
 			/** Return pointer to item with given key, or NULL if no such item exists.
-        Must not be called concurrently with erasure operations. */
+		Must not be called concurrently with erasure operations. */
 			const_pointer internal_fast_find(const Key& key) const
 			{
 				hashcode_t h = my_hash_compare.hash(key);
-				hashcode_t m = (hashcode_t) itt_load_word_with_acquire(my_mask);
+				hashcode_t m = (hashcode_t)itt_load_word_with_acquire(my_mask);
 				node* n;
 			restart:
-				__TBB_ASSERT((m&(m+1))==0, "data structure is invalid");
+				__TBB_ASSERT((m&(m + 1)) == 0, "data structure is invalid");
 				bucket* b = get_bucket(h & m);
 				// TODO: actually, notification is unnecessary here, just hiding double-check
 				if (itt_load_word_with_acquire(b->node_list) == internal::rehash_req)
@@ -1267,7 +1259,7 @@ namespace tbb
 							const_cast<concurrent_hash_map*>(this)->rehash_bucket(b, h & m); //recursive rehashing
 					}
 					else lock.acquire(b->mutex, /*write=*/false);
-					__TBB_ASSERT(b->node_list!=internal::rehash_req,NULL);
+					__TBB_ASSERT(b->node_list != internal::rehash_req, NULL);
 				}
 				n = search_bucket(key, b);
 				if (n)
@@ -1279,17 +1271,17 @@ namespace tbb
 		};
 
 		template <typename Key, typename T, typename HashCompare, typename A>
-		bool concurrent_hash_map<Key, T, HashCompare, A>::lookup(bool op_insert, const Key& key, const T* t, const_accessor* result, bool write, node* (* allocate_node)(node_allocator_type&, const Key&, const T*))
+		bool concurrent_hash_map<Key, T, HashCompare, A>::lookup(bool op_insert, const Key& key, const T* t, const_accessor* result, bool write, node* (*allocate_node)(node_allocator_type&, const Key&, const T*))
 		{
-			__TBB_ASSERT( !result || !result->my_node, NULL );
+			__TBB_ASSERT(!result || !result->my_node, NULL);
 			bool return_value;
 			hashcode_t const h = my_hash_compare.hash(key);
-			hashcode_t m = (hashcode_t) itt_load_word_with_acquire(my_mask);
+			hashcode_t m = (hashcode_t)itt_load_word_with_acquire(my_mask);
 			segment_index_t grow_segment = 0;
 			node *n, *tmp_n = 0;
 		restart:
 			{//lock scope
-				__TBB_ASSERT((m&(m+1))==0, "data structure is invalid");
+				__TBB_ASSERT((m&(m + 1)) == 0, "data structure is invalid");
 				return_value = false;
 				// get bucket
 				bucket_accessor b(this, h & m);
@@ -1346,9 +1338,9 @@ namespace tbb
 						{
 							// the wait takes really long, restart the operation
 							b.release();
-							__TBB_ASSERT( !op_insert || !return_value, "Can't acquire new item in locked bucket?" );
+							__TBB_ASSERT(!op_insert || !return_value, "Can't acquire new item in locked bucket?");
 							__TBB_Yield();
-							m = (hashcode_t) itt_load_word_with_acquire(my_mask);
+							m = (hashcode_t)itt_load_word_with_acquire(my_mask);
 							goto restart;
 						}
 					}
@@ -1361,7 +1353,7 @@ namespace tbb
 			if (grow_segment)
 			{
 #if __TBB_STATISTICS
-        my_info_resizes++; // concurrent ones
+				my_info_resizes++; // concurrent ones
 #endif
 				enable_segment(grow_segment);
 			}
@@ -1376,12 +1368,12 @@ namespace tbb
 		{
 			hashcode_t h = my_hash_compare.hash(key);
 			hashcode_t m = my_mask;
-			__TBB_ASSERT((m&(m+1))==0, "data structure is invalid");
+			__TBB_ASSERT((m&(m + 1)) == 0, "data structure is invalid");
 			h &= m;
 			bucket* b = get_bucket(h);
 			while (b->node_list == internal::rehash_req)
 			{
-				m = (1u << __TBB_Log2( h )) - 1; // get parent mask from the topmost bit
+				m = (1u << __TBB_Log2(h)) - 1; // get parent mask from the topmost bit
 				b = get_bucket(h &= m);
 			}
 			node* n = search_bucket(key, b);
@@ -1394,10 +1386,10 @@ namespace tbb
 		template <typename Key, typename T, typename HashCompare, typename A>
 		bool concurrent_hash_map<Key, T, HashCompare, A>::exclude(const_accessor& item_accessor)
 		{
-			__TBB_ASSERT( item_accessor.my_node, NULL );
+			__TBB_ASSERT(item_accessor.my_node, NULL);
 			node_base*const n = item_accessor.my_node;
 			hashcode_t const h = item_accessor.my_hash;
-			hashcode_t m = (hashcode_t) itt_load_word_with_acquire(my_mask);
+			hashcode_t m = (hashcode_t)itt_load_word_with_acquire(my_mask);
 			do
 			{
 				// get bucket
@@ -1412,12 +1404,11 @@ namespace tbb
 					item_accessor.release();
 					return false;
 				}
-				__TBB_ASSERT( *p == n, NULL );
+				__TBB_ASSERT(*p == n, NULL);
 				*p = n->next; // remove from container
 				my_size--;
 				break;
-			}
-			while (true);
+			} while (true);
 			if (!item_accessor.is_writer()) // need to get exclusive lock
 				item_accessor.upgrade_to_writer(); // return value means nothing here
 			item_accessor.release();
@@ -1430,7 +1421,7 @@ namespace tbb
 		{
 			node_base* n;
 			hashcode_t const h = my_hash_compare.hash(key);
-			hashcode_t m = (hashcode_t) itt_load_word_with_acquire(my_mask);
+			hashcode_t m = (hashcode_t)itt_load_word_with_acquire(my_mask);
 		restart:
 			{//lock scope
 				// get bucket
@@ -1482,24 +1473,23 @@ namespace tbb
 			reserve(sz); // TODO: add reduction of number of buckets as well
 			hashcode_t mask = my_mask;
 			hashcode_t b = (mask + 1) >> 1; // size or first index of the last segment
-			__TBB_ASSERT((b&(b-1))==0, NULL); // zero or power of 2
+			__TBB_ASSERT((b&(b - 1)) == 0, NULL); // zero or power of 2
 			bucket* bp = get_bucket(b); // only the last segment should be scanned for rehashing
-			for (; b <= mask; b++ , bp++)
+			for (; b <= mask; b++, bp++)
 			{
 				node_base* n = bp->node_list;
-				__TBB_ASSERT( is_valid(n) || n == internal::empty_rehashed || n == internal::rehash_req, "Broken internal structure" );
-				__TBB_ASSERT( *reinterpret_cast<intptr_t*>(&bp->mutex) == 0, "concurrent or unexpectedly terminated operation during rehash() execution" );
+				__TBB_ASSERT(is_valid(n) || n == internal::empty_rehashed || n == internal::rehash_req, "Broken internal structure");
+				__TBB_ASSERT(*reinterpret_cast<intptr_t*>(&bp->mutex) == 0, "concurrent or unexpectedly terminated operation during rehash() execution");
 				if (n == internal::rehash_req)
 				{ // rehash bucket, conditional because rehashing of a previous bucket may affect this one
 					hashcode_t h = b;
 					bucket* b_old = bp;
 					do
 					{
-						__TBB_ASSERT( h > 1, "The lowermost buckets can't be rehashed" );
-						hashcode_t m = (1u << __TBB_Log2( h )) - 1; // get parent mask from the topmost bit
+						__TBB_ASSERT(h > 1, "The lowermost buckets can't be rehashed");
+						hashcode_t m = (1u << __TBB_Log2(h)) - 1; // get parent mask from the topmost bit
 						b_old = get_bucket(h &= m);
-					}
-					while (b_old->node_list == internal::rehash_req);
+					} while (b_old->node_list == internal::rehash_req);
 					// now h - is index of the root rehashed bucket b_old
 					mark_rehashed_levels(h); // mark all non-rehashed children recursively across all segments
 					for (node_base **p = &b_old->node_list, *q = *p; is_valid(q); q = *p)
@@ -1509,7 +1499,7 @@ namespace tbb
 						{ // should be rehashed
 							*p = q->next; // exclude from b_old
 							bucket* b_new = get_bucket(c & mask);
-							__TBB_ASSERT( b_new->node_list != internal::rehash_req, "hash() function changed for key in table or internal error" );
+							__TBB_ASSERT(b_new->node_list != internal::rehash_req, "hash() function changed for key in table or internal error");
 							add_to_bucket(b_new, q);
 						}
 						else p = &q->next; // iterate to next item
@@ -1517,38 +1507,38 @@ namespace tbb
 				}
 			}
 #if TBB_USE_PERFORMANCE_WARNINGS
-    int current_size = int(my_size), buckets = int(mask)+1, empty_buckets = 0, overpopulated_buckets = 0; // usage statistics
-    static bool reported = false;
+			int current_size = int(my_size), buckets = int(mask) + 1, empty_buckets = 0, overpopulated_buckets = 0; // usage statistics
+			static bool reported = false;
 #endif
 #if TBB_USE_ASSERT || TBB_USE_PERFORMANCE_WARNINGS
-    for( b = 0; b <= mask; b++ ) {// only last segment should be scanned for rehashing
-        if( b & (b-2) ) ++bp; // not the beginning of a segment
-        else bp = get_bucket( b );
-        node_base *n = bp->node_list;
-        __TBB_ASSERT( *reinterpret_cast<intptr_t*>(&bp->mutex) == 0, "concurrent or unexpectedly terminated operation during rehash() execution" );
-        __TBB_ASSERT( is_valid(n) || n == internal::empty_rehashed, "Broken internal structure" );
+			for (b = 0; b <= mask; b++) {// only last segment should be scanned for rehashing
+				if (b & (b - 2)) ++bp; // not the beginning of a segment
+				else bp = get_bucket(b);
+				node_base *n = bp->node_list;
+				__TBB_ASSERT(*reinterpret_cast<intptr_t*>(&bp->mutex) == 0, "concurrent or unexpectedly terminated operation during rehash() execution");
+				__TBB_ASSERT(is_valid(n) || n == internal::empty_rehashed, "Broken internal structure");
 #if TBB_USE_PERFORMANCE_WARNINGS
-        if( n == internal::empty_rehashed ) empty_buckets++;
-        else if( n->next ) overpopulated_buckets++;
+				if (n == internal::empty_rehashed) empty_buckets++;
+				else if (n->next) overpopulated_buckets++;
 #endif
 #if TBB_USE_ASSERT
-        for( ; is_valid(n); n = n->next ) {
-            hashcode_t h = my_hash_compare.hash( static_cast<node*>(n)->item.first ) & mask;
-            __TBB_ASSERT( h == b, "hash() function changed for key in table or internal error" );
-        }
+				for (; is_valid(n); n = n->next) {
+					hashcode_t h = my_hash_compare.hash(static_cast<node*>(n)->item.first) & mask;
+					__TBB_ASSERT(h == b, "hash() function changed for key in table or internal error");
+				}
 #endif
-    }
+			}
 #endif // TBB_USE_ASSERT || TBB_USE_PERFORMANCE_WARNINGS
 
 #if TBB_USE_PERFORMANCE_WARNINGS
-    if( buckets > current_size) empty_buckets -= buckets - current_size;
-    else overpopulated_buckets -= current_size - buckets; // TODO: load_factor?
-    if( !reported && buckets >= 512 && ( 2*empty_buckets > current_size || 2*overpopulated_buckets > current_size ) ) {
-        tbb::internal::runtime_warning(
-            "Performance is not optimal because the hash function produces bad randomness in lower bits in %s.\nSize: %d  Empties: %d  Overlaps: %d",
-            typeid(*this).name(), current_size, empty_buckets, overpopulated_buckets );
-        reported = true;
-    }
+			if (buckets > current_size) empty_buckets -= buckets - current_size;
+			else overpopulated_buckets -= current_size - buckets; // TODO: load_factor?
+			if (!reported && buckets >= 512 && (2 * empty_buckets > current_size || 2 * overpopulated_buckets > current_size)) {
+				tbb::internal::runtime_warning(
+					"Performance is not optimal because the hash function produces bad randomness in lower bits in %s.\nSize: %d  Empties: %d  Overlaps: %d",
+					typeid(*this).name(), current_size, empty_buckets, overpopulated_buckets);
+				reported = true;
+			}
 #endif
 		}
 
@@ -1556,76 +1546,75 @@ namespace tbb
 		void concurrent_hash_map<Key, T, HashCompare, A>::clear()
 		{
 			hashcode_t m = my_mask;
-			__TBB_ASSERT((m&(m+1))==0, "data structure is invalid");
+			__TBB_ASSERT((m&(m + 1)) == 0, "data structure is invalid");
 #if TBB_USE_ASSERT || TBB_USE_PERFORMANCE_WARNINGS || __TBB_STATISTICS
 #if TBB_USE_PERFORMANCE_WARNINGS || __TBB_STATISTICS
-    int current_size = int(my_size), buckets = int(m)+1, empty_buckets = 0, overpopulated_buckets = 0; // usage statistics
-    static bool reported = false;
+			int current_size = int(my_size), buckets = int(m) + 1, empty_buckets = 0, overpopulated_buckets = 0; // usage statistics
+			static bool reported = false;
 #endif
-    bucket *bp = 0;
+			bucket *bp = 0;
 			// check consistency
-    for( segment_index_t b = 0; b <= m; b++ ) {
-        if( b & (b-2) ) ++bp; // not the beginning of a segment
-        else bp = get_bucket( b );
-        node_base *n = bp->node_list;
-        __TBB_ASSERT( is_valid(n) || n == internal::empty_rehashed || n == internal::rehash_req, "Broken internal structure" );
-        __TBB_ASSERT( *reinterpret_cast<intptr_t*>(&bp->mutex) == 0, "concurrent or unexpectedly terminated operation during clear() execution" );
+			for (segment_index_t b = 0; b <= m; b++) {
+				if (b & (b - 2)) ++bp; // not the beginning of a segment
+				else bp = get_bucket(b);
+				node_base *n = bp->node_list;
+				__TBB_ASSERT(is_valid(n) || n == internal::empty_rehashed || n == internal::rehash_req, "Broken internal structure");
+				__TBB_ASSERT(*reinterpret_cast<intptr_t*>(&bp->mutex) == 0, "concurrent or unexpectedly terminated operation during clear() execution");
 #if TBB_USE_PERFORMANCE_WARNINGS || __TBB_STATISTICS
-        if( n == internal::empty_rehashed ) empty_buckets++;
-        else if( n == internal::rehash_req ) buckets--;
-        else if( n->next ) overpopulated_buckets++;
+				if (n == internal::empty_rehashed) empty_buckets++;
+				else if (n == internal::rehash_req) buckets--;
+				else if (n->next) overpopulated_buckets++;
 #endif
 #if __TBB_EXTRA_DEBUG
-        for(; is_valid(n); n = n->next ) {
-            hashcode_t h = my_hash_compare.hash( static_cast<node*>(n)->item.first );
-            h &= m;
-            __TBB_ASSERT( h == b || get_bucket(h)->node_list == internal::rehash_req, "hash() function changed for key in table or internal error" );
-        }
+				for (; is_valid(n); n = n->next) {
+					hashcode_t h = my_hash_compare.hash(static_cast<node*>(n)->item.first);
+					h &= m;
+					__TBB_ASSERT(h == b || get_bucket(h)->node_list == internal::rehash_req, "hash() function changed for key in table or internal error");
+				}
 #endif
-    }
+			}
 #if TBB_USE_PERFORMANCE_WARNINGS || __TBB_STATISTICS
 #if __TBB_STATISTICS
-    printf( "items=%d buckets: capacity=%d rehashed=%d empty=%d overpopulated=%d"
-        " concurrent: resizes=%u rehashes=%u restarts=%u\n",
-        current_size, int(m+1), buckets, empty_buckets, overpopulated_buckets,
-        unsigned(my_info_resizes), unsigned(my_info_rehashes), unsigned(my_info_restarts) );
-    my_info_resizes = 0; // concurrent ones
-    my_info_restarts = 0; // race collisions
-    my_info_rehashes = 0;  // invocations of rehash_bucket
+			printf("items=%d buckets: capacity=%d rehashed=%d empty=%d overpopulated=%d"
+				" concurrent: resizes=%u rehashes=%u restarts=%u\n",
+				current_size, int(m + 1), buckets, empty_buckets, overpopulated_buckets,
+				unsigned(my_info_resizes), unsigned(my_info_rehashes), unsigned(my_info_restarts));
+			my_info_resizes = 0; // concurrent ones
+			my_info_restarts = 0; // race collisions
+			my_info_rehashes = 0;  // invocations of rehash_bucket
 #endif
-    if( buckets > current_size) empty_buckets -= buckets - current_size;
-    else overpopulated_buckets -= current_size - buckets; // TODO: load_factor?
-    if( !reported && buckets >= 512 && ( 2*empty_buckets > current_size || 2*overpopulated_buckets > current_size ) ) {
-        tbb::internal::runtime_warning(
-            "Performance is not optimal because the hash function produces bad randomness in lower bits in %s.\nSize: %d  Empties: %d  Overlaps: %d",
-            typeid(*this).name(), current_size, empty_buckets, overpopulated_buckets );
-        reported = true;
-    }
+			if (buckets > current_size) empty_buckets -= buckets - current_size;
+			else overpopulated_buckets -= current_size - buckets; // TODO: load_factor?
+			if (!reported && buckets >= 512 && (2 * empty_buckets > current_size || 2 * overpopulated_buckets > current_size)) {
+				tbb::internal::runtime_warning(
+					"Performance is not optimal because the hash function produces bad randomness in lower bits in %s.\nSize: %d  Empties: %d  Overlaps: %d",
+					typeid(*this).name(), current_size, empty_buckets, overpopulated_buckets);
+				reported = true;
+			}
 #endif
 #endif//TBB_USE_ASSERT || TBB_USE_PERFORMANCE_WARNINGS || __TBB_STATISTICS
 
 			my_size = 0;
 			segment_index_t s = segment_index_of(m);
-			__TBB_ASSERT( s+1 == pointers_per_table || !my_table[s+1], "wrong mask or concurrent grow" );
+			__TBB_ASSERT(s + 1 == pointers_per_table || !my_table[s + 1], "wrong mask or concurrent grow");
 			cache_aligned_allocator<bucket> alloc;
 			do
 			{
-				__TBB_ASSERT( is_valid( my_table[s] ), "wrong mask or concurrent grow" );
+				__TBB_ASSERT(is_valid(my_table[s]), "wrong mask or concurrent grow");
 				segment_ptr_t buckets_ptr = my_table[s];
 				size_type sz = segment_size(s ? s : 1);
 				for (segment_index_t i = 0; i < sz; i++)
 					for (node_base* n = buckets_ptr[i].node_list; is_valid(n); n = buckets_ptr[i].node_list)
 					{
-						buckets_ptr[i].node_list = n->next;
-						delete_node(n);
+					buckets_ptr[i].node_list = n->next;
+					delete_node(n);
 					}
 				if (s >= first_block) // the first segment or the next
 					alloc.deallocate(buckets_ptr, sz);
 				else if (s == embedded_block && embedded_block != first_block)
 					alloc.deallocate(buckets_ptr, segment_size(first_block) - embedded_buckets);
 				if (s >= embedded_block) my_table[s] = 0;
-			}
-			while (s-- > 0);
+			} while (s-- > 0);
 			my_mask = embedded_buckets - 1;
 		}
 
@@ -1640,13 +1629,13 @@ namespace tbb
 				bool rehash_required = false;
 				for (hashcode_t k = 0; k <= mask; k++)
 				{
-					if (k & (k - 2)) ++dst , src++; // not the beginning of a segment
+					if (k & (k - 2)) ++dst, src++; // not the beginning of a segment
 					else
 					{
 						dst = get_bucket(k);
 						src = source.get_bucket(k);
 					}
-					__TBB_ASSERT( dst->node_list != internal::rehash_req, "Invalid bucket in destination table");
+					__TBB_ASSERT(dst->node_list != internal::rehash_req, "Invalid bucket in destination table");
 					node* n = static_cast<node*>(src->node_list);
 					if (n == internal::rehash_req)
 					{ // source is not rehashed, items are in previous buckets
@@ -1656,8 +1645,8 @@ namespace tbb
 					else
 						for (; n; n = static_cast<node*>(n->next))
 						{
-							add_to_bucket(dst, new(my_allocator) node(n->item.first, n->item.second));
-							++my_size; // TODO: replace by non-atomic op
+						add_to_bucket(dst, new(my_allocator)node(n->item.first, n->item.second));
+						++my_size; // TODO: replace by non-atomic op
 						}
 				}
 				if (rehash_required) rehash();
@@ -1674,8 +1663,8 @@ namespace tbb
 			{
 				hashcode_t h = my_hash_compare.hash((*first).first);
 				bucket* b = get_bucket(h & m);
-				__TBB_ASSERT( b->node_list != internal::rehash_req, "Invalid bucket in destination table");
-				node* n = new(my_allocator) node(*first);
+				__TBB_ASSERT(b->node_list != internal::rehash_req, "Invalid bucket in destination table");
+				node* n = new(my_allocator)node(*first);
 				add_to_bucket(b, n);
 				++my_size; // TODO: replace by non-atomic op
 			}
@@ -1683,7 +1672,6 @@ namespace tbb
 	} // namespace interface5
 
 	using interface5::concurrent_hash_map;
-
 
 	template <typename Key, typename T, typename HashCompare, typename A1, typename A2>
 	inline bool operator==(const concurrent_hash_map<Key, T, HashCompare, A1>& a, const concurrent_hash_map<Key, T, HashCompare, A2>& b)
@@ -1714,7 +1702,6 @@ namespace tbb
 #if _MSC_VER && !defined(__INTEL_COMPILER)
 #pragma warning( pop )
 #endif // warning 4127 is back
-
 } // namespace tbb
 
 #endif /* __TBB_concurrent_hash_map_H */
