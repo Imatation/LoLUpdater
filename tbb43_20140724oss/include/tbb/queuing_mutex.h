@@ -24,7 +24,7 @@
 #include "tbb_config.h"
 
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
-// Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
+    // Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
     #pragma warning (push)
     #pragma warning (disable: 4530)
 #endif
@@ -38,93 +38,86 @@
 #include "atomic.h"
 #include "tbb_profiling.h"
 
-namespace tbb
-{
-	//! Queuing mutex with local-only spinning.
-	/** @ingroup synchronization */
-	class queuing_mutex : internal::mutex_copy_deprecated_and_disabled
-	{
-	public:
-		//! Construct unacquired mutex.
-		queuing_mutex()
-		{
-			q_tail = NULL;
+namespace tbb {
+
+//! Queuing mutex with local-only spinning.
+/** @ingroup synchronization */
+class queuing_mutex : internal::mutex_copy_deprecated_and_disabled {
+public:
+    //! Construct unacquired mutex.
+    queuing_mutex() {
+        q_tail = NULL;
 #if TBB_USE_THREADING_TOOLS
         internal_construct();
 #endif
-		}
+    }
 
-		//! The scoped locking pattern
-		/** It helps to avoid the common problem of forgetting to release lock.
+    //! The scoped locking pattern
+    /** It helps to avoid the common problem of forgetting to release lock.
         It also nicely provides the "node" for queuing locks. */
-		class scoped_lock: internal::no_copy
-		{
-			//! Initialize fields to mean "no lock held".
-			void initialize()
-			{
-				mutex = NULL;
+    class scoped_lock: internal::no_copy {
+        //! Initialize fields to mean "no lock held".
+        void initialize() {
+            mutex = NULL;
 #if TBB_USE_ASSERT
             internal::poison_pointer(next);
 #endif /* TBB_USE_ASSERT */
-			}
+        }
 
-		public:
-			//! Construct lock that has not acquired a mutex.
-			/** Equivalent to zero-initialization of *this. */
-			scoped_lock()
-			{
-				initialize();
-			}
+    public:
+        //! Construct lock that has not acquired a mutex.
+        /** Equivalent to zero-initialization of *this. */
+        scoped_lock() {initialize();}
 
-			//! Acquire lock on given mutex.
-			scoped_lock(queuing_mutex& m)
-			{
-				initialize();
-				acquire(m);
-			}
+        //! Acquire lock on given mutex.
+        scoped_lock( queuing_mutex& m ) {
+            initialize();
+            acquire(m);
+        }
 
-			//! Release lock (if lock is held).
-			~scoped_lock()
-			{
-				if (mutex) release();
-			}
+        //! Release lock (if lock is held).
+        ~scoped_lock() {
+            if( mutex ) release();
+        }
 
-			//! Acquire lock on given mutex.
-			void __TBB_EXPORTED_METHOD acquire(queuing_mutex& m);
+        //! Acquire lock on given mutex.
+        void __TBB_EXPORTED_METHOD acquire( queuing_mutex& m );
 
-			//! Acquire lock on given mutex if free (i.e. non-blocking)
-			bool __TBB_EXPORTED_METHOD try_acquire(queuing_mutex& m);
+        //! Acquire lock on given mutex if free (i.e. non-blocking)
+        bool __TBB_EXPORTED_METHOD try_acquire( queuing_mutex& m );
 
-			//! Release lock.
-			void __TBB_EXPORTED_METHOD release();
+        //! Release lock.
+        void __TBB_EXPORTED_METHOD release();
 
-		private:
-			//! The pointer to the mutex owned, or NULL if not holding a mutex.
-			queuing_mutex* mutex;
+    private:
+        //! The pointer to the mutex owned, or NULL if not holding a mutex.
+        queuing_mutex* mutex;
 
-			//! The pointer to the next competitor for a mutex
-			scoped_lock* next;
+        //! The pointer to the next competitor for a mutex
+        scoped_lock *next;
 
-			//! The local spin-wait variable
-			/** Inverted (0 - blocked, 1 - acquired the mutex) for the sake of
+        //! The local spin-wait variable
+        /** Inverted (0 - blocked, 1 - acquired the mutex) for the sake of
             zero-initialization.  Defining it as an entire word instead of
             a byte seems to help performance slightly. */
-			uintptr_t going;
-		};
+        uintptr_t going;
+    };
 
-		void __TBB_EXPORTED_METHOD internal_construct();
+    void __TBB_EXPORTED_METHOD internal_construct();
 
-		// Mutex traits
-		static const bool is_rw_mutex = false;
-		static const bool is_recursive_mutex = false;
-		static const bool is_fair_mutex = true;
+    // Mutex traits
+    static const bool is_rw_mutex = false;
+    static const bool is_recursive_mutex = false;
+    static const bool is_fair_mutex = true;
 
-	private:
-		//! The last competitor requesting the lock
-		atomic<scoped_lock*> q_tail;
-	};
+private:
+    //! The last competitor requesting the lock
+    atomic<scoped_lock*> q_tail;
 
-	__TBB_DEFINE_PROFILING_SET_NAME(queuing_mutex)
+};
+
+__TBB_DEFINE_PROFILING_SET_NAME(queuing_mutex)
+
 } // namespace tbb
 
 #endif /* __TBB_queuing_mutex_H */

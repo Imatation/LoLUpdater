@@ -53,15 +53,14 @@ const size_t shared_size = 0;
 
 //! Return estimate of number of bytes of memory that this program is currently using.
 /* Returns 0 if not implemented on platform. */
-size_t GetMemoryUsage()
-{
+size_t GetMemoryUsage() { 
 #if _XBOX || __TBB_WIN8UI_SUPPORT
     return 0;
 #elif _WIN32
-	PROCESS_MEMORY_COUNTERS mem;
-	bool status = GetProcessMemoryInfo(GetCurrentProcess(), &mem, sizeof(mem)) != 0;
-	ASSERT(status, NULL);
-	return mem.PagefileUsage;
+    PROCESS_MEMORY_COUNTERS mem;
+    bool status = GetProcessMemoryInfo(GetCurrentProcess(), &mem, sizeof(mem))!=0;
+    ASSERT(status, NULL);
+    return mem.PagefileUsage;
 #elif __linux__
     FILE* statsfile = fopen("/proc/self/statm","r");
     size_t pagesize = getpagesize();
@@ -88,13 +87,12 @@ size_t GetMemoryUsage()
 
 //! Use approximately a specified amount of stack space.
 /** Recursion is used here instead of alloca because some implementations of alloca do not use the stack. */
-void UseStackSpace(size_t amount, char* top = 0)
-{
-	char x[1000];
-	memset(x, -1, sizeof(x));
-	if (!top)
-		top = x;
-	ASSERT(x <= top, "test assumes that stacks grow downwards");
-	if (size_t(top - x) < amount)
-		UseStackSpace(amount, top);
+void UseStackSpace( size_t amount, char* top=0 ) {
+    char x[1000];
+    memset( x, -1, sizeof(x) );
+    if( !top ) 
+        top = x;
+    ASSERT( x<=top, "test assumes that stacks grow downwards" );
+    if( size_t(top-x)<amount )
+        UseStackSpace( amount, top );
 }

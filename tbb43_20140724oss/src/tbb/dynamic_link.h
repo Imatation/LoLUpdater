@@ -29,7 +29,7 @@
     #undef __TBB_ASSERT
     #define __TBB_ASSERT(x,y) LIBRARY_ASSERT(x,y)
 #else
-#define LIBRARY_ASSERT(x,y) __TBB_ASSERT_EX(x,y)
+    #define LIBRARY_ASSERT(x,y) __TBB_ASSERT_EX(x,y)
 #endif /* !LIBRARY_ASSERT */
 
 /** By default, symbols declared and defined here go into namespace tbb::internal.
@@ -46,43 +46,43 @@
 #endif /* _WIN32 */
 
 OPEN_INTERNAL_NAMESPACE
-	//! Type definition for a pointer to a void somefunc(void)
-	typedef void (* pointer_to_handler)();
 
-	//! The helper to construct dynamic_link_descriptor structure
-	// Double cast through the void* in DLD macro is necessary to
-	// prevent warnings from some compilers (g++ 4.1)
+//! Type definition for a pointer to a void somefunc(void)
+typedef void (*pointer_to_handler)();
+
+//! The helper to construct dynamic_link_descriptor structure
+// Double cast through the void* in DLD macro is necessary to
+// prevent warnings from some compilers (g++ 4.1)
 #if __TBB_WEAK_SYMBOLS_PRESENT
 #define DLD(s,h) {#s, (pointer_to_handler*)(void*)(&h), (pointer_to_handler)&s}
 #else 
 #define DLD(s,h) {#s, (pointer_to_handler*)(void*)(&h)}
 #endif /* __TBB_WEAK_SYMBOLS_PRESENT */
-	//! Association between a handler name and location of pointer to it.
-	struct dynamic_link_descriptor
-	{
-		//! Name of the handler
-		const char* name;
-		//! Pointer to the handler
-		pointer_to_handler* handler;
+//! Association between a handler name and location of pointer to it.
+struct dynamic_link_descriptor {
+    //! Name of the handler
+    const char* name;
+    //! Pointer to the handler
+    pointer_to_handler* handler;
 #if __TBB_WEAK_SYMBOLS_PRESENT
-		//! Weak symbol
+    //! Weak symbol
     pointer_to_handler ptr;
 #endif
-	};
+};
 
 #if _WIN32
-	typedef HMODULE dynamic_link_handle;
+typedef HMODULE dynamic_link_handle;
 #else
 typedef void* dynamic_link_handle;
 #endif /* _WIN32 */
 
-	const int DYNAMIC_LINK_GLOBAL = 0x01;
-	const int DYNAMIC_LINK_LOAD = 0x02;
-	const int DYNAMIC_LINK_WEAK = 0x04;
-	const int DYNAMIC_LINK_ALL = DYNAMIC_LINK_GLOBAL | DYNAMIC_LINK_LOAD | DYNAMIC_LINK_WEAK;
+const int DYNAMIC_LINK_GLOBAL = 0x01;
+const int DYNAMIC_LINK_LOAD   = 0x02;
+const int DYNAMIC_LINK_WEAK   = 0x04;
+const int DYNAMIC_LINK_ALL    = DYNAMIC_LINK_GLOBAL | DYNAMIC_LINK_LOAD | DYNAMIC_LINK_WEAK;
 
-	//! Fill in dynamically linked handlers.
-	/** 'library' is the name of the requested library. It should not contain a full
+//! Fill in dynamically linked handlers.
+/** 'library' is the name of the requested library. It should not contain a full
     path since dynamic_link adds the full path (from which the runtime itself
     was loaded) to the library name.
     'required' is the number of the initial entries in the array descriptors[]
@@ -97,26 +97,25 @@ typedef void* dynamic_link_handle;
     'flags' is the set of DYNAMIC_LINK_* flags. Each of the DYNAMIC_LINK_* flags
     allows its corresponding linking stage.
 **/
-	bool dynamic_link(const char* library,
-	                  const dynamic_link_descriptor descriptors[],
-	                  size_t required,
-	                  dynamic_link_handle* handle = 0,
-	                  int flags = DYNAMIC_LINK_ALL);
+bool dynamic_link( const char* library,
+                   const dynamic_link_descriptor descriptors[],
+                   size_t required,
+                   dynamic_link_handle* handle = 0,
+                   int flags = DYNAMIC_LINK_ALL );
 
-	void dynamic_unlink(dynamic_link_handle handle);
+void dynamic_unlink( dynamic_link_handle handle );
 
-	void dynamic_unlink_all();
+void dynamic_unlink_all();
 
-	enum dynamic_link_error_t
-	{
-		dl_success = 0,
-		dl_lib_not_found, // char const * lib, dlerr_t err
-		dl_sym_not_found, // char const * sym, dlerr_t err
-		// Note: dlerr_t depends on OS: it is char const * on Linux* and OS X*, int on Windows*.
-		dl_sys_fail, // char const * func, int err
-		dl_buff_too_small // none
-	}; // dynamic_link_error_t
+enum dynamic_link_error_t {
+    dl_success = 0,
+    dl_lib_not_found,     // char const * lib, dlerr_t err
+    dl_sym_not_found,     // char const * sym, dlerr_t err
+                          // Note: dlerr_t depends on OS: it is char const * on Linux* and OS X*, int on Windows*.
+    dl_sys_fail,          // char const * func, int err
+    dl_buff_too_small     // none
+}; // dynamic_link_error_t
 
-	CLOSE_INTERNAL_NAMESPACE
+CLOSE_INTERNAL_NAMESPACE
 
 #endif /* __TBB_dynamic_link */

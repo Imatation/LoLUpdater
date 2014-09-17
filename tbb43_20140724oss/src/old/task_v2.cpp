@@ -28,11 +28,11 @@
 #define __TBB_DEPRECATED_TASK_INTERFACE 1
 #include "tbb/task.h"
 
-namespace tbb
-{
-	void task::destroy(task& victim)
-	{
-		// Forward to static version
-		task_base::destroy(victim);
-	}
+namespace tbb {
+
+void task::destroy( task& victim ) {
+    // Forward to static version
+    task_base::destroy( victim );
+}
+
 } // namespace tbb

@@ -22,50 +22,45 @@
 
 #include "harness.h"
 
-template <typename Container>
-void TestSequence(const typename Container::allocator_type& a)
-{
-	Container c(a);
-	for (int i = 0; i < 1000; ++i)
-		c.push_back(i * i);
-	typename Container::const_iterator p = c.begin();
-	for (int i = 0; i < 1000; ++i)
-	{
-		ASSERT( *p==i*i, NULL );
-		++p;
-	}
-	// regression test against compilation error for GCC 4.6.2
-	c.resize(1000);
+template<typename Container>
+void TestSequence(const typename Container::allocator_type &a) {
+    Container c(a);
+    for( int i=0; i<1000; ++i )
+        c.push_back(i*i);    
+    typename Container::const_iterator p = c.begin();
+    for( int i=0; i<1000; ++i ) {
+        ASSERT( *p==i*i, NULL );
+        ++p;
+    }
+    // regression test against compilation error for GCC 4.6.2
+    c.resize(1000);
 }
 
-template <typename Set>
-void TestSet(const typename Set::allocator_type& a)
-{
-	Set s(typename Set::key_compare(), a);
-	typedef typename Set::value_type value_type;
-	for (int i = 0; i < 100; ++i)
-		s.insert(value_type(3 * i));
-	for (int i = 0; i < 300; ++i)
-	{
-		ASSERT( s.erase(i)==size_t(i%3==0), NULL );
-	}
+template<typename Set>
+void TestSet(const typename Set::allocator_type &a) {
+    Set s(typename Set::key_compare(), a);
+    typedef typename Set::value_type value_type;
+    for( int i=0; i<100; ++i ) 
+        s.insert(value_type(3*i));
+    for( int i=0; i<300; ++i ) {
+        ASSERT( s.erase(i)==size_t(i%3==0), NULL );
+    }
 }
 
-template <typename Map>
-void TestMap(const typename Map::allocator_type& a)
-{
-	Map m(typename Map::key_compare(), a);
-	typedef typename Map::value_type value_type;
-	for (int i = 0; i < 100; ++i)
-		m.insert(value_type(i, i * i));
-	for (int i = 0; i < 100; ++i)
-	ASSERT( m.find(i)->second==i*i, NULL );
+template<typename Map>
+void TestMap(const typename Map::allocator_type &a) {
+    Map m(typename Map::key_compare(), a);
+    typedef typename Map::value_type value_type;
+    for( int i=0; i<100; ++i ) 
+        m.insert(value_type(i,i*i));
+    for( int i=0; i<100; ++i )
+        ASSERT( m.find(i)->second==i*i, NULL );
 }
 
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
-// Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
-#pragma warning (push)
-#pragma warning (disable: 4530)
+    // Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
+    #pragma warning (push)
+    #pragma warning (disable: 4530)
 #endif
 
 #include <deque>
@@ -75,7 +70,7 @@ void TestMap(const typename Map::allocator_type& a)
 #include <vector>
 
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
-#pragma warning (pop)
+    #pragma warning (pop)
 #endif
 
 #if __TBB_CPP11_RVALUE_REF_PRESENT
@@ -107,20 +102,19 @@ struct MoveOperationTracker {
 };
 #endif /*  __TBB_CPP11_RVALUE_REF_PRESENT */
 
-template <typename Allocator>
-void TestAllocatorWithSTL(const Allocator& a = Allocator())
-{
-	typedef typename Allocator::template rebind<int>::other Ai;
-	typedef typename Allocator::template rebind<std::pair<const int, int>>::other Acii;
+template<typename Allocator>
+void TestAllocatorWithSTL(const Allocator &a = Allocator() ) {
+    typedef typename Allocator::template rebind<int>::other Ai;
+    typedef typename Allocator::template rebind<std::pair<const int, int> >::other Acii;
 #if _MSC_VER
-	typedef typename Allocator::template rebind<const int>::other Aci;
-	typedef typename Allocator::template rebind<std::pair<int, int>>::other Aii;
+    typedef typename Allocator::template rebind<const int>::other Aci;
+    typedef typename Allocator::template rebind<std::pair<int, int> >::other Aii;
 #endif
 
-	// Sequenced containers
-	TestSequence<std::deque<int, Ai>>(a);
-	TestSequence<std::list<int, Ai>>(a);
-	TestSequence<std::vector<int, Ai>>(a);
+    // Sequenced containers
+    TestSequence<std::deque <int,Ai> >(a);
+    TestSequence<std::list  <int,Ai> >(a);
+    TestSequence<std::vector<int,Ai> >(a);
 
 #if __TBB_CPP11_RVALUE_REF_PRESENT
     typedef typename Allocator::template rebind<MoveOperationTracker>::other Amot;
@@ -129,24 +123,24 @@ void TestAllocatorWithSTL(const Allocator& a = Allocator())
     TestSequence<std::vector<MoveOperationTracker, Amot> >(a);
 #endif
 
-	// Associative containers
-	TestSet<std::set<int, std::less<int>, Ai>>(a);
-	TestSet<std::multiset<int, std::less<int>, Ai>>(a);
-	TestMap<std::map<int, int, std::less<int>, Acii>>(a);
-	TestMap<std::multimap<int, int, std::less<int>, Acii>>(a);
+    // Associative containers
+    TestSet<std::set     <int, std::less<int>, Ai> >(a);
+    TestSet<std::multiset<int, std::less<int>, Ai> >(a);
+    TestMap<std::map     <int, int, std::less<int>, Acii> >(a);
+    TestMap<std::multimap<int, int, std::less<int>, Acii> >(a);
 
 #if _MSC_VER
-	// Test compatibility with Microsoft's implementation of std::allocator for some cases that
-	// are undefined according to the ISO standard but permitted by Microsoft.
-	TestSequence<std::deque<const int, Aci>>(a);
+    // Test compatibility with Microsoft's implementation of std::allocator for some cases that
+    // are undefined according to the ISO standard but permitted by Microsoft.
+    TestSequence<std::deque <const int,Aci> >(a);
 #if _CPPLIB_VER>=500
-	TestSequence<std::list<const int, Aci>>(a);
+    TestSequence<std::list  <const int,Aci> >(a);
 #endif
-	TestSequence<std::vector<const int, Aci>>(a);
-	TestSet<std::set<const int, std::less<int>, Aci>>(a);
-	TestMap<std::map<int, int, std::less<int>, Aii>>(a);
-	TestMap<std::map<const int, int, std::less<int>, Acii>>(a);
-	TestMap<std::multimap<int, int, std::less<int>, Aii>>(a);
-	TestMap<std::multimap<const int, int, std::less<int>, Acii>>(a);
+    TestSequence<std::vector<const int,Aci> >(a);
+    TestSet<std::set<const int, std::less<int>, Aci> >(a);
+    TestMap<std::map<int, int, std::less<int>, Aii> >(a);
+    TestMap<std::map<const int, int, std::less<int>, Acii> >(a);
+    TestMap<std::multimap<int, int, std::less<int>, Aii> >(a);
+    TestMap<std::multimap<const int, int, std::less<int>, Acii> >(a);
 #endif /* _MSC_VER */
 }

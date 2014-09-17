@@ -31,14 +31,12 @@
 #include "tbb/tbb_config.h"
 #include "harness_defs.h"
 
-namespace Harness
-{
-	enum TestResult
-	{
-		Done,
-		Skipped,
-		Unknown
-	};
+namespace Harness {
+    enum TestResult {
+        Done,
+        Skipped,
+        Unknown
+    };
 }
 
 //! Entry point to a TBB unit test application
@@ -54,22 +52,22 @@ namespace Harness
 
     To provide non-standard variant of main() for the test, define HARNESS_CUSTOM_MAIN
     before including harness.h **/
-int TestMain();
+int TestMain ();
 
 #if __SUNPRO_CC
     #include <stdlib.h>
     #include <string.h>
     #include <ucontext.h>
 #else /* !__SUNPRO_CC */
-#include <cstdlib>
+    #include <cstdlib>
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
-// Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
-#pragma warning (push)
-#pragma warning (disable: 4530)
+    // Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
+    #pragma warning (push)
+    #pragma warning (disable: 4530)
 #endif
-#include <cstring>
+    #include <cstring>
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
-#pragma warning (pop)
+    #pragma warning (pop)
 #endif
 #endif /* !__SUNPRO_CC */
 
@@ -78,27 +76,27 @@ int TestMain();
 #if __TBB_MIC_NATIVE
     #include "harness_mic.h"
 #else
-#define HARNESS_EXPORT
-#define REPORT_FATAL_ERROR REPORT
+    #define HARNESS_EXPORT
+    #define REPORT_FATAL_ERROR REPORT
 #endif /* !__MIC__ */
 
 #if _WIN32||_WIN64
-#include "tbb/machine/windows_api.h"
-#if _WIN32_WINNT > 0x0501 && _MSC_VER && !_M_ARM
+    #include "tbb/machine/windows_api.h"
+    #if _WIN32_WINNT > 0x0501 && _MSC_VER && !_M_ARM
         #include <dbghelp.h>
         #pragma comment (lib, "dbghelp.lib")
-#endif
-#if _XBOX
+    #endif
+    #if _XBOX
         #undef HARNESS_NO_PARSE_COMMAND_LINE
         #define HARNESS_NO_PARSE_COMMAND_LINE 1
-#endif
-#if __TBB_WIN8UI_SUPPORT
+    #endif
+    #if __TBB_WIN8UI_SUPPORT
         #include <thread>
-#endif
-#if _MSC_VER
-#include <crtdbg.h>
-#endif
-#include <process.h>
+    #endif
+    #if _MSC_VER
+        #include <crtdbg.h>
+    #endif
+    #include <process.h>
 #else
     #include <pthread.h>
 #endif
@@ -118,20 +116,18 @@ int TestMain();
 #include "harness_report.h"
 
 //! Prints current call stack
-void print_call_stack()
-{
-	fflush(stdout);
-	fflush(stderr);
-#if BACKTRACE_FUNCTION_AVAILABLE
+void print_call_stack() {
+    fflush(stdout); fflush(stderr);
+    #if BACKTRACE_FUNCTION_AVAILABLE
         const int sz = 100; // max number of frames to capture
         void *buff[sz];
         int n = backtrace(buff, sz);
         REPORT("Call stack info (%d):\n", n);
         backtrace_symbols_fd(buff, n, fileno(stdout));
-#elif __SUNPRO_CC
+    #elif __SUNPRO_CC
         REPORT("Call stack info:\n");
         printstack(fileno(stdout));
-#elif _WIN32_WINNT > 0x0501 && _MSC_VER && !__TBB_WIN8UI_SUPPORT
+    #elif _WIN32_WINNT > 0x0501 && _MSC_VER && !__TBB_WIN8UI_SUPPORT
         const int sz = 62; // XP limitation for number of frames
         void *buff[sz];
         int n = CaptureStackBackTrace(0, sz, buff, NULL);
@@ -150,92 +146,78 @@ void print_call_stack()
             }
             REPORT("[%d] %016I64LX+%04I64LX: %s\n", i, sym.Address, offset, sym.Name); //TODO: print module name
         }
-#endif /*BACKTRACE_FUNCTION_AVAILABLE*/
+    #endif /*BACKTRACE_FUNCTION_AVAILABLE*/
 }
 
 #if !HARNESS_NO_ASSERT
-#include <exception> //for set_terminate
-
-#include "harness_assert.h"
-#if TEST_USES_TBB
+    #include <exception> //for set_terminate
+    #include "harness_assert.h"
+    #if TEST_USES_TBB
         #include <tbb/tbb_stddef.h> /*set_assertion_handler*/
-#endif
+    #endif
 
-struct InitReporter
-{
-	void (* default_terminate_handler)();
-
-	InitReporter(): default_terminate_handler(NULL)
-	{
-#if TEST_USES_TBB
-#if TBB_USE_ASSERT
+    struct InitReporter {
+        void (*default_terminate_handler)() ;
+        InitReporter(): default_terminate_handler(NULL) {
+            #if TEST_USES_TBB
+                #if TBB_USE_ASSERT
                     tbb::set_assertion_handler(ReportError);
-#endif
+                #endif
                 ASSERT_WARNING(TBB_INTERFACE_VERSION <= tbb::TBB_runtime_interface_version(), "runtime version mismatch");
-#endif
-#if TBB_USE_EXCEPTIONS
+            #endif
+            #if TBB_USE_EXCEPTIONS
                 default_terminate_handler = std::set_terminate(handle_terminate);
-#endif
-	}
+            #endif
+        }
+        static void handle_terminate();
+    };
+    static InitReporter InitReportError;
 
-	static void handle_terminate();
-};
+    void InitReporter::handle_terminate(){
+        REPORT("std::terminate called.\n");
+        print_call_stack();
+        if (InitReportError.default_terminate_handler){
+            InitReportError.default_terminate_handler();
+        }
+    }
 
-static InitReporter InitReportError;
+    typedef void (*test_error_extra_t)(void);
+    static test_error_extra_t ErrorExtraCall;
+    //! Set additional handler to process failed assertions
+    void SetHarnessErrorProcessing( test_error_extra_t extra_call ) {
+        ErrorExtraCall = extra_call;
+    }
 
-void InitReporter::handle_terminate()
-{
-	REPORT("std::terminate called.\n");
-	print_call_stack();
-	if (InitReportError.default_terminate_handler)
-	{
-		InitReportError.default_terminate_handler();
-	}
-}
-
-typedef void (* test_error_extra_t)(void);
-static test_error_extra_t ErrorExtraCall;
-
-//! Set additional handler to process failed assertions
-void SetHarnessErrorProcessing(test_error_extra_t extra_call)
-{
-	ErrorExtraCall = extra_call;
-}
-
-//! Reports errors issued by failed assertions
-void ReportError(const char* filename, int line, const char* expression, const char* message)
-{
-	print_call_stack();
-#if __TBB_ICL_11_1_CODE_GEN_BROKEN
+    //! Reports errors issued by failed assertions
+    void ReportError( const char* filename, int line, const char* expression, const char * message ) {
+        print_call_stack();
+    #if __TBB_ICL_11_1_CODE_GEN_BROKEN
         printf("%s:%d, assertion %s: %s\n", filename, line, expression, message ? message : "failed" );
-#else
-	REPORT_FATAL_ERROR("%s:%d, assertion %s: %s\n", filename, line, expression, message ? message : "failed");
-#endif
+    #else
+        REPORT_FATAL_ERROR("%s:%d, assertion %s: %s\n", filename, line, expression, message ? message : "failed" );
+    #endif
 
-	if (ErrorExtraCall)
-		(*ErrorExtraCall)();
-	fflush(stdout);
-	fflush(stderr);
-#if HARNESS_TERMINATE_ON_ASSERT
+        if( ErrorExtraCall )
+            (*ErrorExtraCall)();
+        fflush(stdout); fflush(stderr);
+    #if HARNESS_TERMINATE_ON_ASSERT
         TerminateProcess(GetCurrentProcess(), 1);
-#elif HARNESS_EXIT_ON_ASSERT
+    #elif HARNESS_EXIT_ON_ASSERT
         exit(1);
-#elif HARNESS_CONTINUE_ON_ASSERT
-	// continue testing
-#elif _MSC_VER && _DEBUG
-	// aligned with tbb_assert_impl.h behavior
+    #elif HARNESS_CONTINUE_ON_ASSERT
+        // continue testing
+    #elif _MSC_VER && _DEBUG
+        // aligned with tbb_assert_impl.h behavior
         if(1 == _CrtDbgReport(_CRT_ASSERT, filename, line, NULL, "%s\r\n%s", expression, message?message:""))
             _CrtDbgBreak();
-#else
-	abort();
-#endif /* HARNESS_EXIT_ON_ASSERT */
-}
-
-//! Reports warnings issued by failed warning assertions
-void ReportWarning(const char* filename, int line, const char* expression, const char* message)
-{
-	REPORT("Warning: %s:%d, assertion %s: %s\n", filename, line, expression, message ? message : "failed");
-}
+    #else
+        abort();
+    #endif /* HARNESS_EXIT_ON_ASSERT */
+    }
+    //! Reports warnings issued by failed warning assertions
+    void ReportWarning( const char* filename, int line, const char* expression, const char * message ) {
+        REPORT("Warning: %s:%d, assertion %s: %s\n", filename, line, expression, message ? message : "failed" );
+    }
 
 #else /* !HARNESS_NO_ASSERT */
 
@@ -244,20 +226,20 @@ void ReportWarning(const char* filename, int line, const char* expression, const
 
 #endif /* !HARNESS_NO_ASSERT */
 
-namespace Harness
-{
-	//TODO: unify with utility::internal::array_length from examples common utilities
-	template <typename T, size_t N>
-	inline size_t array_length(const T(&)[N])
-	{
-		return N;
-	}
+namespace Harness {
+    //TODO: unify with utility::internal::array_length from examples common utilities
+    template<typename T, size_t N>
+    inline size_t array_length(const T(&)[N])
+    {
+       return N;
+    }
 
-	template <typename T, size_t N>
-	inline T* end(T(& array)[N])
-	{
-		return array + array_length(array) ;
-	}
+    template<typename T, size_t N>
+    inline T* end( T(& array)[N])
+    {
+       return array+ array_length(array) ;
+    }
+
 } //namespace Harness
 
 #if TEST_USES_TBB
@@ -276,14 +258,14 @@ namespace Harness
 static bool Verbose;
 
 #ifndef HARNESS_DEFAULT_MIN_THREADS
-#define HARNESS_DEFAULT_MIN_THREADS 1
+    #define HARNESS_DEFAULT_MIN_THREADS 1
 #endif
 
 //! Minimum number of threads
 static int MinThread = HARNESS_DEFAULT_MIN_THREADS;
 
 #ifndef HARNESS_DEFAULT_MAX_THREADS
-#define HARNESS_DEFAULT_MAX_THREADS 4
+    #define HARNESS_DEFAULT_MAX_THREADS 4
 #endif
 
 //! Maximum number of threads
@@ -295,43 +277,36 @@ static int MaxThread = HARNESS_DEFAULT_MAX_THREADS;
     A single number m is interpreted as if written m:m.
     The numbers must be non-negative.
     Clients often treat the value 0 as "run sequentially." */
-static void ParseCommandLine(int argc, char* argv[])
-{
-	if (!argc) REPORT("Command line with 0 arguments\n");
-	int i = 1;
-	if (i < argc)
-	{
-		if (strncmp(argv[i], "-v", 2) == 0)
-		{
-			Verbose = true;
-			++i;
-		}
-	}
-	if (i < argc)
-	{
-		char* endptr;
-		MinThread = strtol(argv[i], &endptr, 0);
-		if (*endptr == ':')
-			MaxThread = strtol(endptr + 1, &endptr, 0);
-		else if (*endptr == '\0')
-			MaxThread = MinThread;
-		if (*endptr != '\0')
-		{
-			REPORT_FATAL_ERROR("garbled nthread range\n");
-			exit(1);
-		}
-		if (MinThread < 0)
-		{
-			REPORT_FATAL_ERROR("nthread must be nonnegative\n");
-			exit(1);
-		}
-		if (MaxThread < MinThread)
-		{
-			REPORT_FATAL_ERROR("nthread range is backwards\n");
-			exit(1);
-		}
-		++i;
-	}
+static void ParseCommandLine( int argc, char* argv[] ) {
+    if( !argc ) REPORT("Command line with 0 arguments\n");
+    int i = 1;
+    if( i<argc ) {
+        if( strncmp( argv[i], "-v", 2 )==0 ) {
+            Verbose = true;
+            ++i;
+        }
+    }
+    if( i<argc ) {
+        char* endptr;
+        MinThread = strtol( argv[i], &endptr, 0 );
+        if( *endptr==':' )
+            MaxThread = strtol( endptr+1, &endptr, 0 );
+        else if( *endptr=='\0' )
+            MaxThread = MinThread;
+        if( *endptr!='\0' ) {
+            REPORT_FATAL_ERROR("garbled nthread range\n");
+            exit(1);
+        }
+        if( MinThread<0 ) {
+            REPORT_FATAL_ERROR("nthread must be nonnegative\n");
+            exit(1);
+        }
+        if( MaxThread<MinThread ) {
+            REPORT_FATAL_ERROR("nthread range is backwards\n");
+            exit(1);
+        }
+        ++i;
+    }
 #if __TBB_STDARGS_BROKEN
     if ( !argc )
         argc = 1;
@@ -340,11 +315,10 @@ static void ParseCommandLine(int argc, char* argv[])
             ++i;
     }
 #endif /* __TBB_STDARGS_BROKEN */
-	if (i != argc)
-	{
-		REPORT_FATAL_ERROR("Usage: %s [-v] [nthread|minthread:maxthread]\n", argv[0]);
-		exit(1);
-	}
+    if( i!=argc ) {
+        REPORT_FATAL_ERROR("Usage: %s [-v] [nthread|minthread:maxthread]\n", argv[0] );
+        exit(1);
+    }
 }
 #endif /* HARNESS_NO_PARSE_COMMAND_LINE */
 
@@ -364,9 +338,8 @@ int main() {
     MPI_Init(NULL,NULL);
 #endif
 #else
-int main(int argc, char* argv[])
-{
-	ParseCommandLine(argc, argv);
+int main(int argc, char* argv[]) {
+    ParseCommandLine( argc, argv );
 #if __TBB_MPI_INTEROP
     MPI_Init(&argc,&argv);
 #endif
@@ -376,9 +349,9 @@ int main(int argc, char* argv[])
     return 0;
 #else
 #if __TBB_MPI_INTEROP
-	// Simple TBB/MPI interoperability harness for most of tests
-	// Worker processes send blocking messages to the master process about their rank and group size
-	// Master process receives this info and print it in verbose mode
+    // Simple TBB/MPI interoperability harness for most of tests
+    // Worker processes send blocking messages to the master process about their rank and group size
+    // Master process receives this info and print it in verbose mode
     int rank, size, myrank;
     MPI_Status status;
     MPI_Comm_size(MPI_COMM_WORLD,&size);
@@ -400,54 +373,50 @@ int main(int argc, char* argv[])
     }
 #endif
 
-	int res = Harness::Unknown;
+    int res = Harness::Unknown;
 #if __TBB_MIC_OFFLOAD
-	// "mic:-1" or "mandatory" specifies execution on the target. The runtime
-	// system chooses the specific target. Execution on the CPU is not allowed.
+    // "mic:-1" or "mandatory" specifies execution on the target. The runtime
+    // system chooses the specific target. Execution on the CPU is not allowed.
 #if __INTEL_COMPILER < 1400
     #pragma offload target(mic:-1) out(res)
 #else
     #pragma offload target(mic) out(res) mandatory
 #endif
 #endif
-	res = TestMain();
+    res = TestMain ();
 
-	ASSERT( res==Harness::Done || res==Harness::Skipped, "Wrong return code by TestMain");
+    ASSERT( res==Harness::Done || res==Harness::Skipped, "Wrong return code by TestMain");
 #if __TBB_MPI_INTEROP
     if (myrank == 0) {
         REPORT( res==Harness::Done ? "done\n" : "skip\n" );
     }
     MPI_Finalize();
 #else
-	REPORT(res == Harness::Done ? "done\n" : "skip\n");
+    REPORT( res==Harness::Done ? "done\n" : "skip\n" );
 #endif
-	return 0;
+    return 0;
 #endif /* HARNESS_SKIP_TEST */
 }
 
 #endif /* !HARNESS_CUSTOM_MAIN */
 
 //! Base class for prohibiting compiler-generated operator=
-class NoAssign
-{
-	//! Assignment not allowed
-	void operator=(const NoAssign&);
+class NoAssign {
+    //! Assignment not allowed
+    void operator=( const NoAssign& );
 public:
 #if __GNUC__
-	//! Explicitly define default construction, because otherwise gcc issues gratuitous warning.
+    //! Explicitly define default construction, because otherwise gcc issues gratuitous warning.
     NoAssign() {}
 #endif /* __GNUC__ */
 };
 
 //! Base class for prohibiting compiler-generated copy constructor or operator=
-class NoCopy: NoAssign
-{
-	//! Copy construction not allowed
-	NoCopy(const NoCopy&);
+class NoCopy: NoAssign {
+    //! Copy construction not allowed
+    NoCopy( const NoCopy& );
 public:
-	NoCopy()
-	{
-	}
+    NoCopy() {}
 };
 
 #if HARNESS_TBBMALLOC_THREAD_SHUTDOWN && __TBB_SOURCE_DIRECTLY_INCLUDED && (_WIN32||_WIN64)
@@ -455,39 +424,36 @@ public:
 #endif
 
 //! For internal use by template function NativeParallelFor
-template <typename Index, typename Body>
-class NativeParallelForTask: NoCopy
-{
+template<typename Index, typename Body>
+class NativeParallelForTask: NoCopy {
 public:
-	NativeParallelForTask(Index index_, const Body& body_) :
-		index(index_),
-		body(body_)
-	{
-	}
+    NativeParallelForTask( Index index_, const Body& body_ ) :
+        index(index_),
+        body(body_)
+    {}
 
-	//! Start task
-	void start()
-	{
+    //! Start task
+    void start() {
 #if _WIN32||_WIN64
-		unsigned thread_id;
+        unsigned thread_id;
 #if __TBB_WIN8UI_SUPPORT
         std::thread* thread_tmp=new std::thread(thread_function, this);
         thread_handle = thread_tmp->native_handle();
         thread_id = 0;
 #else
-		thread_handle = (HANDLE)_beginthreadex(NULL, 0, thread_function, this, 0, &thread_id);
+        thread_handle = (HANDLE)_beginthreadex( NULL, 0, thread_function, this, 0, &thread_id );
 #endif
-		ASSERT( thread_handle!=0, "NativeParallelFor: _beginthreadex failed" );
+        ASSERT( thread_handle!=0, "NativeParallelFor: _beginthreadex failed" );
 #else
 #if __ICC==1100
     #pragma warning (push)
     #pragma warning (disable: 2193)
 #endif /* __ICC==1100 */
-		// Some machines may have very large hard stack limit. When the test is
-		// launched by make, the default stack size is set to the hard limit, and
-		// calls to pthread_create fail with out-of-memory error.
-		// Therefore we set the stack size explicitly (as for TBB worker threads).
-		// TODO: make a single definition of MByte used by all tests.
+        // Some machines may have very large hard stack limit. When the test is
+        // launched by make, the default stack size is set to the hard limit, and
+        // calls to pthread_create fail with out-of-memory error.
+        // Therefore we set the stack size explicitly (as for TBB worker threads).
+// TODO: make a single definition of MByte used by all tests.
         const size_t MByte = 1024*1024;
 #if __i386__||__i386||__arm__
         const size_t stack_size = 1*MByte;
@@ -508,15 +474,14 @@ public:
     #pragma warning (pop)
 #endif
 #endif /* _WIN32||_WIN64 */
-	}
+    }
 
-	//! Wait for task to finish
-	void wait_to_finish()
-	{
+    //! Wait for task to finish
+    void wait_to_finish() {
 #if _WIN32||_WIN64
-		DWORD status = WaitForSingleObjectEx(thread_handle, INFINITE, FALSE);
-		ASSERT( status!=WAIT_FAILED, "WaitForSingleObject failed" );
-		CloseHandle(thread_handle);
+        DWORD status = WaitForSingleObjectEx( thread_handle, INFINITE, FALSE );
+        ASSERT( status!=WAIT_FAILED, "WaitForSingleObject failed" );
+        CloseHandle( thread_handle );
 #else
         int status = pthread_join( thread_id, NULL );
         ASSERT( !status, "pthread_join failed" );
@@ -524,76 +489,72 @@ public:
 #if HARNESS_NO_ASSERT
         (void)status;
 #endif
-	}
+    }
 
 private:
 #if _WIN32||_WIN64
-	HANDLE thread_handle;
+    HANDLE thread_handle;
 #else
     pthread_t thread_id;
 #endif
 
-	//! Range over which task will invoke the body.
-	const Index index;
+    //! Range over which task will invoke the body.
+    const Index index;
 
-	//! Body to invoke over the range.
-	const Body body;
+    //! Body to invoke over the range.
+    const Body body;
 
 #if _WIN32||_WIN64
-	static unsigned __stdcall thread_function(void* object)
+    static unsigned __stdcall thread_function( void* object )
 #else
     static void* thread_function(void* object)
 #endif
-	{
-		NativeParallelForTask& self = *static_cast<NativeParallelForTask*>(object);
-		(self.body)(self.index);
+    {
+        NativeParallelForTask& self = *static_cast<NativeParallelForTask*>(object);
+        (self.body)(self.index);
 #if HARNESS_TBBMALLOC_THREAD_SHUTDOWN && __TBB_SOURCE_DIRECTLY_INCLUDED && (_WIN32||_WIN64)
-		// in those cases can't release per-thread cache automatically,
-		// so do it manually
-		// TODO: investigate less-intrusive way to do it, for example via FLS keys
+        // in those cases can't release per-thread cache automatically,
+        // so do it manually
+        // TODO: investigate less-intrusive way to do it, for example via FLS keys
         __TBB_mallocThreadShutdownNotification();
 #endif
-		return 0;
-	}
+        return 0;
+    }
 };
 
 //! Execute body(i) in parallel for i in the interval [0,n).
 /** Each iteration is performed by a separate thread. */
-template <typename Index, typename Body>
-void NativeParallelFor(Index n, const Body& body)
-{
-	typedef NativeParallelForTask<Index, Body> task;
+template<typename Index, typename Body>
+void NativeParallelFor( Index n, const Body& body ) {
+    typedef NativeParallelForTask<Index,Body> task;
 
-	if (n > 0)
-	{
-		// Allocate array to hold the tasks
-		task* array = static_cast<task*>(operator new(n * sizeof(task)));
+    if( n>0 ) {
+        // Allocate array to hold the tasks
+        task* array = static_cast<task*>(operator new( n*sizeof(task) ));
 
-		// Construct the tasks
-		for (Index i = 0; i != n; ++i)
-			new(&array[i]) task(i, body);
+        // Construct the tasks
+        for( Index i=0; i!=n; ++i )
+            new( &array[i] ) task(i,body);
 
-		// Start the tasks
-		for (Index i = 0; i != n; ++i)
-			array[i].start();
+        // Start the tasks
+        for( Index i=0; i!=n; ++i )
+            array[i].start();
 
-		// Wait for the tasks to finish and destroy each one.
-		for (Index i = n; i; --i)
-		{
-			array[i - 1].wait_to_finish();
-			array[i - 1].~task();
-		}
+        // Wait for the tasks to finish and destroy each one.
+        for( Index i=n; i; --i ) {
+            array[i-1].wait_to_finish();
+            array[i-1].~task();
+        }
 
-		// Deallocate the task array
-		operator delete(array);
-	}
+        // Deallocate the task array
+        operator delete(array);
+    }
 }
 
 //! The function to zero-initialize arrays; useful to avoid warnings
 template <typename T>
-void zero_fill(void* array, size_t n)
-{
-	memset(array, 0, sizeof(T) * n);
+void zero_fill(void* array, size_t n) {
+    memset(array, 0, sizeof(T)*n);
 }
 
 #if __SUNPRO_CC && defined(min)
@@ -606,10 +567,9 @@ void zero_fill(void* array, size_t n)
 /** Provided here to avoid including not strict safe <algorithm>.\n
     In case operands cause signed/unsigned or size mismatch warnings it is caller's
     responsibility to do the appropriate cast before calling the function. **/
-template <typename T1, typename T2>
-T1 min(const T1& val1, const T2& val2)
-{
-	return val1 < val2 ? val1 : val2;
+template<typename T1, typename T2>
+T1 min ( const T1& val1, const T2& val2 ) {
+    return val1 < val2 ? val1 : val2;
 }
 #endif /* !min */
 
@@ -618,10 +578,9 @@ T1 min(const T1& val1, const T2& val2)
 /** Provided here to avoid including not strict safe <algorithm>.\n
     In case operands cause signed/unsigned or size mismatch warnings it is caller's
     responsibility to do the appropriate cast before calling the function. **/
-template <typename T1, typename T2>
-T1 max(const T1& val1, const T2& val2)
-{
-	return val1 < val2 ? val2 : val1;
+template<typename T1, typename T2>
+T1 max ( const T1& val1, const T2& val2 ) {
+    return val1 < val2 ? val2 : val1;
 }
 #endif /* !max */
 
@@ -643,71 +602,53 @@ inline unsigned LinuxKernelVersion()
 }
 #endif
 
-namespace Harness
-{
+namespace Harness {
+
 #if !HARNESS_NO_ASSERT
-	//! Base class that asserts that no operations are made with the object after its destruction.
-	class NoAfterlife
-	{
-	protected:
-		enum state_t
-		{
-			LIVE=0x56781234,
-			DEAD=0xDEADBEEF
-		} m_state;
+//! Base class that asserts that no operations are made with the object after its destruction.
+class NoAfterlife {
+protected:
+    enum state_t {
+        LIVE=0x56781234,
+        DEAD=0xDEADBEEF
+    } m_state;
 
-	public:
-		NoAfterlife() : m_state(LIVE)
-		{
-		}
-
-		NoAfterlife(const NoAfterlife& src) : m_state(LIVE)
-		{
-			ASSERT( src.IsLive(), "Constructing from the dead source" );
-		}
-
-		~NoAfterlife()
-		{
-			ASSERT( IsLive(), "Repeated destructor call" );
-			m_state = DEAD;
-		}
-
-		const NoAfterlife& operator=(const NoAfterlife& src)
-		{
-			ASSERT( IsLive(), NULL );
-			ASSERT( src.IsLive(), NULL );
-			return *this;
-		}
-
-		void AssertLive() const
-		{
-			ASSERT( IsLive(), "Already dead" );
-		}
-
-		bool IsLive() const
-		{
-			return m_state == LIVE;
-		}
-	}; // NoAfterlife
+public:
+    NoAfterlife() : m_state(LIVE) {}
+    NoAfterlife( const NoAfterlife& src ) : m_state(LIVE) {
+        ASSERT( src.IsLive(), "Constructing from the dead source" );
+    }
+    ~NoAfterlife() {
+        ASSERT( IsLive(), "Repeated destructor call" );
+        m_state = DEAD;
+    }
+    const NoAfterlife& operator=( const NoAfterlife& src ) {
+        ASSERT( IsLive(), NULL );
+        ASSERT( src.IsLive(), NULL );
+        return *this;
+    }
+    void AssertLive() const {
+        ASSERT( IsLive(), "Already dead" );
+    }
+    bool IsLive() const {
+        return m_state == LIVE;
+    }
+}; // NoAfterlife
 #endif /* !HARNESS_NO_ASSERT */
 
 #if _WIN32 || _WIN64
-	void Sleep(int ms)
-	{
+    void Sleep ( int ms ) {
 #if !__TBB_WIN8UI_SUPPORT
-		::Sleep(ms);
+        ::Sleep(ms);
 #else
          std::chrono::milliseconds sleep_time( ms );
          std::this_thread::sleep_for( sleep_time );
 #endif
-	}
 
-	typedef DWORD tid_t;
+    }
 
-	tid_t CurrentTid()
-	{
-		return GetCurrentThreadId();
-	}
+    typedef DWORD tid_t;
+    tid_t CurrentTid () { return GetCurrentThreadId(); }
 
 #else /* !WIN */
 
@@ -721,34 +662,30 @@ namespace Harness
     tid_t CurrentTid () { return pthread_self(); }
 #endif /* !WIN */
 
-	static const unsigned Primes[] = {
-		0x9e3779b1, 0xffe6cc59, 0x2109f6dd, 0x43977ab5, 0xba5703f5, 0xb495a877, 0xe1626741, 0x79695e6b,
-		0xbc98c09f, 0xd5bee2b3, 0x287488f9, 0x3af18231, 0x9677cd4d, 0xbe3a6929, 0xadc6a877, 0xdcf0674b,
-		0xbe4d6fe9, 0x5f15e201, 0x99afc3fd, 0xf3f16801, 0xe222cfff, 0x24ba5fdb, 0x0620452d, 0x79f149e3,
-		0xc8b93f49, 0x972702cd, 0xb07dd827, 0x6c97d5ed, 0x085a3d61, 0x46eb5ea7, 0x3d9910ed, 0x2e687b5b,
-		0x29609227, 0x6eb081f1, 0x0954c4e1, 0x9d114db9, 0x542acfa9, 0xb3e6bd7b, 0x0742d917, 0xe9f3ffa7,
-		0x54581edb, 0xf2480f45, 0x0bb9288f, 0xef1affc7, 0x85fa0ca7, 0x3ccc14db, 0xe6baf34b, 0x343377f7,
-		0x5ca19031, 0xe6d9293b, 0xf0a9f391, 0x5d2e980b, 0xfc411073, 0xc3749363, 0xb892d829, 0x3549366b,
-		0x629750ad, 0xb98294e5, 0x892d9483, 0xc235baf3, 0x3d2402a3, 0x6bdef3c9, 0xbec333cd, 0x40c9520f
-	};
+    static const unsigned Primes[] = {
+        0x9e3779b1, 0xffe6cc59, 0x2109f6dd, 0x43977ab5, 0xba5703f5, 0xb495a877, 0xe1626741, 0x79695e6b,
+        0xbc98c09f, 0xd5bee2b3, 0x287488f9, 0x3af18231, 0x9677cd4d, 0xbe3a6929, 0xadc6a877, 0xdcf0674b,
+        0xbe4d6fe9, 0x5f15e201, 0x99afc3fd, 0xf3f16801, 0xe222cfff, 0x24ba5fdb, 0x0620452d, 0x79f149e3,
+        0xc8b93f49, 0x972702cd, 0xb07dd827, 0x6c97d5ed, 0x085a3d61, 0x46eb5ea7, 0x3d9910ed, 0x2e687b5b,
+        0x29609227, 0x6eb081f1, 0x0954c4e1, 0x9d114db9, 0x542acfa9, 0xb3e6bd7b, 0x0742d917, 0xe9f3ffa7,
+        0x54581edb, 0xf2480f45, 0x0bb9288f, 0xef1affc7, 0x85fa0ca7, 0x3ccc14db, 0xe6baf34b, 0x343377f7,
+        0x5ca19031, 0xe6d9293b, 0xf0a9f391, 0x5d2e980b, 0xfc411073, 0xc3749363, 0xb892d829, 0x3549366b,
+        0x629750ad, 0xb98294e5, 0x892d9483, 0xc235baf3, 0x3d2402a3, 0x6bdef3c9, 0xbec333cd, 0x40c9520f
+    };
 
-	class FastRandom
-	{
-		unsigned x, a;
-	public:
-		unsigned short get()
-		{
-			unsigned short r = (unsigned short)(x >> 16);
-			x = x * a + 1;
-			return r;
-		}
-
-		FastRandom(unsigned seed)
-		{
-			x = seed;
-			a = Primes[seed % (sizeof(Primes) / sizeof(Primes[0]))];
-		}
-	};
+    class FastRandom {
+        unsigned x, a;
+    public:
+        unsigned short get() {
+            unsigned short r = (unsigned short)(x >> 16);
+            x = x*a + 1;
+            return r;
+        }
+        FastRandom( unsigned seed ) {
+            x = seed;
+            a = Primes[seed % (sizeof(Primes) / sizeof(Primes[0]))];
+        }
+    };
 } // namespace Harness
 
 #endif /* tbb_tests_harness_H */

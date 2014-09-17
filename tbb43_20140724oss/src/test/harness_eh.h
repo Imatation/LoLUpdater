@@ -28,19 +28,19 @@
 #include "harness_concurrency_tracker.h"
 
 int g_NumThreads = 0;
-Harness::tid_t g_Master = 0;
-const char* g_Orig_Wakeup_Msg = "Missed wakeup or machine is overloaded?";
-const char* g_Wakeup_Msg = g_Orig_Wakeup_Msg;
+Harness::tid_t  g_Master = 0;
+const char * g_Orig_Wakeup_Msg = "Missed wakeup or machine is overloaded?";
+const char * g_Wakeup_Msg = g_Orig_Wakeup_Msg;
 
 tbb::atomic<intptr_t> g_CurExecuted,
                       g_ExecutedAtLastCatch,
                       g_ExecutedAtFirstCatch,
                       g_ExceptionsThrown,
-                      g_MasterExecutedThrow, // number of times master entered exception code
-                      g_NonMasterExecutedThrow, // number of times nonmaster entered exception code
+                      g_MasterExecutedThrow,     // number of times master entered exception code
+                      g_NonMasterExecutedThrow,  // number of times nonmaster entered exception code
                       g_PipelinesStarted;
 volatile bool g_ExceptionCaught = false,
-	g_UnknownException = false;
+              g_UnknownException = false;
 
 #if USE_TASK_SCHEDULER_OBSERVER
 tbb::atomic<intptr_t> g_ActualMaxThreads;
@@ -48,15 +48,15 @@ tbb::atomic<intptr_t> g_ActualCurrentThreads;
 #endif
 
 volatile bool g_ThrowException = true,
-	// g_Flog is true for nested construct tests with catches (exceptions are not allowed to
-	// propagate to the tbb construct itself.)
-	g_Flog = false,
-	g_MasterExecuted = false,
-	g_NonMasterExecuted = false;
+         // g_Flog is true for nested construct tests with catches (exceptions are not allowed to
+         // propagate to the tbb construct itself.)
+              g_Flog = false,
+              g_MasterExecuted = false,
+              g_NonMasterExecuted = false;
 
-bool g_ExceptionInMaster = false;
-bool g_SolitaryException = false;
-bool g_NestedPipelines = false;
+bool    g_ExceptionInMaster = false;
+bool    g_SolitaryException = false;
+bool    g_NestedPipelines   = false;
 
 //! Number of exceptions propagated into the user code (i.e. intercepted by the tests)
 tbb::atomic<intptr_t> g_NumExceptionsCaught;
@@ -66,7 +66,7 @@ tbb::atomic<intptr_t> g_NumExceptionsCaught;
 #if USE_TASK_SCHEDULER_OBSERVER
 class eh_test_observer : public tbb::task_scheduler_observer {
 public:
-/*override*/
+    /*override*/
     void on_scheduler_entry(bool is_worker) {
         if(is_worker) {  // we've already counted the master
             size_t p = ++g_ActualCurrentThreads;
@@ -76,10 +76,10 @@ public:
             }
         }
         else {
-// size_t q = g_ActualMaxThreads;
+            // size_t q = g_ActualMaxThreads;
         }
     }
-/*override*/
+    /*override*/
     void on_scheduler_exit(bool is_worker) {
         if(is_worker) {
             --g_ActualCurrentThreads;
@@ -89,24 +89,23 @@ public:
 #endif
 //-----------------------------------------------------------
 
-inline void ResetEhGlobals(bool throwException = true, bool flog = false)
-{
-	Harness::ConcurrencyTracker::Reset();
-	g_CurExecuted = g_ExecutedAtLastCatch = g_ExecutedAtFirstCatch = 0;
-	g_ExceptionCaught = false;
-	g_UnknownException = false;
-	g_NestedPipelines = false;
-	g_ThrowException = throwException;
-	g_MasterExecutedThrow = 0;
-	g_NonMasterExecutedThrow = 0;
-	g_Flog = flog;
-	g_MasterExecuted = false;
-	g_NonMasterExecuted = false;
+inline void ResetEhGlobals ( bool throwException = true, bool flog = false ) {
+    Harness::ConcurrencyTracker::Reset();
+    g_CurExecuted = g_ExecutedAtLastCatch = g_ExecutedAtFirstCatch = 0;
+    g_ExceptionCaught = false;
+    g_UnknownException = false;
+    g_NestedPipelines = false;
+    g_ThrowException = throwException;
+    g_MasterExecutedThrow = 0;
+    g_NonMasterExecutedThrow = 0;
+    g_Flog = flog;
+    g_MasterExecuted = false;
+    g_NonMasterExecuted = false;
 #if USE_TASK_SCHEDULER_OBSERVER
     g_ActualMaxThreads = 1;  // count master
     g_ActualCurrentThreads = 1;  // count master
 #endif
-	g_ExceptionsThrown = g_NumExceptionsCaught = g_PipelinesStarted = 0;
+    g_ExceptionsThrown = g_NumExceptionsCaught = g_PipelinesStarted = 0;
 }
 
 #if TBB_USE_EXCEPTIONS
@@ -147,7 +146,7 @@ static void ThrowTestException ( intptr_t threshold ) {
     if ( !g_ThrowException ||   // if we're not supposed to throw
             (!g_Flog &&         // if we're not catching throw in bodies and 
              (g_ExceptionInMaster ^ inMaster)) ) { // we're the master and not expected to throw
-// or are the master and the master is not the one to throw (??)
+              // or are the master and the master is not the one to throw (??)
         return; 
     }
     while ( Existed() < threshold )
@@ -157,10 +156,10 @@ static void ThrowTestException ( intptr_t threshold ) {
         if(inMaster) ++g_MasterExecutedThrow; else ++g_NonMasterExecutedThrow;
         throw test_exception(EXCEPTION_DESCR);
     }
-// g_SolitaryException == true
+    // g_SolitaryException == true
     if(g_NestedPipelines) {
-// only throw exception if we have started at least two inner pipelines
-// else return
+        // only throw exception if we have started at least two inner pipelines
+        // else return
         if(g_PipelinesStarted >= 3) {
             if ( g_ExceptionsThrown.compare_and_swap(1, 0) == 0 )  {
                 if(inMaster) ++g_MasterExecutedThrow; else ++g_NonMasterExecutedThrow;
@@ -221,118 +220,100 @@ static void ThrowTestException ( intptr_t threshold ) {
 
 #else /* !TBB_USE_EXCEPTIONS */
 
-inline void ThrowTestException(intptr_t)
-{
-}
+inline void ThrowTestException ( intptr_t ) {}
 
 #endif /* !TBB_USE_EXCEPTIONS */
 
 #define TRY()   \
-    bool l_ExceptionCaughtAtCurrentLevel = false, unknownException = false;
-__TBB_TRY {
+    bool l_ExceptionCaughtAtCurrentLevel = false, unknownException = false;    \
+    __TBB_TRY {
 
 // "l_ExceptionCaughtAtCurrentLevel || unknownException" is used only to "touch" otherwise unused local variables
-#define CATCH_AND_FAIL() } __TBB_CATCH(...) {
-	ASSERT (false, "Cancelling tasks must not cause any exceptions");
-	(void)(l_ExceptionCaughtAtCurrentLevel && unknownException);
-}
+#define CATCH_AND_FAIL() } __TBB_CATCH(...) { \
+        ASSERT (false, "Cancelling tasks must not cause any exceptions");    \
+        (void)(l_ExceptionCaughtAtCurrentLevel && unknownException);                        \
+    }
 
 const int c_Timeout = 1000000;
 
-void WaitUntilConcurrencyPeaks(int expected_peak)
-{
-	if (g_Flog)
-		return;
-	int n = 0;
+void WaitUntilConcurrencyPeaks ( int expected_peak ) {
+    if ( g_Flog )
+        return;
+    int n = 0;
 retry:
-	while (++n < c_Timeout && (int)Harness::ConcurrencyTracker::PeakParallelism() < expected_peak)
-		__TBB_Yield();
+    while ( ++n < c_Timeout && (int)Harness::ConcurrencyTracker::PeakParallelism() < expected_peak )
+        __TBB_Yield();
 #if USE_TASK_SCHEDULER_OBSERVER
     ASSERT_WARNING( g_NumThreads == g_ActualMaxThreads, "Library did not provide sufficient threads");
 #endif
-	ASSERT_WARNING(n < c_Timeout,g_Wakeup_Msg);
-	// Workaround in case a missed wakeup takes place
-	if (n == c_Timeout)
-	{
-		tbb::task& r = *new(tbb::task::allocate_root()) tbb::empty_task();
-		r.spawn(r);
-		n = 0;
-		goto retry;
-	}
+    ASSERT_WARNING(n < c_Timeout,g_Wakeup_Msg);
+    // Workaround in case a missed wakeup takes place
+    if ( n == c_Timeout ) {
+        tbb::task &r = *new( tbb::task::allocate_root() ) tbb::empty_task();
+        r.spawn(r);
+        n = 0;
+        goto retry;
+    }
 }
 
-inline void WaitUntilConcurrencyPeaks()
-{
-	WaitUntilConcurrencyPeaks(g_NumThreads);
+inline void WaitUntilConcurrencyPeaks () { WaitUntilConcurrencyPeaks(g_NumThreads); }
+
+inline bool IsMaster() {
+    return Harness::CurrentTid() == g_Master;
 }
 
-inline bool IsMaster()
-{
-	return Harness::CurrentTid() == g_Master;
+inline bool IsThrowingThread() {
+    return g_ExceptionInMaster ^ IsMaster() ? true : false;
 }
 
-inline bool IsThrowingThread()
-{
-	return g_ExceptionInMaster ^ IsMaster() ? true : false;
-}
+class CancellatorTask : public tbb::task {
+    static volatile bool s_Ready;
+    tbb::task_group_context &m_groupToCancel;
+    intptr_t m_cancellationThreshold;
 
-class CancellatorTask : public tbb::task
-{
-	static volatile bool s_Ready;
-	tbb::task_group_context& m_groupToCancel;
-	intptr_t m_cancellationThreshold;
-
-	tbb::task* execute()
-	{
-		Harness::ConcurrencyTracker ct;
-		s_Ready = true;
-		while (g_CurExecuted < m_cancellationThreshold)
-			__TBB_Yield();
-		m_groupToCancel.cancel_group_execution();
-		g_ExecutedAtLastCatch = g_CurExecuted;
-		return NULL;
-	}
-
+    tbb::task* execute () {
+        Harness::ConcurrencyTracker ct;
+        s_Ready = true;
+        while ( g_CurExecuted < m_cancellationThreshold )
+            __TBB_Yield();
+        m_groupToCancel.cancel_group_execution();
+        g_ExecutedAtLastCatch = g_CurExecuted;
+        return NULL;
+    }
 public:
-	CancellatorTask(tbb::task_group_context& ctx, intptr_t threshold)
-		: m_groupToCancel(ctx), m_cancellationThreshold(threshold)
-	{
-		s_Ready = false;
-	}
+    CancellatorTask ( tbb::task_group_context& ctx, intptr_t threshold )
+        : m_groupToCancel(ctx), m_cancellationThreshold(threshold)
+    {
+        s_Ready = false;
+    }
 
-	static void Reset()
-	{
-		s_Ready = false;
-	}
+    static void Reset () { s_Ready = false; }
 
-	static bool WaitUntilReady()
-	{
-		const intptr_t limit = 10000000;
-		intptr_t n = 0;
-		do
-		{
-			__TBB_Yield();
-		}
-		while (!s_Ready && ++n < limit);
-		// should yield once, then continue if Cancellator is ready.
-		ASSERT( s_Ready || n == limit, NULL );
-		return s_Ready;
-	}
+    static bool WaitUntilReady () {
+        const intptr_t limit = 10000000;
+        intptr_t n = 0;
+        do {
+            __TBB_Yield();
+        } while( !s_Ready && ++n < limit );
+        // should yield once, then continue if Cancellator is ready.
+        ASSERT( s_Ready || n == limit, NULL );
+        return s_Ready;
+    }
 };
 
 volatile bool CancellatorTask::s_Ready = false;
 
-template <class LauncherTaskT, class CancellatorTaskT>
-void RunCancellationTest(intptr_t threshold = 1)
+template<class LauncherTaskT, class CancellatorTaskT>
+void RunCancellationTest ( intptr_t threshold = 1 )
 {
-	tbb::task_group_context ctx;
-	tbb::empty_task& r = *new(tbb::task::allocate_root(ctx)) tbb::empty_task;
-	r.set_ref_count(3);
-	r.spawn(*new(r.allocate_child()) CancellatorTaskT(ctx, threshold));
-	__TBB_Yield();
-	r.spawn(*new(r.allocate_child()) LauncherTaskT(ctx));
-	TRY();
-		r.wait_for_all();
-		CATCH_AND_FAIL();
-	r.destroy(r);
+    tbb::task_group_context  ctx;
+    tbb::empty_task &r = *new( tbb::task::allocate_root(ctx) ) tbb::empty_task;
+    r.set_ref_count(3);
+    r.spawn( *new( r.allocate_child() ) CancellatorTaskT(ctx, threshold) );
+    __TBB_Yield();
+    r.spawn( *new( r.allocate_child() ) LauncherTaskT(ctx) );
+    TRY();
+        r.wait_for_all();
+    CATCH_AND_FAIL();
+    r.destroy(r);
 }

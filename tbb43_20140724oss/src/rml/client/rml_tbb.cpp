@@ -22,12 +22,10 @@
 #include "tbb/dynamic_link.h"
 #include <assert.h>
 
-namespace tbb
-{
-	namespace internal
-	{
-		namespace rml
-		{
+namespace tbb {
+namespace internal {
+namespace rml {
+
 #define MAKE_SERVER(x) DLD(__TBB_make_rml_server,x)
 #define GET_INFO(x) DLD(__TBB_call_with_my_server_info,x)
 #define SERVER tbb_server 
@@ -44,6 +42,7 @@ namespace tbb
 #endif /* __TBB_WEAK_SYMBOLS_PRESENT */
 
 #include "rml_factory.h"
-		} // rml
-	} // internal
+
+} // rml
+} // internal
 } // tbb

@@ -19,8 +19,7 @@
 */
 
 #ifndef __TBB_machine_H
-#error Do not
-#include  this internal file directly; use public TBB headers instead.
+#error Do not #include this internal file directly; use public TBB headers instead.
 #endif
 
 #include <sched.h>

@@ -24,7 +24,7 @@
 
 #define TRY_BAD_EXPR_ENABLED (TBB_USE_ASSERT && TBB_USE_EXCEPTIONS && !__TBB_THROW_ACROSS_MODULE_BOUNDARY_BROKEN)
 
-#if TRY_BAD_EXPR_ENABLED   
+#if TRY_BAD_EXPR_ENABLED
 
 //! Check that expression x raises assertion failure with message containing given substring.
 /** Assumes that tbb::set_assertion_handler( AssertionFailureHandler ) was called earlier. */
@@ -52,7 +52,7 @@ AssertionFailure::AssertionFailure( const char* filename, int line, const char* 
 {
     ASSERT(filename,"missing filename");
     ASSERT(0<line,"line number must be positive");
-// All of our current files have fewer than 4000 lines.
+    // All of our current files have fewer than 4000 lines.
     ASSERT(line<5000,"dubiously high line number");
     ASSERT(expression,"missing expression");
 }

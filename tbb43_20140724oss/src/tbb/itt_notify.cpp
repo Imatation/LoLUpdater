@@ -21,9 +21,9 @@
 #if DO_ITT_NOTIFY
 
 #if _WIN32||_WIN64
-#ifndef UNICODE
+    #ifndef UNICODE
         #define UNICODE
-#endif
+    #endif
 #else
     #pragma weak dlopen
     #pragma weak dlsym
@@ -43,7 +43,6 @@ extern "C" void MallocInitializeITT();
 #else
 #error This file is expected to be used for either TBB or TBB allocator build.
 #endif // __TBB_BUILD
-
 
 #include "tools_api/ittnotify_static.c"
 
@@ -67,8 +66,8 @@ int __TBB_load_ittnotify() {
 #define __TBB_NO_IMPLICIT_LINKAGE 1
 #include "itt_notify.h"
 
-namespace tbb
-{
+namespace tbb {
+
 #if DO_ITT_NOTIFY
     const tchar 
             *SyncType_GlobalLock = _T("TbbGlobalLock"),
@@ -88,4 +87,6 @@ namespace tbb
             *SyncObj_ContextsList = _T("TBB Scheduler")
             ;
 #endif /* DO_ITT_NOTIFY */
+
 } // namespace tbb
+

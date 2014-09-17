@@ -44,13 +44,13 @@ tbbmalloc_proxy.lib /INCLUDE:"__TBB_malloc_proxy"
 #ifdef _DEBUG
     #pragma comment(lib, "tbbmalloc_proxy_debug.lib")
 #else
-#pragma comment(lib, "tbbmalloc_proxy.lib")
+    #pragma comment(lib, "tbbmalloc_proxy.lib")
 #endif
 
 #if defined(_WIN64)
     #pragma comment(linker, "/include:__TBB_malloc_proxy")
 #else
-#pragma comment(linker, "/include:___TBB_malloc_proxy")
+    #pragma comment(linker, "/include:___TBB_malloc_proxy")
 #endif
 
 #else
@@ -62,6 +62,5 @@ struct __TBB_malloc_proxy_caller {
 } volatile __TBB_malloc_proxy_helper_object;
 
 #endif // _MSC_VER
-
 
 #endif //__TBB_tbbmalloc_proxy_H

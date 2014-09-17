@@ -24,13 +24,12 @@
 #include <iterator>
 #include <memory>
 
-namespace Harness
-{
-	template <class T>
-	class InputIterator
-	{
-		T* my_ptr;
-	public:
+namespace Harness {
+
+template <class T>
+class InputIterator {
+    T * my_ptr;
+public:
 #if HARNESS_EXTENDED_STD_COMPLIANCE
     typedef std::input_iterator_tag iterator_category;
     typedef T value_type;
@@ -38,33 +37,20 @@ namespace Harness
     typedef typename std::allocator<T>::pointer pointer;
     typedef typename std::allocator<T>::reference reference;
 #endif /* HARNESS_EXTENDED_STD_COMPLIANCE */
+   
+    explicit InputIterator( T * ptr): my_ptr(ptr){}
+    
+    T& operator* () { return *my_ptr; }
+    
+    InputIterator& operator++ () { ++my_ptr; return *this; }
 
-		explicit InputIterator(T* ptr): my_ptr(ptr)
-		{
-		}
+    bool operator== ( const InputIterator& r ) { return my_ptr == r.my_ptr; }
+};
 
-		T& operator*()
-		{
-			return *my_ptr;
-		}
-
-		InputIterator& operator++()
-		{
-			++my_ptr;
-			return *this;
-		}
-
-		bool operator==(const InputIterator& r)
-		{
-			return my_ptr == r.my_ptr;
-		}
-	};
-
-	template <class T>
-	class ForwardIterator
-	{
-		T* my_ptr;
-	public:
+template <class T>
+class ForwardIterator {
+    T * my_ptr;
+public:
 #if HARNESS_EXTENDED_STD_COMPLIANCE
     typedef std::forward_iterator_tag iterator_category;
     typedef T value_type;
@@ -72,41 +58,26 @@ namespace Harness
     typedef typename std::allocator<T>::pointer pointer;
     typedef typename std::allocator<T>::reference reference;
 #endif /* HARNESS_EXTENDED_STD_COMPLIANCE */
+   
+    explicit ForwardIterator ( T * ptr ) : my_ptr(ptr){}
+    
+    ForwardIterator ( const ForwardIterator& r ) : my_ptr(r.my_ptr){}
+    
+    T& operator* () { return *my_ptr; }
+    
+    ForwardIterator& operator++ () { ++my_ptr; return *this; }
 
-		explicit ForwardIterator(T* ptr) : my_ptr(ptr)
-		{
-		}
+    bool operator== ( const ForwardIterator& r ) { return my_ptr == r.my_ptr; }
+};
 
-		ForwardIterator(const ForwardIterator& r) : my_ptr(r.my_ptr)
-		{
-		}
-
-		T& operator*()
-		{
-			return *my_ptr;
-		}
-
-		ForwardIterator& operator++()
-		{
-			++my_ptr;
-			return *this;
-		}
-
-		bool operator==(const ForwardIterator& r)
-		{
-			return my_ptr == r.my_ptr;
-		}
-	};
-
-	template <class T>
-	class RandomIterator
-	{
-		T* my_ptr;
+template <class T>
+class RandomIterator {
+    T * my_ptr;
 #if !HARNESS_EXTENDED_STD_COMPLIANCE
-		typedef typename std::allocator<T>::difference_type difference_type;
+    typedef typename std::allocator<T>::difference_type difference_type;
 #endif
 
-	public:
+public:
 #if HARNESS_EXTENDED_STD_COMPLIANCE
     typedef std::random_access_iterator_tag iterator_category;
     typedef T value_type;
@@ -115,50 +86,23 @@ namespace Harness
     typedef typename std::allocator<T>::difference_type difference_type;
 #endif /* HARNESS_EXTENDED_STD_COMPLIANCE */
 
-		explicit RandomIterator(T* ptr) : my_ptr(ptr)
-		{
-		}
+    explicit RandomIterator ( T * ptr ) : my_ptr(ptr){}
+    RandomIterator ( const RandomIterator& r ) : my_ptr(r.my_ptr){}
+    T& operator* () { return *my_ptr; }
+    RandomIterator& operator++ () { ++my_ptr; return *this; }
+    bool operator== ( const RandomIterator& r ) { return my_ptr == r.my_ptr; }
+    difference_type operator- (const RandomIterator &r) {return my_ptr - r.my_ptr;}
+    RandomIterator operator+ (difference_type n) {return RandomIterator(my_ptr + n);}
+};
 
-		RandomIterator(const RandomIterator& r) : my_ptr(r.my_ptr)
-		{
-		}
-
-		T& operator*()
-		{
-			return *my_ptr;
-		}
-
-		RandomIterator& operator++()
-		{
-			++my_ptr;
-			return *this;
-		}
-
-		bool operator==(const RandomIterator& r)
-		{
-			return my_ptr == r.my_ptr;
-		}
-
-		difference_type operator-(const RandomIterator& r)
-		{
-			return my_ptr - r.my_ptr;
-		}
-
-		RandomIterator operator+(difference_type n)
-		{
-			return RandomIterator(my_ptr + n);
-		}
-	};
-
-	template <class T>
-	class ConstRandomIterator
-	{
-		const T* my_ptr;
+template <class T>
+class ConstRandomIterator {
+    const T * my_ptr;
 #if !HARNESS_EXTENDED_STD_COMPLIANCE
-		typedef typename std::allocator<T>::difference_type difference_type;
+    typedef typename std::allocator<T>::difference_type difference_type;
 #endif
 
-	public:
+public:
 #if HARNESS_EXTENDED_STD_COMPLIANCE
     typedef std::random_access_iterator_tag iterator_category;
     typedef T value_type;
@@ -167,76 +111,46 @@ namespace Harness
     typedef typename std::allocator<T>::difference_type difference_type;
 #endif /* HARNESS_EXTENDED_STD_COMPLIANCE */
 
-		explicit ConstRandomIterator(const T* ptr) : my_ptr(ptr)
-		{
-		}
+    explicit ConstRandomIterator ( const T * ptr ) : my_ptr(ptr){}
+    ConstRandomIterator ( const ConstRandomIterator& r ) : my_ptr(r.my_ptr){}
+    const T& operator* () { return *my_ptr; }
+    ConstRandomIterator& operator++ () { ++my_ptr; return *this; }
+    bool operator== ( const ConstRandomIterator& r ) { return my_ptr == r.my_ptr; }
+    difference_type operator- (const ConstRandomIterator &r) {return my_ptr - r.my_ptr;}
+    ConstRandomIterator operator+ (difference_type n) {return ConstRandomIterator(my_ptr + n);}
+};
 
-		ConstRandomIterator(const ConstRandomIterator& r) : my_ptr(r.my_ptr)
-		{
-		}
-
-		const T& operator*()
-		{
-			return *my_ptr;
-		}
-
-		ConstRandomIterator& operator++()
-		{
-			++my_ptr;
-			return *this;
-		}
-
-		bool operator==(const ConstRandomIterator& r)
-		{
-			return my_ptr == r.my_ptr;
-		}
-
-		difference_type operator-(const ConstRandomIterator& r)
-		{
-			return my_ptr - r.my_ptr;
-		}
-
-		ConstRandomIterator operator+(difference_type n)
-		{
-			return ConstRandomIterator(my_ptr + n);
-		}
-	};
 } // namespace Harness
 
 #if !HARNESS_EXTENDED_STD_COMPLIANCE
-namespace std
-{
-	template <typename T>
-	struct iterator_traits<Harness::InputIterator<T>>
-	{
-		typedef std::input_iterator_tag iterator_category;
-		typedef T value_type;
-		typedef value_type& reference;
-	};
+namespace std {
+    template<typename T>
+    struct iterator_traits< Harness::InputIterator<T> > {
+        typedef std::input_iterator_tag iterator_category;
+        typedef T value_type;
+        typedef value_type& reference;
+    };
 
-	template <typename T>
-	struct iterator_traits<Harness::ForwardIterator<T>>
-	{
-		typedef std::forward_iterator_tag iterator_category;
-		typedef T value_type;
-		typedef value_type& reference;
-	};
+    template<typename T>
+    struct iterator_traits< Harness::ForwardIterator<T> > {
+        typedef std::forward_iterator_tag iterator_category;
+        typedef T value_type;
+        typedef value_type& reference;
+    };
 
-	template <typename T>
-	struct iterator_traits<Harness::RandomIterator<T>>
-	{
-		typedef std::random_access_iterator_tag iterator_category;
-		typedef T value_type;
-		typedef value_type& reference;
-	};
+    template<typename T>
+    struct iterator_traits< Harness::RandomIterator<T> > {
+        typedef std::random_access_iterator_tag iterator_category;
+        typedef T value_type;
+        typedef value_type& reference;
+    };
 
-	template <typename T>
-	struct iterator_traits<Harness::ConstRandomIterator<T>>
-	{
-		typedef std::random_access_iterator_tag iterator_category;
-		typedef T value_type;
-		typedef const value_type& reference;
-	};
+    template<typename T>
+    struct iterator_traits< Harness::ConstRandomIterator<T> > {
+        typedef std::random_access_iterator_tag iterator_category;
+        typedef T value_type;
+        typedef const value_type& reference;
+    };
 } // namespace std
 #endif /* !HARNESS_EXTENDED_STD_COMPLIANCE */
 

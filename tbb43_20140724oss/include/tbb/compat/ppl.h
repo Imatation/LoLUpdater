@@ -30,32 +30,33 @@
 #include "../reader_writer_lock.h"
 #include "../combinable.h"
 
-namespace Concurrency
-{
+namespace Concurrency {
+
 #if __TBB_TASK_GROUP_CONTEXT
-	using tbb::task_handle;
-	using tbb::task_group_status;
-	using tbb::task_group;
-	using tbb::structured_task_group;
-	using tbb::invalid_multiple_scheduling;
-	using tbb::missing_wait;
-	using tbb::make_task;
+    using tbb::task_handle;
+    using tbb::task_group_status;
+    using tbb::task_group;
+    using tbb::structured_task_group;
+    using tbb::invalid_multiple_scheduling;
+    using tbb::missing_wait;
+    using tbb::make_task;
 
-	using tbb::not_complete;
-	using tbb::complete;
-	using tbb::canceled;
+    using tbb::not_complete;
+    using tbb::complete;
+    using tbb::canceled;
 
-	using tbb::is_current_task_group_canceling;
+    using tbb::is_current_task_group_canceling;
 #endif /* __TBB_TASK_GROUP_CONTEXT */
 
-	using tbb::parallel_invoke;
-	using tbb::strict_ppl::parallel_for;
-	using tbb::parallel_for_each;
-	using tbb::critical_section;
-	using tbb::reader_writer_lock;
-	using tbb::combinable;
+    using tbb::parallel_invoke;
+    using tbb::strict_ppl::parallel_for;
+    using tbb::parallel_for_each;
+    using tbb::critical_section;
+    using tbb::reader_writer_lock;
+    using tbb::combinable;
 
-	using tbb::improper_lock;
+    using tbb::improper_lock;
+
 } // namespace Concurrency
 
 #endif /* __TBB_compat_ppl_H */

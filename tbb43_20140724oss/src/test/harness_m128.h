@@ -33,67 +33,47 @@
 #pragma warning (disable: 4752)
 #endif
 
-template <typename __Mvec>
-class ClassWithVectorType
-{
-	static const int n = 16;
-	static const int F = sizeof(__Mvec) / sizeof(float);
-	__Mvec field[n];
-	void init(int start);
+template<typename __Mvec>
+class ClassWithVectorType {
+    static const int n = 16;
+    static const int F = sizeof(__Mvec)/sizeof(float);
+    __Mvec field[n];
+    void init( int start );
 public:
-	ClassWithVectorType()
-	{
-		init(-n);
-	}
-
-	ClassWithVectorType(int i)
-	{
-		init(i);
-	}
-
-	void operator=(const ClassWithVectorType& src)
-	{
-		__Mvec stack[n];
-		for (int i = 0; i < n; ++i)
-			stack[i ^ 5] = src.field[i];
-		for (int i = 0; i < n; ++i)
-			field[i ^ 5] = stack[i];
-	}
-
-	~ClassWithVectorType()
-	{
-		init(-2 * n);
-	}
-
-	friend bool operator==(const ClassWithVectorType& x, const ClassWithVectorType& y)
-	{
-		for (int i = 0; i < F * n; ++i)
-			if (((const float*)x.field)[i] != ((const float*)y.field)[i])
-				return false;
-		return true;
-	}
-
-	friend bool operator!=(const ClassWithVectorType& x, const ClassWithVectorType& y)
-	{
-		return !(x == y);
-	}
+    ClassWithVectorType() {init(-n);} 
+    ClassWithVectorType( int i ) {init(i);}
+    void operator=( const ClassWithVectorType& src ) {
+        __Mvec stack[n];
+        for( int i=0; i<n; ++i )
+            stack[i^5] = src.field[i];
+        for( int i=0; i<n; ++i )
+            field[i^5] = stack[i];
+    }
+    ~ClassWithVectorType() {init(-2*n);}
+    friend bool operator==( const ClassWithVectorType& x, const ClassWithVectorType& y ) {
+        for( int i=0; i<F*n; ++i )
+            if( ((const float*)x.field)[i]!=((const float*)y.field)[i] )
+                return false;
+        return true;
+    }
+    friend bool operator!=( const ClassWithVectorType& x, const ClassWithVectorType& y ) {
+        return !(x==y);
+    }
 };
 
-template <typename __Mvec>
-void ClassWithVectorType<__Mvec>::init(int start)
-{
-	__Mvec stack[n];
-	for (int i = 0; i < n; ++i)
-	{
-		// Declaring value as a one-element array instead of a scalar quites 
-		// gratuitous warnings about possible use of "value" before it was set.
-		__Mvec value[1];
-		for (int j = 0; j < F; ++j)
-			((float*)value)[j] = float(n * start + F * i + j);
-		stack[i ^ 5] = value[0];
-	}
-	for (int i = 0; i < n; ++i)
-		field[i ^ 5] = stack[i];
+template<typename __Mvec>
+void ClassWithVectorType<__Mvec>::init( int start ) {
+    __Mvec stack[n];
+    for( int i=0; i<n; ++i ) {
+        // Declaring value as a one-element array instead of a scalar quites 
+        // gratuitous warnings about possible use of "value" before it was set.
+        __Mvec value[1];
+        for( int j=0; j<F; ++j )
+            ((float*)value)[j] = float(n*start+F*i+j);
+        stack[i^5] = value[0];
+    }
+    for( int i=0; i<n; ++i )
+        field[i^5] = stack[i];
 }
 
 #if (__AVX__ || (_MSC_VER>=1600 && _M_X64)) && !defined(__sun)

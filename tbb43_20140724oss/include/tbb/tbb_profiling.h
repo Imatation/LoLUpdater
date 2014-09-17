@@ -21,38 +21,34 @@
 #ifndef __TBB_profiling_H
 #define __TBB_profiling_H
 
-namespace tbb
-{
-	namespace internal
-	{
-		//
-		// This is not under __TBB_ITT_STRUCTURE_API because these values are used directly in flow_graph.h.  
-		//
+namespace tbb {
+    namespace internal {
 
-		// include list of index names
-#define TBB_STRING_RESOURCE(index_name,str) index_name,
+        //
+        // This is not under __TBB_ITT_STRUCTURE_API because these values are used directly in flow_graph.h.  
+        //
+       
+        // include list of index names
+        #define TBB_STRING_RESOURCE(index_name,str) index_name,
+        enum string_index {
+           #include "internal/_tbb_strings.h"
+           NUM_STRINGS
+        };
+        #undef TBB_STRING_RESOURCE
 
-		enum string_index
-		{
-#include "internal/_tbb_strings.h"
-
-
-			NUM_STRINGS
-		};
-#undef TBB_STRING_RESOURCE
-
-		enum itt_relation
-		{
-			__itt_relation_is_unknown = 0,
-			__itt_relation_is_dependent_on, /**< "A is dependent on B" means that A cannot start until B completes */
-			__itt_relation_is_sibling_of, /**< "A is sibling of B" means that A and B were created as a group */
-			__itt_relation_is_parent_of, /**< "A is parent of B" means that A created B */
-			__itt_relation_is_continuation_of, /**< "A is continuation of B" means that A assumes the dependencies of B */
-			__itt_relation_is_child_of, /**< "A is child of B" means that A was created by B (inverse of is_parent_of) */
-			__itt_relation_is_continued_by, /**< "A is continued by B" means that B assumes the dependencies of A (inverse of is_continuation_of) */
-			__itt_relation_is_predecessor_to /**< "A is predecessor to B" means that B cannot start until A completes (inverse of is_dependent_on) */
-		};
-	}
+        enum itt_relation
+        {
+        __itt_relation_is_unknown = 0,
+        __itt_relation_is_dependent_on,         /**< "A is dependent on B" means that A cannot start until B completes */
+        __itt_relation_is_sibling_of,           /**< "A is sibling of B" means that A and B were created as a group */
+        __itt_relation_is_parent_of,            /**< "A is parent of B" means that A created B */
+        __itt_relation_is_continuation_of,      /**< "A is continuation of B" means that A assumes the dependencies of B */
+        __itt_relation_is_child_of,             /**< "A is child of B" means that A was created by B (inverse of is_parent_of) */
+        __itt_relation_is_continued_by,         /**< "A is continued by B" means that B assumes the dependencies of A (inverse of is_continuation_of) */
+        __itt_relation_is_predecessor_to        /**< "A is predecessor to B" means that B cannot start until A completes (inverse of is_dependent_on) */
+        };
+    
+    }
 }
 
 // Check if the tools support is enabled
@@ -115,11 +111,11 @@ namespace tbb {
 #else /* no tools support */
 
 #if _WIN32||_WIN64
-#define __TBB_DEFINE_PROFILING_SET_NAME(sync_object_type)               \
-        namespace profiling {
-	inline void set_name( sync_object_type&, const wchar_t* ) {}
-inline void set_name( sync_object_type&, const char* ) {}
-}
+    #define __TBB_DEFINE_PROFILING_SET_NAME(sync_object_type)               \
+        namespace profiling {                                               \
+            inline void set_name( sync_object_type&, const wchar_t* ) {}    \
+            inline void set_name( sync_object_type&, const char* ) {}       \
+        }
 #else /* !WIN */
     #define __TBB_DEFINE_PROFILING_SET_NAME(sync_object_type)               \
         namespace profiling {                                               \
@@ -130,27 +126,19 @@ inline void set_name( sync_object_type&, const char* ) {}
 #endif /* no tools support */
 
 #include "atomic.h"
-
 // Need these to work regardless of tools support
-namespace tbb
-{
-	namespace internal
-	{
-		enum notify_type
-		{
-			prepare=0,
-			cancel,
-			acquired,
-			releasing
-		};
+namespace tbb {
+    namespace internal {
 
-		const uintptr_t NUM_NOTIFY_TYPES = 4; // set to # elements in enum above
+        enum notify_type {prepare=0, cancel, acquired, releasing};
 
-		void __TBB_EXPORTED_FUNC call_itt_notify_v5(int t, void* ptr);
-		void __TBB_EXPORTED_FUNC itt_store_pointer_with_release_v3(void* dst, void* src);
-		void* __TBB_EXPORTED_FUNC itt_load_pointer_with_acquire_v3(const void* src);
-		void* __TBB_EXPORTED_FUNC itt_load_pointer_v3(const void* src);
-#if __TBB_ITT_STRUCTURE_API   
+        const uintptr_t NUM_NOTIFY_TYPES = 4; // set to # elements in enum above
+
+        void __TBB_EXPORTED_FUNC call_itt_notify_v5(int t, void *ptr);
+        void __TBB_EXPORTED_FUNC itt_store_pointer_with_release_v3(void *dst, void *src);
+        void* __TBB_EXPORTED_FUNC itt_load_pointer_with_acquire_v3(const void *src);
+        void* __TBB_EXPORTED_FUNC itt_load_pointer_v3( const void* src );
+#if __TBB_ITT_STRUCTURE_API
         enum itt_domain_enum { ITT_DOMAIN_FLOW=0 };
 
         void __TBB_EXPORTED_FUNC itt_make_task_group_v7( itt_domain_enum domain, void *group, unsigned long long group_extra, 
@@ -164,29 +152,25 @@ namespace tbb
         void __TBB_EXPORTED_FUNC itt_task_end_v7( itt_domain_enum domain );
 #endif // __TBB_ITT_STRUCTURE_API
 
-
-		// two template arguments are to workaround /Wp64 warning with tbb::atomic specialized for unsigned type
-		template <typename T, typename U>
-		inline void itt_store_word_with_release(tbb::atomic<T>& dst, U src)
-		{
+        // two template arguments are to workaround /Wp64 warning with tbb::atomic specialized for unsigned type
+        template <typename T, typename U>
+        inline void itt_store_word_with_release(tbb::atomic<T>& dst, U src) {
 #if TBB_USE_THREADING_TOOLS
-			// This assertion should be replaced with static_assert
+            // This assertion should be replaced with static_assert
             __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
             itt_store_pointer_with_release_v3(&dst, (void *)uintptr_t(src));
 #else
-			dst = src;
+            dst = src;
 #endif // TBB_USE_THREADING_TOOLS
+        }
 
-		}
-
-		template <typename T>
-		inline T itt_load_word_with_acquire(const tbb::atomic<T>& src)
-		{
+        template <typename T>
+        inline T itt_load_word_with_acquire(const tbb::atomic<T>& src) {
 #if TBB_USE_THREADING_TOOLS
-			// This assertion should be replaced with static_assert
+            // This assertion should be replaced with static_assert
             __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
 #if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
-			// Workaround for overzealous compiler warnings
+            // Workaround for overzealous compiler warnings
             #pragma warning (push)
             #pragma warning (disable: 4311)
 #endif
@@ -196,61 +180,54 @@ namespace tbb
 #endif
             return result;
 #else
-			return src;
+            return src;
 #endif // TBB_USE_THREADING_TOOLS
+        }
 
-		}
-
-		template <typename T>
-		inline void itt_store_word_with_release(T& dst, T src)
-		{
+        template <typename T>
+        inline void itt_store_word_with_release(T& dst, T src) {
 #if TBB_USE_THREADING_TOOLS
-			// This assertion should be replaced with static_assert
+            // This assertion should be replaced with static_assert
             __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
             itt_store_pointer_with_release_v3(&dst, (void *)src);
 #else
-			__TBB_store_with_release(dst, src);
+            __TBB_store_with_release(dst, src); 
 #endif // TBB_USE_THREADING_TOOLS
+        }
 
-		}
-
-		template <typename T>
-		inline T itt_load_word_with_acquire(const T& src)
-		{
+        template <typename T>
+        inline T itt_load_word_with_acquire(const T& src) {
 #if TBB_USE_THREADING_TOOLS
-			// This assertion should be replaced with static_assert
+            // This assertion should be replaced with static_assert
             __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized");
             return (T)itt_load_pointer_with_acquire_v3(&src);
 #else
-			return __TBB_load_with_acquire(src);
+            return __TBB_load_with_acquire(src);
 #endif // TBB_USE_THREADING_TOOLS
+        }
 
-		}
-
-		template <typename T>
-		inline void itt_hide_store_word(T& dst, T src)
-		{
+        template <typename T>
+        inline void itt_hide_store_word(T& dst, T src) {
 #if TBB_USE_THREADING_TOOLS
-			//TODO: This assertion should be replaced with static_assert
+            //TODO: This assertion should be replaced with static_assert
             __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized");
             itt_store_pointer_with_release_v3(&dst, (void *)src);
 #else
-			dst = src;
+            dst = src;
 #endif
-		}
+        }
 
-		//TODO: rename to itt_hide_load_word_relaxed
-		template <typename T>
-		inline T itt_hide_load_word(const T& src)
-		{
+        //TODO: rename to itt_hide_load_word_relaxed
+        template <typename T>
+        inline T itt_hide_load_word(const T& src) {
 #if TBB_USE_THREADING_TOOLS
-			//TODO: This assertion should be replaced with static_assert
+            //TODO: This assertion should be replaced with static_assert
             __TBB_ASSERT(sizeof(T) == sizeof(void *), "Type must be word-sized.");
             return (T)itt_load_pointer_v3(&src);
 #else
-			return src;
+            return src;
 #endif
-		}
+        }
 
 #if TBB_USE_THREADING_TOOLS
         inline void call_itt_notify(notify_type t, void *ptr) {
@@ -258,14 +235,11 @@ namespace tbb
         }
 
 #else
-		inline void call_itt_notify(notify_type /*t*/, void* /*ptr*/)
-		{
-		}
+        inline void call_itt_notify(notify_type /*t*/, void * /*ptr*/) {}
 
 #endif // TBB_USE_THREADING_TOOLS
 
-
-#if __TBB_ITT_STRUCTURE_API   
+#if __TBB_ITT_STRUCTURE_API
         inline void itt_make_task_group( itt_domain_enum domain, void *group, unsigned long long group_extra, 
                                          void *parent, unsigned long long parent_extra, string_index name_index ) {
             itt_make_task_group_v7( domain, group, group_extra, parent, parent_extra, name_index ); 
@@ -291,7 +265,7 @@ namespace tbb
         }
 #endif // __TBB_ITT_STRUCTURE_API
 
-	} // namespace internal
+    } // namespace internal
 } // namespace tbb
 
 #endif /* __TBB_profiling_H */

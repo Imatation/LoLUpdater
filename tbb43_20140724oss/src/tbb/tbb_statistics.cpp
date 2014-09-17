@@ -44,14 +44,14 @@ const char* StatGroupTitles[] = {
 /** The order of this vector elements must correspond to the statistics_counters 
     structure layout (with NULLs interspersed to separate groups). **/
 const char* StatFieldTitles[] = {
-/*task objects*/        "active", "freed", "big", NULL,
-/*tasks executed*/      "total", "w/o spawn", NULL,
-/*stealing attempts*/   "succeeded", "failed", "conflicts", "backoffs", NULL,
-/*task proxies*/        "mailed", "revoked", "stolen", "bypassed", "ignored", NULL,
-/*arena*/               "switches", "roundtrips", "avg.conc", "avg.allot", NULL,
-/*market*/              "roundtrips", NULL,
-/*priority ops*/        "ar.switch", "mkt.switch", "ar.reset", "ref.fixup", "avg.ar.pr", "avg.mkt.pr", NULL,
-/*prio ops details*/    "winnows", "reloads", "orphaned", "winnowed", "reloaded", NULL
+    /*task objects*/        "active", "freed", "big", NULL,
+    /*tasks executed*/      "total", "w/o spawn", NULL,
+    /*stealing attempts*/   "succeeded", "failed", "conflicts", "backoffs", NULL,
+    /*task proxies*/        "mailed", "revoked", "stolen", "bypassed", "ignored", NULL,
+    /*arena*/               "switches", "roundtrips", "avg.conc", "avg.allot", NULL,
+    /*market*/              "roundtrips", NULL,
+    /*priority ops*/        "ar.switch", "mkt.switch", "ar.reset", "ref.fixup", "avg.ar.pr", "avg.mkt.pr", NULL,
+    /*prio ops details*/    "winnows", "reloads", "orphaned", "winnowed", "reloaded", NULL
 };
 
 //! Class for logging statistics
@@ -65,7 +65,7 @@ public:
         my_file = fopen("statistics.txt","w");
         if( !my_file )
             perror("fopen(\"statistics.txt\"\")");
-// Initialize groups dump layout info
+        // Initialize groups dump layout info
         group_start_field[0] = 0;
         for ( size_t i = 0, j = 0; i < NumGroups; ++i, ++j ) {
             __TBB_ASSERT( StatFieldTitles[j], "Empty group occurred" );
@@ -113,14 +113,14 @@ private:
     static const size_t StatisticsColumnWidth = 10;
     static const size_t NumGroups = sizeof(StatGroupTitles)/sizeof(char*);
 
-//! File into which statistics are written.
+    //! File into which statistics are written.
     FILE* my_file;
-//! Mutex that serializes accesses to my_file
+    //! Mutex that serializes accesses to my_file
     spin_mutex my_mutex;
-//! Indices of the each group's first field in statistics_counters struct.
-/** An extra element is used to track the total number of statistics fields. **/
+    //! Indices of the each group's first field in statistics_counters struct.
+    /** An extra element is used to track the total number of statistics fields. **/
     size_t group_start_field[NumGroups + 1];
-//! Currently processed set of counters.
+    //! Currently processed set of counters.
     const statistics_counters* counters_to_dump;
 
     static const size_t NumFields = sizeof(StatFieldTitles)/sizeof(*StatFieldTitles) - NumGroups;
@@ -155,7 +155,7 @@ private:
     }
 
     void print_field_titles ( size_t group_idx ) {
-// +group_idx accounts for preceding NULL separators
+        // +group_idx accounts for preceding NULL separators
         size_t i = group_start_field[group_idx] + group_idx;
         while ( StatFieldTitles[i] ) {
             averages_fields[i - group_idx] = strncmp(StatFieldTitles[i], "avg.", 4) == 0;

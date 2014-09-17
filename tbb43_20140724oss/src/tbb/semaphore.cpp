@@ -24,11 +24,10 @@
 #include "tbb_misc.h"
 #endif
 
-namespace tbb
-{
-	namespace internal
-	{
-		// TODO: For new win UI port, we can use SRWLock API without dynamic_link etc.
+namespace tbb {
+namespace internal {
+
+// TODO: For new win UI port, we can use SRWLock API without dynamic_link etc.
 #if __TBB_USE_SRWLOCK
 
 static atomic<do_once_state> concmon_module_inited;
@@ -55,7 +54,7 @@ static void (WINAPI *__TBB_init_binsem)( SRWLOCK* ) = (void (WINAPI *)(SRWLOCK*)
 static void (WINAPI *__TBB_acquire_binsem)( SRWLOCK* ) = (void (WINAPI *)(SRWLOCK*))&acquire_binsem_using_event;
 static void (WINAPI *__TBB_release_binsem)( SRWLOCK* ) = (void (WINAPI *)(SRWLOCK*))&release_binsem_using_event;
 
-		//! Table describing the how to link the handlers.
+//! Table describing the how to link the handlers.
 static const dynamic_link_descriptor SRWLLinkTable[] = {
     DLD(InitializeSRWLock,       __TBB_init_binsem),
     DLD(AcquireSRWLockExclusive, __TBB_acquire_binsem),
@@ -90,5 +89,6 @@ void binary_semaphore::P() { __TBB_acquire_binsem( &my_sem.lock ); }
 void binary_semaphore::V() { __TBB_release_binsem( &my_sem.lock ); }
 
 #endif /* __TBB_USE_SRWLOCK */
-	} // namespace internal
+
+} // namespace internal
 } // namespace tbb

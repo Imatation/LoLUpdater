@@ -27,16 +27,14 @@
 #ifndef harness_assert_H
 #define harness_assert_H
 
-void ReportError(const char* filename, int line, const char* expression, const char* message);
-void ReportWarning(const char* filename, int line, const char* expression, const char* message);
+void ReportError( const char* filename, int line, const char* expression, const char* message); 
+void ReportWarning( const char* filename, int line, const char* expression, const char* message); 
 
 #define ASSERT(p,message) ((p)?(void)0:ReportError(__FILE__,__LINE__,#p,message))
 #define ASSERT_WARNING(p,message) ((p)?(void)0:ReportWarning(__FILE__,__LINE__,#p,message))
 
 //! Compile-time error if x and y have different types
-template <typename T>
-void AssertSameType(const T& /*x*/, const T& /*y*/)
-{
-}
+template<typename T>
+void AssertSameType( const T& /*x*/, const T& /*y*/ ) {}
 
 #endif /* harness_assert_H */
