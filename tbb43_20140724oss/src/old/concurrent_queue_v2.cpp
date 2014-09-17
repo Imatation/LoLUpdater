@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #include "concurrent_queue_v2.h"
 #include "tbb/cache_aligned_allocator.h"
@@ -27,7 +27,7 @@
 
 #if defined(_MSC_VER) && defined(_Wp64)
 // Workaround for overzealous compiler warnings in /Wp64 mode
-#pragma warning (disable: 4267)
+    #pragma warning (disable: 4267)
 #endif
 
 #define RECORD_EVENTS 0
@@ -42,7 +42,7 @@ namespace tbb
 
 		//! A queue using simple locking.
 		/** For efficiency, this class has no constructor.
-	The caller is expected to zero-initialize it. */
+    The caller is expected to zero-initialize it. */
 		struct micro_queue
 		{
 			typedef concurrent_queue_base::page page;
@@ -56,7 +56,7 @@ namespace tbb
 
 			spin_mutex page_mutex;
 
-			class push_finalizer : no_copy
+			class push_finalizer: no_copy
 			{
 				ticket my_ticket;
 				micro_queue& my_queue;
@@ -74,7 +74,7 @@ namespace tbb
 
 			void push(const void* item, ticket k, concurrent_queue_base& base);
 
-			class pop_finalizer : no_copy
+			class pop_finalizer: no_copy
 			{
 				ticket my_ticket;
 				micro_queue& my_queue;
@@ -109,7 +109,7 @@ namespace tbb
 
 		//! Internal representation of a ConcurrentQueue.
 		/** For efficiency, this class has no constructor.
-	The caller is expected to zero-initialize it. */
+    The caller is expected to zero-initialize it. */
 		class concurrent_queue_rep
 		{
 		public:
@@ -221,11 +221,11 @@ namespace tbb
 		concurrent_queue_base::concurrent_queue_base(size_t item_sz)
 		{
 			items_per_page = item_sz <= 8 ? 32 :
-				item_sz <= 16 ? 16 :
-				item_sz <= 32 ? 8 :
-				item_sz <= 64 ? 4 :
-				item_sz <= 128 ? 2 :
-				1;
+				                 item_sz <= 16 ? 16 :
+				                 item_sz <= 32 ? 8 :
+				                 item_sz <= 64 ? 4 :
+				                 item_sz <= 128 ? 2 :
+				                 1;
 			my_capacity = size_t(-1) / (item_sz > 1 ? item_sz : 2);
 			my_rep = cache_aligned_allocator<concurrent_queue_rep>().allocate(1);
 			__TBB_ASSERT((size_t)my_rep % NFS_GetLineSize() == 0, "alignment error");
@@ -270,7 +270,8 @@ namespace tbb
 			do
 			{
 				k = r.head_counter++;
-			} while (!r.choose(k).pop(dst, k, *this));
+			}
+			while (!r.choose(k).pop(dst, k, *this));
 		}
 
 		bool concurrent_queue_base::internal_pop_if_present(void* dst)
@@ -279,7 +280,7 @@ namespace tbb
 			concurrent_queue_rep::ticket k;
 			do
 			{
-				for (atomic_backoff b;; b.pause())
+				for (atomic_backoff b;;b.pause())
 				{
 					k = r.head_counter;
 					if (r.tail_counter <= k)
@@ -294,7 +295,8 @@ namespace tbb
 					}
 					// Another thread snatched the item, so pause and retry.
 				}
-			} while (!r.choose(k).pop(dst, k, *this));
+			}
+			while (!r.choose(k).pop(dst, k, *this));
 			return true;
 		}
 
@@ -302,7 +304,7 @@ namespace tbb
 		{
 			concurrent_queue_rep& r = *my_rep;
 			concurrent_queue_rep::ticket k;
-			for (atomic_backoff b;; b.pause())
+			for (atomic_backoff b;;b.pause())
 			{
 				k = r.tail_counter;
 				if ((ptrdiff_t)(k - r.head_counter) >= my_capacity)
@@ -333,7 +335,7 @@ namespace tbb
 		//------------------------------------------------------------------------
 		// concurrent_queue_iterator_rep
 		//------------------------------------------------------------------------
-		class concurrent_queue_iterator_rep : no_assign
+		class concurrent_queue_iterator_rep: no_assign
 		{
 		public:
 			typedef concurrent_queue_rep::ticket ticket;
@@ -358,7 +360,7 @@ namespace tbb
 				else
 				{
 					concurrent_queue_base::page* p = array[concurrent_queue_rep::index(k)];
-					__TBB_ASSERT(p, NULL);
+					__TBB_ASSERT(p,NULL);
 					size_t i = modulo_power_of_two(k / concurrent_queue_rep::n_queue, my_queue.items_per_page);
 					return static_cast<unsigned char*>(static_cast<void*>(p + 1)) + my_queue.item_size * i;
 				}

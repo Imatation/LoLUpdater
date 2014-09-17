@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #ifndef __TBB_parallel_reduce_H
 #define __TBB_parallel_reduce_H
@@ -50,7 +50,7 @@ namespace tbb
 			//! Task type used to combine the partial results of parallel_reduce.
 			/** @ingroup algorithms */
 			template <typename Body>
-			class finish_reduce : public flag_task
+			class finish_reduce: public flag_task
 			{
 				//! Pointer to body, or NULL if the left child has not yet finished.
 				bool has_right_zombie;
@@ -95,7 +95,7 @@ namespace tbb
 			//! Task type used to split the work of parallel_reduce.
 			/** @ingroup algorithms */
 			template <typename Range, typename Body, typename Partitioner>
-			class start_reduce : public task
+			class start_reduce: public task
 			{
 				typedef finish_reduce<Body> finish_type;
 				Body* my_body;
@@ -155,7 +155,7 @@ namespace tbb
 					if (!range.empty())
 					{
 #if !__TBB_TASK_GROUP_CONTEXT || TBB_JOIN_OUTER_TASK_GROUP
-						task::spawn_root_and_wait(*new(task::allocate_root()) start_reduce(range, &body, partitioner));
+                task::spawn_root_and_wait( *new(task::allocate_root()) start_reduce(range,&body,partitioner) );
 #else
 						// Bound context prevents exceptions from body to affect nesting or sibling algorithms,
 						// and allows users to handle exceptions safely by wrapping parallel_for in the try-block.
@@ -222,12 +222,12 @@ namespace tbb
 						parent_ptr->has_right_zombie = true;
 					}
 				}
-				else __TBB_ASSERT(my_context == root_task, NULL);// because left leaf spawns right leafs without recycling
+				else __TBB_ASSERT(my_context==root_task,NULL);// because left leaf spawns right leafs without recycling
 				my_partition.execute(*this, my_range);
 				if (my_context == left_child)
 				{
 					finish_type* parent_ptr = static_cast<finish_type*>(parent());
-					__TBB_ASSERT(my_body != parent_ptr->zombie_space.begin(), NULL);
+					__TBB_ASSERT(my_body!=parent_ptr->zombie_space.begin(),NULL);
 					itt_store_word_with_release(parent_ptr->my_body, my_body);
 				}
 				return NULL;
@@ -236,7 +236,7 @@ namespace tbb
 			//! Task type used to combine the partial results of parallel_deterministic_reduce.
 			/** @ingroup algorithms */
 			template <typename Body>
-			class finish_deterministic_reduce : public task
+			class finish_deterministic_reduce: public task
 			{
 				Body& my_left_body;
 				Body my_right_body;
@@ -260,7 +260,7 @@ namespace tbb
 			//! Task type used to split the work of parallel_deterministic_reduce.
 			/** @ingroup algorithms */
 			template <typename Range, typename Body>
-			class start_deterministic_reduce : public task
+			class start_deterministic_reduce: public task
 			{
 				typedef finish_deterministic_reduce<Body> finish_type;
 				Body& my_body;
@@ -289,7 +289,7 @@ namespace tbb
 					if (!range.empty())
 					{
 #if !__TBB_TASK_GROUP_CONTEXT || TBB_JOIN_OUTER_TASK_GROUP
-						task::spawn_root_and_wait(*new(task::allocate_root()) start_deterministic_reduce(range, &body));
+                task::spawn_root_and_wait( *new(task::allocate_root()) start_deterministic_reduce(range,&body) );
 #else
 						// Bound context prevents exceptions from body to affect nesting or sibling algorithms,
 						// and allows users to handle exceptions safely by wrapping parallel_for in the try-block.
@@ -337,8 +337,8 @@ namespace tbb
 
 		//! Auxiliary class for parallel_reduce; for internal use only.
 		/** The adaptor class that implements \ref parallel_reduce_body_req "parallel_reduce Body"
-		using given \ref parallel_reduce_lambda_req "anonymous function objects".
-		**/
+        using given \ref parallel_reduce_lambda_req "anonymous function objects".
+     **/
 		/** @ingroup algorithms */
 		template <typename Range, typename Value, typename RealBody, typename Reduction>
 		class lambda_reduce_body
@@ -354,25 +354,25 @@ namespace tbb
 		public:
 			lambda_reduce_body(const Value& identity, const RealBody& body, const Reduction& reduction)
 				: identity_element(identity)
-				, my_real_body(body)
-				, my_reduction(reduction)
-				, my_value(identity)
+				  , my_real_body(body)
+				  , my_reduction(reduction)
+				  , my_value(identity)
 			{
 			}
 
 			lambda_reduce_body(const lambda_reduce_body& other)
 				: identity_element(other.identity_element)
-				, my_real_body(other.my_real_body)
-				, my_reduction(other.my_reduction)
-				, my_value(other.my_value)
+				  , my_real_body(other.my_real_body)
+				  , my_reduction(other.my_reduction)
+				  , my_value(other.my_value)
 			{
 			}
 
 			lambda_reduce_body(lambda_reduce_body& other, tbb::split)
 				: identity_element(other.identity_element)
-				, my_real_body(other.my_real_body)
-				, my_reduction(other.my_reduction)
-				, my_value(other.identity_element)
+				  , my_real_body(other.my_real_body)
+				  , my_reduction(other.my_reduction)
+				  , my_value(other.identity_element)
 			{
 			}
 
@@ -397,23 +397,24 @@ namespace tbb
 	// Requirements on Range concept are documented in blocked_range.h
 
 	/** \page parallel_reduce_body_req Requirements on parallel_reduce body
-	Class \c Body implementing the concept of parallel_reduce body must define:
-	- \code Body::Body( Body&, split ); \endcode        Splitting constructor.
-	Must be able to run concurrently with operator() and method \c join
-	- \code Body::~Body(); \endcode                     Destructor
-	- \code void Body::operator()( Range& r ); \endcode Function call operator applying body to range \c r
-	and accumulating the result
-	- \code void Body::join( Body& b ); \endcode        Join results.
-	The result in \c b should be merged into the result of \c this
-	**/
+    Class \c Body implementing the concept of parallel_reduce body must define:
+    - \code Body::Body( Body&, split ); \endcode        Splitting constructor.
+                                                        Must be able to run concurrently with operator() and method \c join
+    - \code Body::~Body(); \endcode                     Destructor
+    - \code void Body::operator()( Range& r ); \endcode Function call operator applying body to range \c r
+                                                        and accumulating the result
+    - \code void Body::join( Body& b ); \endcode        Join results.
+                                                        The result in \c b should be merged into the result of \c this
+**/
 
 	/** \page parallel_reduce_lambda_req Requirements on parallel_reduce anonymous function objects (lambda functions)
-	TO BE DOCUMENTED
-	**/
+    TO BE DOCUMENTED
+**/
 
 	/** \name parallel_reduce
-	See also requirements on \ref range_req "Range" and \ref parallel_reduce_body_req "parallel_reduce Body". **/
+    See also requirements on \ref range_req "Range" and \ref parallel_reduce_body_req "parallel_reduce Body". **/
 	//@{
+
 	//! Parallel iteration with reduction and default partitioner.
 	/** @ingroup algorithms **/
 	template <typename Range, typename Body>
@@ -473,7 +474,7 @@ namespace tbb
 #endif /* __TBB_TASK_GROUP_CONTEXT */
 
 	/** parallel_reduce overloads that work with anonymous function objects
-	(see also \ref parallel_reduce_lambda_req "requirements on parallel_reduce anonymous function objects"). **/
+    (see also \ref parallel_reduce_lambda_req "requirements on parallel_reduce anonymous function objects"). **/
 
 	//! Parallel iteration with reduction and default partitioner.
 	/** @ingroup algorithms **/
@@ -490,7 +491,7 @@ namespace tbb
 	/** @ingroup algorithms **/
 	template <typename Range, typename Value, typename RealBody, typename Reduction>
 	Value parallel_reduce(const Range& range, const Value& identity, const RealBody& real_body, const Reduction& reduction,
-		const simple_partitioner& partitioner)
+	                      const simple_partitioner& partitioner)
 	{
 		internal::lambda_reduce_body<Range, Value, RealBody, Reduction> body(identity, real_body, reduction);
 		internal::start_reduce<Range, internal::lambda_reduce_body<Range, Value, RealBody, Reduction>, const simple_partitioner>
@@ -502,7 +503,7 @@ namespace tbb
 	/** @ingroup algorithms **/
 	template <typename Range, typename Value, typename RealBody, typename Reduction>
 	Value parallel_reduce(const Range& range, const Value& identity, const RealBody& real_body, const Reduction& reduction,
-		const auto_partitioner& partitioner)
+	                      const auto_partitioner& partitioner)
 	{
 		internal::lambda_reduce_body<Range, Value, RealBody, Reduction> body(identity, real_body, reduction);
 		internal::start_reduce<Range, internal::lambda_reduce_body<Range, Value, RealBody, Reduction>, const auto_partitioner>
@@ -514,7 +515,7 @@ namespace tbb
 	/** @ingroup algorithms **/
 	template <typename Range, typename Value, typename RealBody, typename Reduction>
 	Value parallel_reduce(const Range& range, const Value& identity, const RealBody& real_body, const Reduction& reduction,
-		affinity_partitioner& partitioner)
+	                      affinity_partitioner& partitioner)
 	{
 		internal::lambda_reduce_body<Range, Value, RealBody, Reduction> body(identity, real_body, reduction);
 		internal::start_reduce<Range, internal::lambda_reduce_body<Range, Value, RealBody, Reduction>, affinity_partitioner>
@@ -527,7 +528,7 @@ namespace tbb
 	/** @ingroup algorithms **/
 	template <typename Range, typename Value, typename RealBody, typename Reduction>
 	Value parallel_reduce(const Range& range, const Value& identity, const RealBody& real_body, const Reduction& reduction,
-		const simple_partitioner& partitioner, task_group_context& context)
+	                      const simple_partitioner& partitioner, task_group_context& context)
 	{
 		internal::lambda_reduce_body<Range, Value, RealBody, Reduction> body(identity, real_body, reduction);
 		internal::start_reduce<Range, internal::lambda_reduce_body<Range, Value, RealBody, Reduction>, const simple_partitioner>
@@ -539,7 +540,7 @@ namespace tbb
 	/** @ingroup algorithms **/
 	template <typename Range, typename Value, typename RealBody, typename Reduction>
 	Value parallel_reduce(const Range& range, const Value& identity, const RealBody& real_body, const Reduction& reduction,
-		const auto_partitioner& partitioner, task_group_context& context)
+	                      const auto_partitioner& partitioner, task_group_context& context)
 	{
 		internal::lambda_reduce_body<Range, Value, RealBody, Reduction> body(identity, real_body, reduction);
 		internal::start_reduce<Range, internal::lambda_reduce_body<Range, Value, RealBody, Reduction>, const auto_partitioner>
@@ -551,7 +552,7 @@ namespace tbb
 	/** @ingroup algorithms **/
 	template <typename Range, typename Value, typename RealBody, typename Reduction>
 	Value parallel_reduce(const Range& range, const Value& identity, const RealBody& real_body, const Reduction& reduction,
-		affinity_partitioner& partitioner, task_group_context& context)
+	                      affinity_partitioner& partitioner, task_group_context& context)
 	{
 		internal::lambda_reduce_body<Range, Value, RealBody, Reduction> body(identity, real_body, reduction);
 		internal::start_reduce<Range, internal::lambda_reduce_body<Range, Value, RealBody, Reduction>, affinity_partitioner>
@@ -579,7 +580,7 @@ namespace tbb
 #endif /* __TBB_TASK_GROUP_CONTEXT */
 
 	/** parallel_reduce overloads that work with anonymous function objects
-	(see also \ref parallel_reduce_lambda_req "requirements on parallel_reduce anonymous function objects"). **/
+    (see also \ref parallel_reduce_lambda_req "requirements on parallel_reduce anonymous function objects"). **/
 
 	//! Parallel iteration with deterministic reduction and default partitioner.
 	/** @ingroup algorithms **/
@@ -597,7 +598,7 @@ namespace tbb
 	/** @ingroup algorithms **/
 	template <typename Range, typename Value, typename RealBody, typename Reduction>
 	Value parallel_deterministic_reduce(const Range& range, const Value& identity, const RealBody& real_body, const Reduction& reduction,
-		task_group_context& context)
+	                                    task_group_context& context)
 	{
 		internal::lambda_reduce_body<Range, Value, RealBody, Reduction> body(identity, real_body, reduction);
 		internal::start_deterministic_reduce<Range, internal::lambda_reduce_body<Range, Value, RealBody, Reduction>>

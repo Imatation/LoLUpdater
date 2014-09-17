@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #ifndef __TBB_queuing_rw_mutex_H
 #define __TBB_queuing_rw_mutex_H
@@ -25,14 +25,14 @@
 
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
 // Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
-#pragma warning (push)
-#pragma warning (disable: 4530)
+    #pragma warning (push)
+    #pragma warning (disable: 4530)
 #endif
 
 #include <cstring>
 
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
-#pragma warning (pop)
+    #pragma warning (pop)
 #endif
 
 #include "atomic.h"
@@ -42,8 +42,8 @@ namespace tbb
 {
 	//! Queuing reader-writer mutex with local-only spinning.
 	/** Adapted from Krieger, Stumm, et al. pseudocode at
-	http://www.eecg.toronto.edu/parallel/pubs_abs.html#Krieger_etal_ICPP93
-	@ingroup synchronization */
+    http://www.eecg.toronto.edu/parallel/pubs_abs.html#Krieger_etal_ICPP93
+    @ingroup synchronization */
 	class queuing_rw_mutex : internal::mutex_copy_deprecated_and_disabled
 	{
 	public:
@@ -52,7 +52,7 @@ namespace tbb
 		{
 			q_tail = NULL;
 #if TBB_USE_THREADING_TOOLS
-			internal_construct();
+        internal_construct();
 #endif
 		}
 
@@ -60,23 +60,23 @@ namespace tbb
 		~queuing_rw_mutex()
 		{
 #if TBB_USE_ASSERT
-			__TBB_ASSERT(!q_tail, "destruction of an acquired mutex");
+        __TBB_ASSERT( !q_tail, "destruction of an acquired mutex");
 #endif
 		}
 
 		//! The scoped locking pattern
 		/** It helps to avoid the common problem of forgetting to release lock.
-		It also nicely provides the "node" for queuing locks. */
-		class scoped_lock : internal::no_copy
+        It also nicely provides the "node" for queuing locks. */
+		class scoped_lock: internal::no_copy
 		{
 			//! Initialize fields to mean "no lock held".
 			void initialize()
 			{
 				my_mutex = NULL;
 #if TBB_USE_ASSERT
-				my_state = 0xFF; // Set to invalid state
-				internal::poison_pointer(my_next);
-				internal::poison_pointer(my_prev);
+            my_state = 0xFF; // Set to invalid state
+            internal::poison_pointer(my_next);
+            internal::poison_pointer(my_prev);
 #endif /* TBB_USE_ASSERT */
 			}
 

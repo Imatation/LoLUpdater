@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #if !defined(__TBB_machine_H) || defined(__TBB_machine_linux_ia64_H)
 #error Do not
@@ -32,15 +32,15 @@
 #define __TBB_ENDIANNESS __TBB_ENDIAN_LITTLE
 
 #if __INTEL_COMPILER
-#define __TBB_compiler_fence()
-#define __TBB_control_consistency_helper() __TBB_compiler_fence()
-#define __TBB_acquire_consistency_helper()
-#define __TBB_release_consistency_helper()
-#define __TBB_full_memory_fence()          __mf()
+    #define __TBB_compiler_fence()
+    #define __TBB_control_consistency_helper() __TBB_compiler_fence()
+    #define __TBB_acquire_consistency_helper()
+    #define __TBB_release_consistency_helper()
+    #define __TBB_full_memory_fence()          __mf()
 #else
 #define __TBB_compiler_fence() __asm__ __volatile__("": : :"memory")
 #define __TBB_control_consistency_helper() __TBB_compiler_fence()
-// Even though GCC imbues volatile loads with acquire semantics, it sometimes moves
+// Even though GCC imbues volatile loads with acquire semantics, it sometimes moves 
 // loads over the acquire fence. The following helpers stop such incorrect code motion.
 #define __TBB_acquire_consistency_helper() __TBB_compiler_fence()
 #define __TBB_release_consistency_helper() __TBB_compiler_fence()
@@ -129,13 +129,13 @@ extern "C"
 #define __TBB_machine_fetchstore4full_fence __TBB_machine_fetchstore4__TBB_full_fence
 #define __TBB_machine_fetchstore8full_fence __TBB_machine_fetchstore8__TBB_full_fence
 #define __TBB_machine_cmpswp1full_fence     __TBB_machine_cmpswp1__TBB_full_fence
-#define __TBB_machine_cmpswp2full_fence     __TBB_machine_cmpswp2__TBB_full_fence
+#define __TBB_machine_cmpswp2full_fence     __TBB_machine_cmpswp2__TBB_full_fence 
 #define __TBB_machine_cmpswp4full_fence     __TBB_machine_cmpswp4__TBB_full_fence
 #define __TBB_machine_cmpswp8full_fence     __TBB_machine_cmpswp8__TBB_full_fence
 
 // Mapping relaxed operations to the entry points implementing them.
 /** On IA64 RMW operations implicitly have acquire semantics. Thus one cannot
-	actually have completely relaxed RMW operation here. **/
+    actually have completely relaxed RMW operation here. **/
 #define __TBB_machine_fetchadd1relaxed      __TBB_machine_fetchadd1acquire
 #define __TBB_machine_fetchadd2relaxed      __TBB_machine_fetchadd2acquire
 #define __TBB_machine_fetchadd4relaxed      __TBB_machine_fetchadd4acquire
@@ -145,32 +145,32 @@ extern "C"
 #define __TBB_machine_fetchstore4relaxed    __TBB_machine_fetchstore4acquire
 #define __TBB_machine_fetchstore8relaxed    __TBB_machine_fetchstore8acquire
 #define __TBB_machine_cmpswp1relaxed        __TBB_machine_cmpswp1acquire
-#define __TBB_machine_cmpswp2relaxed        __TBB_machine_cmpswp2acquire
+#define __TBB_machine_cmpswp2relaxed        __TBB_machine_cmpswp2acquire 
 #define __TBB_machine_cmpswp4relaxed        __TBB_machine_cmpswp4acquire
 #define __TBB_machine_cmpswp8relaxed        __TBB_machine_cmpswp8acquire
 
 #define __TBB_MACHINE_DEFINE_ATOMICS(S,V)                               \
     template <typename T>
-struct machine_load_store_relaxed < T, S > {
-	static inline T load(const T& location) {
+struct machine_load_store_relaxed<T,S> {
+	static inline T load ( const T& location ) {
 		return (T)__TBB_machine_load##S##_relaxed(&location);
-	}
-	static inline void store(T& location, T value) {
-		__TBB_machine_store##S##_relaxed(&location, (V)value);
-	}
+}
+static inline void store ( T& location, T value ) {
+	__TBB_machine_store##S##_relaxed(&location, (V)value);
+}
 }
 
 namespace tbb
 {
 	namespace internal
 	{
-		__TBB_MACHINE_DEFINE_ATOMICS(1, int8_t);
+		__TBB_MACHINE_DEFINE_ATOMICS(1,int8_t);
 
-		__TBB_MACHINE_DEFINE_ATOMICS(2, int16_t);
+		__TBB_MACHINE_DEFINE_ATOMICS(2,int16_t);
 
-		__TBB_MACHINE_DEFINE_ATOMICS(4, int32_t);
+		__TBB_MACHINE_DEFINE_ATOMICS(4,int32_t);
 
-		__TBB_MACHINE_DEFINE_ATOMICS(8, int64_t);
+		__TBB_MACHINE_DEFINE_ATOMICS(8,int64_t);
 	}
 } // namespaces internal, tbb
 

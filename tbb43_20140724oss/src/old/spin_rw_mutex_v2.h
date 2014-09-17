@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #ifndef __TBB_spin_rw_mutex_H
 #define __TBB_spin_rw_mutex_H
@@ -69,14 +69,14 @@ namespace tbb
 
 #if TBB_USE_ASSERT
 		//! Destructor asserts if the mutex is acquired, i.e. state is zero.
-		~spin_rw_mutex() {
-			__TBB_ASSERT(!state, "destruction of an acquired mutex");
-		};
+    ~spin_rw_mutex() {
+        __TBB_ASSERT( !state, "destruction of an acquired mutex");
+    };
 #endif /* TBB_USE_ASSERT */
 
 		//! The scoped locking pattern
 		/** It helps to avoid the common problem of forgetting to release lock.
-		It also nicely provides the "node" for queuing locks. */
+        It also nicely provides the "node" for queuing locks. */
 		class scoped_lock : internal::no_copy
 		{
 		public:
@@ -127,7 +127,7 @@ namespace tbb
 				if (is_writer)
 				{
 #if TBB_USE_THREADING_TOOLS||TBB_USE_ASSERT
-					internal_release_writer(m);
+                internal_release_writer(m);
 #else
 					m->state = 0;
 #endif /* TBB_USE_THREADING_TOOLS||TBB_USE_ASSERT */
@@ -144,7 +144,7 @@ namespace tbb
 				__TBB_ASSERT(mutex, "lock is not acquired");
 				__TBB_ASSERT(is_writer, "not a writer");
 #if TBB_USE_THREADING_TOOLS||TBB_USE_ASSERT
-				internal_downgrade(mutex);
+            internal_downgrade(mutex);
 #else
 				mutex->state = 4; // Bit 2 - reader, 00..00100
 #endif
@@ -159,7 +159,7 @@ namespace tbb
 				bool result;
 				is_writer = write;
 				result = write ? internal_try_acquire_writer(&m)
-					: internal_try_acquire_reader(&m);
+					         : internal_try_acquire_reader(&m);
 				if (result) mutex = &m;
 				return result;
 			}
@@ -181,8 +181,8 @@ namespace tbb
 		static const state_t ONE_READER = 4;
 		static const state_t BUSY = WRITER | READERS;
 		/** Bit 0 = writer is holding lock
-		Bit 1 = request by a writer to acquire lock (hint to readers to wait)
-		Bit 2..N = number of readers holding lock */
+        Bit 1 = request by a writer to acquire lock (hint to readers to wait)
+        Bit 2..N = number of readers holding lock */
 		volatile state_t state;
 	};
 } // namespace tbb

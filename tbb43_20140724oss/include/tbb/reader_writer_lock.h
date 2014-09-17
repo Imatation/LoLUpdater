@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #ifndef __TBB_reader_writer_lock_H
 #define __TBB_reader_writer_lock_H
@@ -31,8 +31,8 @@ namespace tbb
 	{
 		//! Writer-preference reader-writer lock with local-only spinning on readers.
 		/** Loosely adapted from Mellor-Crummey and Scott pseudocode at
-	http://www.cs.rochester.edu/research/synchronization/pseudocode/rw.html#s_wp
-	@ingroup synchronization */
+    http://www.cs.rochester.edu/research/synchronization/pseudocode/rw.html#s_wp
+    @ingroup synchronization */
 		class reader_writer_lock : tbb::internal::no_copy
 		{
 		public:
@@ -41,40 +41,40 @@ namespace tbb
 
 			//! Status type for nodes associated with lock instances
 			/** waiting_nonblocking: the wait state for nonblocking lock
-		  instances; for writes, these transition straight to active
-		  states; for reads, these are unused.
+          instances; for writes, these transition straight to active
+          states; for reads, these are unused.
 
-		  waiting: the start and spin state for all lock instances; these will
-		  transition to active state when appropriate.  Non-blocking write locks
-		  transition from this state to waiting_nonblocking immediately.
+        waiting: the start and spin state for all lock instances; these will
+          transition to active state when appropriate.  Non-blocking write locks
+          transition from this state to waiting_nonblocking immediately.
 
-		  active: the active state means that the lock instance holds
-		  the lock; it will transition to invalid state during node deletion
+        active: the active state means that the lock instance holds
+          the lock; it will transition to invalid state during node deletion
 
-		  invalid: the end state for all nodes; this is set in the
-		  destructor so if we encounter this state, we are looking at
-		  memory that has already been freed
+        invalid: the end state for all nodes; this is set in the
+          destructor so if we encounter this state, we are looking at
+          memory that has already been freed
 
-		  The state diagrams below describe the status transitions.
-		  Single arrows indicate that the thread that owns the node is
-		  responsible for the transition; double arrows indicate that
-		  any thread could make the transition.
+        The state diagrams below describe the status transitions.
+        Single arrows indicate that the thread that owns the node is
+        responsible for the transition; double arrows indicate that
+        any thread could make the transition.
 
-		  State diagram for scoped_lock status:
+        State diagram for scoped_lock status:
 
-		  waiting ----------> waiting_nonblocking
-		  |     _____________/       |
-		  V    V                     V
-		  active -----------------> invalid
+        waiting ----------> waiting_nonblocking
+          |     _____________/       |
+          V    V                     V
+        active -----------------> invalid
 
-		  State diagram for scoped_lock_read status:
+        State diagram for scoped_lock_read status:
 
-		  waiting
-		  |
-		  V
-		  active ----------------->invalid
+        waiting
+          |
+          V
+        active ----------------->invalid
 
-		  */
+    */
 			enum status_t
 			{
 				waiting_nonblocking,
@@ -97,7 +97,7 @@ namespace tbb
 
 			//! The scoped lock pattern for write locks
 			/** Scoped locks help avoid the common problem of forgetting to release the lock.
-		This type also serves as the node for queuing locks. */
+        This type also serves as the node for queuing locks. */
 			class scoped_lock : tbb::internal::no_copy
 			{
 			public:
@@ -120,7 +120,7 @@ namespace tbb
 					return tbb::internal::allocate_via_handler_v3(s);
 				}
 
-					void operator delete(void* p)
+				void operator delete(void* p)
 				{
 					tbb::internal::deallocate_via_handler_v3(p);
 				}
@@ -163,7 +163,7 @@ namespace tbb
 					return tbb::internal::allocate_via_handler_v3(s);
 				}
 
-					void operator delete(void* p)
+				void operator delete(void* p)
 				{
 					tbb::internal::deallocate_via_handler_v3(p);
 				}
@@ -185,29 +185,29 @@ namespace tbb
 
 			//! Acquires the reader_writer_lock for write.
 			/** If the lock is currently held in write mode by another
-		context, the writer will block by spinning on a local
-		variable.  Exceptions thrown: improper_lock The context tries
-		to acquire a reader_writer_lock that it already has write
-		ownership of.*/
+        context, the writer will block by spinning on a local
+        variable.  Exceptions thrown: improper_lock The context tries
+        to acquire a reader_writer_lock that it already has write
+        ownership of.*/
 			void __TBB_EXPORTED_METHOD lock();
 
 			//! Tries to acquire the reader_writer_lock for write.
 			/** This function does not block.  Return Value: True or false,
-		depending on whether the lock is acquired or not.  If the lock
-		is already held by this acquiring context, try_lock() returns
-		false. */
+        depending on whether the lock is acquired or not.  If the lock
+        is already held by this acquiring context, try_lock() returns
+        false. */
 			bool __TBB_EXPORTED_METHOD try_lock();
 
 			//! Acquires the reader_writer_lock for read.
 			/** If the lock is currently held by a writer, this reader will
-		block and wait until the writers are done.  Exceptions thrown:
-		improper_lock The context tries to acquire a
-		reader_writer_lock that it already has write ownership of. */
+        block and wait until the writers are done.  Exceptions thrown:
+        improper_lock The context tries to acquire a
+        reader_writer_lock that it already has write ownership of. */
 			void __TBB_EXPORTED_METHOD lock_read();
 
 			//! Tries to acquire the reader_writer_lock for read.
 			/** This function does not block.  Return Value: True or false,
-		depending on whether the lock is acquired or not.  */
+        depending on whether the lock is acquired or not.  */
 			bool __TBB_EXPORTED_METHOD try_lock_read();
 
 			//! Releases the reader_writer_lock

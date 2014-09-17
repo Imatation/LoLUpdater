@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #ifndef __TBB_tbb_thread_H
 #define __TBB_tbb_thread_H
@@ -39,18 +39,19 @@ typedef DWORD thread_id_type;
 #include <pthread.h>
 #endif // _WIN32||_WIN64
 
+
 #include "tick_count.h"
 
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
 // Suppress "C++ exception handler used, but unwind semantics are not enabled" warning in STL headers
-#pragma warning (push)
-#pragma warning (disable: 4530)
+    #pragma warning (push)
+    #pragma warning (disable: 4530)
 #endif
 
 #include <iosfwd>
 
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
-#pragma warning (pop)
+    #pragma warning (pop)
 #endif
 
 namespace tbb
@@ -76,14 +77,14 @@ namespace tbb
 				return allocate_closure_v3(size);
 			}
 
-				void operator delete(void* ptr)
+			void operator delete(void* ptr)
 			{
 				free_closure_v3(ptr);
 			}
 		};
 
 		template <class F>
-		struct thread_closure_0 : thread_closure_base
+		struct thread_closure_0: thread_closure_base
 		{
 			F function;
 
@@ -100,9 +101,9 @@ namespace tbb
 			}
 		};
 
-		//! Structure used to pass user function with 1 argument to thread.
+		//! Structure used to pass user function with 1 argument to thread.  
 		template <class F, class X>
-		struct thread_closure_1 : thread_closure_base
+		struct thread_closure_1: thread_closure_base
 		{
 			F function;
 			X arg1;
@@ -122,7 +123,7 @@ namespace tbb
 		};
 
 		template <class F, class X, class Y>
-		struct thread_closure_2 : thread_closure_base
+		struct thread_closure_2: thread_closure_base
 		{
 			F function;
 			X arg1;
@@ -145,26 +146,27 @@ namespace tbb
 		//! Versioned thread class.
 		class tbb_thread_v3
 		{
-#if __TBB_IF_NO_COPY_CTOR_MOVE_SEMANTICS_BROKEN
+#if __TBB_IF_NO_COPY_CTOR_MOVE_SEMANTICS_BROKEN   
 			// Workaround for a compiler bug: declaring the copy constructor as public
 			// enables use of the moving constructor.
 			// The definition is not provided in order to prohibit copying.
-		public:
+    public:
 #endif
 			tbb_thread_v3(const tbb_thread_v3&); // = delete;   // Deny access
 		public:
 #if _WIN32||_WIN64
 			typedef HANDLE native_handle_type;
 #else
-			typedef pthread_t native_handle_type;
+        typedef pthread_t native_handle_type; 
 #endif // _WIN32||_WIN64
+
 
 			class id;
 
-			//! Constructs a thread object that does not represent a thread of execution.
+			//! Constructs a thread object that does not represent a thread of execution. 
 			tbb_thread_v3() __TBB_NOEXCEPT(true) : my_handle(0)
 #if _WIN32||_WIN64
-				, my_thread_id(0)
+			                                       , my_thread_id(0)
 #endif // _WIN32||_WIN64
 
 			{
@@ -198,7 +200,7 @@ namespace tbb
 			tbb_thread_v3(tbb_thread_v3&& x) __TBB_NOEXCEPT(true)
 				: my_handle(x.my_handle)
 #if _WIN32||_WIN64
-				, my_thread_id(x.my_thread_id)
+				  , my_thread_id(x.my_thread_id)
 #endif
 			{
 				x.internal_wipe();
@@ -214,11 +216,12 @@ namespace tbb
 		public:
 #else // __TBB_CPP11_RVALUE_REF_PRESENT
 
-			tbb_thread_v3& operator=(tbb_thread_v3& x) {
-				internal_move(x);
-				return *this;
-			}
+        tbb_thread_v3& operator=(tbb_thread_v3& x) {
+            internal_move(x);
+            return *this;
+        }
 #endif // __TBB_CPP11_RVALUE_REF_PRESENT
+
 
 			void swap(tbb_thread_v3& t) __TBB_NOEXCEPT(true) {
 				tbb::swap(*this, t);
@@ -247,20 +250,21 @@ namespace tbb
 
 			//! The number of hardware thread contexts.
 			/** Before TBB 3.0 U4 this methods returned the number of logical CPU in
-			the system. Currently on Windows, Linux and FreeBSD it returns the
-			number of logical CPUs available to the current process in accordance
-			with its affinity mask.
-
-			NOTE: The return value of this method never changes after its first
-			invocation. This means that changes in the process affinity mask that
-			took place after this method was first invoked will not affect the
-			number of worker threads in the TBB worker threads pool. **/
+            the system. Currently on Windows, Linux and FreeBSD it returns the
+            number of logical CPUs available to the current process in accordance
+            with its affinity mask.
+            
+            NOTE: The return value of this method never changes after its first
+            invocation. This means that changes in the process affinity mask that
+            took place after this method was first invoked will not affect the
+            number of worker threads in the TBB worker threads pool. **/
 			static unsigned __TBB_EXPORTED_FUNC hardware_concurrency() __TBB_NOEXCEPT(true);
 		private:
 			native_handle_type my_handle;
 #if _WIN32||_WIN64
 			thread_id_type my_thread_id;
 #endif // _WIN32||_WIN64
+
 
 			void internal_wipe() __TBB_NOEXCEPT(true) {
 				my_handle = 0;
@@ -281,7 +285,7 @@ namespace tbb
 
 			/** Runs start_routine(closure) on another thread and sets my_handle to the handle of the created thread. */
 			void __TBB_EXPORTED_METHOD internal_start(__TBB_NATIVE_THREAD_ROUTINE_PTR(start_routine),
-				void* closure);
+			                                                                                        void* closure);
 			friend void __TBB_EXPORTED_FUNC move_v3(tbb_thread_v3& t1, tbb_thread_v3& t2);
 			friend void tbb::swap(tbb_thread_v3& t1, tbb_thread_v3& t2) __TBB_NOEXCEPT(true);
 		};
@@ -295,8 +299,8 @@ namespace tbb
 			{
 			}
 #else
-			pthread_t my_id;
-			id(pthread_t id_) : my_id(id_) {}
+        pthread_t my_id;
+        id( pthread_t id_ ) : my_id(id_) {}
 #endif // _WIN32||_WIN64
 
 			friend class tbb_thread_v3;
@@ -314,8 +318,8 @@ namespace tbb
 
 			template <class charT, class traits>
 			friend std::basic_ostream<charT, traits>&
-				operator<<(std::basic_ostream<charT, traits>& out,
-				tbb_thread_v3::id id)
+			operator<<(std::basic_ostream<charT, traits>& out,
+			           tbb_thread_v3::id id)
 			{
 				out << id.my_id;
 				return out;
@@ -328,8 +332,9 @@ namespace tbb
 #if _WIN32||_WIN64
 			return id(my_thread_id);
 #else
-			return id(my_handle);
+        return id(my_handle);
 #endif // _WIN32||_WIN64
+
 		}
 
 		void __TBB_EXPORTED_FUNC move_v3(tbb_thread_v3& t1, tbb_thread_v3& t2);

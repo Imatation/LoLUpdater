@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #ifndef __TBB_parallel_while
 #define __TBB_parallel_while
@@ -37,9 +37,9 @@ namespace tbb
 
 		//! For internal use only.
 		/** Executes one iteration of a while.
-		@ingroup algorithms */
+        @ingroup algorithms */
 		template <typename Body>
-		class while_iteration_task : public task
+		class while_iteration_task: public task
 		{
 			const Body& my_body;
 			typename Body::argument_type my_value;
@@ -58,14 +58,14 @@ namespace tbb
 
 			template <typename Body_>
 			friend class while_group_task;
-			friend class tbb::parallel_while < Body > ;
+			friend class tbb::parallel_while<Body>;
 		};
 
 		//! For internal use only
 		/** Unpacks a block of iterations.
-		@ingroup algorithms */
+        @ingroup algorithms */
 		template <typename Body>
-		class while_group_task : public task
+		class while_group_task: public task
 		{
 			static const size_t max_arg_size = 4;
 			const Body& my_body;
@@ -80,7 +80,7 @@ namespace tbb
 			task* execute()
 			{
 				typedef while_iteration_task<Body> iteration_type;
-				__TBB_ASSERT(size > 0, NULL);
+				__TBB_ASSERT( size>0, NULL );
 				task_list list;
 				task* t;
 				size_t k = 0;
@@ -102,9 +102,9 @@ namespace tbb
 
 		//! For internal use only.
 		/** Gets block of iterations from a stream and packages them into a while_group_task.
-		@ingroup algorithms */
+        @ingroup algorithms */
 		template <typename Stream, typename Body>
-		class while_task : public task
+		class while_task: public task
 		{
 			Stream& my_stream;
 			const Body& my_body;
@@ -144,19 +144,19 @@ namespace tbb
 			{
 			}
 
-			friend class tbb::parallel_while < Body > ;
+			friend class tbb::parallel_while<Body>;
 		};
 	} // namespace internal
 	//! @endcond
 
 	//! Parallel iteration over a stream, with optional addition of more work.
 	/** The Body b has the requirement: \n
-		"b(v)"                      \n
-		"b.argument_type"           \n
-		where v is an argument_type
-		@ingroup algorithms */
+        "b(v)"                      \n
+        "b.argument_type"           \n
+    where v is an argument_type
+    @ingroup algorithms */
 	template <typename Body>
-	class parallel_while : internal::no_copy
+	class parallel_while: internal::no_copy
 	{
 	public:
 		//! Construct empty non-running parallel while.
@@ -179,8 +179,8 @@ namespace tbb
 
 		//! Apply body.apply to each item in the stream.
 		/** A Stream s has the requirements \n
-		 "S::value_type"                \n
-		 "s.pop_if_present(value) is convertible to bool */
+         "S::value_type"                \n
+         "s.pop_if_present(value) is convertible to bool */
 		template <typename Stream>
 		void run(Stream& stream, const Body& body);
 
@@ -212,11 +212,11 @@ namespace tbb
 	template <typename Body>
 	void parallel_while<Body>::add(const value_type& item)
 	{
-		__TBB_ASSERT(my_barrier, "attempt to add to parallel_while that is not running");
+		__TBB_ASSERT(my_barrier,"attempt to add to parallel_while that is not running");
 		typedef internal::while_iteration_task<Body> iteration_type;
 		iteration_type& i = *new(task::allocate_additional_child_of(*my_barrier)) iteration_type(item, *my_body);
 		task::self().spawn(i);
 	}
-} // namespace
+} // namespace 
 
 #endif /* __TBB_parallel_while */

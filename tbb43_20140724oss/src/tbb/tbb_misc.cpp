@@ -1,24 +1,24 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
-// Source file for miscellaneous entities that are infrequently referenced by
+// Source file for miscellaneous entities that are infrequently referenced by 
 // an executing program.
 
 #include "tbb/tbb_stddef.h"
@@ -79,15 +79,16 @@ namespace tbb
 	namespace internal
 	{
 #if TBB_USE_EXCEPTIONS
-#define DO_THROW(exc, init_args) throw exc init_args;
+    #define DO_THROW(exc, init_args) throw exc init_args;
 #else /* !TBB_USE_EXCEPTIONS */
 #define PRINT_ERROR_AND_ABORT(exc_name, msg) \
         fprintf (stderr, "Exception %s with message %s would've been thrown, "
-		"if exception handling were not disabled. Aborting.\n", exc_name, msg);
+			"if exception handling were not disabled. Aborting.\n", exc_name, msg);
 		fflush(stderr);
 		abort();
 #define DO_THROW(exc, init_args) PRINT_ERROR_AND_ABORT(#exc, #init_args)
 #endif /* !TBB_USE_EXCEPTIONS */
+
 
 		/* The "what" should be fairly short, not more than about 128 characters.
    Because we control all the call sites to handle_perror, it is pointless
@@ -108,30 +109,31 @@ namespace tbb
 			// Ensure that buffer ends in terminator.
 			buf[sizeof(buf) - 1] = 0;
 #if TBB_USE_EXCEPTIONS
-			throw runtime_error(buf);
+    throw runtime_error(buf);
 #else
-			PRINT_ERROR_AND_ABORT("runtime_error", buf);
+			PRINT_ERROR_AND_ABORT( "runtime_error", buf);
 #endif /* !TBB_USE_EXCEPTIONS */
 		}
 
-#if _WIN32||_WIN64
+#if _WIN32||_WIN64 
 		void handle_win_error(int error_code)
 		{
 			char buf[512];
 #if !__TBB_WIN8UI_SUPPORT
 			FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-				NULL, error_code, 0, buf, sizeof(buf), NULL);
+			               NULL, error_code, 0, buf, sizeof(buf), NULL);
 #else
 			//TODO: update with right replacement for FormatMessageA
-			sprintf_s((char*)&buf, 512, "error code %d", error_code);
+    sprintf_s((char*)&buf, 512, "error code %d", error_code);
 #endif
 #if TBB_USE_EXCEPTIONS
-			throw runtime_error(buf);
+    throw runtime_error(buf);
 #else
-			PRINT_ERROR_AND_ABORT("runtime_error", buf);
+			PRINT_ERROR_AND_ABORT( "runtime_error", buf);
 #endif /* !TBB_USE_EXCEPTIONS */
 		}
 #endif // _WIN32||_WIN64
+
 
 		void throw_bad_last_alloc_exception_v4()
 		{
@@ -143,40 +145,40 @@ namespace tbb
 			__TBB_ASSERT(eid > 0 && eid < eid_max, "Unknown exception ID");
 			switch (eid)
 			{
-			case eid_bad_alloc: DO_THROW(bad_alloc, ());
-			case eid_bad_last_alloc: DO_THROW(bad_last_alloc, ());
-			case eid_nonpositive_step: DO_THROW(invalid_argument, ("Step must be positive"));
-			case eid_out_of_range: DO_THROW(out_of_range, ("Index out of requested size range"));
-			case eid_segment_range_error: DO_THROW(range_error, ("Index out of allocated segment slots"));
-			case eid_index_range_error: DO_THROW(range_error, ("Index is not allocated"));
-			case eid_missing_wait: DO_THROW(missing_wait, ());
-			case eid_invalid_multiple_scheduling: DO_THROW(invalid_multiple_scheduling, ());
-			case eid_improper_lock: DO_THROW(improper_lock, ());
-			case eid_possible_deadlock: DO_THROW(runtime_error, ("Resource deadlock would occur"));
-			case eid_operation_not_permitted: DO_THROW(runtime_error, ("Operation not permitted"));
-			case eid_condvar_wait_failed: DO_THROW(runtime_error, ("Wait on condition variable failed"));
-			case eid_invalid_load_factor: DO_THROW(out_of_range, ("Invalid hash load factor"));
-			case eid_reserved: DO_THROW(out_of_range, ("[backward compatibility] Invalid number of buckets"));
-			case eid_invalid_swap: DO_THROW(invalid_argument, ("swap() is invalid on non-equal allocators"));
-			case eid_reservation_length_error: DO_THROW(length_error, ("reservation size exceeds permitted max size"));
-			case eid_invalid_key: DO_THROW(out_of_range, ("invalid key"));
-			case eid_user_abort: DO_THROW(user_abort, ());
-			case eid_bad_tagged_msg_cast: DO_THROW(runtime_error, ("Illegal tagged_msg cast"));
+			case eid_bad_alloc: DO_THROW( bad_alloc, () );
+			case eid_bad_last_alloc: DO_THROW( bad_last_alloc, () );
+			case eid_nonpositive_step: DO_THROW( invalid_argument, ("Step must be positive") );
+			case eid_out_of_range: DO_THROW( out_of_range, ("Index out of requested size range") );
+			case eid_segment_range_error: DO_THROW( range_error, ("Index out of allocated segment slots") );
+			case eid_index_range_error: DO_THROW( range_error, ("Index is not allocated") );
+			case eid_missing_wait: DO_THROW( missing_wait, () );
+			case eid_invalid_multiple_scheduling: DO_THROW( invalid_multiple_scheduling, () );
+			case eid_improper_lock: DO_THROW( improper_lock, () );
+			case eid_possible_deadlock: DO_THROW( runtime_error, ("Resource deadlock would occur") );
+			case eid_operation_not_permitted: DO_THROW( runtime_error, ("Operation not permitted") );
+			case eid_condvar_wait_failed: DO_THROW( runtime_error, ("Wait on condition variable failed") );
+			case eid_invalid_load_factor: DO_THROW( out_of_range, ("Invalid hash load factor") );
+			case eid_reserved: DO_THROW( out_of_range, ("[backward compatibility] Invalid number of buckets") );
+			case eid_invalid_swap: DO_THROW( invalid_argument, ("swap() is invalid on non-equal allocators") );
+			case eid_reservation_length_error: DO_THROW( length_error, ("reservation size exceeds permitted max size") );
+			case eid_invalid_key: DO_THROW( out_of_range, ("invalid key") );
+			case eid_user_abort: DO_THROW( user_abort, () );
+			case eid_bad_tagged_msg_cast: DO_THROW( runtime_error, ("Illegal tagged_msg cast") );
 #if __TBB_SUPPORTS_WORKERS_WAITING_IN_TERMINATE
-			case eid_blocking_sch_init: DO_THROW(runtime_error, ("Nesting of blocking termination is impossible"));
+    case eid_blocking_sch_init: DO_THROW( runtime_error, ("Nesting of blocking termination is impossible") );
 #endif
 			default: break;
 			}
 #if !TBB_USE_EXCEPTIONS && __APPLE__
-			out_of_range e1("");
-			length_error e2("");
-			range_error e3("");
-			invalid_argument e4("");
+    out_of_range e1("");
+    length_error e2("");
+    range_error e3("");
+    invalid_argument e4("");
 #endif /* !TBB_USE_EXCEPTIONS && __APPLE__ */
 		}
 
 #if _XBOX || __TBB_WIN8UI_SUPPORT
-		bool GetBoolEnvironmentVariable(const char *) { return false; }
+bool GetBoolEnvironmentVariable( const char * ) { return false;}
 #else /* _XBOX || __TBB_WIN8UI_SUPPORT */
 		bool GetBoolEnvironmentVariable(const char* name)
 		{
@@ -189,16 +191,33 @@ namespace tbb
 #include "tbb_version.h"
 
 		/** The leading "\0" is here so that applying "strings" to the binary delivers a clean result. */
-		static const char VersionString[] = "\0" TBB_VERSION_STRINGS
+		static const char VersionString[] = "\0" TBB_VERSION_STRINGS 
 
-			;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		;
 
 		static bool PrintVersionFlag = false;
 
 		void PrintVersion()
 		{
 			PrintVersionFlag = true;
-			fputs(VersionString + 1, stderr);
+			fputs(VersionString + 1,stderr);
 		}
 
 		void PrintExtraVersionInfo(const char* category, const char* format, ...)
@@ -230,32 +249,32 @@ namespace tbb
 		{
 #if __TBB_TSX_AVAILABLE
 #if (__INTEL_COMPILER || __GNUC__ || _MSC_VER || __SUNPRO_CC)
-			bool result = false;
-			const int hle_ebx_mask = 1 << 4;
+    bool result = false;
+    const int hle_ebx_mask = 1<<4;
 #if _MSC_VER
-			int info[4] = { 0, 0, 0, 0 };
-			const int reg_ebx = 1;
-			__cpuidex(info, 7, 0);
-			result = (info[reg_ebx] & hle_ebx_mask) != 0;
+    int info[4] = {0,0,0,0};
+    const int reg_ebx = 1;
+    __cpuidex(info, 7, 0);
+    result = (info[reg_ebx] & hle_ebx_mask)!=0;
 #elif __GNUC__ || __SUNPRO_CC
-			int32_t reg_ebx = 0;
-			int32_t reg_eax = 7;
-			int32_t reg_ecx = 0;
-			__asm__ __volatile__("movl %%ebx, %%esi\n"
-				"cpuid\n"
-				"movl %%ebx, %0\n"
-				"movl %%esi, %%ebx\n"
-				: "=a"(reg_ebx) : "0" (reg_eax), "c" (reg_ecx) : "esi",
+    int32_t reg_ebx = 0;
+    int32_t reg_eax = 7;
+    int32_t reg_ecx = 0;
+    __asm__ __volatile__ ( "movl %%ebx, %%esi\n"
+                           "cpuid\n"
+                           "movl %%ebx, %0\n"
+                           "movl %%esi, %%ebx\n"
+                           : "=a"(reg_ebx) : "0" (reg_eax), "c" (reg_ecx) : "esi", 
 #if __TBB_x86_64
-				"ebx",
+                           "ebx",
 #endif
-				"edx"
-				);
-			result = (reg_ebx & hle_ebx_mask) != 0;
+                           "edx"
+                           );
+    result = (reg_ebx & hle_ebx_mask)!=0 ;
 #endif
-			return result;
+    return result;
 #else
-#error Speculation detection not enabled for compiler
+    #error Speculation detection not enabled for compiler
 #endif /* __INTEL_COMPILER || __GNUC__ || _MSC_VER */
 #else /* __TBB_TSX_AVAILABLE */
 			return false;
@@ -280,26 +299,26 @@ using tbb::internal::int64_t;
 #endif
 
 //! Warn about 8-byte store that crosses a cache line.
-extern "C" void __TBB_machine_store8_slow_perf_warning(volatile void *ptr) {
-	// Report run-time warning unless we have already recently reported warning for that address.
-	const unsigned n = 4;
-	static tbb::atomic<void*> cache[n];
-	static tbb::atomic<unsigned> k;
-	for (unsigned i = 0; i < n; ++i)
-		if (ptr == cache[i])
-			goto done;
-	cache[(k++) % n] = const_cast<void*>(ptr);
-	tbb::internal::runtime_warning("atomic store on misaligned 8-byte location %p is slow", ptr);
+extern "C" void __TBB_machine_store8_slow_perf_warning( volatile void *ptr ) {
+// Report run-time warning unless we have already recently reported warning for that address.
+    const unsigned n = 4;
+    static tbb::atomic<void*> cache[n];
+    static tbb::atomic<unsigned> k;
+    for( unsigned i=0; i<n; ++i ) 
+        if( ptr==cache[i] ) 
+            goto done;
+    cache[(k++)%n] = const_cast<void*>(ptr);
+    tbb::internal::runtime_warning( "atomic store on misaligned 8-byte location %p is slow", ptr );
 done:;
 }
 
 //! Handle 8-byte store that crosses a cache line.
-extern "C" void __TBB_machine_store8_slow(volatile void *ptr, int64_t value) {
-	for (tbb::internal::atomic_backoff b;; b.pause()) {
-		int64_t tmp = *(int64_t*)ptr;
-		if (__TBB_machine_cmpswp8(ptr, value, tmp) == tmp)
-			break;
-	}
+extern "C" void __TBB_machine_store8_slow( volatile void *ptr, int64_t value ) {
+    for( tbb::internal::atomic_backoff b;;b.pause() ) {
+        int64_t tmp = *(int64_t*)ptr;
+        if( __TBB_machine_cmpswp8(ptr,value,tmp)==tmp ) 
+            break;
+    }
 }
 
 #endif /* __TBB_x86_32 */
@@ -308,10 +327,10 @@ extern "C" void __TBB_machine_store8_slow(volatile void *ptr, int64_t value) {
 #if __TBB_ipf
 /* It was found that on IA-64 architecture inlining of __TBB_machine_lockbyte leads
    to serious performance regression with ICC. So keep it out-of-line.
-   */
-extern "C" intptr_t __TBB_machine_lockbyte(volatile unsigned char& flag) {
-	tbb::internal::atomic_backoff backoff;
-	while (!__TBB_TryLockByte(flag)) backoff.pause();
-	return 0;
+ */
+extern "C" intptr_t __TBB_machine_lockbyte( volatile unsigned char& flag ) {
+    tbb::internal::atomic_backoff backoff;
+    while( !__TBB_TryLockByte(flag) ) backoff.pause();
+    return 0;
 }
 #endif

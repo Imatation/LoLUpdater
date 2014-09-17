@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #ifndef __TBB_spin_rw_mutex_H
 #define __TBB_spin_rw_mutex_H
@@ -28,7 +28,7 @@
 
 namespace tbb
 {
-#if __TBB_TSX_AVAILABLE
+#if __TBB_TSX_AVAILABLE 
 	namespace interface8
 	{
 		namespace internal
@@ -79,23 +79,23 @@ namespace tbb
 		spin_rw_mutex_v3() : state(0)
 		{
 #if TBB_USE_THREADING_TOOLS
-			internal_construct();
+        internal_construct();
 #endif
 		}
 
 #if TBB_USE_ASSERT
 		//! Destructor asserts if the mutex is acquired, i.e. state is zero.
-		~spin_rw_mutex_v3() {
-			__TBB_ASSERT(!state, "destruction of an acquired mutex");
-		};
+    ~spin_rw_mutex_v3() {
+        __TBB_ASSERT( !state, "destruction of an acquired mutex");
+    };
 #endif /* TBB_USE_ASSERT */
 
 		//! The scoped locking pattern
 		/** It helps to avoid the common problem of forgetting to release lock.
-		It also nicely provides the "node" for queuing locks. */
+        It also nicely provides the "node" for queuing locks. */
 		class scoped_lock : internal::no_copy
 		{
-#if __TBB_TSX_AVAILABLE
+#if __TBB_TSX_AVAILABLE 
 			friend class tbb::interface8::internal::x86_rtm_rw_mutex;
 
 			// helper methods for x86_rtm_rw_mutex
@@ -131,7 +131,7 @@ namespace tbb
 			//! Acquire lock on given mutex.
 			void acquire(spin_rw_mutex& m, bool write = true)
 			{
-				__TBB_ASSERT(!mutex, "holding mutex already");
+				__TBB_ASSERT( !mutex, "holding mutex already" );
 				is_writer = write;
 				mutex = &m;
 				if (write) mutex->internal_acquire_writer();
@@ -142,8 +142,8 @@ namespace tbb
 			/** Returns whether the upgrade happened without releasing and re-acquiring the lock */
 			bool upgrade_to_writer()
 			{
-				__TBB_ASSERT(mutex, "lock is not acquired");
-				__TBB_ASSERT(!is_writer, "not a reader");
+				__TBB_ASSERT( mutex, "lock is not acquired" );
+				__TBB_ASSERT( !is_writer, "not a reader" );
 				is_writer = true;
 				return mutex->internal_upgrade();
 			}
@@ -151,27 +151,27 @@ namespace tbb
 			//! Release lock.
 			void release()
 			{
-				__TBB_ASSERT(mutex, "lock is not acquired");
+				__TBB_ASSERT( mutex, "lock is not acquired" );
 				spin_rw_mutex* m = mutex;
 				mutex = NULL;
 #if TBB_USE_THREADING_TOOLS||TBB_USE_ASSERT
-				if (is_writer) m->internal_release_writer();
-				else            m->internal_release_reader();
+            if( is_writer ) m->internal_release_writer();
+            else            m->internal_release_reader();
 #else
-				if (is_writer) __TBB_AtomicAND(&m->state, READERS);
-				else __TBB_FetchAndAddWrelease(&m->state, -(intptr_t)ONE_READER);
+				if (is_writer) __TBB_AtomicAND( &m->state, READERS );
+				else __TBB_FetchAndAddWrelease( &m->state, -(intptr_t)ONE_READER);
 #endif /* TBB_USE_THREADING_TOOLS||TBB_USE_ASSERT */
 			}
 
 			//! Downgrade writer to become a reader.
 			bool downgrade_to_reader()
 			{
-				__TBB_ASSERT(mutex, "lock is not acquired");
-				__TBB_ASSERT(is_writer, "not a writer");
+				__TBB_ASSERT( mutex, "lock is not acquired" );
+				__TBB_ASSERT( is_writer, "not a writer" );
 #if TBB_USE_THREADING_TOOLS||TBB_USE_ASSERT
-				mutex->internal_downgrade();
+            mutex->internal_downgrade();
 #else
-				__TBB_FetchAndAddW(&mutex->state, ((intptr_t)ONE_READER - WRITER));
+				__TBB_FetchAndAddW( &mutex->state, ((intptr_t)ONE_READER-WRITER));
 #endif /* TBB_USE_THREADING_TOOLS||TBB_USE_ASSERT */
 				is_writer = false;
 				return true;
@@ -180,11 +180,11 @@ namespace tbb
 			//! Try acquire lock on given mutex.
 			bool try_acquire(spin_rw_mutex& m, bool write = true)
 			{
-				__TBB_ASSERT(!mutex, "holding mutex already");
+				__TBB_ASSERT( !mutex, "holding mutex already" );
 				bool result;
 				is_writer = write;
 				result = write ? m.internal_try_acquire_writer()
-					: m.internal_try_acquire_reader();
+					         : m.internal_try_acquire_reader();
 				if (result)
 					mutex = &m;
 				return result;
@@ -224,11 +224,11 @@ namespace tbb
 		void unlock()
 		{
 #if TBB_USE_THREADING_TOOLS||TBB_USE_ASSERT
-			if (state&WRITER) internal_release_writer();
-			else               internal_release_reader();
+        if( state&WRITER ) internal_release_writer();
+        else               internal_release_reader();
 #else
-			if (state & WRITER) __TBB_AtomicAND(&state, READERS);
-			else __TBB_FetchAndAddWrelease(&state, -(intptr_t)ONE_READER);
+			if (state & WRITER) __TBB_AtomicAND( &state, READERS );
+			else __TBB_FetchAndAddWrelease( &state, -(intptr_t)ONE_READER);
 #endif /* TBB_USE_THREADING_TOOLS||TBB_USE_ASSERT */
 		}
 
@@ -256,8 +256,8 @@ namespace tbb
 		static const state_t BUSY = WRITER | READERS;
 		//! State of lock
 		/** Bit 0 = writer is holding lock
-		Bit 1 = request by a writer to acquire lock (hint to readers to wait)
-		Bit 2..N = number of readers holding lock */
+        Bit 1 = request by a writer to acquire lock (hint to readers to wait)
+        Bit 2..N = number of readers holding lock */
 		state_t state;
 
 	private:
@@ -267,7 +267,7 @@ namespace tbb
 	__TBB_DEFINE_PROFILING_SET_NAME(spin_rw_mutex)
 } // namespace tbb
 
-#if __TBB_TSX_AVAILABLE
+#if __TBB_TSX_AVAILABLE 
 #include "internal/_x86_rtm_rw_mutex_impl.h"
 #endif
 
@@ -277,17 +277,17 @@ namespace tbb
 	{
 		//! A cross-platform spin reader/writer mutex with speculative lock acquisition.
 		/** On platforms with proper HW support, this lock may speculatively execute
-	its critical sections, using HW mechanisms to detect real data races and
-	ensure atomicity of the critical sections. In particular, it uses
-	Intel(R) Transactional Synchronization Extensions (Intel(R) TSX).
-	Without such HW support, it behaves like a spin_rw_mutex.
-	It should be used for locking short critical sections where the lock is
-	contended but the data it protects are not.
-	@ingroup synchronization */
-#if __TBB_TSX_AVAILABLE
+    its critical sections, using HW mechanisms to detect real data races and
+    ensure atomicity of the critical sections. In particular, it uses
+    Intel(R) Transactional Synchronization Extensions (Intel(R) TSX).
+    Without such HW support, it behaves like a spin_rw_mutex.
+    It should be used for locking short critical sections where the lock is 
+    contended but the data it protects are not.
+    @ingroup synchronization */
+#if __TBB_TSX_AVAILABLE 
 		typedef interface7::internal::padded_mutex<tbb::interface8::internal::x86_rtm_rw_mutex, true> speculative_spin_rw_mutex;
 #else
-		typedef interface7::internal::padded_mutex<tbb::spin_rw_mutex, true> speculative_spin_rw_mutex;
+typedef interface7::internal::padded_mutex<tbb::spin_rw_mutex,true> speculative_spin_rw_mutex;
 #endif
 	} // namespace interface8
 

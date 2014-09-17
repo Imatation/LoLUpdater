@@ -1,35 +1,35 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 // Basic testing of an allocator
 // Tests against requirements in 20.1.5 of ISO C++ Standard (1998).
 // Does not check for thread safety or false sharing issues.
 //
-// Tests for compatibility with the host's STL are in
+// Tests for compatibility with the host's STL are in 
 // test_Allocator_STL.h.  Those tests are in a separate file
 // because they bring in lots of STL headers, and the tests here
 // are supposed to work in the abscense of STL.
 
 #include "harness.h"
 #if __TBB_ALLOCATOR_CONSTRUCT_VARIADIC
-#include <utility> //for std::pair
+    #include <utility> //for std::pair
 #endif
 
 template <typename A>
@@ -68,7 +68,7 @@ inline char PseudoRandomValue(size_t j, size_t k)
 	return char(j * 3 ^ j >> 4 ^ k);
 }
 
-//! T is type and A is allocator for that type
+//! T is type and A is allocator for that type 
 template <typename T, typename A>
 void TestBasic(A& a)
 {
@@ -80,28 +80,28 @@ void TestBasic(A& a)
 	typename A::const_pointer pcx = &cx;
 
 	typename A::reference rx = x;
-	ASSERT(&rx == &x, NULL);
+	ASSERT( &rx==&x, NULL );
 
 	typename A::const_reference rcx = cx;
-	ASSERT(&rcx == &cx, NULL);
+	ASSERT( &rcx==&cx, NULL );
 
 	typename A::value_type v = x;
 
 	typename A::size_type size;
 	size = 0;
 	--size;
-	ASSERT(size > 0, "not an unsigned integral type?");
+	ASSERT( size>0, "not an unsigned integral type?" );
 
 	typename A::difference_type difference;
 	difference = 0;
 	--difference;
-	ASSERT(difference < 0, "not an signed integral type?");
+	ASSERT( difference<0, "not an signed integral type?" );
 
-	// "rebind" tested by our caller
+	// "rebind" tested by our caller 
 
-	ASSERT(a.address(rx) == px, NULL);
+	ASSERT( a.address(rx)==px, NULL );
 
-	ASSERT(a.address(rcx) == pcx, NULL);
+	ASSERT( a.address(rcx)==pcx, NULL );
 
 	typename A::pointer array[100];
 	size_t sizeof_T = sizeof(T);
@@ -124,40 +124,40 @@ void TestBasic(A& a)
 	{
 		char* s = reinterpret_cast<char*>(reinterpret_cast<void*>(array[k]));
 		for (size_t j = 0; j < k * sizeof_T; ++j)
-			ASSERT(s[j] == PseudoRandomValue(j, k), NULL);
+		ASSERT( s[j] == PseudoRandomValue(j,k), NULL );
 		a.deallocate(array[k], k);
 	}
 
 	// Test "a.max_size()"
 	AssertSameType(a.max_size(), typename A::size_type(0));
-	// Following assertion catches case where max_size() is so large that computation of
+	// Following assertion catches case where max_size() is so large that computation of 
 	// number of bytes for such an allocation would overflow size_type.
-	ASSERT(a.max_size()*typename A::size_type(sizeof(T)) >= a.max_size(), "max_size larger than reasonable");
+	ASSERT( a.max_size()*typename A::size_type(sizeof(T))>=a.max_size(), "max_size larger than reasonable" );
 
 	// Test "a.construct(p,t)"
 	int n = NumberOfFoo;
 	typename A::pointer p = a.allocate(1);
 	a.construct(p, cx);
-	ASSERT(NumberOfFoo == n + 1, "constructor for Foo not called?");
+	ASSERT( NumberOfFoo==n+1, "constructor for Foo not called?" );
 
 	// Test "a.destroy(p)"
 	a.destroy(p);
-	ASSERT(NumberOfFoo == n, "destructor for Foo not called?");
+	ASSERT( NumberOfFoo==n, "destructor for Foo not called?" );
 	a.deallocate(p, 1);
 
 #if __TBB_ALLOCATOR_CONSTRUCT_VARIADIC
-	{
-		typedef typename A:: template rebind<std::pair<typename A::value_type, typename A::value_type> >::other pair_allocator_type;
-		pair_allocator_type pair_allocator(a);
-		int NumberOfFooBeforeConstruct = NumberOfFoo;
-		typename pair_allocator_type::pointer pair_pointer = pair_allocator.allocate(1);
-		pair_allocator.construct(pair_pointer, cx, cx);
-		ASSERT(NumberOfFoo == NumberOfFooBeforeConstruct + 2, "constructor for Foo not called appropriate number of times?");
+    {
+        typedef typename A:: template rebind<std::pair<typename A::value_type, typename A::value_type> >::other pair_allocator_type;
+        pair_allocator_type pair_allocator(a);
+        int NumberOfFooBeforeConstruct= NumberOfFoo;
+        typename pair_allocator_type::pointer pair_pointer = pair_allocator.allocate(1);
+        pair_allocator.construct( pair_pointer, cx, cx);
+        ASSERT( NumberOfFoo==NumberOfFooBeforeConstruct+2, "constructor for Foo not called appropriate number of times?" );
 
-		pair_allocator.destroy(pair_pointer);
-		ASSERT(NumberOfFoo == NumberOfFooBeforeConstruct, "destructor for Foo not called appropriate number of times?");
-		pair_allocator.deallocate(pair_pointer, 1);
-	}
+        pair_allocator.destroy( pair_pointer );
+        ASSERT( NumberOfFoo==NumberOfFooBeforeConstruct, "destructor for Foo not called appropriate number of times?" );
+        pair_allocator.deallocate(pair_pointer,1);
+    }
 #endif
 }
 
@@ -170,7 +170,7 @@ void TestBasic(A& a)
 
 // A is an allocator for some type
 template <typename A>
-struct Body : NoAssign
+struct Body: NoAssign
 {
 	static const size_t max_k = 100000;
 	A& a;
@@ -189,7 +189,7 @@ struct Body : NoAssign
 		for (size_t j = 0; j < size * sizeof(typename A::value_type); ++j)
 		{
 			if (is_zero_filling<typename A::template rebind<void>::other>::value)
-				ASSERT(!s[j], NULL);
+			ASSERT( !s[j], NULL);
 			s[j] = PseudoRandomValue(i, t);
 		}
 	}
@@ -200,7 +200,7 @@ struct Body : NoAssign
 		size_t size = i * (i & 3);
 		char* s = reinterpret_cast<char*>(reinterpret_cast<void*>(array[i]));
 		for (size_t j = 0; j < size * sizeof(typename A::value_type); ++j)
-			ASSERT(s[j] == PseudoRandomValue(i, t), "Thread safety test failed");
+		ASSERT( s[j] == PseudoRandomValue(i, t), "Thread safety test failed" );
 		a.deallocate(array[i], size);
 		array[i] = 0;
 	}
@@ -233,10 +233,10 @@ void Test(A& a)
 
 	// thread safety
 	NativeParallelFor(4, Body<A>(a));
-	ASSERT(NumberOfFoo == 0, "Allocate/deallocate count mismatched");
+	ASSERT( NumberOfFoo==0, "Allocate/deallocate count mismatched" );
 
-	ASSERT(a == b, NULL);
-	ASSERT(!(a != b), NULL);
+	ASSERT( a==b, NULL );
+	ASSERT( !(a!=b), NULL );
 }
 
 template <typename Allocator>

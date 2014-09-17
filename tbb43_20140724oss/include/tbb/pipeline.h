@@ -1,32 +1,32 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
-#ifndef __TBB_pipeline_H
-#define __TBB_pipeline_H
+#ifndef __TBB_pipeline_H 
+#define __TBB_pipeline_H 
 
 #include "atomic.h"
 #include "task.h"
 #include "tbb_allocator.h"
 #include <cstddef>
 
-#if __TBB_CPP11_TYPE_PROPERTIES_PRESENT  || __TBB_TR1_TYPE_PROPERTIES_IN_STD_PRESENT
+#if __TBB_CPP11_TYPE_PROPERTIES_PRESENT  || __TBB_TR1_TYPE_PROPERTIES_IN_STD_PRESENT     
 #include <type_traits>
 #endif
 
@@ -64,7 +64,7 @@ namespace tbb
 
 	//! A stage in a pipeline.
 	/** @ingroup algorithms */
-	class filter : internal::no_copy
+	class filter: internal::no_copy
 	{
 	private:
 		//! Value used to mark "not in pipeline"
@@ -79,7 +79,7 @@ namespace tbb
 
 		//! 4th bit distinguishes ordered vs unordered filters.
 		/** The bit was not set for parallel filters in TBB 2.1 and earlier,
-		but is_ordered() function always treats parallel filters as out of order. */
+        but is_ordered() function always treats parallel filters as out of order. */
 		static const unsigned char filter_is_out_of_order = 0x1 << 4;
 
 		//! 5th bit distinguishes thread-bound and regular filters.
@@ -91,9 +91,9 @@ namespace tbb
 		//! 7th bit defines exception propagation mode expected by the application.
 		static const unsigned char exact_exception_propagation =
 #if TBB_USE_CAPTURED_EXCEPTION
-			0x0;
+            0x0;
 #else
-			0x1 << 7;
+		0x1 << 7;
 #endif /* TBB_USE_CAPTURED_EXCEPTION */
 
 		static const unsigned char current_version = __TBB_PIPELINE_VERSION(5);
@@ -164,14 +164,14 @@ namespace tbb
 		/** Returns NULL if filter is a sink. */
 		virtual void* operator()(void* item) = 0;
 
-		//! Destroy filter.
+		//! Destroy filter.  
 		/** If the filter was added to a pipeline, the pipeline must be destroyed first. */
 		virtual __TBB_EXPORTED_METHOD ~filter();
 
 #if __TBB_TASK_GROUP_CONTEXT
 		//! Destroys item if pipeline was cancelled.
 		/** Required to prevent memory leaks.
-		Note it can be called concurrently even for serial filters.*/
+        Note it can be called concurrently even for serial filters.*/
 		virtual void finalize(void* /*item*/)
 		{
 		};
@@ -181,7 +181,7 @@ namespace tbb
 		//! Pointer to next filter in the pipeline.
 		filter* next_filter_in_pipeline;
 
-		//! has the filter not yet processed all the tokens it will ever see?
+		//! has the filter not yet processed all the tokens it will ever see?  
 		//  (pipeline has not yet reached end_of_input or this filter has not yet
 		//  seen the last token produced by input_filter)
 		bool has_more_work();
@@ -211,7 +211,7 @@ namespace tbb
 
 	//! A stage in a pipeline served by a user thread.
 	/** @ingroup algorithms */
-	class thread_bound_filter : public filter
+	class thread_bound_filter: public filter
 	{
 	public:
 		enum result_type
@@ -225,26 +225,26 @@ namespace tbb
 		};
 
 	protected:
-		thread_bound_filter(mode filter_mode) :
+		thread_bound_filter(mode filter_mode):
 			filter(static_cast<mode>(filter_mode | filter::filter_is_bound))
 		{
 			__TBB_ASSERT(filter_mode & filter::filter_is_serial, "thread-bound filters must be serial");
 		}
 
 	public:
-		//! If a data item is available, invoke operator() on that item.
+		//! If a data item is available, invoke operator() on that item.  
 		/** This interface is non-blocking.
-		Returns 'success' if an item was processed.
-		Returns 'item_not_available' if no item can be processed now
-		but more may arrive in the future, or if token limit is reached.
-		Returns 'end_of_stream' if there are no more items to process. */
+        Returns 'success' if an item was processed.
+        Returns 'item_not_available' if no item can be processed now 
+        but more may arrive in the future, or if token limit is reached. 
+        Returns 'end_of_stream' if there are no more items to process. */
 		result_type __TBB_EXPORTED_METHOD try_process_item();
 
 		//! Wait until a data item becomes available, and invoke operator() on that item.
 		/** This interface is blocking.
-		Returns 'success' if an item was processed.
-		Returns 'end_of_stream' if there are no more items to process.
-		Never returns 'item_not_available', as it blocks until another return condition applies. */
+        Returns 'success' if an item was processed.
+        Returns 'end_of_stream' if there are no more items to process.
+        Never returns 'item_not_available', as it blocks until another return condition applies. */
 		result_type __TBB_EXPORTED_METHOD process_item();
 
 	private:
@@ -260,8 +260,8 @@ namespace tbb
 		//! Construct empty pipeline.
 		__TBB_EXPORTED_METHOD pipeline();
 
-		/** Though the current implementation declares the destructor virtual, do not rely on this
-		detail.  The virtualness is deprecated and may disappear in future versions of TBB. */
+		/** Though the current implementation declares the destructor virtual, do not rely on this 
+        detail.  The virtualness is deprecated and may disappear in future versions of TBB. */
 		virtual __TBB_EXPORTED_METHOD ~pipeline();
 
 		//! Add filter to end of pipeline.
@@ -298,7 +298,7 @@ namespace tbb
 		//! Number of idle tokens waiting for input stage.
 		atomic<internal::Token> input_tokens;
 
-		//! Global counter of tokens
+		//! Global counter of tokens 
 		atomic<internal::Token> token_counter;
 
 		//! False until fetch_input returns NULL.
@@ -363,7 +363,7 @@ namespace tbb
 			};
 
 			// Obtain type properties in one or another way
-#if __TBB_CPP11_TYPE_PROPERTIES_PRESENT
+#if __TBB_CPP11_TYPE_PROPERTIES_PRESENT 
 			template <typename T>
 			struct tbb_trivially_copyable
 			{
@@ -373,20 +373,21 @@ namespace tbb
 				};
 			};
 #elif __TBB_TR1_TYPE_PROPERTIES_IN_STD_PRESENT
-			template<typename T> struct tbb_trivially_copyable { enum { value = std::has_trivial_copy_constructor<T>::value }; };
+template<typename T> struct tbb_trivially_copyable { enum { value = std::has_trivial_copy_constructor<T>::value }; };
 #else
 			// Explicitly list the types we wish to be placed as-is in the pipeline input_buffers.
-			template<typename T> struct tbb_trivially_copyable { enum { value = false }; };
-			template<typename T> struct tbb_trivially_copyable < T* > { enum { value = true }; };
-			template<> struct tbb_trivially_copyable < short > { enum { value = true }; };
-			template<> struct tbb_trivially_copyable < unsigned short > { enum { value = true }; };
-			template<> struct tbb_trivially_copyable < int > { enum { value = !tbb_large_object<int>::value }; };
-			template<> struct tbb_trivially_copyable < unsigned int > { enum { value = !tbb_large_object<int>::value }; };
-			template<> struct tbb_trivially_copyable < long > { enum { value = !tbb_large_object<long>::value }; };
-			template<> struct tbb_trivially_copyable < unsigned long > { enum { value = !tbb_large_object<long>::value }; };
-			template<> struct tbb_trivially_copyable < float > { enum { value = !tbb_large_object<float>::value }; };
-			template<> struct tbb_trivially_copyable < double > { enum { value = !tbb_large_object<double>::value }; };
+template<typename T> struct tbb_trivially_copyable { enum { value = false }; };
+template<typename T> struct tbb_trivially_copyable <T*> { enum { value = true }; };
+template<> struct tbb_trivially_copyable <short> { enum { value = true }; };
+template<> struct tbb_trivially_copyable <unsigned short> { enum { value = true }; };
+template<> struct tbb_trivially_copyable <int> { enum { value = !tbb_large_object<int>::value }; };
+template<> struct tbb_trivially_copyable <unsigned int> { enum { value = !tbb_large_object<int>::value }; };
+template<> struct tbb_trivially_copyable <long> { enum { value = !tbb_large_object<long>::value }; };
+template<> struct tbb_trivially_copyable <unsigned long> { enum { value = !tbb_large_object<long>::value }; };
+template<> struct tbb_trivially_copyable <float> { enum { value = !tbb_large_object<float>::value }; };
+template<> struct tbb_trivially_copyable <double> { enum { value = !tbb_large_object<double>::value }; };
 #endif // Obtaining type properties
+
 
 			template <typename T>
 			struct is_large_object
@@ -402,7 +403,7 @@ namespace tbb
 
 			// large object helper (uses tbb_allocator)
 			template <typename T>
-			class token_helper < T, true >
+			class token_helper<T, true>
 			{
 			public:
 				typedef typename tbb::tbb_allocator<T> allocator;
@@ -412,7 +413,7 @@ namespace tbb
 				static pointer create_token(const value_type& source)
 				{
 					pointer output_t = allocator().allocate(1);
-					return new(output_t)T(source);
+					return new(output_t) T(source);
 				}
 
 				static value_type& token(pointer& t)
@@ -422,7 +423,7 @@ namespace tbb
 
 				static void* cast_to_void_ptr(pointer ref)
 				{
-					return (void *)ref;
+					return (void *) ref;
 				}
 
 				static pointer cast_from_void_ptr(void* ref)
@@ -439,7 +440,7 @@ namespace tbb
 
 			// pointer specialization
 			template <typename T>
-			class token_helper < T*, false >
+			class token_helper<T*, false>
 			{
 			public:
 				typedef T* pointer;
@@ -472,7 +473,7 @@ namespace tbb
 
 			// small object specialization (converts void* to the correct type, passes objects directly.)
 			template <typename T>
-			class token_helper < T, false >
+			class token_helper<T, false>
 			{
 				typedef union
 				{
@@ -515,7 +516,7 @@ namespace tbb
 			};
 
 			template <typename T, typename U, typename Body>
-			class concrete_filter : public tbb::filter
+			class concrete_filter: public tbb::filter
 			{
 				const Body& my_body;
 				typedef token_helper<T, is_large_object<T>::value> t_helper;
@@ -545,9 +546,9 @@ namespace tbb
 				}
 			};
 
-			// input
+			// input 
 			template <typename U, typename Body>
-			class concrete_filter<void, U, Body> : public filter
+			class concrete_filter<void, U, Body>: public filter
 			{
 				const Body& my_body;
 				typedef token_helper<U, is_large_object<U>::value> u_helper;
@@ -576,7 +577,7 @@ namespace tbb
 			};
 
 			template <typename T, typename Body>
-			class concrete_filter<T, void, Body> : public filter
+			class concrete_filter<T, void, Body>: public filter
 			{
 				const Body& my_body;
 				typedef token_helper<T, is_large_object<T>::value> t_helper;
@@ -605,7 +606,7 @@ namespace tbb
 			};
 
 			template <typename Body>
-			class concrete_filter<void, void, Body> : public filter
+			class concrete_filter<void, void, Body>: public filter
 			{
 				const Body& my_body;
 
@@ -647,7 +648,7 @@ namespace tbb
 
 			//! Abstract base class that represents a node in a parse tree underlying a filter_t.
 			/** These nodes are always heap-allocated and can be shared by filter_t objects. */
-			class filter_node : tbb::internal::no_copy
+			class filter_node: tbb::internal::no_copy
 			{
 				/** Count must be atomic because it is hidden state for user, but might be shared by threads. */
 				tbb::atomic<intptr_t> ref_count;
@@ -656,12 +657,12 @@ namespace tbb
 				{
 					ref_count = 0;
 #ifdef __TBB_TEST_FILTER_NODE_COUNT
-					++(__TBB_TEST_FILTER_NODE_COUNT);
+        ++(__TBB_TEST_FILTER_NODE_COUNT);
 #endif
 				}
 
 			public:
-				//! Add concrete_filter to pipeline
+				//! Add concrete_filter to pipeline 
 				virtual void add_to(pipeline&) = 0;
 
 				//! Increment reference count
@@ -673,7 +674,7 @@ namespace tbb
 				//! Decrement reference count and delete if it becomes zero.
 				void remove_ref()
 				{
-					__TBB_ASSERT(ref_count > 0, "ref_count underflow");
+					__TBB_ASSERT(ref_count>0,"ref_count underflow");
 					if (--ref_count == 0)
 						delete this;
 				}
@@ -681,14 +682,14 @@ namespace tbb
 				virtual ~filter_node()
 				{
 #ifdef __TBB_TEST_FILTER_NODE_COUNT
-					--(__TBB_TEST_FILTER_NODE_COUNT);
+        --(__TBB_TEST_FILTER_NODE_COUNT);
 #endif
 				}
 			};
 
 			//! Node in parse tree representing result of make_filter.
 			template <typename T, typename U, typename Body>
-			class filter_node_leaf : public filter_node
+			class filter_node_leaf: public filter_node
 			{
 				const tbb::filter::mode mode;
 				const Body body;
@@ -707,7 +708,7 @@ namespace tbb
 			};
 
 			//! Node in parse tree representing join of two filters.
-			class filter_node_join : public filter_node
+			class filter_node_join: public filter_node
 			{
 				friend class filter_node; // to suppress GCC 3.2 warnings
 				filter_node& left;
@@ -747,8 +748,8 @@ namespace tbb
 		template <typename T, typename V, typename U>
 		filter_t<T, U> operator&(const filter_t<T, V>& left, const filter_t<V, U>& right)
 		{
-			__TBB_ASSERT(left.root, "cannot use default-constructed filter_t as left argument of '&'");
-			__TBB_ASSERT(right.root, "cannot use default-constructed filter_t as right argument of '&'");
+			__TBB_ASSERT(left.root,"cannot use default-constructed filter_t as left argument of '&'");
+			__TBB_ASSERT(right.root,"cannot use default-constructed filter_t as right argument of '&'");
 			return new internal::filter_node_join(*left.root, *right.root);
 		}
 
@@ -815,23 +816,23 @@ namespace tbb
 
 		inline internal::pipeline_proxy::pipeline_proxy(const filter_t<void, void>& filter_chain) : my_pipe()
 		{
-			__TBB_ASSERT(filter_chain.root, "cannot apply parallel_pipeline to default-constructed filter_t");
+			__TBB_ASSERT( filter_chain.root, "cannot apply parallel_pipeline to default-constructed filter_t" );
 			filter_chain.root->add_to(my_pipe);
 		}
 
 		inline void parallel_pipeline(size_t max_number_of_live_tokens, const filter_t<void, void>& filter_chain
 #if __TBB_TASK_GROUP_CONTEXT
-			, tbb::task_group_context& context
+		                              , tbb::task_group_context& context
 #endif
-			)
+		)
 		{
 			internal::pipeline_proxy pipe(filter_chain);
 			// tbb::pipeline::run() is called via the proxy
 			pipe->run(max_number_of_live_tokens
 #if __TBB_TASK_GROUP_CONTEXT
-				, context
+			          , context
 #endif
-				);
+			);
 		}
 
 #if __TBB_TASK_GROUP_CONTEXT
@@ -841,6 +842,7 @@ namespace tbb
 			parallel_pipeline(max_number_of_live_tokens, filter_chain, context);
 		}
 #endif // __TBB_TASK_GROUP_CONTEXT
+
 	} // interface6
 
 	using interface6::flow_control;

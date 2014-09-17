@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #ifndef __TBB_parallel_for_H
 #define __TBB_parallel_for_H
@@ -40,7 +40,7 @@ namespace tbb
 			//! Task type used in parallel_for
 			/** @ingroup algorithms */
 			template <typename Range, typename Body, typename Partitioner>
-			class start_for : public task
+			class start_for: public task
 			{
 				Range my_range;
 				const Body my_body;
@@ -90,7 +90,7 @@ namespace tbb
 					if (!range.empty())
 					{
 #if !__TBB_TASK_GROUP_CONTEXT || TBB_JOIN_OUTER_TASK_GROUP
-						start_for& a = *new(task::allocate_root()) start_for(range, body, partitioner);
+                start_for& a = *new(task::allocate_root()) start_for(range,body,partitioner);
 #else
 						// Bound context prevents exceptions from body to affect nesting or sibling algorithms,
 						// and allows users to handle exceptions safely by wrapping parallel_for in the try-block.
@@ -183,7 +183,7 @@ namespace tbb
 #pragma vector always assert
 #endif
 #endif
-				for (Index i = b; i < e; ++i, k += ms)
+				for (Index i = b; i < e; ++i , k += ms)
 				{
 					my_func(k);
 				}
@@ -195,21 +195,22 @@ namespace tbb
 	// Requirements on Range concept are documented in blocked_range.h
 
 	/** \page parallel_for_body_req Requirements on parallel_for body
-	Class \c Body implementing the concept of parallel_for body must define:
-	- \code Body::Body( const Body& ); \endcode                 Copy constructor
-	- \code Body::~Body(); \endcode                             Destructor
-	- \code void Body::operator()( Range& r ) const; \endcode   Function call operator applying the body to range \c r.
-	**/
+    Class \c Body implementing the concept of parallel_for body must define:
+    - \code Body::Body( const Body& ); \endcode                 Copy constructor
+    - \code Body::~Body(); \endcode                             Destructor
+    - \code void Body::operator()( Range& r ) const; \endcode   Function call operator applying the body to range \c r.
+**/
 
 	/** \name parallel_for
-	See also requirements on \ref range_req "Range" and \ref parallel_for_body_req "parallel_for Body". **/
+    See also requirements on \ref range_req "Range" and \ref parallel_for_body_req "parallel_for Body". **/
 	//@{
+
 	//! Parallel iteration over range with default partitioner.
 	/** @ingroup algorithms **/
 	template <typename Range, typename Body>
 	void parallel_for(const Range& range, const Body& body)
 	{
-		internal::start_for<Range, Body, const __TBB_DEFAULT_PARTITIONER>::run(range, body, __TBB_DEFAULT_PARTITIONER());
+		internal::start_for<Range, Body, const __TBB_DEFAULT_PARTITIONER>::run(range, body,__TBB_DEFAULT_PARTITIONER());
 	}
 
 	//! Parallel iteration over range with simple partitioner.
@@ -390,6 +391,7 @@ namespace tbb
 		{
 			parallel_for_impl(first, last, step, f, partitioner, context);
 		}
+
 
 		//! Parallel iteration over a range of integers with a default step value, explicit task group context, and default partitioner
 		template <typename Index, typename Function>

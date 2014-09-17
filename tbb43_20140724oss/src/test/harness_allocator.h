@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 // Declarations for simple estimate of the memory being used by a program.
 // Not yet implemented for OS X*.
@@ -28,7 +28,7 @@
 
 #if __linux__ || __APPLE__ || __sun
 #include <unistd.h>
-#elif _WIN32
+#elif _WIN32 
 #include "tbb/machine/windows_api.h"
 #endif /* OS specific */
 #include <memory>
@@ -43,6 +43,7 @@
 #include <stdexcept>
 
 #include <utility> // for std::swap
+
 
 #if !TBB_USE_EXCEPTIONS && _MSC_VER
 #pragma warning (pop)
@@ -59,7 +60,7 @@ using std::printf;
 // Workaround for overzealous compiler warnings in /Wp64 mode
 #pragma warning (push)
 #if defined(_Wp64)
-#pragma warning (disable: 4267)
+    #pragma warning (disable: 4267)
 #endif
 #pragma warning (disable: 4512)
 #endif
@@ -67,12 +68,13 @@ using std::printf;
 namespace Harness
 {
 #if __TBB_ALLOCATOR_TRAITS_PRESENT
-	using std::true_type;
-	using std::false_type;
+    using std::true_type;
+    using std::false_type;
 #else
 	using tbb::internal::true_type;
 	using tbb::internal::false_type;
 #endif //__TBB_ALLOCATOR_TRAITS_PRESENT
+
 }
 
 template <typename counter_type = size_t>
@@ -85,7 +87,7 @@ struct arena_data
 	template <typename T>
 	arena_data(T* a_buffer, size_t a_size) __TBB_NOEXCEPT(true)
 		: my_buffer(reinterpret_cast<char *>(a_buffer))
-		, my_size(a_size * sizeof(T))
+		  , my_size(a_size * sizeof(T))
 	{
 		my_allocated = 0;
 	}
@@ -169,21 +171,20 @@ public:
 
 	//! Copy-construct value at location pointed to by p.
 #if __TBB_ALLOCATOR_CONSTRUCT_VARIADIC
-	template<typename U, typename... Args>
-	void construct(U *p, Args&&... args)
-	{
-		::new((void *)p) U(std::forward<Args>(args)...);
-	}
+    template<typename U, typename... Args>
+    void construct(U *p, Args&&... args)
+        { ::new((void *)p) U(std::forward<Args>(args)...); }
 #else // __TBB_ALLOCATOR_CONSTRUCT_VARIADIC
 
 #if __TBB_CPP11_RVALUE_REF_PRESENT
-	void construct(pointer p, value_type&& value) { ::new((void*)(p)) value_type(std::move(value)); }
+    void construct( pointer p, value_type&& value ) {::new((void*)(p)) value_type(std::move(value));}
 #endif
 	void construct(pointer p, const value_type& value)
 	{
 		::new((void*)(p)) value_type(value);
 	}
 #endif // __TBB_ALLOCATOR_CONSTRUCT_VARIADIC
+
 
 	//! Destroy value at location pointed to by p.
 	void destroy(pointer p)
@@ -300,7 +301,7 @@ public:
 
 	static counters_t counters()
 	{
-		counters_t c = { items_allocated, items_freed, allocations, frees };
+		counters_t c = {items_allocated, items_freed, allocations, frees};
 		return c;
 	}
 
@@ -337,6 +338,7 @@ bool static_counting_allocator<base_alloc_t, count_t>::verbose;
 template <typename base_alloc_t, typename count_t>
 bool static_counting_allocator<base_alloc_t, count_t>::throwing;
 
+
 template <typename tag, typename count_t = tbb::atomic<size_t>>
 class static_shared_counting_allocator_base
 {
@@ -352,7 +354,7 @@ public:
 
 	static counters_t counters()
 	{
-		counters_t c = { items_allocated, items_freed, allocations, frees };
+		counters_t c = {items_allocated, items_freed, allocations, frees};
 		return c;
 	}
 
@@ -516,11 +518,11 @@ public:
 
 	local_counting_allocator(const local_counting_allocator& a) throw()
 		: base_alloc_t(a)
-		, items_allocated(a.items_allocated)
-		, items_freed(a.items_freed)
-		, allocations(a.allocations)
-		, frees(a.frees)
-		, max_items(a.max_items)
+		  , items_allocated(a.items_allocated)
+		  , items_freed(a.items_freed)
+		  , allocations(a.allocations)
+		  , frees(a.frees)
+		  , max_items(a.max_items)
 	{
 	}
 
@@ -533,10 +535,10 @@ public:
 	template <typename U, typename C>
 	local_counting_allocator(const local_counting_allocator<U, C>& a) throw()
 		: items_allocated(a.items_allocated)
-		, items_freed(a.items_freed)
-		, allocations(a.allocations)
-		, frees(a.frees)
-		, max_items(a.max_items)
+		  , items_freed(a.items_freed)
+		  , allocations(a.allocations)
+		  , frees(a.frees)
+		  , max_items(a.max_items)
 	{
 	}
 
@@ -573,7 +575,7 @@ public:
 };
 
 template <typename T, template<typename X> class Allocator = std::allocator>
-class debug_allocator : public Allocator < T >
+class debug_allocator : public Allocator<T>
 {
 public:
 	typedef Allocator<T> base_allocator_type;
@@ -615,7 +617,7 @@ public:
 //! Analogous to std::allocator<void>, as defined in ISO C++ Standard, Section 20.4.1
 /** @ingroup memory_allocation */
 template <template<typename T> class Allocator>
-class debug_allocator<void, Allocator> : public Allocator < void >
+class debug_allocator<void, Allocator> : public Allocator<void>
 {
 public:
 	typedef Allocator<void> base_allocator_type;
@@ -643,7 +645,7 @@ inline bool operator!=(const debug_allocator<T1, B1>& a, const debug_allocator<T
 }
 
 template <typename T, typename pocma = Harness::false_type, template<typename X> class Allocator = std::allocator>
-class stateful_allocator : public Allocator < T >
+class stateful_allocator : public Allocator<T>
 {
 	void* unique_pointer;
 
@@ -692,6 +694,7 @@ public:
 #pragma warning (pop)
 #endif // warning 4267,4512 is back
 
+
 namespace Harness
 {
 	struct IsEqual
@@ -706,7 +709,7 @@ namespace Harness
 
 		template <typename T1, typename T2>
 		static bool compare(const std::pair<const std::weak_ptr<T1>, std::weak_ptr<T2>>& t1,
-			const std::pair<const std::weak_ptr<T1>, std::weak_ptr<T2>>& t2)
+		                    const std::pair<const std::weak_ptr<T1>, std::weak_ptr<T2>>& t2)
 		{
 			// Compare real pointers.
 			return t1.first.lock().get() == t2.first.lock().get() &&

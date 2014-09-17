@@ -1,22 +1,22 @@
 /*
-	Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
+    Copyright 2005-2014 Intel Corporation.  All Rights Reserved.
 
-	This file is part of Threading Building Blocks. Threading Building Blocks is free software;
-	you can redistribute it and/or modify it under the terms of the GNU General Public License
-	version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
-	implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See  the GNU General Public License for more details.   You should have received a copy of
-	the  GNU General Public License along with Threading Building Blocks; if not, write to the
-	Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
+    This file is part of Threading Building Blocks. Threading Building Blocks is free software;
+    you can redistribute it and/or modify it under the terms of the GNU General Public License
+    version 2  as  published  by  the  Free Software Foundation.  Threading Building Blocks is
+    distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+    implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See  the GNU General Public License for more details.   You should have received a copy of
+    the  GNU General Public License along with Threading Building Blocks; if not, write to the
+    Free Software Foundation, Inc.,  51 Franklin St,  Fifth Floor,  Boston,  MA 02110-1301 USA
 
-	As a special exception,  you may use this file  as part of a free software library without
-	restriction.  Specifically,  if other files instantiate templates  or use macros or inline
-	functions from this file, or you compile this file and link it with other files to produce
-	an executable,  this file does not by itself cause the resulting executable to be covered
-	by the GNU General Public License. This exception does not however invalidate any other
-	reasons why the executable file might be covered by the GNU General Public License.
-	*/
+    As a special exception,  you may use this file  as part of a free software library without
+    restriction.  Specifically,  if other files instantiate templates  or use macros or inline
+    functions from this file, or you compile this file and link it with other files to produce
+    an executable,  this file does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however invalidate any other
+    reasons why the executable file might be covered by the GNU General Public License.
+*/
 
 #if _WIN32||_WIN64
 #include <process.h> // _beginthreadex()
@@ -58,9 +58,9 @@ namespace tbb
 				handle_perror(EDEADLK, "tbb_thread::join"); // Resource deadlock avoided
 #if _WIN32||_WIN64
 #if __TBB_WIN8UI_SUPPORT
-			std::thread* thread_tmp = (std::thread*)my_thread_id;
-			thread_tmp->join();
-			delete thread_tmp;
+    std::thread* thread_tmp=(std::thread*)my_thread_id;
+    thread_tmp->join();
+    delete thread_tmp;
 #else // __TBB_WIN8UI_SUPPORT
 
 			DWORD status = WaitForSingleObjectEx(my_handle, INFINITE, FALSE);
@@ -73,9 +73,9 @@ namespace tbb
 #endif // __TBB_WIN8UI_SUPPORT
 
 #else
-			int status = pthread_join(my_handle, NULL);
-			if (status)
-				handle_perror(status, "pthread_join");
+    int status = pthread_join( my_handle, NULL );
+    if( status )
+        handle_perror( status, "pthread_join" );
 #endif // _WIN32||_WIN64
 
 			my_handle = 0;
@@ -91,31 +91,31 @@ namespace tbb
 				handle_win_error(GetLastError());
 			my_thread_id = 0;
 #else
-			int status = pthread_detach(my_handle);
-			if (status)
-				handle_perror(status, "pthread_detach");
+    int status = pthread_detach( my_handle );
+    if( status )
+        handle_perror( status, "pthread_detach" );
 #endif // _WIN32||_WIN64
 
 			my_handle = 0;
 		}
 
 		void tbb_thread_v3::internal_start(__TBB_NATIVE_THREAD_ROUTINE_PTR(start_routine),
-			void* closure)
+		                                   void* closure)
 		{
 #if _WIN32||_WIN64
 #if __TBB_WIN8UI_SUPPORT
-			std::thread* thread_tmp = new std::thread(start_routine, closure);
-			my_handle = thread_tmp->native_handle();
+    std::thread* thread_tmp=new std::thread(start_routine, closure);
+    my_handle  = thread_tmp->native_handle();
 			//  TODO: to find out the way to find thread_id without GetThreadId and other
 			//  desktop functions.
 			//  Now tbb_thread does have its own thread_id that stores std::thread object
-			my_thread_id = (size_t)thread_tmp;
+    my_thread_id = (size_t)thread_tmp;
 #else
 			unsigned thread_id;
 			// The return type of _beginthreadex is "uintptr_t" on new MS compilers,
 			// and 'unsigned long' on old MS compilers.  uintptr_t works for both.
 			uintptr_t status = _beginthreadex(NULL, ThreadStackSize, start_routine,
-				closure, 0, &thread_id);
+			                                      closure, 0, &thread_id);
 			if (status == 0)
 				handle_perror(errno, "__beginthreadex");
 			else
@@ -125,30 +125,31 @@ namespace tbb
 			}
 #endif
 #else
-			pthread_t thread_handle;
-			int status;
-			pthread_attr_t stack_size;
-			status = pthread_attr_init(&stack_size);
-			if (status)
-				handle_perror(status, "pthread_attr_init");
-			status = pthread_attr_setstacksize(&stack_size, ThreadStackSize);
-			if (status)
-				handle_perror(status, "pthread_attr_setstacksize");
+    pthread_t thread_handle;
+    int status;
+    pthread_attr_t stack_size;
+    status = pthread_attr_init( &stack_size );
+    if( status )
+        handle_perror( status, "pthread_attr_init" );
+    status = pthread_attr_setstacksize( &stack_size, ThreadStackSize );
+    if( status )
+        handle_perror( status, "pthread_attr_setstacksize" );
 
-			status = pthread_create(&thread_handle, &stack_size, start_routine, closure);
-			if (status)
-				handle_perror(status, "pthread_create");
-			status = pthread_attr_destroy(&stack_size);
-			if (status)
-				handle_perror(status, "pthread_attr_destroy");
+    status = pthread_create( &thread_handle, &stack_size, start_routine, closure );
+    if( status )
+        handle_perror( status, "pthread_create" );
+    status = pthread_attr_destroy( &stack_size );
+    if( status )
+        handle_perror( status, "pthread_attr_destroy" );
 
-			my_handle = thread_handle;
+    my_handle = thread_handle;
 #endif // _WIN32||_WIN64
+
 		}
 
 		unsigned tbb_thread_v3::hardware_concurrency() __TBB_NOEXCEPT(
-			true
-			)
+		true
+		)
 		{
 			return governor::default_num_threads();
 		}
@@ -158,8 +159,9 @@ namespace tbb
 #if _WIN32||_WIN64
 			return tbb_thread_v3::id(GetCurrentThreadId());
 #else
-			return tbb_thread_v3::id(pthread_self());
+    return tbb_thread_v3::id( pthread_self() );
 #endif // _WIN32||_WIN64
+
 		}
 
 		void move_v3(tbb_thread_v3& t1, tbb_thread_v3& t2)
@@ -172,6 +174,7 @@ namespace tbb
 			t1.my_thread_id = t2.my_thread_id;
 			t2.my_thread_id = 0;
 #endif // _WIN32||_WIN64
+
 		}
 
 		void thread_yield_v3()
@@ -192,19 +195,20 @@ namespace tbb
 #if !__TBB_WIN8UI_SUPPORT
 				Sleep(t);
 #else
-				std::chrono::milliseconds sleep_time(t);
-				std::this_thread::sleep_for(sleep_time);
+         std::chrono::milliseconds sleep_time( t );
+         std::this_thread::sleep_for( sleep_time );
 #endif
 				t1 = tick_count::now();
 			}
 #else
-			struct timespec req;
-			double sec = i.seconds();
+    struct timespec req;
+    double sec = i.seconds();
 
-			req.tv_sec = static_cast<long>(sec);
-			req.tv_nsec = static_cast<long>((sec - req.tv_sec)*1e9);
-			nanosleep(&req, NULL);
+    req.tv_sec = static_cast<long>(sec);
+    req.tv_nsec = static_cast<long>( (sec - req.tv_sec)*1e9 );
+    nanosleep(&req, NULL);
 #endif // _WIN32||_WIN64
+
 		}
 	} // internal
 } // tbb
