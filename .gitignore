@@ -10,6 +10,7 @@ LoLUpdaterLauncher\Properties\Resources.Designer.cs
 *.suo
 *.user
 *.sln.docstates
+ia32
 
 # Build results
 [Dd]ebug/

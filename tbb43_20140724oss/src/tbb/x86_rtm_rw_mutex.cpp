@@ -34,7 +34,7 @@
 #endif
 
 #if defined(_MSC_VER) && defined(_Wp64)
-    // Workaround for overzealous compiler warnings in /Wp64 mode
+// Workaround for overzealous compiler warnings in /Wp64 mode
     #pragma warning (disable: 4244)
 #endif
 
@@ -113,13 +113,13 @@ void x86_rtm_rw_mutex::internal_acquire_writer(x86_rtm_rw_mutex::scoped_lock& s,
                     backoff.pause();  // test the spin_rw_mutex (real readers or writers)
                 } while(this->state);
             }
-            // _xbegin returns -1 on success or the abort code, so capture it
+// _xbegin returns -1 on success or the abort code, so capture it
             if(( abort_code = __TBB_machine_begin_transaction()) == ~(unsigned int)(0) )
             {
-                // started speculation
+// started speculation
 #if !__TBB_RW_MUTEX_DELAY_TEST
                 if(this->state) {  // add spin_rw_mutex to read-set.
-                    // reader or writer grabbed the lock, so abort.
+// reader or writer grabbed the lock, so abort.
                     __TBB_machine_transaction_conflict_abort();
                 }
 #endif
@@ -150,17 +150,17 @@ void x86_rtm_rw_mutex::internal_acquire_reader(x86_rtm_rw_mutex::scoped_lock& s,
         unsigned int abort_code;
         do {
             tbb::internal::atomic_backoff backoff;
-            // if in try_acquire, and lock is held as writer, don't attempt to speculate.
+// if in try_acquire, and lock is held as writer, don't attempt to speculate.
             if(w_flag) {
                 if(only_speculate) return;
                 do {
                     backoff.pause();  // test the spin_rw_mutex (real readers or writers)
                 } while(w_flag);
             }
-            // _xbegin returns -1 on success or the abort code, so capture it
+// _xbegin returns -1 on success or the abort code, so capture it
             if((abort_code = __TBB_machine_begin_transaction()) == ~(unsigned int)(0) )
             {
-                // started speculation
+// started speculation
 #if !__TBB_RW_MUTEX_DELAY_TEST
                 if(w_flag) {  // add w_flag to read-set.
                     __TBB_machine_transaction_conflict_abort();  // writer grabbed the lock, so abort.
@@ -170,15 +170,15 @@ void x86_rtm_rw_mutex::internal_acquire_reader(x86_rtm_rw_mutex::scoped_lock& s,
                 s.my_scoped_lock.internal_set_mutex(this);  // need mutex for release()
                 return;  // successfully started speculation
             }
-            // fallback path
-            // retry only if there is any hope of getting into a transaction soon
-            // Retry in the following cases (from Section 8.3.5 of Intel(R)
-            // Architecture Instruction Set Extensions Programming Reference):
-            // 1. abort caused by XABORT instruction (bit 0 of EAX register is set)
-            // 2. the transaction may succeed on a retry (bit 1 of EAX register is set)
-            // 3. if another logical processor conflicted with a memory address
-            //    that was part of the transaction that aborted (bit 2 of EAX register is set)
-            // That is, retry if (abort_code & 0x7) is non-zero
+// fallback path
+// retry only if there is any hope of getting into a transaction soon
+// Retry in the following cases (from Section 8.3.5 of Intel(R)
+// Architecture Instruction Set Extensions Programming Reference):
+// 1. abort caused by XABORT instruction (bit 0 of EAX register is set)
+// 2. the transaction may succeed on a retry (bit 1 of EAX register is set)
+// 3. if another logical processor conflicted with a memory address
+//    that was part of the transaction that aborted (bit 2 of EAX register is set)
+// That is, retry if (abort_code & 0x7) is non-zero
             ++num_retries;
         } while( (abort_code & speculation_retry) != 0 && (num_retries < retry_threshold_read) );
     }
@@ -202,8 +202,8 @@ bool x86_rtm_rw_mutex::internal_upgrade(x86_rtm_rw_mutex::scoped_lock& s)
         }
     case RTM_transacting_reader:
         s.transaction_state = RTM_transacting_writer;
-        // don't need to add w_flag to read_set even if __TBB_RW_MUTEX_DELAY_TEST
-        // because the this pointer (the spin_rw_mutex) will be sufficient on release.
+// don't need to add w_flag to read_set even if __TBB_RW_MUTEX_DELAY_TEST
+// because the this pointer (the spin_rw_mutex) will be sufficient on release.
         return true;
     default:
         __TBB_ASSERT(false, "Invalid state for upgrade");
@@ -245,10 +245,10 @@ bool x86_rtm_rw_mutex::internal_try_acquire_writer(x86_rtm_rw_mutex::scoped_lock
         return true;
     }
     __TBB_ASSERT(s.transaction_state == RTM_not_in_mutex, "Trying to acquire writer which is already allocated");
-    // transacting write acquire failed.  try_acquire the real mutex
+// transacting write acquire failed.  try_acquire the real mutex
     bool result = s.my_scoped_lock.try_acquire(*this, true);
     if(result) {
-        // only shoot down readers if we're not transacting ourselves
+// only shoot down readers if we're not transacting ourselves
         __TBB_ASSERT(!w_flag, "After try_acquire_writer, w_flag already true");
         w_flag = true;
         s.transaction_state = RTM_real_writer;

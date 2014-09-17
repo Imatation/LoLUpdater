@@ -19,7 +19,8 @@
 */
 
 #if !defined(__TBB_machine_H) || defined(__TBB_machine_linux_intel64_H)
-#error Do not #include this internal file directly; use public TBB headers instead.
+#error Do not
+#include  this internal file directly; use public TBB headers instead.
 #endif
 
 #define __TBB_machine_linux_intel64_H
@@ -40,50 +41,55 @@
 #endif
 
 #define __TBB_MACHINE_DEFINE_ATOMICS(S,T,X)                                          \
-static inline T __TBB_machine_cmpswp##S (volatile void *ptr, T value, T comparand )  \
-{                                                                                    \
-    T result;                                                                        \
-                                                                                     \
-    __asm__ __volatile__("lock\ncmpxchg" X " %2,%1"                                  \
-                          : "=a"(result), "=m"(*(volatile T*)ptr)                    \
-                          : "q"(value), "0"(comparand), "m"(*(volatile T*)ptr)       \
-                          : "memory");                                               \
-    return result;                                                                   \
-}                                                                                    \
-                                                                                     \
-static inline T __TBB_machine_fetchadd##S(volatile void *ptr, T addend)              \
-{                                                                                    \
-    T result;                                                                        \
-    __asm__ __volatile__("lock\nxadd" X " %0,%1"                                     \
-                          : "=r"(result),"=m"(*(volatile T*)ptr)                     \
-                          : "0"(addend), "m"(*(volatile T*)ptr)                      \
-                          : "memory");                                               \
-    return result;                                                                   \
-}                                                                                    \
-                                                                                     \
-static inline  T __TBB_machine_fetchstore##S(volatile void *ptr, T value)            \
-{                                                                                    \
-    T result;                                                                        \
-    __asm__ __volatile__("lock\nxchg" X " %0,%1"                                     \
-                          : "=r"(result),"=m"(*(volatile T*)ptr)                     \
-                          : "0"(value), "m"(*(volatile T*)ptr)                       \
-                          : "memory");                                               \
-    return result;                                                                   \
-}                                                                                    \
+static inline T __TBB_machine_cmpswp##S (volatile void *ptr, T value, T comparand )
+{
+	T result;
+
+	__asm__ __volatile__("lock\ncmpxchg" X " %2,%1"
+		: "=a"(result), "=m"(*(volatile T*)ptr)
+	: "q"(value), "0"(comparand), "m"(*(volatile T*)ptr)
+	: "memory");
+	return result;
+}
+
+static inline T __TBB_machine_fetchadd##S(volatile void *ptr, T addend)
+{
+	T result;
+	__asm__ __volatile__("lock\nxadd" X " %0,%1"
+		: "=r"(result),"=m"(*(volatile T*)ptr)
+	: "0"(addend), "m"(*(volatile T*)ptr)
+	: "memory");
+	return result;
+}
+
+static inline T __TBB_machine_fetchstore##S(volatile void *ptr, T value)
+{
+	T result;
+	__asm__ __volatile__("lock\nxchg" X " %0,%1"
+		: "=r"(result),"=m"(*(volatile T*)ptr)
+	: "0"(value), "m"(*(volatile T*)ptr)
+	: "memory");
+	return result;
+}
 
 __TBB_MACHINE_DEFINE_ATOMICS(1,int8_t,"")
+
 __TBB_MACHINE_DEFINE_ATOMICS(2,int16_t,"")
+
 __TBB_MACHINE_DEFINE_ATOMICS(4,int32_t,"")
+
 __TBB_MACHINE_DEFINE_ATOMICS(8,int64_t,"q")
 
 #undef __TBB_MACHINE_DEFINE_ATOMICS
 
-static inline void __TBB_machine_or( volatile void *ptr, uint64_t value ) {
-    __asm__ __volatile__("lock\norq %1,%0" : "=m"(*(volatile uint64_t*)ptr) : "r"(value), "m"(*(volatile uint64_t*)ptr) : "memory");
+static inline void __TBB_machine_or(volatile void* ptr, uint64_t value)
+{
+	__asm__ __volatile__("lock\norq %1,%0": "=m"(*(volatile uint64_t*)ptr): "r"(value), "m"(*(volatile uint64_t*)ptr): "memory");
 }
 
-static inline void __TBB_machine_and( volatile void *ptr, uint64_t value ) {
-    __asm__ __volatile__("lock\nandq %1,%0" : "=m"(*(volatile uint64_t*)ptr) : "r"(value), "m"(*(volatile uint64_t*)ptr) : "memory");
+static inline void __TBB_machine_and(volatile void* ptr, uint64_t value)
+{
+	__asm__ __volatile__("lock\nandq %1,%0": "=m"(*(volatile uint64_t*)ptr): "r"(value), "m"(*(volatile uint64_t*)ptr): "memory");
 }
 
 #define __TBB_AtomicOR(P,V) __TBB_machine_or(P,V)
@@ -93,4 +99,3 @@ static inline void __TBB_machine_and( volatile void *ptr, uint64_t value ) {
 #define __TBB_USE_GENERIC_HALF_FENCED_LOAD_STORE            1
 #define __TBB_USE_GENERIC_RELAXED_LOAD_STORE                1
 #define __TBB_USE_GENERIC_SEQUENTIAL_CONSISTENCY_LOAD_STORE 1
-

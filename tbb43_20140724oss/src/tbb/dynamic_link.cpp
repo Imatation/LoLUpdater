@@ -27,17 +27,18 @@
     LIBRARY_ASSERT and DYNAMIC_LINK_WARNING instead.
 */
 
-#include <cstdarg>          // va_list etc.
-#if _WIN32
-    #include <malloc.h>
+#include <cstdarg> // va_list etc.
 
-    // Unify system calls
-    #define dlopen( name, flags )   LoadLibrary( name )
-    #define dlsym( handle, name )   GetProcAddress( handle, name )
-    #define dlclose( handle )       ( ! FreeLibrary( handle ) )
-    #define dlerror()               GetLastError()
+#if _WIN32
+#include <malloc.h>
+
+// Unify system calls
+#define dlopen( name, flags )   LoadLibrary( name )
+#define dlsym( handle, name )   GetProcAddress( handle, name )
+#define dlclose( handle )       ( ! FreeLibrary( handle ) )
+#define dlerror()               GetLastError()
 #ifndef PATH_MAX
-    #define PATH_MAX                MAX_PATH
+#define PATH_MAX                MAX_PATH
 #endif
 #else /* _WIN32 */
     #include <dlfcn.h>
@@ -48,7 +49,7 @@
 #endif /* _WIN32 */
 
 #if __TBB_WEAK_SYMBOLS_PRESENT
-    //TODO: use function attribute for weak symbols instead of the pragma.
+//TODO: use function attribute for weak symbols instead of the pragma.
     #pragma weak dlopen
     #pragma weak dlsym
     #pragma weak dlclose
@@ -61,7 +62,7 @@
 #define __USE_TBB_ATOMICS       ( !(__linux__&&__ia64__) || __TBB_BUILD )
 #define __USE_STATIC_DL_INIT    (!__ANDROID__)
 
-#if !__USE_TBB_ATOMICS
+#if !__USE_TBB_ATOMICS  
 #include <pthread.h>
 #endif
 
@@ -108,11 +109,10 @@ soon as all of the symbols have been resolved.
 */
 
 OPEN_INTERNAL_NAMESPACE
-
 #if __TBB_WEAK_SYMBOLS_PRESENT || __TBB_DYNAMIC_LOAD_ENABLED
 
 #if !defined(DYNAMIC_LINK_WARNING) && !__TBB_WIN8UI_SUPPORT
-    // Report runtime errors and continue.
+	// Report runtime errors and continue.
     #define DYNAMIC_LINK_WARNING dynamic_link_warning
     static void dynamic_link_warning( dynamic_link_error_t code, ... ) {
         (void) code;
@@ -124,9 +124,9 @@ OPEN_INTERNAL_NAMESPACE
         if ( module == NULL )
             return false;
 
-        #if __TBB_WEAK_SYMBOLS_PRESENT
+#if __TBB_WEAK_SYMBOLS_PRESENT
             if ( !dlsym ) return false;
-        #endif /* __TBB_WEAK_SYMBOLS_PRESENT */
+#endif /* __TBB_WEAK_SYMBOLS_PRESENT */
 
         const size_t n_desc=20; // Usually we don't have more than 20 descriptors per library
         LIBRARY_ASSERT( required <= n_desc, "Too many descriptors is required" );
@@ -142,8 +142,8 @@ OPEN_INTERNAL_NAMESPACE
             h[k] = addr;
         }
 
-        // Commit the entry points.
-        // Cannot use memset here, because the writes must be atomic.
+	// Commit the entry points.
+	// Cannot use memset here, because the writes must be atomic.
         for( size_t k = 0; k < required; ++k )
             *descriptors[k].handler = h[k];
         return true;
@@ -167,7 +167,7 @@ OPEN_INTERNAL_NAMESPACE
     void dynamic_unlink_all() {
     }
 #else
-/*
+	/*
     There is a security issue on Windows: LoadLibrary() may load and execute malicious code.
     See http://www.microsoft.com/technet/security/advisory/2269637.mspx for details.
     To avoid the issue, we have to pass full path (not just library name) to LoadLibrary. This
@@ -184,32 +184,32 @@ OPEN_INTERNAL_NAMESPACE
         "malloc\tbbmalloc.dll" would be "c:\program files\common\intel\malloc\tbbmalloc.dll".
 */
 
-    // Struct handle_storage is used by dynamic_link routine to store handles of
-    // all loaded or pinned dynamic libraries. When TBB is shut down, it calls
-    // dynamic_unlink_all() that unloads modules referenced by handle_storage.
-    // This struct should not have any constructors since it may be used before
-    // the constructor is called.
+	// Struct handle_storage is used by dynamic_link routine to store handles of
+	// all loaded or pinned dynamic libraries. When TBB is shut down, it calls
+	// dynamic_unlink_all() that unloads modules referenced by handle_storage.
+	// This struct should not have any constructors since it may be used before
+	// the constructor is called.
     #define MAX_LOADED_MODULES 8 // The number of maximum possible modules which can be loaded
 
     struct handle_storage {
-    #if __USE_TBB_ATOMICS
+#if __USE_TBB_ATOMICS
         ::tbb::atomic<size_t> my_size;
-    #else
+#else
         size_t my_size;
         pthread_spinlock_t my_lock;
-    #endif
+#endif
         dynamic_link_handle my_handles[MAX_LOADED_MODULES];
 
         void add_handle(const dynamic_link_handle &handle) {
-        #if !__USE_TBB_ATOMICS
+#if !__USE_TBB_ATOMICS
             int res = pthread_spin_lock( &my_lock );
             LIBRARY_ASSERT( res==0, "pthread_spin_lock failed" );
-        #endif
+#endif
             const size_t ind = my_size++;
-        #if !__USE_TBB_ATOMICS
+#if !__USE_TBB_ATOMICS
             res = pthread_spin_unlock( &my_lock );
             LIBRARY_ASSERT( res==0, "pthread_spin_unlock failed" );
-        #endif
+#endif
             LIBRARY_ASSERT( ind < MAX_LOADED_MODULES, "Too many modules are loaded" );
             my_handles[ind] = handle;
         }
@@ -243,8 +243,8 @@ OPEN_INTERNAL_NAMESPACE
     } ap_data;
 
     static void init_ap_data() {
-    #if _WIN32
-        // Get handle of our DLL first.
+#if _WIN32
+	// Get handle of our DLL first.
         HMODULE handle;
         BOOL brc = GetModuleHandleEx(
             GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
@@ -256,7 +256,7 @@ OPEN_INTERNAL_NAMESPACE
             DYNAMIC_LINK_WARNING( dl_sys_fail, "GetModuleHandleEx", err );
             return;
         }
-        // Now get path to our DLL.
+	// Now get path to our DLL.
         DWORD drc = GetModuleFileName( handle, ap_data._path, static_cast< DWORD >( PATH_MAX ) );
         if ( drc == 0 ) { // Error occurred.
             int err = GetLastError();
@@ -267,7 +267,7 @@ OPEN_INTERNAL_NAMESPACE
             DYNAMIC_LINK_WARNING( dl_buff_too_small );
             return;
         }
-        // Find the position of the last backslash.
+	// Find the position of the last backslash.
         char *backslash = strrchr( ap_data._path, '\\' );
 
         if ( !backslash ) {    // Backslash not found.
@@ -277,11 +277,11 @@ OPEN_INTERNAL_NAMESPACE
         LIBRARY_ASSERT( backslash >= ap_data._path, "Unbelievable.");
         ap_data._len = (size_t)(backslash - ap_data._path) + 1;
         *(backslash+1) = 0;
-    #else
-        // Get the library path
-        #if __TBB_WEAK_SYMBOLS_PRESENT
+#else
+	// Get the library path
+#if __TBB_WEAK_SYMBOLS_PRESENT
             if ( !dladdr || !dlerror ) return;
-        #endif /* __TBB_WEAK_SYMBOLS_PRESENT */
+#endif /* __TBB_WEAK_SYMBOLS_PRESENT */
         Dl_info dlinfo;
         int res = dladdr( (void*)&dynamic_link, &dlinfo ); // any function inside the library can be used for the address
         if ( !res ) {
@@ -301,11 +301,11 @@ OPEN_INTERNAL_NAMESPACE
 
         size_t rc;
         if ( dlinfo.dli_fname[0]=='/' ) {
-            // The library path is absolute
+	// The library path is absolute
             rc = 0;
             ap_data._len = 0;
         } else {
-            // The library path is relative so get the current working directory
+	// The library path is relative so get the current working directory
             if ( !getcwd( ap_data._path, sizeof(ap_data._path)/sizeof(ap_data._path[0]) ) ) {
                 DYNAMIC_LINK_WARNING( dl_buff_too_small );
                 return;
@@ -325,38 +325,38 @@ OPEN_INTERNAL_NAMESPACE
             ap_data._len += fname_len;
             ap_data._path[ap_data._len]=0;
         }
-    #endif /* _WIN32 */
+#endif /* _WIN32 */
     }
 
     static void init_dl_data() {
         init_ap_data();
-    #if !__USE_TBB_ATOMICS
+#if !__USE_TBB_ATOMICS
         int res;
         res = pthread_spin_init( &handles.my_lock, PTHREAD_PROCESS_SHARED );
         LIBRARY_ASSERT( res==0, "pthread_spin_init failed" );
-    #endif
+#endif
     }
 
-    // ap_data structure is initialized with current directory on Linux.
-    // So it should be initialized as soon as possible since the current directory may be changed.
-    // static_init_ap_data object provides this initialization during library loading.
+	// ap_data structure is initialized with current directory on Linux.
+	// So it should be initialized as soon as possible since the current directory may be changed.
+	// static_init_ap_data object provides this initialization during library loading.
     static class _static_init_dl_data {
     public:
         _static_init_dl_data() {
-    #if __USE_STATIC_DL_INIT
+#if __USE_STATIC_DL_INIT
             atomic_once( &init_dl_data, init_dl_data_state );
-    #endif
+#endif
         }
-    #if !__USE_TBB_ATOMICS
+#if !__USE_TBB_ATOMICS
         ~_static_init_dl_data() {
             int res;
             res = pthread_spin_destroy( &handles.my_lock );
             LIBRARY_ASSERT( res==0, "pthread_spin_destroy failed" );
         }
-    #endif
+#endif
     } static_init_dl_data;
 
-    /*
+	/*
         The function constructs absolute path for given relative path. Important: Base directory is not
         current one, it is the directory libtbb.so loaded from.
 
@@ -369,7 +369,7 @@ OPEN_INTERNAL_NAMESPACE
                     otherwise -- Ok, number of characters (not counting terminating null) written to
                     buffer.
     */
-    #if __TBB_DYNAMIC_LOAD_ENABLED
+#if __TBB_DYNAMIC_LOAD_ENABLED
     static size_t abs_path( char const * name, char * path, size_t len ) {
         atomic_once( &init_dl_data, init_dl_data_state );
 
@@ -385,34 +385,35 @@ OPEN_INTERNAL_NAMESPACE
         }
         return full_len;
     }
-    #endif  // __TBB_DYNAMIC_LOAD_ENABLED
+#endif // __TBB_DYNAMIC_LOAD_ENABLED
 
-    #if __TBB_WEAK_SYMBOLS_PRESENT
+
+#if __TBB_WEAK_SYMBOLS_PRESENT
     static bool weak_symbol_link( const dynamic_link_descriptor descriptors[], size_t required )
     {
-        // Check if the required entries are present in what was loaded into our process.
+	// Check if the required entries are present in what was loaded into our process.
         for ( size_t k = 0; k < required; ++k )
             if ( !descriptors[k].ptr )
                 return false;
-        // Commit the entry points.
+	// Commit the entry points.
         for ( size_t k = 0; k < required; ++k )
             *descriptors[k].handler = (pointer_to_handler) descriptors[k].ptr;
         return true;
     }
-    #else
+#else
     static bool weak_symbol_link( const dynamic_link_descriptor[], size_t ) {
         return false;
     }
-    #endif /* __TBB_WEAK_SYMBOLS_PRESENT */
+#endif /* __TBB_WEAK_SYMBOLS_PRESENT */
 
     void dynamic_unlink( dynamic_link_handle handle ) {
         if ( handle ) {
-    #if __TBB_WEAK_SYMBOLS_PRESENT
+#if __TBB_WEAK_SYMBOLS_PRESENT
         LIBRARY_ASSERT( dlclose != NULL, "dlopen is present but dlclose is NOT present!?" );
-    #endif /* __TBB_WEAK_SYMBOLS_PRESENT */
-    #if __TBB_DYNAMIC_LOAD_ENABLED
+#endif /* __TBB_WEAK_SYMBOLS_PRESENT */
+#if __TBB_DYNAMIC_LOAD_ENABLED
             dlclose( handle );
-    #endif /* __TBB_DYNAMIC_LOAD_ENABLED */
+#endif /* __TBB_DYNAMIC_LOAD_ENABLED */
         }
     }
 
@@ -420,7 +421,7 @@ OPEN_INTERNAL_NAMESPACE
         handles.free_handles();
     }
 
-    #if _WIN32
+#if _WIN32
     static dynamic_link_handle global_symbols_link( const char* library, const dynamic_link_descriptor descriptors[], size_t required ) {
         dynamic_link_handle library_handle;
         if ( GetModuleHandleEx( 0, library, &library_handle ) ) {
@@ -431,24 +432,24 @@ OPEN_INTERNAL_NAMESPACE
         }
         return 0;
     }
-    #else /* _WIN32 */
-    // It is supposed that all symbols are from the only one library
+#else /* _WIN32 */
+	// It is supposed that all symbols are from the only one library
     static dynamic_link_handle pin_symbols( dynamic_link_descriptor desc, const dynamic_link_descriptor descriptors[], size_t required ) {
-        // The library has been loaded by another module and contains at least one requested symbol.
-        // But after we obtained the symbol the library can be unloaded by another thread
-        // invalidating our symbol. Therefore we need to pin the library in memory.
+	// The library has been loaded by another module and contains at least one requested symbol.
+	// But after we obtained the symbol the library can be unloaded by another thread
+	// invalidating our symbol. Therefore we need to pin the library in memory.
         dynamic_link_handle library_handle;
         Dl_info info;
-        // Get library's name from earlier found symbol
+	// Get library's name from earlier found symbol
         if ( dladdr( (void*)*desc.handler, &info ) ) {
-            // Pin the library
+	// Pin the library
             library_handle = dlopen( info.dli_fname, RTLD_LAZY );
             if ( library_handle ) {
-                // If original library was unloaded before we pinned it
-                // and then another module loaded in its place, the earlier
-                // found symbol would become invalid. So revalidate them.
+	// If original library was unloaded before we pinned it
+	// and then another module loaded in its place, the earlier
+	// found symbol would become invalid. So revalidate them.
                 if ( !resolve_symbols( library_handle, descriptors, required ) ) {
-                    // Wrong library.
+	// Wrong library.
                     dynamic_unlink(library_handle);
                     library_handle = 0;
                 }
@@ -458,30 +459,30 @@ OPEN_INTERNAL_NAMESPACE
             }
         }
         else {
-            // The library have been unloaded by another thread
+	// The library have been unloaded by another thread
             library_handle = 0;
         }
         return library_handle;
     }
 
     static dynamic_link_handle global_symbols_link( const char*, const dynamic_link_descriptor descriptors[], size_t required ) {
-    #if __TBB_WEAK_SYMBOLS_PRESENT
+#if __TBB_WEAK_SYMBOLS_PRESENT
         if ( !dlopen ) return 0;
-    #endif /* __TBB_WEAK_SYMBOLS_PRESENT */
+#endif /* __TBB_WEAK_SYMBOLS_PRESENT */
         dynamic_link_handle library_handle = dlopen( NULL, RTLD_LAZY );
-    #if __ANDROID__
-        // On Android dlopen( NULL ) returns NULL if it is called during dynamic module initialization.
+#if __ANDROID__
+	// On Android dlopen( NULL ) returns NULL if it is called during dynamic module initialization.
         if ( !library_handle )
             return 0;
-    #endif
-        // Check existence of only the first symbol, then use it to find the library and load all necessary symbols
+#endif
+	// Check existence of only the first symbol, then use it to find the library and load all necessary symbols
         pointer_to_handler handler;
         dynamic_link_descriptor desc = { descriptors[0].name, &handler };
         if ( resolve_symbols( library_handle, &desc, 1 ) )
                 return pin_symbols( desc, descriptors, required );
         return 0;
     }
-    #endif /* _WIN32 */
+#endif /* _WIN32 */
 
     static void save_library_handle( dynamic_link_handle src, dynamic_link_handle *dst ) {
         if ( dst )
@@ -491,29 +492,29 @@ OPEN_INTERNAL_NAMESPACE
     }
 
     dynamic_link_handle dynamic_load( const char* library, const dynamic_link_descriptor descriptors[], size_t required ) {
-    #if __TBB_DYNAMIC_LOAD_ENABLED
-    #if _XBOX
+#if __TBB_DYNAMIC_LOAD_ENABLED
+#if _XBOX
         return LoadLibrary (library);
-    #else /* _XBOX */
+#else /* _XBOX */
         size_t const len = PATH_MAX + 1;
         char path[ len ];
         size_t rc = abs_path( library, path, len );
         if ( 0 < rc && rc < len ) {
-    #if _WIN32
-            // Prevent Windows from displaying silly message boxes if it fails to load library
-            // (e.g. because of MS runtime problems - one of those crazy manifest related ones)
+#if _WIN32
+	// Prevent Windows from displaying silly message boxes if it fails to load library
+	// (e.g. because of MS runtime problems - one of those crazy manifest related ones)
             UINT prev_mode = SetErrorMode (SEM_FAILCRITICALERRORS);
-    #endif /* _WIN32 */
-    #if __TBB_WEAK_SYMBOLS_PRESENT
+#endif /* _WIN32 */
+#if __TBB_WEAK_SYMBOLS_PRESENT
         if ( !dlopen ) return 0;
-    #endif /* __TBB_WEAK_SYMBOLS_PRESENT */
+#endif /* __TBB_WEAK_SYMBOLS_PRESENT */
             dynamic_link_handle library_handle = dlopen( path, RTLD_LAZY );
-    #if _WIN32
+#if _WIN32
             SetErrorMode (prev_mode);
-    #endif /* _WIN32 */
+#endif /* _WIN32 */
             if( library_handle ) {
                 if( !resolve_symbols( library_handle, descriptors, required ) ) {
-                    // The loaded library does not contain all the expected entry points
+	// The loaded library does not contain all the expected entry points
                     dynamic_unlink( library_handle );
                     library_handle = NULL;
                 }
@@ -522,14 +523,14 @@ OPEN_INTERNAL_NAMESPACE
             return library_handle;
         } else if ( rc>=len )
                 DYNAMIC_LINK_WARNING( dl_buff_too_small );
-                // rc == 0 means failing of init_ap_data so the warning has already been issued.
-    #endif /* _XBOX */
-    #endif /* __TBB_DYNAMIC_LOAD_ENABLED */
+	// rc == 0 means failing of init_ap_data so the warning has already been issued.
+#endif /* _XBOX */
+#endif /* __TBB_DYNAMIC_LOAD_ENABLED */
         return 0;
     }
 
     bool dynamic_link( const char* library, const dynamic_link_descriptor descriptors[], size_t required, dynamic_link_handle *handle, int flags ) {
-        // TODO: May global_symbols_link find weak symbols?
+	// TODO: May global_symbols_link find weak symbols?
         dynamic_link_handle library_handle = ( flags & DYNAMIC_LINK_GLOBAL ) ? global_symbols_link( library, descriptors, required ) : 0;
 
         if ( !library_handle && ( flags & DYNAMIC_LINK_LOAD ) )
@@ -544,17 +545,20 @@ OPEN_INTERNAL_NAMESPACE
 
 #endif /*__TBB_WIN8UI_SUPPORT*/
 #else /* __TBB_WEAK_SYMBOLS_PRESENT || __TBB_DYNAMIC_LOAD_ENABLED */
-    bool dynamic_link( const char*, const dynamic_link_descriptor*, size_t, dynamic_link_handle *handle, int ) {
-        if ( handle )
-            *handle=0;
-        return false;
-    }
+	bool dynamic_link(const char*, const dynamic_link_descriptor*, size_t, dynamic_link_handle* handle, int)
+	{
+		if (handle)
+			*handle = 0;
+		return false;
+	}
 
-    void dynamic_unlink( dynamic_link_handle ) {
-    }
+	void dynamic_unlink(dynamic_link_handle)
+	{
+	}
 
-    void dynamic_unlink_all() {
-    }
+	void dynamic_unlink_all()
+	{
+	}
 #endif /* __TBB_WEAK_SYMBOLS_PRESENT || __TBB_DYNAMIC_LOAD_ENABLED */
 
-CLOSE_INTERNAL_NAMESPACE
+	CLOSE_INTERNAL_NAMESPACE

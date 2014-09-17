@@ -23,36 +23,40 @@
 #include "itt_notify.h"
 #include "tbb_misc.h"
 
-namespace tbb {
+namespace tbb
+{
+	void spin_mutex::scoped_lock::internal_acquire(spin_mutex& m)
+	{
+		__TBB_ASSERT(!my_mutex, "already holding a lock on a spin_mutex");
+		ITT_NOTIFY(sync_prepare, &m);
+		__TBB_LockByte(m.flag);
+		my_mutex = &m;
+		ITT_NOTIFY(sync_acquired, &m);
+	}
 
-void spin_mutex::scoped_lock::internal_acquire( spin_mutex& m ) {
-    __TBB_ASSERT( !my_mutex, "already holding a lock on a spin_mutex" );
-    ITT_NOTIFY(sync_prepare, &m);
-    __TBB_LockByte(m.flag);
-    my_mutex = &m;
-    ITT_NOTIFY(sync_acquired, &m);
-}
+	void spin_mutex::scoped_lock::internal_release()
+	{
+		__TBB_ASSERT(my_mutex, "release on spin_mutex::scoped_lock that is not holding a lock");
 
-void spin_mutex::scoped_lock::internal_release() {
-    __TBB_ASSERT( my_mutex, "release on spin_mutex::scoped_lock that is not holding a lock" );
+		ITT_NOTIFY(sync_releasing, my_mutex);
+		__TBB_UnlockByte(my_mutex->flag);
+		my_mutex = NULL;
+	}
 
-    ITT_NOTIFY(sync_releasing, my_mutex);
-    __TBB_UnlockByte(my_mutex->flag);
-    my_mutex = NULL;
-}
+	bool spin_mutex::scoped_lock::internal_try_acquire(spin_mutex& m)
+	{
+		__TBB_ASSERT(!my_mutex, "already holding a lock on a spin_mutex");
+		bool result = bool(__TBB_TryLockByte(m.flag));
+		if (result)
+		{
+			my_mutex = &m;
+			ITT_NOTIFY(sync_acquired, &m);
+		}
+		return result;
+	}
 
-bool spin_mutex::scoped_lock::internal_try_acquire( spin_mutex& m ) {
-    __TBB_ASSERT( !my_mutex, "already holding a lock on a spin_mutex" );
-    bool result = bool( __TBB_TryLockByte(m.flag) );
-    if( result ) {
-        my_mutex = &m;
-        ITT_NOTIFY(sync_acquired, &m);
-    }
-    return result;
-}
-
-void spin_mutex::internal_construct() {
-    ITT_SYNC_CREATE(this, _T("tbb::spin_mutex"), _T(""));
-}
-
+	void spin_mutex::internal_construct()
+	{
+		ITT_SYNC_CREATE(this, _T("tbb::spin_mutex"), _T(""));
+	}
 } // namespace tbb
