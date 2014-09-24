@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net;
 using System.IO;
+using System.Net;
+
 namespace LoLUpdater_Updater
 {
-    class Program
+    internal static class Program
     {
-        static void Main()
+        private static void Main()
         {
             try
             {
@@ -43,7 +44,6 @@ namespace LoLUpdater_Updater
                         Console.ReadLine();
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -52,11 +52,10 @@ namespace LoLUpdater_Updater
             }
             finally
             {
-                if(File.Exists("LoLUpdater.txt"))
+                if (File.Exists("LoLUpdater.txt"))
                 { File.Delete("LoLUpdater.txt"); }
                 Environment.Exit(0);
             }
-
         }
     }
 }

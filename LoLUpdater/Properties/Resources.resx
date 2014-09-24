@@ -121,11 +121,23 @@
   <data name="Adobe_AIR" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Adobe AIR.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="CfgString" xml:space="preserve">
+    <value>DefaultMultiThreading=1</value>
+  </data>
   <data name="Cg_3_1_April2012_Setup" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cg-3.1_April2012_Setup.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Done" xml:space="preserve">
+    <value>Done!</value>
+  </data>
+  <data name="Error1" xml:space="preserve">
+    <value>Your {0} is missing the version folder, please repair your installation.</value>
+  </data>
   <data name="NPSWF32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NPSWF32.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Patching" xml:space="preserve">
+    <value>Patching...</value>
   </data>
   <data name="tbb" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tbb.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -151,17 +163,5 @@ YOU MAY SATISFY THE CONDITIONS IN SECTION 3(A)(1) IN ANY REASONABLE MANNER BASED
 IF REQUESTED BY THE LICENSOR, YOU MUST REMOVE ANY OF THE INFORMATION REQUIRED BY SECTION 3(A)(1)(A) TO THE EXTENT REASONABLY PRACTICABLE.
 IF YOU SHARE ADAPTED MATERIAL YOU PRODUCE, THE ADAPTER'S LICENSE YOU APPLY MUST NOT PREVENT RECIPIENTS OF THE ADAPTED MATERIAL FROM COMPLYING WITH THIS PUBLIC LICENSE."
 Do you accept these Terms? (Y/N)</value>
-  </data>
-  <data name="Program_Main_Done_" xml:space="preserve">
-    <value>Done!</value>
-  </data>
-  <data name="Program_Main_Patching___" xml:space="preserve">
-    <value>Patching...</value>
-  </data>
-  <data name="Program_Cfg_" xml:space="preserve">
-    <value>DefaultMultiThreading=1</value>
-  </data>
-  <data name="Program_Version_Your__0__is_missing_the_version_folder__please_repair_your_installation_" xml:space="preserve">
-    <value>Your {0} is missing the version folder, please repair your installation.</value>
   </data>
 </root>

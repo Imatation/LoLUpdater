@@ -1,12 +1,12 @@
-﻿using System;
+﻿using LoLUpdater.Properties;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using LoLUpdater.Properties;
 
 namespace LoLUpdater
 {
-    internal class Program
+    internal static class Program
     {
         private static readonly string Air = Version("projects", "lol_air_client");
         private static readonly string Sln = Version("solutions", "lol_game_client_sln");
@@ -23,20 +23,20 @@ namespace LoLUpdater
                 Console.WriteLine(Resources.Terms);
                 if (!string.Equals(Console.ReadLine(), "y", StringComparison.InvariantCultureIgnoreCase)) return;
                 Console.Clear();
-                Console.WriteLine(Resources.Program_Main_Patching___);
+                Console.WriteLine(Resources.Patching);
                 Console.WriteLine("");
                 Kill("LoLClient");
                 Kill("LoLLauncher");
                 Kill("LoLPatcher");
                 Kill("League of Legends");
                 Kill("PMB");
-                var pmbUninstall = Path.Combine(Environment.Is64BitProcess
+                string pmbUninstall = Path.Combine(Environment.Is64BitProcess
                     ? Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
                     : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                     "Pando Networks", "Media Booster", "uninst.exe");
                 if (File.Exists(pmbUninstall))
                 {
-                    Process.Start(new ProcessStartInfo {FileName = pmbUninstall, Arguments = "/verysilent"});
+                    Process.Start(new ProcessStartInfo { FileName = pmbUninstall, Arguments = "/verysilent" });
                 }
                 if (File.Exists(Path.Combine("Config", "game.cfg")))
                 {
@@ -105,9 +105,9 @@ namespace LoLUpdater
                     InstallCg();
                 }
                 else if (new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion) < new Version("3.1.0013"))
-                    {
-                        InstallCg();
-                    }
+                {
+                    InstallCg();
+                }
                 if (Directory.Exists("RADS"))
                 {
                     AdvancedCopy(
@@ -159,7 +159,7 @@ namespace LoLUpdater
             }
             finally
             {
-                Console.WriteLine(Resources.Program_Main_Done_);
+                Console.WriteLine(Resources.Done);
                 Console.ReadLine();
                 Environment.Exit(0);
             }
@@ -167,7 +167,7 @@ namespace LoLUpdater
 
         private static void Kill(string process)
         {
-            foreach (var proc in Process.GetProcessesByName(process))
+            foreach (Process proc in Process.GetProcessesByName(process))
             {
                 proc.Kill();
                 proc.WaitForExit();
@@ -205,13 +205,13 @@ namespace LoLUpdater
         private static void InstallCg()
         {
             File.WriteAllBytes("Cg-3.1_April2012_Setup.exe", Resources.Cg_3_1_April2012_Setup);
-            var cg = new Process
+            Process cg = new Process
             {
                 StartInfo =
                     new ProcessStartInfo
                     {
                         FileName = "Cg-3.1_April2012_Setup.exe",
-                        Arguments = "/verysilent /TYPE=compact"
+                        Arguments = "/silent /TYPE=compact"
                     }
             };
             cg.Start();
@@ -223,18 +223,18 @@ namespace LoLUpdater
         private static void Cfg(string file, string path)
         {
             if (File.ReadAllText(Path.Combine(path, file))
-                .Contains(Resources.Program_Cfg_)) return;
+                .Contains(Resources.CfgString)) return;
             File.AppendAllText(Path.Combine(path, file),
-                string.Format("{0}{1}", Environment.NewLine, Resources.Program_Cfg_));
+                string.Format("{0}{1}", Environment.NewLine, Resources.CfgString));
         }
 
         private static string Version(string folder, string folder1)
         {
-            var x = Path.GetFileName(Directory.GetDirectories(Path.Combine("RADS", folder, folder1, "releases")).Max());
+            string x = Path.GetFileName(Directory.GetDirectories(Path.Combine("RADS", folder, folder1, "releases")).Max());
             if (!string.IsNullOrEmpty(x)) return x;
             Console.WriteLine(
                 Resources
-                    .Program_Version_Your__0__is_missing_the_version_folder__please_repair_your_installation_,
+                    .Error1,
                 Path.Combine("RADS", folder, folder1, "releases"));
             Console.ReadLine();
             Environment.Exit(0);
