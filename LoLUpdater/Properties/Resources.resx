@@ -164,4 +164,10 @@ IF REQUESTED BY THE LICENSOR, YOU MUST REMOVE ANY OF THE INFORMATION REQUIRED BY
 IF YOU SHARE ADAPTED MATERIAL YOU PRODUCE, THE ADAPTER'S LICENSE YOU APPLY MUST NOT PREVENT RECIPIENTS OF THE ADAPTED MATERIAL FROM COMPLYING WITH THIS PUBLIC LICENSE."
 Do you accept these Terms? (Y/N)</value>
   </data>
+  <data name="Uninst" xml:space="preserve">
+    <value>Uninstalling...</value>
+  </data>
+  <data name="UninstPrompt" xml:space="preserve">
+    <value>Backup folder detected, do you want to uninstall, Y for YES, N for 'No, continiue to installation/update', this will also remove DefaultMultiThreading=1 from the config if installed and also delete the Backup directory.</value>
+  </data>
 </root>

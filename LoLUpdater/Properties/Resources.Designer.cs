@@ -151,5 +151,23 @@ namespace LoLUpdater.Properties {
                 return ResourceManager.GetString("Terms", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uninstalling....
+        /// </summary>
+        internal static string Uninst {
+            get {
+                return ResourceManager.GetString("Uninst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup folder detected, do you want to uninstall, Y for YES, N for &apos;No, continiue to installation/update&apos;, this will also remove DefaultMultiThreading=1 from the config if installed and also delete the Backup directory..
+        /// </summary>
+        internal static string UninstPrompt {
+            get {
+                return ResourceManager.GetString("UninstPrompt", resourceCulture);
+            }
+        }
     }
 }
