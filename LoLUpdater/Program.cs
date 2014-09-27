@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace LoLUpdater
 {
+    // TODO: Fix so that it continiues after errors and prints/saves an error.log
     internal static class Program
     {
         private static readonly string Sln = Version("solutions", "lol_game_client_sln");
@@ -38,48 +39,59 @@ namespace LoLUpdater
                 if (Directory.Exists("Backup"))
                 {
                     Console.WriteLine(Resources.UninstPrompt);
-                    Console.WriteLine("");
-                    if (string.Equals(Console.ReadLine(), "y", StringComparison.InvariantCultureIgnoreCase))
+                    while (true)
                     {
-                        Console.Clear();
-                        Console.WriteLine(Resources.Uninst);
-                        Console.WriteLine("");
-                        Kill(LoLProcces);
-                        if (Directory.Exists("RADS"))
+                        if (string.Equals(Console.ReadLine(), "Y", StringComparison.OrdinalIgnoreCase))
                         {
-                            BakCopy("Cg.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
-                            BakCopy("CgD3D9.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
-                            BakCopy("CgGL.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
-                            BakCopy("tbb.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
-                            BakCopy("Adobe AIR.dll", "projects", "lol_air_client",
-                                Path.Combine("Adobe Air", "Versions", "1.0"), Air);
-                            BakCopy("NPSWF32.dll", "projects", "lol_air_client",
-                                Path.Combine("Adobe Air", "Versions", "1.0", "Resources"), Air);
-                            if (!File.Exists(Path.Combine("Config", "game.cfg"))) return;
-                            Cfg("game.cfg", "Config", false);
-                        }
-                        else if (!Directory.Exists("Game")) return;
+                            Console.Clear();
+                            Console.WriteLine(Resources.Uninst);
+                            Console.WriteLine("");
+                            Kill(LoLProcces);
+                            if (Directory.Exists("RADS"))
+                            {
+                                BakCopy("Cg.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
+                                BakCopy("CgD3D9.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
+                                BakCopy("CgGL.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
+                                BakCopy("tbb.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
+                                BakCopy("Adobe AIR.dll", "projects", "lol_air_client",
+                                    Path.Combine("Adobe Air", "Versions", "1.0"), Air);
+                                BakCopy("NPSWF32.dll", "projects", "lol_air_client",
+                                    Path.Combine("Adobe Air", "Versions", "1.0", "Resources"), Air);
+                                Directory.Delete("Backup", true);
+                                if (!File.Exists(Path.Combine("Config", "game.cfg"))) return;
+                                Cfg("game.cfg", "Config", false);
+                            }
+                            else if (!Directory.Exists("Game")) return;
 
-                        Copy("Cg.dll", "Backup", "Game");
-                        Copy("CgGL.dll", "Backup", "Game");
-                        Copy("CgD3D9.dll", "Backup", "Game");
-                        Copy("Tbb.dll", "Backup", "Game");
-                        Copy("NPSWF32.dll", "Backup", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"));
-                        Copy("Adobe AIR.dll", "Backup", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"));
-                        if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg"))) return;
-                        Cfg("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), false);
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
-                        {
-                            Cfg("GamePermanent_zh_MY.cfg",
-                                Path.Combine("Game", "DATA", "CFG", "defaults"), false);
-                        }
-                        if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")))
-                        {
+                            Copy("Cg.dll", "Backup", "Game");
+                            Copy("CgGL.dll", "Backup", "Game");
+                            Copy("CgD3D9.dll", "Backup", "Game");
+                            Copy("Tbb.dll", "Backup", "Game");
+                            Copy("NPSWF32.dll", "Backup",
+                                Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"));
+                            Copy("Adobe AIR.dll", "Backup", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"));
+                            Directory.Delete("Backup", true);
+                            if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                            {
+                                // TODO: Install GARENA and see what config files are for what verison.
+                                Cfg("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), false);
+                            }
+                            if (
+                                File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults",
+                                    "GamePermanent_zh_MY.cfg")))
+                            {
+                                Cfg("GamePermanent_zh_MY.cfg",
+                                    Path.Combine("Game", "DATA", "CFG", "defaults"), false);
+                            }
+                            if (
+                                !File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults",
+                                    "GamePermanent_en_SG.cfg")))
+                                return;
                             Cfg("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), false);
                         }
+                        else if (!string.Equals(Console.ReadLine(), "N", StringComparison.OrdinalIgnoreCase)) return;
+                        Install();
                     }
-                    else if (!string.Equals(Console.ReadLine(), "n", StringComparison.InvariantCultureIgnoreCase)) return;
-                    Install();
                 }
                 else
                 {
@@ -94,6 +106,7 @@ namespace LoLUpdater
             }
             finally
             {
+                Console.WriteLine("");
                 Console.WriteLine(Resources.Done);
                 if (File.Exists("lol.launcher.exe"))
                 {
@@ -159,16 +172,25 @@ namespace LoLUpdater
                         "Backup");
                 }
             }
-            if (string.IsNullOrEmpty(_cgBinPath))
-            {
-                InstallCg();
-            }
-            else if (new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion) <
+            if (string.IsNullOrEmpty(_cgBinPath) || new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion) <
                      new Version("3.1.0013"))
             {
-                InstallCg();
+                File.WriteAllBytes("Cg-3.1_April2012_Setup.exe", Resources.Cg_3_1_April2012_Setup);
+                Process cg = new Process
+                {
+                    StartInfo =
+                        new ProcessStartInfo
+                        {
+                            FileName = "Cg-3.1_April2012_Setup.exe",
+                            Arguments = "/silent /TYPE=compact"
+                        }
+                };
+                cg.Start();
+                cg.WaitForExit();
+                File.Delete("Cg-3.1_April2012_Setup.exe");
+                _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
             }
-            if (Directory.Exists("Rads"))
+            if (Directory.Exists("RADS"))
             {
                 Copy(
                      "Cg.dll", "solutions", "lol_game_client_sln", Sln);
@@ -182,6 +204,8 @@ namespace LoLUpdater
                      "CgGL.dll", "projects", "lol_launcher", Launch);
                 Copy(
                     "CgGL.dll", "projects", "lol_patcher", Patch);
+                Copy(
+     "CgGL.dll", "solutions", "lol_game_client_sln");
                 Copy(
                      "CgD3D9.dll", "solutions", "lol_game_client_sln", Sln);
                 Copy(
@@ -268,24 +292,6 @@ namespace LoLUpdater
         {
             File.Copy(Path.Combine(from, file),
                 Path.Combine(to, file), true);
-        }
-
-        private static void InstallCg()
-        {
-            File.WriteAllBytes("Cg-3.1_April2012_Setup.exe", Resources.Cg_3_1_April2012_Setup);
-            Process cg = new Process
-            {
-                StartInfo =
-                    new ProcessStartInfo
-                    {
-                        FileName = "Cg-3.1_April2012_Setup.exe",
-                        Arguments = "/silent /TYPE=compact"
-                    }
-            };
-            cg.Start();
-            cg.WaitForExit();
-            File.Delete("Cg-3.1_April2012_Setup.exe");
-            _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
         }
 
         private static void Cfg(string path, string file, bool mode)
