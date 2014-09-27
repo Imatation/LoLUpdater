@@ -322,12 +322,12 @@ namespace LoLUpdater
                 Path.Combine(to, file), true);
         }
 
-        private static void Cfg(string path, string file, bool mode)
+        private static void Cfg(string file, string path, bool mode)
         {
             if (mode)
             {
                 if (File.ReadAllText(Path.Combine(path, file))
-                  .Contains(Resources.CfgString)) return;
+                    .Contains(Resources.CfgString)) return;
                 File.AppendAllText(Path.Combine(path, file),
                     string.Format("{0}{1}", Environment.NewLine, Resources.CfgString));
             }
