@@ -26,8 +26,10 @@ namespace LoLUpdater_Updater
                         {
                             webClient.DownloadData("http://www.svenskautogrupp.se/LoLUpdater.txt");
                             Console.WriteLine("Comparing versions...");
+                            stream.Position = 0;
+                            var sr = new StreamReader(stream);
                             if (new Version(FileVersionInfo.GetVersionInfo("LoLUpdater.exe").FileVersion) <
-                                new Version(stream.ToString()))
+                                new Version(sr.ReadToEnd()))
                             {
                                 Console.WriteLine("Update found, downloading...");
 
