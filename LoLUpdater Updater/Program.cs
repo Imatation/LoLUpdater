@@ -9,53 +9,37 @@ namespace LoLUpdater_Updater
     {
         private static void Main()
         {
-            try
+            using (WebClient webClient = new WebClient())
             {
-                using (WebClient webClient = new WebClient())
+                if (!File.Exists("LoLUpdater.exe"))
                 {
-                    if (!File.Exists("LoLUpdater.exe"))
-                    {
-                        Console.WriteLine("LoLUpdater not found, downloading...");
+                    Console.WriteLine("LoLUpdater not found, downloading...");
 
-                        webClient.DownloadFile("http://www.svenskautogrupp.se/LoLUpdater.exe", "LoLUpdater.exe");
-                    }
-                    else
+                    webClient.DownloadFile("http://www.svenskautogrupp.se/LoLUpdater.exe", "LoLUpdater.exe");
+                }
+                else
+                {
+                    using (MemoryStream stream = new MemoryStream(webClient.DownloadData("http://www.svenskautogrupp.se/LoLUpdater.txt")))
                     {
-                        Console.WriteLine("Downloading latest versioninfo...");
-                        using (MemoryStream stream = new MemoryStream(webClient.DownloadData("http://www.svenskautogrupp.se/LoLUpdater.txt")))
+                        webClient.DownloadData("http://www.svenskautogrupp.se/LoLUpdater.txt");
+                        stream.Position = 0;
+                        var sr = new StreamReader(stream);
+                        if (new Version(FileVersionInfo.GetVersionInfo("LoLUpdater.exe").FileVersion) <
+                            new Version(sr.ReadToEnd()))
                         {
-                            webClient.DownloadData("http://www.svenskautogrupp.se/LoLUpdater.txt");
-                            Console.WriteLine("Comparing versions...");
-                            stream.Position = 0;
-                            var sr = new StreamReader(stream);
-                            if (new Version(FileVersionInfo.GetVersionInfo("LoLUpdater.exe").FileVersion) <
-                                new Version(sr.ReadToEnd()))
-                            {
-                                Console.WriteLine("Update found, downloading...");
+                            Console.WriteLine("Update found, downloading...");
 
-                                webClient.DownloadFile("http://www.svenskautogrupp.se/LoLUpdater.exe",
-                                    "LoLUpdater.exe");
-                            }
-                            else
-                            {
-                                Console.WriteLine("No update found.");
-                                Console.ReadLine();
-                            }
-                            Process.Start("LoLUpdater.exe");
+                            webClient.DownloadFile("http://www.svenskautogrupp.se/LoLUpdater.exe",
+                                "LoLUpdater.exe");
                         }
+                        else
+                        {
+                            Console.WriteLine("No update found, starting LoLUpdater...");
+                            Console.ReadLine();
+                        }
+                        Process.Start("LoLUpdater.exe");
                     }
                 }
-            }
-            catch
-                (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.ReadLine();
-            }
-            finally
-            {
-                Process.Start("LoLUpdater.exe");
-                Environment.Exit(0);
             }
         }
     }
