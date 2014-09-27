@@ -206,14 +206,11 @@ namespace LoLUpdater
                     "Cg.dll", "projects", "lol_launcher", Launch);
                 Copy(
                     "Cg.dll", "projects", "lol_patcher", Patch);
-                Copy(
-                    "Cg.dll", "solutions", "lol_game_client_sln");
+
                 Copy(
                     "CgGL.dll", "projects", "lol_launcher", Launch);
                 Copy(
                     "CgGL.dll", "projects", "lol_patcher", Patch);
-                Copy(
-                    "CgGL.dll", "solutions", "lol_game_client_sln");
                 Copy(
                     "CgD3D9.dll", "solutions", "lol_game_client_sln", Sln);
                 Copy(

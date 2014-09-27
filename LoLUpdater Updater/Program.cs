@@ -46,35 +46,45 @@ namespace LoLUpdater_Updater
                         stream.Position = 0;
                         var sr = new StreamReader(stream);
                         var current = new Version(FileVersionInfo.GetVersionInfo("LoLUpdater.exe").FileVersion);
-                        var latest = new Version(sr.ReadToEnd());
-                        if (current < latest)
+                        if (string.IsNullOrEmpty(current.ToString()))
                         {
-                            Console.WriteLine("Update found, downloading...");
+                            File.Delete("LoLUpdater.exe");
+                            Console.WriteLine("File corrupt, redownloading...");
 
                             webClient.DownloadFile(new Uri("http://www.svenskautogrupp.se/LoLUpdater.exe"), "LoLUpdater.exe");
                         }
-                        else if (current == latest)
-                        {
-                            Console.WriteLine("You have the latest version, starting LoLUpdater...");
-                        }
-                        else if (current > latest)
-                        {
-                            Console.WriteLine("You are not supposed to get here...");
-                        }
                         else
                         {
-                            Console.WriteLine("Something very strange happend...");
+                            var latest = new Version(sr.ReadToEnd());
+                            if (current < latest)
+                            {
+                                Console.WriteLine("Update found, downloading...");
+
+                                webClient.DownloadFile(new Uri("http://www.svenskautogrupp.se/LoLUpdater.exe"), "LoLUpdater.exe");
+                            }
+                            else if (current == latest)
+                            {
+                                Console.WriteLine("You have the latest version, starting LoLUpdater...");
+                            }
+                            else if (current > latest)
+                            {
+                                Console.WriteLine("You are not supposed to get here...");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Something very strange happend...");
+                            }
                         }
                     }
-                }
-                if (!File.Exists("LoLUpdater.exe")) return;
-                Process.Start("LoLUpdater.exe");
-                while (true)
-                {
-                    Process[] proc = Process.GetProcessesByName("LoLUpdater");
-                    if (proc.Length > 0)
+                    if (!File.Exists("LoLUpdater.exe")) return;
+                    Process.Start("LoLUpdater.exe");
+                    while (true)
                     {
-                        Environment.Exit(0);
+                        Process[] proc = Process.GetProcessesByName("LoLUpdater");
+                        if (proc.Length > 0)
+                        {
+                            Environment.Exit(0);
+                        }
                     }
                 }
             }
