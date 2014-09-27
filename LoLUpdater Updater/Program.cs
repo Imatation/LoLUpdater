@@ -37,9 +37,10 @@ namespace LoLUpdater_Updater
                             Console.WriteLine("No update found, starting LoLUpdater...");
                             Console.ReadLine();
                         }
-                        Process.Start("LoLUpdater.exe");
                     }
                 }
+                Process.Start("LoLUpdater.exe");
+                Environment.Exit(0);
             }
         }
     }
