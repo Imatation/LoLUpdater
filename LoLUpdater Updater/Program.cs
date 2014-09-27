@@ -53,9 +53,15 @@ namespace LoLUpdater_Updater
                     }
                 }
                 if (!File.Exists("LoLUpdater.exe")) return;
-                Process[] proc = Process.GetProcessesByName("LoLUpdater");
-                if (proc.Length > 0)
-                { Environment.Exit(0); }
+                Process.Start("LoLUpdater.exe");
+                while (true)
+                {
+                    Process[] proc = Process.GetProcessesByName("LoLUpdater");
+                    if (proc.Length > 0)
+                    {
+                        Environment.Exit(0);
+                    }
+                }
             }
         }
     }
