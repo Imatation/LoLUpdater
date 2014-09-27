@@ -1,9 +1,10 @@
-﻿using LoLUpdater.Properties;
-using System;
+﻿using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management;
+using System.Threading.Tasks;
 
 namespace LoLUpdater
 {
@@ -26,10 +27,16 @@ namespace LoLUpdater
 
         private static bool _intercept;
 
+        private static readonly bool MultiCore = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
+                    .Cast<ManagementBaseObject>()
+                    .Sum(item => int.Parse(item["NumberOfCores"].ToString())) >= 2;
+
         private static void Main()
         {
             try
             {
+                // Retroactive fix/fix for systems incorrectly installed with DefaultMultiThreading=1
+                CfgFix(!MultiCore);
                 // RIOT has provided an install wihout PMB at one point through support, so at the
                 // moment this is an auto-executing if-statement, if PMB ever becomes non-malicious
                 // then remove this.
@@ -67,36 +74,20 @@ namespace LoLUpdater
                                 BakCopy("NPSWF32.dll", "projects", "lol_air_client",
                                     Path.Combine("Adobe Air", "Versions", "1.0", "Resources"), Air);
                                 Directory.Delete("Backup", true);
-                                if (!File.Exists(Path.Combine("Config", "game.cfg"))) return;
-                                Cfg("game.cfg", "Config", false);
                             }
-                            else if (!Directory.Exists("Game")) return;
+                            else if (Directory.Exists("Game"))
+                            {
+                                Copy("Cg.dll", "Backup", "Game");
+                                Copy("CgGL.dll", "Backup", "Game");
+                                Copy("CgD3D9.dll", "Backup", "Game");
+                                Copy("Tbb.dll", "Backup", "Game");
+                                Copy("NPSWF32.dll", "Backup",
+                                    Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"));
+                                Copy("Adobe AIR.dll", "Backup", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"));
+                                Directory.Delete("Backup", true);
+                            }
 
-                            Copy("Cg.dll", "Backup", "Game");
-                            Copy("CgGL.dll", "Backup", "Game");
-                            Copy("CgD3D9.dll", "Backup", "Game");
-                            Copy("Tbb.dll", "Backup", "Game");
-                            Copy("NPSWF32.dll", "Backup",
-                                Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"));
-                            Copy("Adobe AIR.dll", "Backup", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"));
-                            Directory.Delete("Backup", true);
-                            if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                            {
-                                // TODO: Install GARENA and see what config files are for what verison.
-                                Cfg("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), false);
-                            }
-                            if (
-                                File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults",
-                                    "GamePermanent_zh_MY.cfg")))
-                            {
-                                Cfg("GamePermanent_zh_MY.cfg",
-                                    Path.Combine("Game", "DATA", "CFG", "defaults"), false);
-                            }
-                            if (
-                                !File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults",
-                                    "GamePermanent_en_SG.cfg")))
-                                return;
-                            Cfg("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), false);
+                            CfgFix(!MultiCore);
                             _intercept = false;
                         }
                     } while (_intercept);
@@ -150,8 +141,6 @@ namespace LoLUpdater
                         Path.Combine("Adobe Air", "Versions", "1.0"), Air);
                     Copybak("projects", "lol_air_client", "NPSWF32.dll",
                         Path.Combine("Adobe Air", "Versions", "1.0", "Resources"), Air);
-                    if (!File.Exists(Path.Combine("Config", "game.cfg"))) return;
-                    Copy("game.cfg", "Config", "Backup");
                 }
                 else if (Directory.Exists("Game"))
                 {
@@ -162,6 +151,9 @@ namespace LoLUpdater
                     Copy("Adobe AIR.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"), "Backup");
                     Copy("NPSWF32.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"),
                         "Backup");
+                    if (File.Exists(Path.Combine("Config", "game.cfg")))
+                    { Copy("game.cfg", "Config", "Backup"); }
+
                     if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
                     {
                         Copy("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
@@ -235,25 +227,32 @@ namespace LoLUpdater
                 LocalCopy("projects", "lol_air_client",
                     Path.Combine("Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR, Air);
             }
+            else if (Directory.Exists("Game"))
+            {
+                Copy("Cg.dll",
+                  _cgBinPath,
+                  "Game");
+                Copy("CgGL.dll",
+                    _cgBinPath,
+                    "Game");
+                Copy("CgD3D9.dll", _cgBinPath, "Game");
+                File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbb);
+                File.WriteAllBytes(
+                    Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR);
+                File.WriteAllBytes(
+                    Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
+                    Resources.NPSWF32);
+            }
+            CfgFix(MultiCore);
+        }
 
+        private static void CfgFix(bool status)
+        {
+            if (!status) return;
             if (File.Exists(Path.Combine("Config", "game.cfg")))
             {
                 Cfg("game.cfg", "Config", true);
             }
-            else if (!Directory.Exists("Game")) return;
-            Copy("Cg.dll",
-                _cgBinPath,
-                "Game");
-            Copy("CgGL.dll",
-                _cgBinPath,
-                "Game");
-            Copy("CgD3D9.dll", _cgBinPath, "Game");
-            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbb);
-            File.WriteAllBytes(
-                Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR);
-            File.WriteAllBytes(
-                Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
-                Resources.NPSWF32);
             if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
             {
                 Cfg("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), true);
@@ -273,10 +272,21 @@ namespace LoLUpdater
 
         private static void Kill(IEnumerable process)
         {
-            foreach (Process proc in Process.GetProcessesByName(process.ToString()))
+            if (MultiCore)
             {
-                proc.Kill();
-                proc.WaitForExit();
+                Parallel.ForEach(Process.GetProcessesByName(process.ToString()), proc =>
+                {
+                    proc.Kill();
+                    proc.WaitForExit();
+                });
+            }
+            else
+            {
+                foreach (Process proc in Process.GetProcessesByName(process.ToString()))
+                {
+                    proc.Kill();
+                    proc.WaitForExit();
+                }
             }
         }
 

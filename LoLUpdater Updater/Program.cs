@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Management;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace LoLUpdater_Updater
 {
@@ -15,14 +18,27 @@ namespace LoLUpdater_Updater
                 {
                     Console.WriteLine("LoLUpdater not found, downloading...");
 
-                    webClient.DownloadFile("http://www.svenskautogrupp.se/LoLUpdater.exe", "LoLUpdater.exe");
+                    webClient.DownloadFile(new Uri("http://www.svenskautogrupp.se/LoLUpdater.exe"), "LoLUpdater.exe");
                 }
                 else
                 {
-                    foreach (Process process in Process.GetProcessesByName("LoLUpdater"))
+                    if (new ManagementObjectSearcher("Select * from Win32_Processor").Get()
+                                    .Cast<ManagementBaseObject>()
+                                    .Sum(item => int.Parse(item["NumberOfCores"].ToString())) >= 2)
                     {
-                        process.Kill();
-                        process.WaitForExit();
+                        Parallel.ForEach(Process.GetProcessesByName("LoLUpdater"), proc =>
+                        {
+                            proc.Kill();
+                            proc.WaitForExit();
+                        });
+                    }
+                    else
+                    {
+                        foreach (Process proc in Process.GetProcessesByName("LoLUpdater"))
+                        {
+                            proc.Kill();
+                            proc.WaitForExit();
+                        }
                     }
                     using (MemoryStream stream = new MemoryStream(webClient.DownloadData("http://www.svenskautogrupp.se/LoLUpdater.txt")))
                     {
@@ -35,8 +51,7 @@ namespace LoLUpdater_Updater
                         {
                             Console.WriteLine("Update found, downloading...");
 
-                            webClient.DownloadFile("http://www.svenskautogrupp.se/LoLUpdater.exe",
-                                "LoLUpdater.exe");
+                            webClient.DownloadFile(new Uri("http://www.svenskautogrupp.se/LoLUpdater.exe"), "LoLUpdater.exe");
                         }
                         else if (current == latest)
                         {

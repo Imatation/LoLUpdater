@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LoLUpdater.Properties {
+namespace LoLUpdater {
     using System;
     
     
