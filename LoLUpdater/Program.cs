@@ -33,7 +33,7 @@ namespace LoLUpdater
 
         private static readonly bool IsHaswell = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
             .Cast<ManagementBaseObject>()
-            .Sum(item => int.Parse(item["Name"].ToString().Contains("Haswell").ToString())) > 1;
+            .Sum(item => int.Parse(item["Name"].ToString().Contains("Haswell").ToString())) > 0;
 
         private static void Main()
         {
@@ -273,6 +273,13 @@ namespace LoLUpdater
                 _cgBinPath,
                 "Game");
             Copy("CgD3D9.dll", _cgBinPath, "Game");
+
+            File.WriteAllBytes(
+                Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR);
+            File.WriteAllBytes(
+                Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
+                Resources.NPSWF32);
+
             if (IsMultiCore)
             {
                 if (InstructionsSupported(6) || InstructionsSupported(10) || InstructionsSupported(17))
@@ -305,12 +312,6 @@ namespace LoLUpdater
                     File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbbST);
                 }
             }
-
-            File.WriteAllBytes(
-                Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR);
-            File.WriteAllBytes(
-                Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
-                Resources.NPSWF32);
         }
 
         private static void CfgFix(bool status)
