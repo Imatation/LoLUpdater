@@ -139,9 +139,6 @@
   <data name="Patching" xml:space="preserve">
     <value>Patching...</value>
   </data>
-  <data name="tbb" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tbb.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="Terms" xml:space="preserve">
     <value>"THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -169,5 +166,32 @@ Do you accept these Terms? (Y/N)</value>
   </data>
   <data name="UninstPrompt" xml:space="preserve">
     <value>Backup folder detected, do you want to uninstall, Y for YES, N for 'No, continiue to installation/update', this will also remove DefaultMultiThreading=1 from the config if installed and also delete the Backup directory.</value>
+  </data>
+  <data name="AVX" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AVX.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Haswell" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Haswell.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SSE" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SSE.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SSE2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SSE2.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SSE2ST" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SSE2ST.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SSEST" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SSEST.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tbb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tbb.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="tbbST" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tbbST.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Program_Main_lol_launcher_exe_not_found" xml:space="preserve">
+    <value>lol.launcher.exe not found</value>
   </data>
 </root>

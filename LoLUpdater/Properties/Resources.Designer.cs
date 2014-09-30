@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LoLUpdater {
+namespace LoLUpdater.Properties {
     using System;
     
     
@@ -71,6 +71,16 @@ namespace LoLUpdater {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] AVX {
+            get {
+                object obj = ResourceManager.GetObject("AVX", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DefaultMultiThreading=1.
         /// </summary>
         internal static string CfgString {
@@ -110,6 +120,16 @@ namespace LoLUpdater {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] Haswell {
+            get {
+                object obj = ResourceManager.GetObject("Haswell", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] NPSWF32 {
             get {
                 object obj = ResourceManager.GetObject("NPSWF32", resourceCulture);
@@ -127,11 +147,70 @@ namespace LoLUpdater {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to lol.launcher.exe not found.
+        /// </summary>
+        internal static string Program_Main_lol_launcher_exe_not_found {
+            get {
+                return ResourceManager.GetString("Program_Main_lol_launcher_exe_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] SSE {
+            get {
+                object obj = ResourceManager.GetObject("SSE", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] SSE2 {
+            get {
+                object obj = ResourceManager.GetObject("SSE2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] SSE2ST {
+            get {
+                object obj = ResourceManager.GetObject("SSE2ST", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] SSEST {
+            get {
+                object obj = ResourceManager.GetObject("SSEST", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] tbb {
             get {
                 object obj = ResourceManager.GetObject("tbb", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] tbbST {
+            get {
+                object obj = ResourceManager.GetObject("tbbST", resourceCulture);
                 return ((byte[])(obj));
             }
         }

@@ -27,7 +27,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release-MT\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>none</ErrorReport>
@@ -60,10 +60,15 @@
     <None Include="Resources\NPSWF32.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\tbb.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="LoLUpdater.ico" />
+    <None Include="Resources\tbbST.dll" />
+    <None Include="Resources\SSEST.dll" />
+    <None Include="Resources\SSE2ST.dll" />
+    <None Include="Resources\tbb.dll" />
+    <None Include="Resources\SSE.dll" />
+    <None Include="Resources\SSE2.dll" />
+    <None Include="Resources\AVX.dll" />
+    <None Include="Resources\Haswell.dll" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

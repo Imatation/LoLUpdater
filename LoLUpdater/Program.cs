@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LoLUpdater.Properties;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
@@ -8,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace LoLUpdater
 {
-    // TODO: Fix so that it continiues after errors and prints/saves an error.log
     internal static class Program
     {
         private static readonly string Sln = Version("solutions", "lol_game_client_sln");
@@ -31,15 +31,15 @@ namespace LoLUpdater
                     .Cast<ManagementBaseObject>()
                     .Sum(item => int.Parse(item["NumberOfCores"].ToString())) >= 2;
 
+        private static readonly int Haswell = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
+            .Cast<ManagementBaseObject>()
+            .Sum(item => int.Parse(item["Name"].ToString().Contains("Haswell").ToString()));
+
         private static void Main()
         {
             try
             {
-                // Retroactive fix/fix for systems incorrectly installed with DefaultMultiThreading=1
                 CfgFix(!MultiCore);
-                // RIOT has provided an install wihout PMB at one point through support, so at the
-                // moment this is an auto-executing if-statement, if PMB ever becomes non-malicious
-                // then remove this.
                 if (File.Exists(PmbUninstall))
                 {
                     Kill("PMB");
@@ -110,6 +110,10 @@ namespace LoLUpdater
                 if (File.Exists("lol.launcher.exe"))
                 {
                     Process.Start("lol.launcher.exe");
+                }
+                else
+                {
+                    Console.WriteLine(Resources.Program_Main_lol_launcher_exe_not_found);
                 }
                 Console.WriteLine();
                 Environment.Exit(0);
@@ -217,7 +221,44 @@ namespace LoLUpdater
                     "CgD3D9.dll", "projects", "lol_launcher", Launch);
                 Copy(
                     "CgD3D9.dll", "projects", "lol_patcher", Patch);
-                LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbb, Sln);
+
+                if (MultiCore)
+                {
+                    if (InstructionsSupported(6) || InstructionsSupported(10) || InstructionsSupported(17))
+                    {
+                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE, Sln);
+                        if (InstructionsSupported(10) || InstructionsSupported(17))
+                        {
+                            LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE2, Sln);
+                            if (InstructionsSupported(17))
+                            {
+                                LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.AVX, Sln);
+                                if (Haswell > 0)
+                                { LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.Haswell, Sln); }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbb, Sln);
+                    }
+                }
+                else
+                {
+                    if (InstructionsSupported(6) || InstructionsSupported(10))
+                    {
+                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSEST, Sln);
+                        if (InstructionsSupported(10))
+                        {
+                            LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE2ST, Sln);
+                        }
+                    }
+                    else
+                    {
+                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbbST, Sln);
+                    }
+                }
+
                 LocalCopy("projects", "lol_air_client",
                     Path.Combine("Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
                     Resources.NPSWF32, Air);
@@ -233,7 +274,43 @@ namespace LoLUpdater
                     _cgBinPath,
                     "Game");
                 Copy("CgD3D9.dll", _cgBinPath, "Game");
-                File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbb);
+                if (MultiCore)
+                {
+                    if (InstructionsSupported(6) || InstructionsSupported(10) || InstructionsSupported(17))
+                    {
+                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE);
+                        if (InstructionsSupported(10) || InstructionsSupported(17))
+                        {
+                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2);
+                            if (InstructionsSupported(17))
+                            {
+                                File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.AVX);
+                                if (Haswell > 0)
+                                { File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.Haswell); }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbb);
+                    }
+                }
+                else
+                {
+                    if (InstructionsSupported(6) || InstructionsSupported(10))
+                    {
+                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSEST);
+                        if (InstructionsSupported(10))
+                        {
+                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2ST);
+                        }
+                    }
+                    else
+                    {
+                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbbST);
+                    }
+                }
+
                 File.WriteAllBytes(
                     Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR);
                 File.WriteAllBytes(
@@ -245,26 +322,50 @@ namespace LoLUpdater
 
         private static void CfgFix(bool status)
         {
-            if (!status) return;
-            if (File.Exists(Path.Combine("Config", "game.cfg")))
+            if (status)
             {
-                Cfg("game.cfg", "Config", true);
+                if (File.Exists(Path.Combine("Config", "game.cfg")))
+                {
+                    Cfg("game.cfg", "Config", true);
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                {
+                    Cfg("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), true);
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")))
+                {
+                    Cfg("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), true);
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
+                {
+                    Cfg("GamePermanent_zh_MY.cfg",
+                        Path.Combine("Game", "DATA", "CFG", "defaults"), true);
+                }
+                if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"))) return;
+                Cfg("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), true);
             }
-            if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+            else
             {
-                Cfg("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), true);
+                if (File.Exists(Path.Combine("Config", "game.cfg")))
+                {
+                    Cfg("game.cfg", "Config", false);
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
+                {
+                    Cfg("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), false);
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")))
+                {
+                    Cfg("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), false);
+                }
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
+                {
+                    Cfg("GamePermanent_zh_MY.cfg",
+                        Path.Combine("Game", "DATA", "CFG", "defaults"), false);
+                }
+                if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"))) return;
+                Cfg("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), false);
             }
-            if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")))
-            {
-                Cfg("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), true);
-            }
-            if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")))
-            {
-                Cfg("GamePermanent_zh_MY.cfg",
-                    Path.Combine("Game", "DATA", "CFG", "defaults"), true);
-            }
-            if (!File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg"))) return;
-            Cfg("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), true);
         }
 
         private static void Kill(IEnumerable process)
@@ -343,6 +444,14 @@ namespace LoLUpdater
         private static string Version(string folder, string folder1)
         {
             return Path.GetFileName(Directory.GetDirectories(Path.Combine("RADS", folder, folder1, "releases")).Max());
+        }
+
+        private static bool InstructionsSupported(int id)
+        {
+            ManagementObject mo = new ManagementObject("Win32_Processor.DeviceID='CPU0'");
+            ushort i = (ushort)mo["Architecture"];
+
+            return i == id;
         }
     }
 }
