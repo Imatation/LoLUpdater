@@ -29,11 +29,10 @@ namespace LoLUpdater
 
         private static readonly bool IsMultiCore = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
                     .Cast<ManagementBaseObject>()
-                    .Sum(item => int.Parse(item["NumberOfCores"].ToString())) >= 2;
-
+                    .Sum(item => int.Parse(item["NumberOfCores"].ToString())) > 1;
         private static readonly bool IsHaswell = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
             .Cast<ManagementBaseObject>()
-            .Sum(item => int.Parse(item["Name"].ToString().Contains("Haswell").ToString())) > 0;
+            .Sum(item => int.Parse(item["Name"].ToString().Contains("Haswell") == true;
 
         private static void Main()
         {
