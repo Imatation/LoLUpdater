@@ -51,16 +51,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Adobe AIR.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Cg-3.1_April2012_Setup.exe" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\NPSWF32.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="LoLUpdater.ico" />
+    <None Include="Resources\NPSWF32.dll" />
+    <None Include="Resources\Adobe AIR.dll" />
     <None Include="Resources\tbbST.dll" />
     <None Include="Resources\SSEST.dll" />
     <None Include="Resources\SSE2ST.dll" />
