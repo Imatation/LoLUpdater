@@ -22,17 +22,17 @@ namespace LoLUpdater
                 : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
                 "Pando Networks", "Media Booster", "uninst.exe");
 
-        private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
-            EnvironmentVariableTarget.User);
-
-        private static bool _intercept;
-
         private static readonly bool IsMultiCore = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
                     .Cast<ManagementBaseObject>()
                     .Sum(item => int.Parse(item["NumberOfCores"].ToString())) > 1;
         private static readonly bool IsHaswell = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
             .Cast<ManagementBaseObject>()
             .Sum(item => int.Parse(item["Name"].ToString().Contains("Haswell") == true;
+
+        private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
+            EnvironmentVariableTarget.User);
+
+        private static bool _intercept;
 
         private static void Main()
         {
@@ -233,10 +233,6 @@ namespace LoLUpdater
                 File.Delete(Path.Combine(Path.GetTempFileName(), "Cg-3.1_April2012_Setup.exe"));
                 _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
             }
-            else
-            {
-                throw new Exception("Nvidia CG Toolkit could not be installed.");
-            }
             if (Directory.Exists("RADS"))
             {
                 CopyRes("projects", "lol_air_client",
@@ -299,53 +295,55 @@ namespace LoLUpdater
                     }
                 }
             }
-            else if (!Directory.Exists("Game")) return;
-            Copy("Cg.dll",
+            else if (Directory.Exists("Game"))
+            {
+                Copy("Cg.dll",
                 _cgBinPath,
                 "Game");
-            Copy("CgGL.dll",
-                _cgBinPath,
-                "Game");
-            Copy("CgD3D9.dll", _cgBinPath, "Game");
+                Copy("CgGL.dll",
+                    _cgBinPath,
+                    "Game");
+                Copy("CgD3D9.dll", _cgBinPath, "Game");
 
-            File.WriteAllBytes(
-                Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR);
-            File.WriteAllBytes(
-                Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
-                Resources.NPSWF32);
+                File.WriteAllBytes(
+                    Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR);
+                File.WriteAllBytes(
+                    Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
+                    Resources.NPSWF32);
 
-            if (IsHaswell)
-            {
-                File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.Haswell);
-            }
-            else
-            {
-                if (IsMultiCore)
+                if (IsHaswell)
                 {
-                    if (InstructionsSupported(6) || InstructionsSupported(10) || InstructionsSupported(17))
-                    {
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE);
-                        if (!InstructionsSupported(10) || !InstructionsSupported(17)) return;
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2);
-                        if (!InstructionsSupported(17)) return;
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.AVX);
-                    }
-                    else
-                    {
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbb);
-                    }
+                    File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.Haswell);
                 }
                 else
                 {
-                    if (InstructionsSupported(6) || InstructionsSupported(10))
+                    if (IsMultiCore)
                     {
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSEST);
-                        if (!InstructionsSupported(10)) return;
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2ST);
+                        if (InstructionsSupported(6) || InstructionsSupported(10) || InstructionsSupported(17))
+                        {
+                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE);
+                            if (!InstructionsSupported(10) || !InstructionsSupported(17)) return;
+                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2);
+                            if (!InstructionsSupported(17)) return;
+                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.AVX);
+                        }
+                        else
+                        {
+                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbb);
+                        }
                     }
                     else
                     {
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbbST);
+                        if (InstructionsSupported(6) || InstructionsSupported(10))
+                        {
+                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSEST);
+                            if (!InstructionsSupported(10)) return;
+                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2ST);
+                        }
+                        else
+                        {
+                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbbST);
+                        }
                     }
                 }
             }
@@ -412,14 +410,14 @@ namespace LoLUpdater
             if (mode)
             {
                 if (File.ReadAllText(Path.Combine(path, file))
-                    .Contains(Resources.CfgString) && File.GetAttributes(Path.Combine(path, file)) != FileAttributes.ReadOnly) return;
+                    .Contains(Resources.CfgString)) return;
                 File.AppendAllText(Path.Combine(path, file),
                     string.Format("{0}{1}", Environment.NewLine, Resources.CfgString));
             }
             else
             {
                 var oldLines = File.ReadAllLines(Path.Combine(path, file));
-                if (!oldLines.Contains(Resources.CfgString) && File.GetAttributes(Path.Combine(path, file)) != FileAttributes.ReadOnly) return;
+                if (!oldLines.Contains(Resources.CfgString)) return;
                 var newLines = oldLines.Select(line => new { Line = line, Words = line.Split(' ') }).Where(lineInfo => !lineInfo.Words.Contains(Resources.CfgString)).Select(lineInfo => lineInfo.Line);
                 File.WriteAllLines(Path.Combine(path, file), newLines);
             }
