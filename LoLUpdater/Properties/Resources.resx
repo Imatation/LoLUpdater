@@ -131,7 +131,7 @@
     <value>Done!</value>
   </data>
   <data name="Error1" xml:space="preserve">
-    <value>Your {0} is missing the version folder, please repair your installation.</value>
+    <value>Your {0} is missing the versions folder, please repair your installation.</value>
   </data>
   <data name="NPSWF32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NPSWF32.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -165,7 +165,7 @@ Do you accept these Terms? (Y/N)</value>
     <value>Uninstalling...</value>
   </data>
   <data name="UninstPrompt" xml:space="preserve">
-    <value>Backup folder detected, do you want to uninstall, Y for YES, N for 'No, continiue to installation/update', this will also remove DefaultMultiThreading=1 from the config if installed and also delete the Backup directory.</value>
+    <value>Do you want to uninstall, Y/N.</value>
   </data>
   <data name="AVX" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\AVX.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -191,7 +191,7 @@ Do you accept these Terms? (Y/N)</value>
   <data name="tbbST" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tbbST.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Program_Main_lol_launcher_exe_not_found" xml:space="preserve">
-    <value>lol.launcher.exe not found</value>
+  <data name="PMBprompt" xml:space="preserve">
+    <value>Pandom Media Booster is already uninstalled!</value>
   </data>
 </root>

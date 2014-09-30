@@ -27,19 +27,23 @@ namespace LoLUpdater
 
         private static bool _intercept;
 
-        private static readonly bool MultiCore = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
+        private static readonly bool IsMultiCore = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
                     .Cast<ManagementBaseObject>()
                     .Sum(item => int.Parse(item["NumberOfCores"].ToString())) >= 2;
 
-        private static readonly int Haswell = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
+        private static readonly bool IsHaswell = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
             .Cast<ManagementBaseObject>()
-            .Sum(item => int.Parse(item["Name"].ToString().Contains("Haswell").ToString()));
+            .Sum(item => int.Parse(item["Name"].ToString().Contains("Haswell").ToString())) > 1;
 
         private static void Main()
         {
             try
             {
-                CfgFix(!MultiCore);
+                if ((File.ReadAllLines(Path.Combine("Config", "game.cfg")).Contains(Resources.CfgString) || File.ReadAllLines(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains(Resources.CfgString)) && !IsMultiCore)
+                {
+                    CfgFix(!IsMultiCore);
+                }
+
                 if (File.Exists(PmbUninstall))
                 {
                     Kill("PMB");
@@ -86,8 +90,14 @@ namespace LoLUpdater
                                 Copy("Adobe AIR.dll", "Backup", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"));
                                 Directory.Delete("Backup", true);
                             }
-
-                            CfgFix(!MultiCore);
+                            if (IsMultiCore)
+                            {
+                                CfgFix(!IsMultiCore);
+                            }
+                            else
+                            {
+                                CfgFix(IsMultiCore);
+                            }
                             _intercept = false;
                         }
                     } while (_intercept);
@@ -111,10 +121,6 @@ namespace LoLUpdater
                 {
                     Process.Start("lol.launcher.exe");
                 }
-                else
-                {
-                    Console.WriteLine(Resources.Program_Main_lol_launcher_exe_not_found);
-                }
                 Console.WriteLine();
                 Environment.Exit(0);
             }
@@ -128,12 +134,16 @@ namespace LoLUpdater
             Console.WriteLine(Resources.Patching);
             Console.WriteLine("");
             Kill(LoLProcces);
-
+            CfgFix(IsMultiCore);
             if (!Directory.Exists("Backup"))
             {
                 if (Directory.Exists("RADS") || Directory.Exists("Game"))
                 {
                     Directory.CreateDirectory("Backup");
+                }
+                else
+                {
+                    throw new DirectoryNotFoundException("Installation directory not found");
                 }
                 if (Directory.Exists("RADS"))
                 {
@@ -145,47 +155,43 @@ namespace LoLUpdater
                         Path.Combine("Adobe Air", "Versions", "1.0"), Air);
                     Copybak("projects", "lol_air_client", "NPSWF32.dll",
                         Path.Combine("Adobe Air", "Versions", "1.0", "Resources"), Air);
+                    if (!File.Exists(Path.Combine("Config", "game.cfg"))) return;
+                    Copy("game.cfg", "Config", "Backup");
                 }
-                else if (Directory.Exists("Game"))
+                else if (!File.Exists("Game")) return;
+                Copy("Cg.dll", "Game", "Backup");
+                Copy("CgGL.dll", "Game", "Backup");
+                Copy("CgD3D9.dll", "Game", "Backup");
+                Copy("tbb.dll", "Game", "Backup");
+                Copy("Adobe AIR.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"), "Backup");
+                Copy("NPSWF32.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"),
+                    "Backup");
+                if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
                 {
-                    Copy("Cg.dll", "Game", "Backup");
-                    Copy("CgGL.dll", "Game", "Backup");
-                    Copy("CgD3D9.dll", "Game", "Backup");
-                    Copy("tbb.dll", "Game", "Backup");
-                    Copy("Adobe AIR.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0"), "Backup");
-                    Copy("NPSWF32.dll", Path.Combine("Air", "Adobe AIR", "Versions", "1.0", "Resources"),
-                        "Backup");
-                    if (File.Exists(Path.Combine("Config", "game.cfg")))
-                    { Copy("game.cfg", "Config", "Backup"); }
+                    Copy("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
+                }
 
-                    if (File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")))
-                    {
-                        Copy("game.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"), "Backup");
-                    }
-
-                    if (File.Exists(Path.Combine(Path.Combine("Game", "DATA", "CFG", "defaults"),
-                        "GamePermanent.cfg")))
-                    {
-                        Copy("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"),
-                            "Backup");
-                    }
-                    if (
-                        File.Exists(Path.Combine(Path.Combine("Game", "DATA", "CFG", "defaults"),
-                            "GamePermanent_zh_MY.cfg")))
-                    {
-                        Copy("GamePermanent_zh_MY.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"),
-                            "Backup");
-                    }
-                    if (
-                        !File.Exists(Path.Combine(Path.Combine("Game", "DATA", "CFG", "defaults"),
-                            "GamePermanent_en_SG.cfg"))) return;
-                    Copy("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"),
+                if (File.Exists(Path.Combine(Path.Combine("Game", "DATA", "CFG", "defaults"),
+                    "GamePermanent.cfg")))
+                {
+                    Copy("GamePermanent.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"),
                         "Backup");
                 }
+                if (
+                    File.Exists(Path.Combine(Path.Combine("Game", "DATA", "CFG", "defaults"),
+                        "GamePermanent_zh_MY.cfg")))
+                {
+                    Copy("GamePermanent_zh_MY.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"),
+                        "Backup");
+                }
+                if (
+                    !File.Exists(Path.Combine(Path.Combine("Game", "DATA", "CFG", "defaults"),
+                        "GamePermanent_en_SG.cfg"))) return;
+                Copy("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"),
+                    "Backup");
             }
-            if (_cgBinPath != null &&
-                (new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion) <
-                 new Version("3.1.0013") || string.IsNullOrEmpty(_cgBinPath)))
+            if (string.IsNullOrEmpty(_cgBinPath) || new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion) <
+                 new Version("3.1.0013"))
             {
                 File.WriteAllBytes("Cg-3.1_April2012_Setup.exe", Resources.Cg_3_1_April2012_Setup);
                 Process cg = new Process
@@ -204,6 +210,12 @@ namespace LoLUpdater
             }
             if (Directory.Exists("RADS"))
             {
+                LocalCopy("projects", "lol_air_client",
+                    Path.Combine("Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
+                    Resources.NPSWF32, Air);
+                LocalCopy("projects", "lol_air_client",
+                    Path.Combine("Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR, Air);
+
                 Copy(
                     "Cg.dll", "solutions", "lol_game_client_sln", Sln);
                 Copy(
@@ -222,21 +234,17 @@ namespace LoLUpdater
                 Copy(
                     "CgD3D9.dll", "projects", "lol_patcher", Patch);
 
-                if (MultiCore)
+                if (IsMultiCore)
                 {
                     if (InstructionsSupported(6) || InstructionsSupported(10) || InstructionsSupported(17))
                     {
                         LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE, Sln);
-                        if (InstructionsSupported(10) || InstructionsSupported(17))
-                        {
-                            LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE2, Sln);
-                            if (InstructionsSupported(17))
-                            {
-                                LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.AVX, Sln);
-                                if (Haswell > 0)
-                                { LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.Haswell, Sln); }
-                            }
-                        }
+                        if (!InstructionsSupported(10) || !InstructionsSupported(17)) return;
+                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE2, Sln);
+                        if (!InstructionsSupported(17)) return;
+                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.AVX, Sln);
+                        if (!IsHaswell) return;
+                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.Haswell, Sln);
                     }
                     else
                     {
@@ -248,76 +256,61 @@ namespace LoLUpdater
                     if (InstructionsSupported(6) || InstructionsSupported(10))
                     {
                         LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSEST, Sln);
-                        if (InstructionsSupported(10))
-                        {
-                            LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE2ST, Sln);
-                        }
+                        if (!InstructionsSupported(10)) return;
+                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE2ST, Sln);
                     }
                     else
                     {
                         LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbbST, Sln);
                     }
                 }
-
-                LocalCopy("projects", "lol_air_client",
-                    Path.Combine("Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
-                    Resources.NPSWF32, Air);
-                LocalCopy("projects", "lol_air_client",
-                    Path.Combine("Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR, Air);
             }
-            else if (Directory.Exists("Game"))
+            else if (!Directory.Exists("Game")) return;
+            Copy("Cg.dll",
+              _cgBinPath,
+              "Game");
+            Copy("CgGL.dll",
+                _cgBinPath,
+                "Game");
+            Copy("CgD3D9.dll", _cgBinPath, "Game");
+            if (IsMultiCore)
             {
-                Copy("Cg.dll",
-                  _cgBinPath,
-                  "Game");
-                Copy("CgGL.dll",
-                    _cgBinPath,
-                    "Game");
-                Copy("CgD3D9.dll", _cgBinPath, "Game");
-                if (MultiCore)
+                if (InstructionsSupported(6) || InstructionsSupported(10) || InstructionsSupported(17))
                 {
-                    if (InstructionsSupported(6) || InstructionsSupported(10) || InstructionsSupported(17))
+                    File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE);
+                    if (InstructionsSupported(10) || InstructionsSupported(17))
                     {
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE);
-                        if (InstructionsSupported(10) || InstructionsSupported(17))
-                        {
-                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2);
-                            if (InstructionsSupported(17))
-                            {
-                                File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.AVX);
-                                if (Haswell > 0)
-                                { File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.Haswell); }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbb);
+                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2);
+                        if (!InstructionsSupported(17)) return;
+                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.AVX);
+                        if (!IsHaswell) return;
+                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.Haswell);
                     }
                 }
                 else
                 {
-                    if (InstructionsSupported(6) || InstructionsSupported(10))
-                    {
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSEST);
-                        if (InstructionsSupported(10))
-                        {
-                            File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2ST);
-                        }
-                    }
-                    else
-                    {
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbbST);
-                    }
+                    File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbb);
                 }
-
-                File.WriteAllBytes(
-                    Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR);
-                File.WriteAllBytes(
-                    Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
-                    Resources.NPSWF32);
             }
-            CfgFix(MultiCore);
+            else
+            {
+                if (InstructionsSupported(6) || InstructionsSupported(10))
+                {
+                    File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSEST);
+                    if (!InstructionsSupported(10)) return;
+                    File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2ST);
+                }
+                else
+                {
+                    File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.tbbST);
+                }
+            }
+
+            File.WriteAllBytes(
+                Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR);
+            File.WriteAllBytes(
+                Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
+                Resources.NPSWF32);
         }
 
         private static void CfgFix(bool status)
@@ -370,7 +363,7 @@ namespace LoLUpdater
 
         private static void Kill(IEnumerable process)
         {
-            if (MultiCore)
+            if (IsMultiCore)
             {
                 Parallel.ForEach(Process.GetProcessesByName(process.ToString()), proc =>
                 {
@@ -450,7 +443,6 @@ namespace LoLUpdater
         {
             ManagementObject mo = new ManagementObject("Win32_Processor.DeviceID='CPU0'");
             ushort i = (ushort)mo["Architecture"];
-
             return i == id;
         }
     }

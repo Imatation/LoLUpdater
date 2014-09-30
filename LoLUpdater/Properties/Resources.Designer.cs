@@ -109,7 +109,7 @@ namespace LoLUpdater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your {0} is missing the version folder, please repair your installation..
+        ///   Looks up a localized string similar to Your {0} is missing the versions folder, please repair your installation..
         /// </summary>
         internal static string Error1 {
             get {
@@ -147,11 +147,11 @@ namespace LoLUpdater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to lol.launcher.exe not found.
+        ///   Looks up a localized string similar to Pandom Media Booster is already uninstalled!.
         /// </summary>
-        internal static string Program_Main_lol_launcher_exe_not_found {
+        internal static string PMBprompt {
             get {
-                return ResourceManager.GetString("Program_Main_lol_launcher_exe_not_found", resourceCulture);
+                return ResourceManager.GetString("PMBprompt", resourceCulture);
             }
         }
         
@@ -241,7 +241,7 @@ namespace LoLUpdater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Backup folder detected, do you want to uninstall, Y for YES, N for &apos;No, continiue to installation/update&apos;, this will also remove DefaultMultiThreading=1 from the config if installed and also delete the Backup directory..
+        ///   Looks up a localized string similar to Do you want to uninstall, Y/N..
         /// </summary>
         internal static string UninstPrompt {
             get {
