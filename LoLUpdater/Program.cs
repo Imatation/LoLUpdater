@@ -41,7 +41,7 @@ namespace LoLUpdater
             {
                 if ((File.ReadAllLines(Path.Combine("Config", "game.cfg")).Contains(Resources.CfgString) || File.ReadAllLines(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains(Resources.CfgString)) && !IsMultiCore)
                 {
-                    CfgFix(!IsMultiCore);
+                    CfgFix(IsMultiCore);
                 }
 
                 if (File.Exists(PmbUninstall))
