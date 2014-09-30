@@ -224,19 +224,19 @@ namespace LoLUpdater
                 new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion) <
                 new Version("3.1.0013"))
             {
-                File.WriteAllBytes("Cg-3.1_April2012_Setup.exe", Resources.Cg_3_1_April2012_Setup);
+                File.WriteAllBytes(Path.Combine(Path.GetTempFileName(), "Cg-3.1_April2012_Setup.exe"), Resources.Cg_3_1_April2012_Setup);
                 Process cg = new Process
                 {
                     StartInfo =
                         new ProcessStartInfo
                         {
-                            FileName = "Cg-3.1_April2012_Setup.exe",
+                            FileName = Path.Combine(Path.GetTempFileName(), "Cg-3.1_April2012_Setup.exe"),
                             Arguments = "/silent /TYPE=compact"
                         }
                 };
                 cg.Start();
                 cg.WaitForExit();
-                File.Delete("Cg-3.1_April2012_Setup.exe");
+                File.Delete(Path.Combine(Path.GetTempFileName(), "Cg-3.1_April2012_Setup.exe"));
                 _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
             }
             if (Directory.Exists("RADS"))
