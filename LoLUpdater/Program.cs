@@ -39,11 +39,11 @@ namespace LoLUpdater
         {
             try
             {
-                if ((File.ReadAllLines(Path.Combine("Config", "game.cfg")).Contains(Resources.CfgString) || File.ReadAllLines(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains(Resources.CfgString)) && !IsMultiCore)
+                if (!IsMultiCore && (File.Exists(Path.Combine("Config", "game.cfg")) || File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")) || File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")) || File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")) || File.Exists(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg"))) &&
+                (File.ReadAllLines(Path.Combine("Config", "game.cfg")).Contains(Resources.CfgString) || File.ReadAllLines(Path.Combine("Game", "DATA", "CFG", "defaults", "game.cfg")).Contains(Resources.CfgString) || File.ReadAllLines(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent.cfg")).Contains(Resources.CfgString) || File.ReadAllLines(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_zh_MY.cfg")).Contains(Resources.CfgString) || File.ReadAllLines(Path.Combine("Game", "DATA", "CFG", "defaults", "GamePermanent_en_SG.cfg")).Contains(Resources.CfgString)))
                 {
                     CfgFix(IsMultiCore);
                 }
-
                 if (File.Exists(PmbUninstall))
                 {
                     Kill("PMB");
@@ -69,13 +69,13 @@ namespace LoLUpdater
                             Kill(LoLProcces);
                             if (Directory.Exists("RADS"))
                             {
-                                BakCopy("Cg.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
-                                BakCopy("CgD3D9.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
-                                BakCopy("CgGL.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
-                                BakCopy("tbb.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
-                                BakCopy("Adobe AIR.dll", "projects", "lol_air_client",
+                                CopyY("Cg.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
+                                CopyY("CgD3D9.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
+                                CopyY("CgGL.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
+                                CopyY("tbb.dll", "solutions", "lol_game_client_sln", string.Empty, Sln);
+                                CopyY("Adobe AIR.dll", "projects", "lol_air_client",
                                     Path.Combine("Adobe Air", "Versions", "1.0"), Air);
-                                BakCopy("NPSWF32.dll", "projects", "lol_air_client",
+                                CopyY("NPSWF32.dll", "projects", "lol_air_client",
                                     Path.Combine("Adobe Air", "Versions", "1.0", "Resources"), Air);
                                 Directory.Delete("Backup", true);
                             }
@@ -147,13 +147,13 @@ namespace LoLUpdater
                 }
                 if (Directory.Exists("RADS"))
                 {
-                    Copybak("solutions", "lol_game_client_sln", "Cg.dll", string.Empty, Sln);
-                    Copybak("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty, Sln);
-                    Copybak("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty, Sln);
-                    Copybak("solutions", "lol_game_client_sln", "tbb.dll", string.Empty, Sln);
-                    Copybak("projects", "lol_air_client", "Adobe AIR.dll",
+                    CopyX("solutions", "lol_game_client_sln", "Cg.dll", string.Empty, Sln);
+                    CopyX("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty, Sln);
+                    CopyX("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty, Sln);
+                    CopyX("solutions", "lol_game_client_sln", "tbb.dll", string.Empty, Sln);
+                    CopyX("projects", "lol_air_client", "Adobe AIR.dll",
                         Path.Combine("Adobe Air", "Versions", "1.0"), Air);
-                    Copybak("projects", "lol_air_client", "NPSWF32.dll",
+                    CopyX("projects", "lol_air_client", "NPSWF32.dll",
                         Path.Combine("Adobe Air", "Versions", "1.0", "Resources"), Air);
                     if (!File.Exists(Path.Combine("Config", "game.cfg"))) return;
                     Copy("game.cfg", "Config", "Backup");
@@ -190,8 +190,9 @@ namespace LoLUpdater
                 Copy("GamePermanent_en_SG.cfg", Path.Combine("Game", "DATA", "CFG", "defaults"),
                     "Backup");
             }
-            if (string.IsNullOrEmpty(_cgBinPath) || new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion) <
-                 new Version("3.1.0013"))
+            if (string.IsNullOrEmpty(_cgBinPath) ||
+                new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion) <
+                new Version("3.1.0013"))
             {
                 File.WriteAllBytes("Cg-3.1_April2012_Setup.exe", Resources.Cg_3_1_April2012_Setup);
                 Process cg = new Process
@@ -210,10 +211,10 @@ namespace LoLUpdater
             }
             if (Directory.Exists("RADS"))
             {
-                LocalCopy("projects", "lol_air_client",
+                CopyRes("projects", "lol_air_client",
                     Path.Combine("Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
                     Resources.NPSWF32, Air);
-                LocalCopy("projects", "lol_air_client",
+                CopyRes("projects", "lol_air_client",
                     Path.Combine("Adobe Air", "Versions", "1.0", "Adobe AIR.dll"), Resources.Adobe_AIR, Air);
 
                 Copy(
@@ -234,41 +235,43 @@ namespace LoLUpdater
                 Copy(
                     "CgD3D9.dll", "projects", "lol_patcher", Patch);
 
-                if (IsMultiCore)
+                if (IsHaswell)
+                {
+                    CopyRes("solutions", "lol_game_client_sln", "tbb.dll", Resources.Haswell, Sln);
+                }
+                else if (IsMultiCore)
                 {
                     if (InstructionsSupported(6) || InstructionsSupported(10) || InstructionsSupported(17))
                     {
-                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE, Sln);
+                        CopyRes("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE, Sln);
                         if (!InstructionsSupported(10) || !InstructionsSupported(17)) return;
-                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE2, Sln);
+                        CopyRes("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE2, Sln);
                         if (!InstructionsSupported(17)) return;
-                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.AVX, Sln);
-                        if (!IsHaswell) return;
-                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.Haswell, Sln);
+                        CopyRes("solutions", "lol_game_client_sln", "tbb.dll", Resources.AVX, Sln);
                     }
                     else
                     {
-                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbb, Sln);
+                        CopyRes("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbb, Sln);
                     }
                 }
                 else
                 {
                     if (InstructionsSupported(6) || InstructionsSupported(10))
                     {
-                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSEST, Sln);
+                        CopyRes("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSEST, Sln);
                         if (!InstructionsSupported(10)) return;
-                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE2ST, Sln);
+                        CopyRes("solutions", "lol_game_client_sln", "tbb.dll", Resources.SSE2ST, Sln);
                     }
                     else
                     {
-                        LocalCopy("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbbST, Sln);
+                        CopyRes("solutions", "lol_game_client_sln", "tbb.dll", Resources.tbbST, Sln);
                     }
                 }
             }
             else if (!Directory.Exists("Game")) return;
             Copy("Cg.dll",
-              _cgBinPath,
-              "Game");
+                _cgBinPath,
+                "Game");
             Copy("CgGL.dll",
                 _cgBinPath,
                 "Game");
@@ -280,19 +283,19 @@ namespace LoLUpdater
                 Path.Combine("Air", "Adobe Air", "Versions", "1.0", "Resources", "NPSWF32.dll"),
                 Resources.NPSWF32);
 
-            if (IsMultiCore)
+            if (IsHaswell)
+            {
+                File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.Haswell);
+            }
+            else if (IsMultiCore)
             {
                 if (InstructionsSupported(6) || InstructionsSupported(10) || InstructionsSupported(17))
                 {
                     File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE);
-                    if (InstructionsSupported(10) || InstructionsSupported(17))
-                    {
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2);
-                        if (!InstructionsSupported(17)) return;
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.AVX);
-                        if (!IsHaswell) return;
-                        File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.Haswell);
-                    }
+                    if (!InstructionsSupported(10) || !InstructionsSupported(17)) return;
+                    File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.SSE2);
+                    if (!InstructionsSupported(17)) return;
+                    File.WriteAllBytes(Path.Combine("Game", "tbb.dll"), Resources.AVX);
                 }
                 else
                 {
@@ -382,7 +385,7 @@ namespace LoLUpdater
             }
         }
 
-        private static void Copybak(string folder, string folder1, string file, string to, string version)
+        private static void CopyX(string folder, string folder1, string file, string to, string version)
         {
             File.Copy(
                 Path.Combine("RADS", folder, folder1, "releases", version, "deploy", to, file)
@@ -390,7 +393,15 @@ namespace LoLUpdater
                 true);
         }
 
-        private static void LocalCopy(string folder, string folder1, string file, byte[] file1, string version)
+        private static void CopyY(string folder, string folder1, string file, string to, string version)
+        {
+            File.Copy(Path.Combine("Backup", file)
+
+                , Path.Combine("RADS", folder, folder1, "releases", version, "deploy", to, file),
+                true);
+        }
+
+        private static void CopyRes(string folder, string folder1, string file, byte[] file1, string version)
         {
             File.WriteAllBytes(
                 Path.Combine("RADS", folder, folder1, "releases", version, "deploy", file), file1);
@@ -402,13 +413,6 @@ namespace LoLUpdater
               Path.Combine(
                   _cgBinPath, file),
               Path.Combine("RADS", folder, folder1, "releases", version, "deploy", file), true);
-        }
-
-        private static void BakCopy(string file, string folder, string folder1, string ext, string version)
-        {
-            File.Copy(Path.Combine("RADS", folder, folder1, "releases", version, "deploy", ext, file),
-              Path.Combine("Backup", file)
-              , true);
         }
 
         private static void Copy(string file, string from, string to)
