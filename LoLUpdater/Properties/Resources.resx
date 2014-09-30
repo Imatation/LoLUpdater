@@ -165,7 +165,7 @@ Do you accept these Terms? (Y/N)</value>
     <value>Uninstalling...</value>
   </data>
   <data name="UninstPrompt" xml:space="preserve">
-    <value>Do you want to uninstall, Y/N.</value>
+    <value>Do you want to uninstall, Y/N, if you updated lolupdater then"N" will take you to the update installation.</value>
   </data>
   <data name="AVX" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\AVX.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -190,8 +190,5 @@ Do you accept these Terms? (Y/N)</value>
   </data>
   <data name="tbbST" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tbbST.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="PMBprompt" xml:space="preserve">
-    <value>Pandom Media Booster is already uninstalled!</value>
   </data>
 </root>

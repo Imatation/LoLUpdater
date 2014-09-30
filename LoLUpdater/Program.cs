@@ -167,16 +167,9 @@ namespace LoLUpdater
             Kill(LoLProcces);
             if (!Directory.Exists("Backup"))
             {
-                if (Directory.Exists("RADS") || Directory.Exists("Game"))
-                {
-                    Directory.CreateDirectory("Backup");
-                }
-                else
-                {
-                    throw new DirectoryNotFoundException("Installation directory not found");
-                }
                 if (Directory.Exists("RADS"))
                 {
+                    Directory.CreateDirectory("Backup");
                     CopyX("solutions", "lol_game_client_sln", "Cg.dll", string.Empty, Sln);
                     CopyX("solutions", "lol_game_client_sln", "CgD3D9.dll", string.Empty, Sln);
                     CopyX("solutions", "lol_game_client_sln", "CgGL.dll", string.Empty, Sln);
@@ -189,6 +182,7 @@ namespace LoLUpdater
                     Copy("game.cfg", "Config", "Backup");
                 }
                 else if (!File.Exists("Game")) return;
+                Directory.CreateDirectory("Backup");
                 Copy("Cg.dll", "Game", "Backup");
                 Copy("CgGL.dll", "Game", "Backup");
                 Copy("CgD3D9.dll", "Game", "Backup");
@@ -224,7 +218,8 @@ namespace LoLUpdater
                 new Version(FileVersionInfo.GetVersionInfo(Path.Combine(_cgBinPath, "cg.dll")).FileVersion) <
                 new Version("3.1.0013"))
             {
-                File.WriteAllBytes(Path.Combine(Path.GetTempFileName(), "Cg-3.1_April2012_Setup.exe"), Resources.Cg_3_1_April2012_Setup);
+                File.WriteAllBytes(Path.Combine(Path.GetTempFileName(), "Cg-3.1_April2012_Setup.exe"),
+                    Resources.Cg_3_1_April2012_Setup);
                 Process cg = new Process
                 {
                     StartInfo =
@@ -238,6 +233,10 @@ namespace LoLUpdater
                 cg.WaitForExit();
                 File.Delete(Path.Combine(Path.GetTempFileName(), "Cg-3.1_April2012_Setup.exe"));
                 _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH", EnvironmentVariableTarget.User);
+            }
+            else
+            {
+                throw new Exception("Nvidia CG Toolkit could not be installed.");
             }
             if (Directory.Exists("RADS"))
             {
@@ -414,14 +413,14 @@ namespace LoLUpdater
             if (mode)
             {
                 if (File.ReadAllText(Path.Combine(path, file))
-                    .Contains(Resources.CfgString)) return;
+                    .Contains(Resources.CfgString) && File.GetAttributes(Path.Combine(path, file)) != FileAttributes.ReadOnly) return;
                 File.AppendAllText(Path.Combine(path, file),
                     string.Format("{0}{1}", Environment.NewLine, Resources.CfgString));
             }
             else
             {
                 var oldLines = File.ReadAllLines(Path.Combine(path, file));
-                if (!oldLines.Contains(Resources.CfgString)) return;
+                if (!oldLines.Contains(Resources.CfgString) && File.GetAttributes(Path.Combine(path, file)) != FileAttributes.ReadOnly) return;
                 var newLines = oldLines.Select(line => new { Line = line, Words = line.Split(' ') }).Where(lineInfo => !lineInfo.Words.Contains(Resources.CfgString)).Select(lineInfo => lineInfo.Line);
                 File.WriteAllLines(Path.Combine(path, file), newLines);
             }

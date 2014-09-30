@@ -147,15 +147,6 @@ namespace LoLUpdater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pandom Media Booster is already uninstalled!.
-        /// </summary>
-        internal static string PMBprompt {
-            get {
-                return ResourceManager.GetString("PMBprompt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] SSE {
@@ -241,7 +232,7 @@ namespace LoLUpdater.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do you want to uninstall, Y/N..
+        ///   Looks up a localized string similar to Do you want to uninstall, Y/N, if you updated lolupdater then&quot;N&quot; will take you to the update installation..
         /// </summary>
         internal static string UninstPrompt {
             get {
