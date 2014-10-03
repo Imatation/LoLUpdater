@@ -312,9 +312,10 @@ node_modules
 .lock-wscript
 
 ### bower ###
-bower_components
+components
 
 ### Custom ###
+atom-shell
 LoLUpdater.exe
 LoLUpdaterXP.exe
 LoLUpdater.zip
