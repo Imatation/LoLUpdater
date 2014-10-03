@@ -27,7 +27,7 @@ namespace LoLUpdater
                     .Sum(item => int.Parse(item["NumberOfCores"].ToString())) > 1;
         private static readonly bool IsHaswell = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
             .Cast<ManagementBaseObject>()
-            .Sum(item => int.Parse(item["Name"].ToString().Contains("Haswell") == true;
+            .Any(item => item["Name"].ToString().Contains("Haswell"));
 
         private static string _cgBinPath = Environment.GetEnvironmentVariable("CG_BIN_PATH",
             EnvironmentVariableTarget.User);
