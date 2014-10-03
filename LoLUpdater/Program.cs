@@ -24,7 +24,7 @@ namespace LoLUpdater
 
         private static readonly bool IsMultiCore = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
                     .Cast<ManagementBaseObject>()
-                    .Sum(item => int.Parse(item["NumberOfCores"].ToString())) > 1;
+                    .Sum(item => toInt(item["NumberOfCores"].ToString())) > 1;
         private static readonly bool IsHaswell = new ManagementObjectSearcher("Select * from Win32_Processor").Get()
             .Cast<ManagementBaseObject>()
             .Any(item => item["Name"].ToString().Contains("Haswell"));
@@ -431,6 +431,13 @@ namespace LoLUpdater
         private static bool InstructionsSupported(int id)
         {
             return (ushort)new ManagementObject("Win32_Processor.DeviceID='CPU0'")["Architecture"] == id;
+        }
+
+        private static int toInt(string value) 
+        {
+            int result = 0;
+            int.TryParse(value, out result);
+            return result;
         }
     }
 }
