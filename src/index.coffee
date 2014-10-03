@@ -9,7 +9,7 @@ addEventListener "DOMContentLoaded", ->
     ipc = require "ipc"
     ipc.send "minimize"
 
-  document.getElementById("go").addEventListener "click", ->
+  document.getElementById("patch").addEventListener "click", ->
     document.querySelector(".patch-dialog").toggle()
     localStorage["LoLPath"] = document.querySelector("lol-finder").value
 
