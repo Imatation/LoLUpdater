@@ -11,9 +11,6 @@ gulp.task "clean", ->
     ])
 
 gulp.task "dist", ->
-  autoPrefixerOptions =
-    browsers: ["Chrome 37"]
-    cascade: false
   coffeeFilter = $.filter("**/*.coffee")
   cssFilter = $.filter("**/*.css")
   jsonFilter = $.filter("**/*.json")
