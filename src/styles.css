@@ -1,4 +1,3 @@
-
 body
 {
     font-family: RobotoDraft, sans-serif;
@@ -10,8 +9,8 @@ body
 
     color: #333;
 
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    -webkit-touch-callout: none;
+    tap-highlight-color: rgba(0, 0, 0, 0);
+    touch-callout: none;
 }
 
 main
@@ -39,7 +38,7 @@ core-toolbar
     -webkit-app-region: drag;
 }
 
-core-toolbar paper-icon-button
+core-toolbar .window-controls
 {
     position: absolute;
     top: 15px;

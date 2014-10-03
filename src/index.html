@@ -1,0 +1,91 @@
+<!doctype html>
+
+<html>
+
+<head>
+  <title>LoLUpdater</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <script src="components/platform/platform.js"></script>
+
+  <link rel="import" href="components/core-icons/core-icons.html">
+  <link rel="import" href="components/core-icon-button/core-icon-button.html">
+  <link rel="import" href="components/core-toolbar/core-toolbar.html">
+  <link rel="import" href="components/core-tooltip/core-tooltip.html">
+  <link rel="import" href="elements/lol-finder/lol-finder.html">
+  <link rel="import" href="elements/minimize-icon/minimize-icon.html">
+  <link rel="import" href="components/paper-button/paper-button.html">
+  <link rel="import" href="components/paper-fab/paper-fab.html">
+  <link rel="import" href="components/paper-radio-button/paper-radio-button.html">
+  <link rel="import" href="components/paper-radio-group/paper-radio-group.html">
+  <link rel="import" href="components/paper-dialog/paper-dialog.html">
+  <link rel="import" href="components/paper-dialog/paper-dialog-transition.html">
+
+  <script src="index.js"></script>
+
+  <script type="text/javascript">
+    WebFontConfig = {
+      google: {
+        families: ['RobotoDraft:regular,light,:latin']
+      }
+    };
+    (function() {
+      var wf = document.createElement('script');
+      wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+      wf.type = 'text/javascript';
+      wf.async = 'true';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(wf, s);
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body unresolved>
+
+<core-toolbar>
+  <span>LoLUpdater</span>
+  <div class="window-controls">
+    <core-icon-button icon="custom:minimize" class="minimize"></core-icon-button>
+    <core-icon-button icon="close" class="exit"></core-icon-button>
+  </div>
+</core-toolbar>
+<main>
+  <paper-radio-group selected="install">
+    <paper-radio-button name="install" label="Install"></paper-radio-button>
+    <paper-radio-button name="remove" label="Remove"></paper-radio-button>
+  </paper-radio-group>
+  <lol-finder></lol-finder>
+  <paper-button id="go" raised>Patch</paper-button>
+</main>
+<paper-dialog heading="License" opened autoCloseDisabled backdrop layered>
+  <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
+
+  <p>Id qui scripta laboramus dissentiet, verterem partiendo vim at. Stet dissentiet ut mei. Iriure facilis eloquentiam pro eu, nec an esse inciderint. In meliore abhorreant sea. Eros nostro ocurreret at nec. Cu per regione persecuti.</p>
+
+  <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
+
+  <paper-button class="exit" affirmative>Decline</paper-button>
+  <paper-button affirmative autofocus>Accept</paper-button>
+
+</paper-dialog>
+
+<paper-dialog heading="Patching…" class="patch-dialog" transition="paper-dialog-transition-bottom" autoCloseDisabled backdrop layered>
+  <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
+
+  <p>Id qui scripta laboramus dissentiet, verterem partiendo vim at. Stet dissentiet ut mei. Iriure facilis eloquentiam pro eu, nec an esse inciderint. In meliore abhorreant sea. Eros nostro ocurreret at nec. Cu per regione persecuti.</p>
+
+  <p>Lorem ipsum dolor sit amet, doming noster at quo, nostrud lucilius rationibus ea duo. Vim no mucius dolores. No bonorum voluptatum vis, has iudicabit consectetuer ne. Nullam sensibus vim id, et quo graeci perpetua.</p>
+</paper-dialog>
+
+<core-tooltip label="Report Bug" position="left" class="bug" large>
+  <paper-fab icon="bug-report" class="mini"></paper-fab>
+</core-tooltip>
+
+</body>
+
+</html>

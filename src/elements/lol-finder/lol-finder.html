@@ -1,0 +1,33 @@
+<!-- Import Polymer -->
+<link rel="import" href="../../components/polymer/polymer.html">
+
+<link rel="import" href="../../components/paper-input/paper-input.html">
+<link rel="import" href="../../components/paper-button/paper-button.html">
+
+<!-- Define your custom element -->
+<polymer-element name="lol-finder" attributes="value">
+  <template>
+    <style>
+      #chooser {
+        display: none;
+      }
+      #wrapper {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+      }
+      #button {
+        min-width: 90px;
+      }
+      #input {
+        width: 100%;
+      }
+    </style>
+    <div id="wrapper">
+      <paper-input id="input" label="LoL Path" value="{{ value }}"></paper-input>
+      <paper-button id="button">Find LoL</paper-button>
+    </div>
+  </template>
+  <script src="lol-finder.js"></script>
+
+</polymer-element>

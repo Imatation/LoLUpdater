@@ -1,0 +1,13 @@
+{
+  "name": "LoLUpdater",
+  "version": "1.0.0",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Loggan08/LoLUpdater.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Loggan08/LoLUpdater/issues"
+  },
+  "homepage": "https://www.lolupdater.com"
+}
